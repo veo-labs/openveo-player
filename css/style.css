@@ -1,0 +1,164 @@
+body{ font-family: arial, sans-serif; font-size: 12px; }
+
+/*
+ * Hide all angularsjs element with ng-hide class to avoid blink while
+ * page loading.
+ */
+.ng-hide{ display: none !important; }
+
+/*
+ * *******************************
+ * Player and player full screen.
+ * *******************************
+ */
+.ov-player{ position: relative; height: 500px; overflow: hidden;}
+
+/* Full screen for older browsers */
+.ov-fullscreen, .ov-fullscreen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; }
+
+/* Full screen for browsers who supports the fullscreen API */
+ov-player > div:full-screen, :full-screen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; }
+ov-player > div:-webkit-full-screen, :-webkit-full-screen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; }
+ov-player > div:-ms-fullscreen, :-ms-fullscreen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; }
+ov-player > div:-o-full-screen, :-o-full-screen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; }
+ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; }
+
+
+/*
+ * *******************************
+ * Navigation tabs.
+ * *******************************
+ */
+nav{ position: absolute; top: 0; color: #fff; font-weight: bold; font-size: 1.1em; }
+nav ul{ display: table; }
+nav li{ display: table-cell; padding: 0 40px; line-height: 35px; border-top: 5px solid #fff; background-color: #3d3932; }
+nav li:hover{ border-top: 5px solid #1bbbe9; cursor: pointer; }
+nav li.ov-selected{ border-top: 5px solid #1bbbe9; }
+
+
+/*
+ * *******************************
+ * Views (central part between navigation and player controls).
+ * *******************************
+ */
+.ov-views{ position: absolute; width: 100%; top: 40px; bottom: 50px; }
+
+
+/*
+ * *******************************
+ * Video view with half video and half presentation.
+ * *******************************
+ */
+.ov-video-view{ width: 100%; height: 100%; background-color: #000; }
+
+/* Video part of the video view */
+.ov-video{ width: 100%; height: 100%; }
+.ov-video iframe{ width: 100%; height: 100%; }
+.ov-mode-presentation .ov-video{ display: none; }
+
+/* 
+ * Presentation part of the video view.
+ * Only video on small devices for modes video, both and 
+ * both-presentation.
+ */
+.ov-presentation{ height: 100%; }
+.ov-presentation > div{ width: 100%; height: 100%; background-position: center; background-repeat: no-repeat; background-size: contain; }
+
+/* Both, both-presentation and video modes for small devices */
+.ov-mode-both .ov-presentation, .ov-mode-both-presentation .ov-presentation, .ov-mode-video .ov-presentation{ display: none; }
+
+/* Presentation mode for small devices */
+.ov-mode-presentation .ov-presentation{ width: 100%; }
+
+/* Large devices may display both presentation and video */
+@media(min-width: 768px){
+  .ov-video, .ov-presentation{ display: block; float: left; width: 50%; }
+  .ov-mode-both .ov-presentation, .ov-mode-both-presentation .ov-presentation{ display: block; }
+  
+  /* Video alone mode */
+  .ov-mode-video .ov-presentation{ display: none; }
+  .ov-mode-video .ov-video{ width: 100%; }
+  
+  /* Small video and large presentation mode */
+  .ov-mode-both-presentation .ov-presentation{ width: 75%; }
+  .ov-mode-both-presentation .ov-video{ width: 25%; }
+  
+  /* Presentation mode (repeat second selector to be more clear) */
+  .ov-mode-presentation .ov-video{ display: none; }
+  .ov-mode-presentation .ov-presentation{ width: 100%; }
+}
+
+
+/*
+ * *******************************
+ * Index view with half the list of slides and half the focused slide.
+ * *******************************
+ */
+.ov-index-view{ width: 100%; height: 100%; background-color: #fff; }
+
+/*
+ * Slides part of the index view.
+ */
+.ov-slides{ height: 100%; overflow-y: scroll; -webkit-overflow-scrolling: touch; font-size: 1.8em; }
+.ov-slides li{ display: inline-block; width: 200px; height: 200px; padding: 5px; margin: 10px; border: 1px solid #ddd; color: #1bbbe9; }
+.ov-slides li:hover{ cursor: pointer; background-color: #1bbbe9; color: #fff; }
+.ov-slides img{ width: 100%; }
+.ov-slides p{ margin-top: 10px; text-align: center; }
+.ov-past-timecode{ opacity: 0.5; }
+
+/*
+ * Focused slide part of the index view.
+ * Half right part of the view is not displayed on small devices. 
+ */
+.ov-focused-slide{ display: none; height: 100%; }
+
+@media(min-width: 768px){
+  .ov-slides, .ov-focused-slide{ display: block; float: left; width: 50%; }
+  .ov-focused-slide > div{ width: 100%; height: 100%; background-position: center; background-repeat: no-repeat; background-size: contain; }
+}
+
+
+/*
+ * *******************************
+ * Player controls.
+ * *******************************
+ */
+.ov-controls{ position: absolute; bottom: 0; width: 100%; height: 50px; background-color: #000; color: #fff; }
+
+/* Time bar */
+.ov-time-bar{ height: 10px; padding: 3px; border: 1px solid #1bbbe9; }
+.ov-time-bar > div{ position: relative; height: 100%; cursor: pointer; background-color: #666; }
+.ov-seen{ position: absolute; width: 50%; height: 100%; background-color: #1bbbe9; }
+.ov-loaded{ position: absolute; width: 70%; height: 100%; background-color: #3d3932; }
+.ov-cursor{ position: absolute; top: 0; height:100%; width: 2px; background-color: #fff; }
+.ov-cursor > div{ position: absolute; top: -130px; left: -65px; width: 130px; height: 100px; padding: 5px; border: 1px solid #3d3932; border-radius: 5px; background-color: #fff; }
+.ov-cursor img{ width: 130px; height: 100px; }
+
+/* Player buttons */
+.ov-buttons{ position: relative; height: 32px; }
+.ov-button{ color: #fff; }
+.ov-button:hover{ cursor: pointer; color: #1bbbe9; }
+
+/* Left buttons */
+.ov-buttons .ov-left{ display: table; position: absolute; left: 10px; font-size: 1.5em; height: 100%; line-height: 32px; }
+
+/* Play button */
+.ov-icon-play{ display: table-cell; vertical-align: middle; }
+
+/* Right buttons */
+.ov-buttons .ov-right{ position: absolute; right: 10px; display: table; height: 100%; }
+.ov-right .ov-time, .ov-right > div{ display: table-cell; font-size: 1.5em; vertical-align: middle; padding: 0 5px; }
+.ov-right .ov-time{ font-size: 1.1em; }
+.ov-time > span{ color: #aaa; }
+
+/* Mode button */
+.ov-right .ov-mode{ position: relative; font-size: 4em; line-height: 32px; }
+.ov-mode ul{ position: absolute; top: -140px; left: -3px; padding: 5px; border: 1px solid #1bbbe9; background-color: #000; border-radius: 3px; }
+.ov-right .ov-mode li{ line-height: 30px; }
+
+/* Volume button */
+.ov-icon-volume{ position: relative; }
+.ov-icon-volume > div{ position: absolute; top: -90px; left: 5px; width: 10px; height: 70px; padding: 5px; border: 1px solid #1bbbe9; border-radius: 3px; background-color: #000; }
+.ov-icon-volume .ov-volume, .ov-icon-volume .ov-volume-preview{ position: absolute; left: 0; bottom: 0; width: 100%; }
+.ov-icon-volume .ov-volume{ background-color: #1bbbe9; }
+.ov-icon-volume .ov-volume-preview{ background-color: #3d3932; }

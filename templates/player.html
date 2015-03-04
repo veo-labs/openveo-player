@@ -1,0 +1,59 @@
+<div ng-class="{'ov-fullscreen' : fullscreen}">
+  <div class="ov-player">
+
+    <ov-tabs>
+
+      <div class="ov-views">
+        <ov-view title="Vidéo" view="ov-video-view" class="ov-mode-{{selectedMode}}" view-id="video">
+          <div class="ov-video">
+            <ng-include src="videoTemplate"></ng-include>
+          </div>
+          <div class="ov-presentation">
+            <div ng-style="{'background-image': presentation ? 'url(' + presentation + ')' : 'none'}"></div>
+          </div>
+        </ov-view>
+
+        <ov-view title="Index" ng-if="displayIndexTab" view="ov-index-view">
+          <ov-index></ov-index>
+        </ov-view>
+      </div>
+
+    </ov-tabs>
+
+    <div class="ov-controls">
+
+      <div class="ov-time-bar" ng-click="setTime($event)">
+        <div>
+          <div class="ov-loaded" ng-style="{'width' : loadingPercent + '%'}"></div>
+          <div class="ov-seen" ng-style="{'width' : seenPercent + '%'}"></div>
+          <div class="ov-cursor" ng-style="{'left' : timePreviewPosition  + '%'}" ng-show="timePreviewOpened">
+            <div>
+              <img ng-src="{{timePreview}}" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ov-buttons">
+        <div class="ov-left">
+          <span class="ov-icon-{{playPauseButton}} ov-button" ng-click="playPause()"></span>
+        </div>
+        <div class="ov-right">
+          <p class="ov-time" ng-show="displayTime">{{time | millisecondsToTime}} - <span>{{duration | millisecondsToTime}}</span></p>
+          <div class="ov-icon-{{selectedMode}} ov-button ov-mode" ng-show="displayModeButton" ng-click="toggleModes()">
+            <ul ng-show="modesOpened">
+              <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="ov-button ov-icon-{{mode}}"></li>
+            </ul>
+          </div>
+          <div class="ov-icon-volume ov-button" ng-show="displayVolume"  ng-click="toggleVolume()">
+            <div class="ov-volume-bar" ng-show="volumeOpened" ng-click="setVolume($event)">
+              <div class="ov-volume-preview" ng-style="{'height' : volumePreview + '%'}"></div>
+              <div class="ov-volume" ng-style="{'height' : volume + '%'}"></div>
+            </div>
+          </div>
+          <div class="ov-icon-{{fullscreenButton}} ov-button" ng-show="displayFullscreen" ng-click="toggleFullscreen()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

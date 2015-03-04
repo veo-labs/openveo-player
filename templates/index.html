@@ -1,0 +1,12 @@
+<div class="ov-slides">
+  <ul>
+    <li ng-repeat="timecodeObj in data.timecodes | orderTimeCodes" ng-mouseenter="setImagePreview(timecodeObj.timecode)" ng-click="goToTimecode(timecodeObj.timecode)" ng-class="{'ov-past-timecode' : timecodeObj.timecode < time}">
+      <img ng-src="{{timecodeObj.image.small}}"/>
+      <p>{{timecodeObj.timecode | millisecondsToTime}}</p>
+    </li>
+  </ul>
+</div>
+
+<div class="ov-focused-slide">
+  <div ng-style="{'background-image': imagePreview ? 'url(' + imagePreview + ')' : 'none'}"></div>
+</div>
