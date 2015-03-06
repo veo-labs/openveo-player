@@ -185,7 +185,7 @@
         };
         
         if(value) data.value = value;
-        return this.player.contentWindow.postMessage(data, this.postMessageTargetOrigin);
+        return this.player.contentWindow.postMessage(JSON.stringify(data), this.postMessageTargetOrigin);
       }
       
       return null;
