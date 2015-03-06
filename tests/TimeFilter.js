@@ -13,8 +13,8 @@ describe("TimeFilter", function(){
     millisecondsToTimeFilter = $filter("millisecondsToTime");
   }));
 
-  it("Should return an empty String if no time is given", function(){
-    var emptyTime = millisecondsToTimeFilter();
+  it("Should return an empty String if time < 0", function(){
+    var emptyTime = millisecondsToTimeFilter(-1);
     assert.notOk(emptyTime);
     assert.isString(emptyTime);
   });
