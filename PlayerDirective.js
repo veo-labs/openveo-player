@@ -11,7 +11,7 @@
    * PlayerApp.js file.
    */
   app.directive("ovPlayer", ovPlayer);
-  ovPlayer.$inject = ["$injector", "$document", "$sce"];
+  ovPlayer.$inject = ["$injector", "$document", "$sce", "$filter"];
 
   // Available display modes
   // Display mode tells how presentation and video are structured
@@ -22,7 +22,7 @@
   //  - "presentation" mode : Only the presentation is displayed 
   var modes = ["video", "both", "both-presentation", "presentation"];
 
-  function ovPlayer($injector, $document, $sce){
+  function ovPlayer($injector, $document, $sce, $filter){
     return{
       restrict : "E",
       templateUrl : ovPlayerDirectory + "/templates/player.html",
@@ -42,6 +42,8 @@
         var rootElement = $element.children()[0];
         var timeBar = element.getElementsByClassName("ov-time-ghost")[0];
         var volumeBar = element.getElementsByClassName("ov-volume-ghost")[0];
+        var volumeBarRect = volumeBar.getBoundingClientRect();
+        var volumeBarHeight = volumeBarRect.bottom - volumeBarRect.top;
         var timeBarRect = timeBar.getBoundingClientRect();
         var timeBarWidth = timeBarRect.right - timeBarRect.left;        
         this.player = null;
@@ -59,7 +61,7 @@
 
           // Set scoped default values
           $scope.data = $scope.data || {};
-          $scope.data.timecodes = angular.copy($scope.data.timecodes) || {};
+          $scope.timecodes = angular.copy($scope.data.timecodes) || {};
           $scope.presentation = null;
           $scope.playerId = "player_" + $scope.data.videoId;
           $scope.timePreviewOpened = false;
@@ -78,13 +80,11 @@
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
           $scope.displayModeButton = $scope.displayMode;
-
-          var timecodes = Object.keys($scope.data.timecodes);
+          $scope.sortedTimecodes = $filter("orderTimeCodes")($scope.timecodes);
 
           // Got timecodes associated to the video
-          if(timecodes.length){
-            $scope.timePreview = $scope.data.timecodes[timecodes[0]].image.large;
-            $scope.presentation = $scope.data.timecodes[timecodes[0]].image.large;
+          if($scope.sortedTimecodes.length){
+            $scope.timePreview = $scope.presentation = $scope.sortedTimecodes[0].image.large;
           }
 
           // No timecodes for the video
@@ -237,7 +237,7 @@
          * on the volume selector. 
          */
         $scope.setVolume = function(event){
-          $scope.volume = Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100);
+          $scope.volume = Math.min(Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100), 100);
           self.player.setVolume($scope.volume);
         };
 
@@ -258,15 +258,14 @@
          * @return Number The actual timecode for the given time
          */
         function findTimecode(time){
-          var timecodes = Object.keys($scope.data.timecodes);
 
-          if(timecodes.length){
-            for(var i = 0 ; i < timecodes.length ; i++){
-              if(time > timecodes[i] && (timecodes[i + 1] && time < timecodes[i + 1]))
-                return timecodes[i];
+          if($scope.sortedTimecodes.length){
+            for(var i = 0 ; i < $scope.sortedTimecodes.length ; i++){
+              if(time > $scope.sortedTimecodes[i].timecode && ($scope.sortedTimecodes[i + 1] && time < $scope.sortedTimecodes[i + 1].timecode))
+                return $scope.sortedTimecodes[i].timecode;
             }
 
-            return timecodes[timecodes.length - 1];
+            return $scope.sortedTimecodes[$scope.sortedTimecodes.length - 1].timecode;
           }
           
           return 0;
@@ -305,8 +304,8 @@
           var timecode = findTimecode(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
 
           $scope.$apply(function(){
-            if($scope.data.timecodes[timecode])
-              $scope.timePreview = $scope.data.timecodes[timecode].image.small;
+            if($scope.timecodes[timecode])
+              $scope.timePreview = $scope.timecodes[timecode].image.small;
 
             $scope.timePreviewPosition = ((event.pageX - timeBarRect.left) / timeBarWidth) * 100;
           });
@@ -344,7 +343,7 @@
          * @param MouseEvent event The dispatched event
          */
         angular.element(timeBar).on("mouseover", function(event){
-          if(Object.keys($scope.data.timecodes).length){
+          if($scope.sortedTimecodes.length){
             timeBarRect = timeBar.getBoundingClientRect();
             timeBarWidth = timeBarRect.right - timeBarRect.left;
 
@@ -389,20 +388,31 @@
         // Listen to player playProgress event
         $element.on("playProgress", function(event, data){
           var timecode = findTimecode(data.time);
-          
-          $scope.$apply(function(){
+
+          function updateTime(){
             $scope.time = data.time;
             $scope.seenPercent = data.percent;
-            
-            if($scope.data.timecodes[timecode])
-              $scope.presentation = $scope.data.timecodes[timecode].image.large;
-          });
+
+            if($scope.timecodes[timecode])
+              $scope.presentation = $scope.timecodes[timecode].image.large;
+          }
+
+          // Make sure we're not on a digestion cycle
+          var phase = $scope.$root.$$phase;
+          if(phase === "$apply" || phase === "$digest")
+            updateTime();
+          else
+            $scope.$apply(updateTime);
+
         });
 
         // Listen to player end event
         $element.on("end", function(event){
           $scope.$apply(function(){
             $scope.time = $scope.seenPercent = 0;
+
+            if($scope.sortedTimecodes.length)
+              $scope.presentation = $scope.timePreview =  $scope.timecodes[$scope.sortedTimecodes[0].timecode].image.large;
           });
         });
 

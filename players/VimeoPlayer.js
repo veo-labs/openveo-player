@@ -13,7 +13,7 @@
   OvVimeoPlayer.$inject = ["OvPlayerInterface", "$window", "$document"];
   
   function OvVimeoPlayer(OvPlayerInterface, $window, $document){
-    
+
     /**
      * Creates a new VimeoPlayer.
      * @param Object jPlayerElement The JQLite HTML element corresponding
@@ -74,6 +74,12 @@
     VimeoPlayer.prototype.setTime = function(time){
       time = parseInt(time) || 0.1;
       postActionToPlayer.call(this, "seekTo", time / 1000);
+
+      // Send a playProgress event because the Vimeo flash player (old
+      // browsers) does not trigger the playProgress event while in pause
+      // as the HTML5 player does
+      if(!this.playing)
+        this.jPlayerElement.triggerHandler("playProgress", { "time" : time, "percent" : (time / this.duration) * 100 });
     };
     
     /**
@@ -126,7 +132,13 @@
             this.jPlayerElement.triggerHandler("loadProgress", data.data.percent * 100);
           break;
           case "playProgress":
-            this.jPlayerElement.triggerHandler("playProgress", { "time" : data.data.seconds * 1000, "percent" : data.data.percent * 100 });
+            
+            // In Internet Explorer 11 an extra "playProgress" event
+            // is emitted with a percent greater than 1, after the "end"
+            // event
+            if(data.data.percent <= 1)
+              this.jPlayerElement.triggerHandler("playProgress", { "time" : data.data.seconds * 1000, "percent" : data.data.percent * 100 });
+
           break;
           case "play":
             this.playing = 1;

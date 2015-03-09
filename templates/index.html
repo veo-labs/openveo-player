@@ -1,6 +1,6 @@
 <div class="ov-slides">
   <ul>
-    <li ng-repeat="timecodeObj in data.timecodes | orderTimeCodes" ng-mouseenter="setImagePreview(timecodeObj.timecode)" ng-click="goToTimecode(timecodeObj.timecode)" ng-class="{'ov-past-timecode' : timecodeObj.timecode < time}">
+    <li ng-repeat="timecodeObj in sortedTimecodes" ng-mouseenter="setImagePreview(timecodeObj.timecode)" ng-click="goToTimecode(timecodeObj.timecode)" ng-class="{'ov-past-timecode' : timecodeObj.timecode < time}">
       <img ng-src="{{timecodeObj.image.small}}"/>
       <p>{{timecodeObj.timecode | millisecondsToTime}}</p>
     </li>

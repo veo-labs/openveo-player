@@ -56,9 +56,9 @@ describe("VimeoPlayer", function(){
     
     // Simulate Vimeo player
     playerElement.contentWindow.postMessage = function(data){
-      if(data.value === "play"){
+      data = JSON.parse(data);
+      if(data.value === "play")
         jWindowElement.triggerHandler("message", {event : "play", player_id : "player_1"});
-      }
     };
 
     jWindowElement.triggerHandler("message", {event : "ready", player_id : "player_1"});
@@ -74,6 +74,7 @@ describe("VimeoPlayer", function(){
     
     // Simulate Vimeo player
     playerElement.contentWindow.postMessage = function(data){
+      data = JSON.parse(data);
       if(data.value === "pause"){
         jWindowElement.triggerHandler("message", {event : "pause", player_id : "player_1"});
       }
@@ -84,9 +85,10 @@ describe("VimeoPlayer", function(){
   });
   
   it("Should be able to change video volume", function(done){
-    
+
     // Simulate Vimeo player
     playerElement.contentWindow.postMessage = function(data){
+      data = JSON.parse(data);
       if(data.method === "setVolume"){
         assert.equal(data.value, 0.5);
         done();
@@ -98,9 +100,10 @@ describe("VimeoPlayer", function(){
   });
   
   it("Should be able to seek to video specific time", function(done){
-    
+
     // Simulate Vimeo player
     playerElement.contentWindow.postMessage = function(data){
+      data = JSON.parse(data);
       if(data.method === "seekTo"){
         assert.equal(data.value, 50);
         done();
