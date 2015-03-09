@@ -31,6 +31,7 @@
               <img ng-src="{{timePreview}}" />
             </div>
           </div>
+          <div class="ov-time-ghost ov-ghost"></div>
         </div>
       </div>
 
@@ -46,9 +47,10 @@
             </ul>
           </div>
           <div class="ov-icon-volume ov-button" ng-show="displayVolume"  ng-click="toggleVolume()">
-            <div class="ov-volume-bar" ng-show="volumeOpened" ng-click="setVolume($event)">
+            <div ng-show="volumeOpened" ng-click="setVolume($event)">
               <div class="ov-volume-preview" ng-style="{'height' : volumePreview + '%'}"></div>
               <div class="ov-volume" ng-style="{'height' : volume + '%'}"></div>
+              <div class="ov-volume-ghost ov-ghost"></div>
             </div>
           </div>
           <div class="ov-icon-{{fullscreenButton}} ov-button" ng-show="displayFullscreen" ng-click="toggleFullscreen()"></div>

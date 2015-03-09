@@ -130,6 +130,7 @@ nav li.ov-selected{ border-top: 5px solid #1bbbe9; }
 .ov-time-bar > div{ position: relative; height: 100%; cursor: pointer; background-color: #666; }
 .ov-seen{ position: absolute; width: 50%; height: 100%; background-color: #1bbbe9; }
 .ov-loaded{ position: absolute; width: 70%; height: 100%; background-color: #3d3932; }
+.ov-ghost{ position: absolute; width: 100%; height: 100%; }
 .ov-cursor{ position: absolute; top: 0; height:100%; width: 2px; background-color: #fff; }
 .ov-cursor > div{ position: absolute; top: -130px; left: -65px; width: 130px; height: 100px; padding: 5px; border: 1px solid #3d3932; border-radius: 5px; background-color: #fff; }
 .ov-cursor img{ width: 130px; height: 100px; }

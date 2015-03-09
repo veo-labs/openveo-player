@@ -40,8 +40,8 @@
         var document = $document[0];
         var element = $element[0];
         var rootElement = $element.children()[0];
-        var timeBar = element.getElementsByClassName("ov-time-bar")[0];
-        var volumeBar = element.getElementsByClassName("ov-volume-bar")[0];
+        var timeBar = element.getElementsByClassName("ov-time-ghost")[0];
+        var volumeBar = element.getElementsByClassName("ov-volume-ghost")[0];
         var timeBarRect = timeBar.getBoundingClientRect();
         var timeBarWidth = timeBarRect.right - timeBarRect.left;        
         this.player = null;
@@ -289,7 +289,7 @@
          */
         function volumeMouseOut(){
           $document.off("mousemove", volumeMouseMove);
-          $document.off("mouseout", volumeMouseOut);
+          angular.element(volumeBar).off("mouseout", volumeMouseOut);
 
           $scope.$apply(function(){
             $scope.volumePreview = 0;
@@ -308,7 +308,7 @@
             if($scope.data.timecodes[timecode])
               $scope.timePreview = $scope.data.timecodes[timecode].image.small;
 
-            $scope.timePreviewPosition = Math.round(((event.pageX - timeBarRect.left) / timeBarWidth) * 100);
+            $scope.timePreviewPosition = ((event.pageX - timeBarRect.left) / timeBarWidth) * 100;
           });
         };
 
@@ -316,9 +316,9 @@
          * Handles mouse out events on time bar area to reset the 
          * time preview and clear the event listeners.
          */
-        function timeMouseOut(){
+        function timeMouseOut(event){
           $document.off("mousemove", timeMouseMove);
-          $document.off("mouseout", timeMouseOut);
+          angular.element(timeBar).off("mouseout", timeMouseOut);
 
           $scope.$apply(function(){
             $scope.timePreviewPosition = 0;
@@ -335,7 +335,7 @@
           volumeBarRect = volumeBar.getBoundingClientRect();
           volumeBarHeight = volumeBarRect.bottom - volumeBarRect.top;
           $document.on("mousemove", volumeMouseMove);
-          $document.on("mouseout", volumeMouseOut);        
+          angular.element(volumeBar).on("mouseout", volumeMouseOut);
         });
 
         /**
@@ -347,8 +347,10 @@
           if(Object.keys($scope.data.timecodes).length){
             timeBarRect = timeBar.getBoundingClientRect();
             timeBarWidth = timeBarRect.right - timeBarRect.left;
+
+            timeMouseMove(event);
             $document.on("mousemove", timeMouseMove);
-            $document.on("mouseout", timeMouseOut);
+            angular.element(timeBar).on("mouseout", timeMouseOut);
 
             $scope.$apply(function(){
               $scope.timePreviewOpened = true;
