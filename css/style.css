@@ -141,7 +141,7 @@ nav li.ov-selected{ border-top: 5px solid #1bbbe9; }
 .ov-button:hover{ cursor: pointer; color: #1bbbe9; }
 
 /* Left buttons */
-.ov-buttons .ov-left{ display: table; position: absolute; left: 10px; font-size: 1.5em; height: 100%; line-height: 32px; }
+.ov-buttons .ov-left{ display: table; position: absolute; left: 10px; font-size: 1.5em; height: 100%; line-height: 36px; }
 
 /* Play button */
 .ov-icon-play{ display: table-cell; vertical-align: middle; }
