@@ -147,15 +147,15 @@ nav li.ov-selected{ border-top: 5px solid #1bbbe9; }
 .ov-icon-play{ display: table-cell; vertical-align: middle; }
 
 /* Right buttons */
-.ov-buttons .ov-right{ position: absolute; right: 10px; display: table; height: 100%; }
-.ov-right .ov-time, .ov-right > div{ display: table-cell; font-size: 1.5em; vertical-align: middle; padding: 0 5px; }
+.ov-buttons .ov-right{ position: absolute; right: 10px; height: 100%; }
+.ov-right .ov-time, .ov-right > div{ float: left; font-size: 1.5em; line-height: 32px; padding: 0 5px; }
 .ov-right .ov-time{ font-size: 1.1em; }
 .ov-time > span{ color: #aaa; }
 
 /* Mode button */
 .ov-right .ov-mode{ position: relative; font-size: 4em; line-height: 32px; }
 .ov-mode ul{ position: absolute; top: -140px; left: -3px; padding: 5px; border: 1px solid #1bbbe9; background-color: #000; border-radius: 3px; }
-.ov-right .ov-mode li{ line-height: 30px; }
+.ov-right .ov-mode li{ line-height: 30px; height: 30px; }
 
 /* Volume button */
 .ov-icon-volume{ position: relative; }
