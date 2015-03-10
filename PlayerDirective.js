@@ -27,16 +27,17 @@
       restrict : "E",
       templateUrl : ovPlayerDirectory + "/templates/player.html",
       scope : {
-        data : "=ovData",
-        displayFullscreen : "=?ovFullscreenIcon",
-        displayVolume : "=?ovVolumeIcon",
-        displayMode : "=?ovModeIcon",
-        displayTime : "=?ovTimeIcon",
-        fullscreen : "=?ovFullscreen"
+        ovData : "=",
+        ovFullscreenIcon : "=?",
+        ovVolumeIcon : "=?",
+        ovModeIcon : "=?",
+        ovTime : "=?",
+        ovFullViewport : "=?"
       },
       controller : ["$scope", "$element", "$attrs", function($scope, $element, $attrs){
         var self = this;
         var volumeBarRect, volumeBarHeight;
+        var fullscreen = false;
         var document = $document[0];
         var element = $element[0];
         var rootElement = $element.children()[0];
@@ -47,21 +48,22 @@
         var timeBarRect = timeBar.getBoundingClientRect();
         var timeBarWidth = timeBarRect.right - timeBarRect.left;        
         this.player = null;
-        
-        // Validate attributes
-        $scope.displayFullscreen = (typeof $scope.displayFullscreen === "undefined") ? true : $scope.displayFullscreen;
-        $scope.displayVolume = (typeof $scope.displayVolume === "undefined") ? true : $scope.displayVolume;
-        $scope.displayMode = (typeof $scope.displayMode === "undefined") ? true : $scope.displayMode;
-        $scope.displayTime = (typeof $scope.displayTime === "undefined") ? true : $scope.displayTime;
+
+        // Set default value for attributes
+        $scope.ovFullscreenIcon = (typeof $scope.ovFullscreenIcon === "undefined") ? true : $scope.ovFullscreenIcon;
+        $scope.ovVolumeIcon = (typeof $scope.ovVolumeIcon === "undefined") ? true : $scope.ovVolumeIcon;
+        $scope.ovModeIcon = (typeof $scope.ovModeIcon === "undefined") ? true : $scope.ovModeIcon;
+        $scope.ovTime = (typeof $scope.ovTime === "undefined") ? true : $scope.ovTime;
+        $scope.ovFullViewport = (typeof $scope.ovFullViewport === "undefined") ? false : $scope.ovFullViewport;
 
         /**
          * Initializes isolated scope properties.
          */
         function init(){
 
-          // Set scoped default values
-          $scope.data = $scope.data || {};
-          $scope.timecodes = angular.copy($scope.data.timecodes) || {};
+          // Set scope default values
+          $scope.data = angular.copy($scope.ovData) || {};
+          $scope.timecodes = $scope.data.timecodes || {};
           $scope.presentation = null;
           $scope.playerId = "player_" + $scope.data.videoId;
           $scope.timePreviewOpened = false;
@@ -79,20 +81,30 @@
           $scope.duration = 0;
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
-          $scope.displayModeButton = $scope.displayMode;
           $scope.sortedTimecodes = $filter("orderTimeCodes")($scope.timecodes);
 
+          // Full viewport and no FullScreen API available
+          // Consider the player as in fullscreen
+          if($scope.ovFullViewport && !implementFullScreenAPI()){
+            $scope.fullscreenButton = "reduce";
+            fullscreen = true;
+          }
+
           // Got timecodes associated to the video
+          // Use the first image of the first timecode as
+          // the current presentation image
           if($scope.sortedTimecodes.length){
             $scope.timePreview = $scope.presentation = $scope.sortedTimecodes[0].image.large;
           }
 
-          // No timecodes for the video
+          // No timecodes
+          // Without timecodes, the index can't be built
+          // It also means that the video has no associated presentation
           else{
             $scope.displayIndexTab = false;
             $scope.selectedMode = modes[0];
             $scope.modes = [modes[0]];
-            $scope.displayModeButton = false;
+            $scope.ovModeIcon = false;
           }
         };
 
@@ -104,7 +116,7 @@
           if($scope.data.type && $scope.data.videoId){
             $scope.videoTemplate = ovPlayerDirectory + "/templates/" +  $scope.data.type + ".html";
 
-            // Get an intance of a player depending on player's type
+            // Get an instance of a player depending on player's type
             switch($scope.data.type){
               case "vimeo" :
                 var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
@@ -124,7 +136,7 @@
         initPlayer();
 
         /**
-         * Toggles display mode selection.
+         * Toggles display mode selection list.
          * If the list of display modes is opened, close it, open it
          * otherwise.
          */
@@ -143,7 +155,7 @@
 
         /**
          * Toggles player full screen.
-         * If player is in full screen, reduce player to framed, 
+         * If player is in full screen, reduce player to frame,
          * otherwise, display player in full screen.
          */
         this.toggleFullscreen = $scope.toggleFullscreen = function(){
@@ -183,15 +195,15 @@
           }
           
           // Fullscreen API not available
-          // Use viewport fullscreen
+          // Use viewport fullscreen instead
           else{
-            $scope.fullscreen = !$scope.fullscreen;
-            $scope.fullscreenButton = $scope.fullscreen ? "reduce" : "enlarge";
+            fullscreen = $scope.ovFullViewport = !fullscreen;
+            $scope.fullscreenButton = fullscreen ? "reduce" : "enlarge";
           }
         };
 
         /**
-         * Sets the display mode. 
+         * Sets the display mode.
          * @param String mode The display mode to activate, available
          * display modes are available just before ovPlayer definition
          */
@@ -199,8 +211,9 @@
           $scope.selectedMode = mode;
         };
 
-        // Watch for data changes
-        $scope.$watch("data", function(){
+        // Watch for ov-data attribute changes
+        $scope.$watch("ovData", function(){
+          $scope.data = angular.copy($scope.ovData) || {};
 
           // Video id has changed
           if($scope.data.videoId && (!self.player || $scope.data.videoId != self.player.getVideoId())){
@@ -219,6 +232,15 @@
             initPlayer();
 
           }
+
+        });
+
+        // Watch for ov-mode-icon attribute changes
+        $scope.$watch("ovModeIcon", function(){
+
+          // Do not display mode icon if no timecodes are available
+          if(!$scope.sortedTimecodes.length && $scope.ovModeIcon)
+            $scope.ovModeIcon = false;
 
         });
 
@@ -253,8 +275,20 @@
         };
         
         /**
-         * Gets current timecode object corresponding to the given time.
-         * @param Number time The time to look for in milliseconds.
+         * Tests if browser implements the fullscreen API or not.
+         * @return true if fullscreen API is implemented, false otherwise
+         */
+        function implementFullScreenAPI(){
+          return (rootElement.requestFullScreen
+             || rootElement.mozRequestFullScreen
+             || rootElement.webkitRequestFullScreen
+             || rootElement.msRequestFullscreen);
+        }
+
+        /**
+         * Gets closest timecode, from the list of timecodes, to
+         * the given time.
+         * @param Number time The time to look for in milliseconds
          * @return Number The actual timecode for the given time
          */
         function findTimecode(time){
@@ -412,7 +446,7 @@
             $scope.time = $scope.seenPercent = 0;
 
             if($scope.sortedTimecodes.length)
-              $scope.presentation = $scope.timePreview =  $scope.timecodes[$scope.sortedTimecodes[0].timecode].image.large;
+              $scope.presentation = $scope.timecodes[$scope.sortedTimecodes[0].timecode].image.large;
           });
         });
 

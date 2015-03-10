@@ -13,8 +13,7 @@ body{ font-family: arial, sans-serif; font-size: 12px; }
  */
 .ov-player{ position: relative; height: 500px; overflow: hidden;}
 
-/* Full screen for older browsers */
-.ov-fullscreen, .ov-fullscreen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; }
+.ov-fullscreen > .ov-player{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
 /* Full screen for browsers who supports the fullscreen API */
 ov-player > div:full-screen, :full-screen .ov-player{ position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; }

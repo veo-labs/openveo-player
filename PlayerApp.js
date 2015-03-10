@@ -38,12 +38,15 @@
    *   }
    *   Note that small images must be at least 200 pixels width.
    *  - Boolean ov-fullscreen-icon true to display the 
-   *    enlarge/reduce icon
+   *    enlarge/reduce icon (CAUTION : It must be an assignable variable)
    *  - Boolean ov-volume-icon true to display the volume icon
+   *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-mode-icon true to display the display mode icon
-   *  - Boolean ov-time-icon true to display the actual time and duration
-   *  - Boolean ov-fullscreen true to display the player in full screen 
-   *    after loading
+   *    (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-time true to display the actual time and duration
+   *    (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-full-viewport true to display the player in
+   *    full viewport (CAUTION : It must be an assignable variable)
    *
    * e.g.
    * 
@@ -62,7 +65,14 @@
    *    }
    *  }
    *
-   * <ov-player ov-data="data" ov-fullscreen-icon="true" ov-volume="true" ov-mode="true" ov-time="true" ov-fullscreen="false"></ov-player>
+   * <ov-player 
+   *   ov-data="data"
+   *   ov-fullscreen-icon="displayFullscreenIcon"
+   *   ov-volume="displayVolumeIcon"
+   *   ov-mode="displayModeIcon"
+   *   ov-time="displayTime"
+   *   ov-full-viewport="fullViewport"
+   * ></ov-player>
    *
    * // The whole object can also be changed dynamically
    * $scope.data = 
@@ -86,7 +96,8 @@
    *  }
    *
    * CAUTION : To update the data of the player the whole object 
-   * must be changed.
+   * must be changed. There aren't any two way bindings on the data
+   * object properties.
    */
   var app = angular.module("ov.player", []);
   

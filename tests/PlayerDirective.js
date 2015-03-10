@@ -17,9 +17,12 @@ describe("PlayerDirective", function(){
     scope = $rootScope.$new();
   }));
 
-  it("Should define attributes ov-fullscreen-icon, ov-time-icon, ov-volume-icon, ov-mode-icon, ov-fullscreen, ov-data", function(){
+  it("Should define attributes ov-fullscreen-icon, ov-time, ov-volume-icon, ov-mode-icon, ov-fullscreen, ov-data", function(){
     
-    $rootScope.fullscreen = false;
+    $rootScope.fullViewport = false;
+    $rootScope.displayTime = true;
+    $rootScope.displayVolumeIcon = true;
+    $rootScope.displayModeIcon = true;
     $rootScope.data = {
       type : "vimeo",
       videoId : "1",
@@ -32,23 +35,50 @@ describe("PlayerDirective", function(){
         }
       }
     };
-    var element = angular.element("<ov-player ov-fullscreen-icon=\"true\" ov-fullscreen=\"fullscreen\" ov-time-icon=\"true\" ov-volume-icon=\"true\" ov-mode-icon=\"true\" ov-data=\"data\"></ov-player>");
+    
+    var element = angular.element("<ov-player ov-fullscreen-icon=\"true\" ov-full-viewport=\"fullViewport\" ov-time=\"displayTime\" ov-volume-icon=\"displayVolumeIcon\" ov-mode-icon=\"displayModeIcon\" ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
-    scope.$digest();    
+    scope.$digest();
     
     var isolateScope = element.isolateScope();
     assert.isDefined(isolateScope.data.timecodes);
     assert.isObject(isolateScope.data.timecodes);
-    assert.isDefined(isolateScope.displayFullscreen);
-    assert.isDefined(isolateScope.displayVolume);
-    assert.isDefined(isolateScope.displayMode);
-    assert.isDefined(isolateScope.displayTime);
-    assert.isDefined(isolateScope.fullscreen);
+    assert.isDefined(isolateScope.ovFullscreenIcon);
+    assert.isDefined(isolateScope.ovVolumeIcon);
+    assert.isDefined(isolateScope.ovModeIcon);
+    assert.isDefined(isolateScope.ovTime);
+    assert.isDefined(isolateScope.ovFullViewport);
+  });
+
+  it("Should display all icons and time if not specified", function(){
+    $rootScope.data = {
+      type : "vimeo",
+      videoId : "1",
+      timecodes : {
+        10 : {
+           image : {
+              small : "",
+              large : ""
+           }
+        }
+      }
+    };
+    var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    var isolateScope = element.isolateScope();
+    assert.ok(isolateScope.ovFullscreenIcon);
+    assert.ok(isolateScope.ovVolumeIcon);
+    assert.ok(isolateScope.ovTime);
+    assert.ok(isolateScope.ovModeIcon);
+    assert.notOk(isolateScope.ovFullViewport);
   });
   
   it("Should not display modes icon if no timecodes", function(){
     $rootScope.data = {};    
-    var element = angular.element("<ov-player ov-mode-icon=\"true\" ov-data=\"data\"></ov-player>");
+    $rootScope.displayModeIcon = true;
+    var element = angular.element("<ov-player ov-mode-icon=\"displayModeIcon\" ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
     scope.$digest();
     
@@ -64,7 +94,7 @@ describe("PlayerDirective", function(){
     
     var isolateScope = element.isolateScope();
     assert.notOk(isolateScope.displayIndexTab);
-  });  
+  });
   
   it("Should propose the video display mode if no timecodes", function(){
     $rootScope.data = {};
