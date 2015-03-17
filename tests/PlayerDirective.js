@@ -66,13 +66,10 @@ describe("PlayerDirective", function(){
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
     scope.$digest();
-
     var isolateScope = element.isolateScope();
     assert.ok(isolateScope.ovFullscreenIcon);
-    assert.ok(isolateScope.ovVolumeIcon);
     assert.ok(isolateScope.ovTime);
     assert.ok(isolateScope.ovModeIcon);
-    assert.notOk(isolateScope.ovFullViewport);
   });
   
   it("Should not display modes icon if no timecodes", function(){

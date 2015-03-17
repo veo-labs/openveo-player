@@ -40,7 +40,7 @@
           <span class="ov-icon-{{playPauseButton}} ov-button" ng-click="playPause()"></span>
         </div>
         <div class="ov-right">
-          <p class="ov-time" ng-show="ovTimeIcon">{{time | millisecondsToTime}} - <span>{{duration | millisecondsToTime}}</span></p>
+          <p class="ov-time" ng-show="ovTime">{{time | millisecondsToTime}} - <span>{{duration | millisecondsToTime}}</span></p>
           <div class="ov-icon-{{selectedMode}} ov-button ov-mode" ng-show="ovModeIcon" ng-click="toggleModes()">
             <ul ng-show="modesOpened">
               <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="ov-button ov-icon-{{mode}}"></li>
@@ -53,7 +53,7 @@
               <div class="ov-volume-ghost ov-ghost"></div>
             </div>
           </div>
-          <div class="ov-icon-{{fullscreenButton}} ov-button" ng-show="ovFullscreenIcon" ng-click="toggleFullscreen()"></div>
+          <div class="ov-icon-{{fullscreenButton}} ov-button ov-icon-fullscreen" ng-show="ovFullscreenIcon" ng-click="toggleFullscreen()"></div>
         </div>
       </div>
     </div>

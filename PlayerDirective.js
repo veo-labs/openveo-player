@@ -90,6 +90,10 @@
             fullscreen = true;
           }
 
+          // Video volume can't be changed on touch devices
+          if(isTouchDevice())
+            $scope.ovVolumeIcon = false;
+
           // Got timecodes associated to the video
           // Use the first image of the first timecode as
           // the current presentation image
@@ -244,6 +248,15 @@
 
         });
 
+        // Watch for ov-volume-icon attribute changes
+        $scope.$watch("ovVolumeIcon", function(){
+
+          // Video volume can't be changed on touch devices
+          if(isTouchDevice())
+            $scope.ovVolumeIcon = false;
+
+        });
+
         /**
          * Starts / Pauses the player.
          */
@@ -283,7 +296,16 @@
              || rootElement.mozRequestFullScreen
              || rootElement.webkitRequestFullScreen
              || rootElement.msRequestFullscreen);
-        }
+        };
+
+        /**
+         * Tests if device is a touch device.
+         * @return Boolean true if the device is a touch one, false
+         * otherwise
+         */
+        function isTouchDevice(){
+          return true == ("ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch);
+        };
 
         /**
          * Gets closest timecode, from the list of timecodes, to
