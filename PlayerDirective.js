@@ -444,6 +444,7 @@
         $element.on("end", function(event){
           $scope.$apply(function(){
             $scope.time = $scope.seenPercent = 0;
+            $scope.playPauseButton = "play";
 
             if($scope.sortedTimecodes.length)
               $scope.presentation = $scope.timecodes[$scope.sortedTimecodes[0].timecode].image.large;
