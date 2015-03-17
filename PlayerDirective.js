@@ -415,7 +415,7 @@
         // Listen to player loadProgress event
         $element.on("loadProgress", function(event, loadPercent){
           $scope.$apply(function(){
-            $scope.loadingPercent = loadPercent;
+            $scope.loadingPercent = Math.min(loadPercent, 100);
           });
         });
 
