@@ -171,7 +171,7 @@
      * iframe corresponding to the player.
      */
     function handleReady(){
-      this.postMessageTargetOrigin = $window.location.protocol + this.getPlayerUrl().split("?")[0];
+      this.postMessageTargetOrigin = "https:" + this.getPlayerUrl().split("?")[0];
       this.player = $document[0].getElementById(this.playerId);
       this.loaded = true;
       this.playing = 0;
