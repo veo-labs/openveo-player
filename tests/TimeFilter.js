@@ -2,16 +2,22 @@
 
 window.assert = chai.assert;
 
+// TimeFilter.js
 describe("TimeFilter", function(){
+  var millisecondsToTimeFilter, $filter;
   
+  // Load module player
   beforeEach(module("ov.player"));
   
-  var millisecondsToTimeFilter;
-
+  // Dependencies injections
   beforeEach(inject(function(_$filter_){
-    var $filter = _$filter_;
-    millisecondsToTimeFilter = $filter("millisecondsToTime");
+    $filter = _$filter_;
   }));
+
+  // Initializes tests
+  beforeEach(function(){
+    millisecondsToTimeFilter = $filter("millisecondsToTime");
+  });
 
   it("Should return an empty String if time < 0", function(){
     var emptyTime = millisecondsToTimeFilter(-1);

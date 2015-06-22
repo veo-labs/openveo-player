@@ -2,20 +2,22 @@
 
 window.assert = chai.assert;
 
+// IndexDirective.js
 describe("IndexDirective", function(){
+  var ovIndexLink, $rootScope, playerScope, indexScope;
   
+  // Load module player
   beforeEach(module("ov.player"));
 
-  var ovIndexLink, $rootScope;
-  
+  // Dependencies injections
   beforeEach(inject(function(_ovIndexLink_, _$rootScope_){
     $rootScope = _$rootScope_;
     ovIndexLink = _ovIndexLink_;
   }));
 
-  it("Should set image preview to the first one at initialization time", function(){ 
-
-    var playerScope = $rootScope.$new();
+  // Initializes tests
+  beforeEach(function(){
+    playerScope = $rootScope.$new();
     playerScope.data = {
       timecodes : {
         20 : {
@@ -26,47 +28,22 @@ describe("IndexDirective", function(){
       }
     };
     
-    var indexScope = playerScope.$new();
-    
+    indexScope = playerScope.$new();
+  });
+
+  it("Should set image preview to the first one at initialization time", function(){
     ovIndexLink(indexScope, null, null, null);
     assert.equal(indexScope.imagePreview, "largeFilePath");
   });
   
-  it("Should be able to change the image preview", function(){ 
-    
-    var playerScope = $rootScope.$new();
-    playerScope.data = {
-      timecodes : {
-        20 : {
-          image : {
-            large : "largeFilePath" 
-          }
-        }
-      }
-    };
-    
-    var indexScope = playerScope.$new();
-    
+  it("Should be able to change the image preview", function(){
     ovIndexLink(indexScope, null, null, null);
     indexScope.setImagePreview(20);
     assert.equal(indexScope.imagePreview, "largeFilePath");
-  });  
-  
+  });
+
   it("Should be able to ask player to seek to the given time", function(done){
-    
-    var playerScope = $rootScope.$new();
     playerScope.duration = 10000;
-    playerScope.data = {
-      timecodes : {
-        20 : {
-          image : {
-            large : "largeFilePath" 
-          }
-        }
-      }
-    };
-    
-    var indexScope = playerScope.$new();
     
     var playerController = {
       player : {

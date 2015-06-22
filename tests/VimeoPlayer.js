@@ -2,16 +2,22 @@
 
 window.assert = chai.assert;
 
+// VimeoPlayer.js
 describe("VimeoPlayer", function(){
+  var player, playerElement, $document, $injector, jWindowElement,$window;
   
+  // Load module player
   beforeEach(module("ov.player"));
   
-  var player, playerElement, $document, $injector, jWindowElement;
-
+  // Dependencies injections
   beforeEach(inject(function(_$injector_, _$document_, _$window_){
-    var $window = _$window_;
+    $window = _$window_;
     $injector = _$injector_;
     $document = _$document_;
+  }));
+
+  // Initializes tests
+  beforeEach(function(){
     jWindowElement = angular.element($window);
     playerElement = $document[0].createElement("div");
     playerElement.setAttribute("id", "player_1");
@@ -22,8 +28,9 @@ describe("VimeoPlayer", function(){
     var OvVimeoPlayer = $injector.get("OvVimeoPlayer"); 
     player = new OvVimeoPlayer(angular.element(playerElement), "player_1", "5");
     player.initialize();
-  }));
+  });
   
+  // Destroy player after each test
   afterEach(function(){
     $document[0].body.removeChild(playerElement);
     playerElement = null;

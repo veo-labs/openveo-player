@@ -2,21 +2,29 @@
 
 window.assert = chai.assert;
 
+// TabsDirective.js
 describe("TabsDirective", function(){
-  
-  beforeEach(module("ov.player"));
-  beforeEach(module("templates"));
-
   var $compile, $rootScope, element;
   
+  // Load modules player and templates (to mock templates)
+  beforeEach(function(){
+    module("ov.player")
+    module("templates")
+  });
+
+  // Dependencies injections
   beforeEach(inject(function(_$compile_, _$rootScope_){
     $rootScope = _$rootScope_;
     $compile = _$compile_;
+  }));
+
+  // Initializes tests
+  beforeEach(function(){
     var scope = $rootScope.$new(); 
     element = angular.element("<ov-tabs></ov-tabs>");
     element = $compile(element)(scope);
-    scope.$digest();    
-  }));
+    scope.$digest();
+  });
 
   it("Should be able to select a view", function(){
     var isolateScope = element.isolateScope();

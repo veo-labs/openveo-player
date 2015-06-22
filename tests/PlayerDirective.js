@@ -2,23 +2,30 @@
 
 window.assert = chai.assert;
 
+// PlayerDirective.js
 describe("PlayerDirective", function(){
-  
-  beforeEach(module("ov.player"));
-  beforeEach(module("templates"));
-
   var $compile, $rootScope, $injector, $sce, scope;
   
+  // Load modules player and templates (to mock templates)
+  beforeEach(function(){
+    module("ov.player")
+    module("templates")
+  });
+
+  // Dependencies injections
   beforeEach(inject(function(_$compile_, _$rootScope_, _$injector_, _$sce_){
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $injector = _$injector_;
     $sce = _$sce_;
-    scope = $rootScope.$new();
   }));
 
+  // Initializes tests
+  beforeEach(function(){
+    scope = $rootScope.$new();
+  });
+
   it("Should define attributes ov-fullscreen-icon, ov-time, ov-volume-icon, ov-mode-icon, ov-fullscreen, ov-data", function(){
-    
     $rootScope.fullViewport = false;
     $rootScope.displayTime = true;
     $rootScope.displayVolumeIcon = true;
@@ -183,21 +190,7 @@ describe("PlayerDirective", function(){
     var isolateScope = element.isolateScope();
     isolateScope.toggleVolume();
     assert.ok(isolateScope.volumeOpened);
-  });  
-
-  // Fullscreen API does not work on emulation
-/*  it("Should be able to toggle fullscreen", function(){
-    $rootScope.data = {};
-    var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
-    element = $compile(element)(scope);
-    scope.$digest();
-
-    var isolateScope = element.isolateScope();
-    isolateScope.toggleFullscreen();
-    assert.equal(isolateScope.fullscreenButton, "reduce");
-    isolateScope.toggleFullscreen();
-    assert.equal(isolateScope.fullscreenButton, "enlarge");
-  });*/
+  });
 
   it("Should be able to select a mode", function(){
     $rootScope.data = {};

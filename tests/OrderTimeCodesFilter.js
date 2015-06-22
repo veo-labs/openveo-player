@@ -2,12 +2,14 @@
 
 window.assert = chai.assert;
 
+// OrderTimeCodesFilter.js
 describe("OrderTimeCodesFilter", function(){
-  
-  beforeEach(module("ov.player"));
-  
   var orderTimeCodesFilter;
+  
+  // Load module player
+  beforeEach(module("ov.player"));
 
+  // Dependencies injections
   beforeEach(inject(function(_$filter_){
     var $filter = _$filter_;
     orderTimeCodesFilter = $filter("orderTimeCodes");
