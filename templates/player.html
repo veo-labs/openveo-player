@@ -42,12 +42,12 @@
         <div class="ov-right">
           <p class="ov-time" ng-show="ovTime">{{time | millisecondsToTime}} - <span>{{duration | millisecondsToTime}}</span></p>
           <div class="ov-icon-{{selectedMode}} ov-button ov-mode" ng-show="ovModeIcon" ng-click="toggleModes()">
-            <ul ng-show="modesOpened">
+            <ul ng-show="modesOpened" class="ov-modes-animate">
               <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="ov-button ov-icon-{{mode}}"></li>
             </ul>
           </div>
-          <div class="ov-icon-volume ov-button" ng-show="ovVolumeIcon"  ng-click="toggleVolume()">
-            <div ng-show="volumeOpened" ng-click="setVolume($event)">
+          <div class="ov-icon-volume ov-button" ng-show="ovVolumeIcon" ng-click="toggleVolume()">
+            <div ng-show="volumeOpened" class="ov-volume-animate" ng-click="setVolume($event)">
               <div class="ov-volume-preview" ng-style="{'height' : volumePreview + '%'}"></div>
               <div class="ov-volume" ng-style="{'height' : volume + '%'}"></div>
               <div class="ov-volume-ghost ov-ghost"></div>

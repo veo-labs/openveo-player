@@ -1,12 +1,6 @@
 body{ font-family: arial, sans-serif; font-size: 12px; }
 
 /*
- * Hide all angularsjs element with ng-hide class to avoid blink while
- * page loading.
- */
-.ng-hide{ display: none !important; }
-
-/*
  * *******************************
  * Player and player full screen.
  * *******************************
@@ -55,6 +49,10 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
  * *******************************
  */
 .ov-video-view{ width: 100%; height: 100%; background-color: #000; }
+.ov-video-view.ng-hide-add.ng-hide-add-active,
+.ov-video-view.ng-hide-remove.ng-hide-remove-active{ transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s; }
+.ov-video-view{ opacity: 1; }
+.ov-video-view.ng-hide{ opacity: 0; }
 
 /* Video part of the video view */
 .ov-video{ width: 100%; height: 100%; }
@@ -100,6 +98,10 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
  * *******************************
  */
 .ov-index-view{ width: 100%; height: 100%; background-color: #fff; }
+.ov-index-view.ng-hide-add.ng-hide-add-active,
+.ov-index-view.ng-hide-remove.ng-hide-remove-active{ position: absolute; top: 0; left: 0; transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s; }
+.ov-index-view{ opacity: 1; }
+.ov-index-view.ng-hide{ opacity: 0; }
 
 /*
  * Slides part of the index view.
@@ -167,6 +169,10 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
 @media(min-width: 768px){
   .ov-right .ov-mode{ display: block; }
 }
+.ov-modes-animate.ng-hide-add.ng-hide-add-active,
+.ov-modes-animate.ng-hide-remove.ng-hide-remove-active{ transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s; }
+.ov-modes-animate{ opacity: 1; }
+.ov-modes-animate.ng-hide{ opacity: 0; }
 
 /* Volume button */
 .ov-icon-volume{ display: none; position: relative; }
@@ -174,6 +180,10 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
 .ov-icon-volume .ov-volume, .ov-icon-volume .ov-volume-preview{ position: absolute; left: 0; bottom: 0; width: 100%; }
 .ov-icon-volume .ov-volume{ background-color: #1bbbe9; }
 .ov-icon-volume .ov-volume-preview{ background-color: #3d3932; }
+.ov-volume-animate.ng-hide-add.ng-hide-add-active,
+.ov-volume-animate.ng-hide-remove.ng-hide-remove-active{ transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s; }
+.ov-volume-animate{ opacity: 1; }
+.ov-volume-animate.ng-hide{ opacity: 0; }
 @media(min-width: 768px){
   .ov-icon-volume{ display: block; }
 }
