@@ -361,7 +361,7 @@
 
           $scope.$apply(function(){
             if($scope.timecodes[timecode])
-              $scope.timePreview = $scope.timecodes[timecode].image.small;
+              $scope.timePreview = $scope.timecodes[timecode].image.large;
 
             $scope.timePreviewPosition = ((event.pageX - timeBarRect.left) / timeBarWidth) * 100;
           });
