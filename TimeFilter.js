@@ -14,7 +14,7 @@
 
   function MillisecondsToTime(){
     return function(time){
-      if(time < 0)
+      if(time < 0 || isNaN(time))
         return "";
       
       var seconds = parseInt((time / 1000) % 60);
