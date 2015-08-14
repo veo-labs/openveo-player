@@ -11,7 +11,7 @@
    * PlayerApp.js file.
    */
   app.directive("ovPlayer", ovPlayer);
-  ovPlayer.$inject = ["$injector", "$document", "$sce", "$filter"];
+  ovPlayer.$inject = ["$injector", "$document", "$sce", "$filter", "$timeout"];
 
   // Available display modes
   // Display mode tells how presentation and video are structured
@@ -22,7 +22,7 @@
   //  - "presentation" mode : Only the presentation is displayed 
   var modes = ["video", "both", "both-presentation", "presentation"];
 
-  function ovPlayer($injector, $document, $sce, $filter){
+  function ovPlayer($injector, $document, $sce, $filter, $timeout){
     return{
       restrict : "E",
       templateUrl : ovPlayerDirectory + "/templates/player.html",
@@ -36,6 +36,7 @@
       },
       controller : ["$scope", "$element", "$attrs", function($scope, $element, $attrs){
         var self = this;
+        var modesTimeoutPromise, volumeTimeoutPromise;
         var volumeBarRect, volumeBarHeight;
         var fullscreen = false;
         var document = $document[0];
@@ -142,19 +143,35 @@
         /**
          * Toggles display mode selection list.
          * If the list of display modes is opened, close it, open it
-         * otherwise.
+         * otherwise. Close volume if opened.
+         * Automatically close display modes after 3 seconds.
          */
         this.toggleModes = $scope.toggleModes = function(){
+          if(modesTimeoutPromise)
+            $timeout.cancel(modesTimeoutPromise);
+
+          $scope.volumeOpened = false;
           $scope.modesOpened = !$scope.modesOpened;
+
+          if($scope.modesOpened)
+            modesTimeoutPromise = $timeout(function(){$scope.modesOpened = false}, 3000);
         };
 
         /**
          * Toggles the volume.
          * If the volume selector is opened, close it, open it 
-         * otherwise.
+         * otherwise. Close display modes if opened.
+         * Automatically close volume after 3 seconds.
          */
         this.toggleVolume = $scope.toggleVolume = function(){
+          if(volumeTimeoutPromise)
+            $timeout.cancel(volumeTimeoutPromise);
+
+          $scope.modesOpened = false;
           $scope.volumeOpened = !$scope.volumeOpened;
+
+          if($scope.volumeOpened)
+            volumeTimeoutPromise = $timeout(function(){$scope.volumeOpened = false}, 3000);
         };
 
         /**
