@@ -18,25 +18,55 @@
    * Available attributes are :
    *  - Object ov-data A data object as :
    *   {
-   *     "type" : "vimeo", // The player type
-   *     "id" : "34532ezr54sdf87", // The id of the video
-   *     "timecodes" : { // Timecodes
+   *     type : "vimeo", // The player type
+   *     videoId : "136081112", // The id of the video
+   *     timecodes : { // Timecodes
    *       0 : { // Timecode in milliseconds (0 ms)
-   *         "image" : { // Image to display at 0 ms
-   *           "small" : "slide_00000.jpeg", // Small version of the image
-   *           "large" : "slide_00000_large.jpeg" // Large version of the image
+   *         image : { // Image to display at 0 ms
+   *           small : "slide_00000.jpeg", // Small version of the image
+   *           large : "slide_00000_large.jpeg" // Large version of the image
    *         }
    *       },
    *       1200 : { // Timecode in milliseconds (1200 ms)
-   *         "image" : { // Image to display at 1200 ms
-   *           "small" : "slide_00001.jpeg", // Small version of the image
-   *           "large" : "slide_00001_large.jpeg" // Large version of the image
+   *         image : { // Image to display at 1200 ms
+   *           small : "slide_00001.jpeg", // Small version of the image
+   *           large : "slide_00001_large.jpeg" // Large version of the image
    *         }
    *       }
    *       ...
-   *     }
+   *     },
+   *     files : [ // The list of video files (required for "html" player)
+   *       {
+   *         width : 640, // Video width for this file
+   *         height : 360, // Video height for this file
+   *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Video url
+   *       },
+   *       {
+   *         width : 1280, // Video width for this file
+   *         height : 720, // Video height for this file
+   *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Video url
+   *       },
+   *       ...
+   *     ],
+   *     pictures : [ // The list of video thumbnails (required for "html" player)
+   *       {
+   *         width : 960,
+   *         height : 540,
+   *         link : "https://i.vimeocdn.com/video/530445364_960x540.jpg"
+   *       },
+   *       {
+   *         width : 1280,
+   *         height : 720,
+   *         link : "https://i.vimeocdn.com/video/530445364_1280x720.jpg"
+   *       }
+   *     ]
    *   }
-   *   Note that small images must be at least 200 pixels width.
+   *   nb : Note that small images must be at least 200 pixels width.
+   *  - String ov-player-type The type of player to use to play the video. It
+   *    can be either :
+   *      - html : To play the video using HTML player
+   *    If no player type is provided, ov-player will figure out which player
+   *    to use depending on the video type.
    *  - Boolean ov-fullscreen-icon true to display the 
    *    enlarge/reduce icon (CAUTION : It must be an assignable variable)
    *  - Boolean ov-volume-icon true to display the volume icon
@@ -72,6 +102,7 @@
    *   ov-mode="displayModeIcon"
    *   ov-time="displayTime"
    *   ov-full-viewport="fullViewport"
+   *   ov-player-type="html"
    * ></ov-player>
    *
    * // The whole object can also be changed dynamically

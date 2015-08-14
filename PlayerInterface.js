@@ -7,9 +7,15 @@
    * All players must implements the methods of this interface.
    * All events are dispatched to the given jPlayerElement.
    * The following events are emitted by the player : 
-   *  - "play" event
-   *  - "pause" event
-   *  - "loadProgress" event with the percentage load progress
+   *  - "play" : Player starts playing
+   *  - "pause" : Player pauses
+   *  - "loadProgress" : Player is buffering
+   *  - "playProgress" : Player is playing
+   *  - "ready" : Player is ready to play the media
+   *  - "durationChange" : Media duration has changed
+   *  - "end" : Media has reached the end
+   *  - "waiting" : Media is waiting for buffering
+   *  - "playing" : Media is ready to play after buffering
    *
    * e.g.
    * 
@@ -18,9 +24,23 @@
    * var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
    * var player = new OvVimeoPlayer(element, "player_id", "118786909");
    * 
-   * // Listen to "ready" event 
-   * element.on("ready", function(event, duration){
+   * // Listen to "ready" event
+   * element.on("ready", function(event){
    *   console.log("Player is ready");
+   * });
+   *
+   * // Listen to "waiting" event
+   * element.on("waiting", function(event){
+   *   console.log("Player is buffering");
+   * });
+   *
+   * // Listen to "playing" event
+   * element.on("playing", function(event){
+   *   console.log("Player has stopped buffering and can play");
+   * });
+   *
+   * // Listen to "durationChange" event
+   * element.on("durationChange", function(event, duration){
    *   console.log("Video duration " + duration);
    * });
    * 
@@ -35,8 +55,9 @@
    * });
    * 
    * // Listen to "loadProgress" event
-   * element.on("loadProgress", function(event, loadPercent){
-   *   console.log(loadPercent + " percents of the video loaded");
+   * element.on("loadProgress", function(event, data){
+   *   console.log("Loading started at" + data.loadedStart + " percents of the video");
+   *   console.log(data.loadedPercent + " percents of the video loaded");
    * });
    * 
    * // Listen to "playProgress" event
@@ -47,7 +68,7 @@
    * 
    * // Listen to "end" event
    * element.on("end", function(event){
-   *   console.log("Video has finished");
+   *   console.log("Video has reached the end");
    * }); 
    */
   app.factory("OvPlayerInterface", OvPlayer);
@@ -61,27 +82,76 @@
      * @param Object jPlayerElement The JQLite HTML element corresponding
      * to the HTML element which will receive events dispatched by
      * the player
-     * @param String playerId A unique id for the player, useful 
-     * if several players are available in the same page
-     * @param String videoId The vimeo id of the video
+     * @param Object video Details of the video
+     *   {
+     *     videoId : "136081112", // The id of the video
+     *     metadata : {
+     *      duration : 20 // Media duration in seconds
+     *     },
+     *     timecodes : { // Timecodes
+     *       0 : { // Timecode in milliseconds (0 ms)
+     *         image : { // Image to display at 0 ms
+     *           small : "slide_00000.jpeg", // Small version of the image
+     *           large : "slide_00000_large.jpeg" // Large version of the image
+     *         }
+     *       },
+     *       1200 : { // Timecode in milliseconds (1200 ms)
+     *         image : { // Image to display at 1200 ms
+     *           small : "slide_00001.jpeg", // Small version of the image
+     *           large : "slide_00001_large.jpeg" // Large version of the image
+     *         }
+     *       }
+     *       ...
+     *     }
+     *   }
      */
-    Player.prototype.init = function(jPlayerElement, playerId, videoId){
-      if(!jPlayerElement || !playerId || !videoId)
-        throw new Error("A player JQLite Element, a player id and a video id are expected as Player arguments");
+    Player.prototype.init = function(jPlayerElement, video){
+      if(!jPlayerElement || !video)
+        throw new Error("A player JQLite Element and a video object are expected as Player arguments");
       
       this.jPlayerElement = jPlayerElement;
-      this.playerId = playerId;
-      this.videoId = videoId;
+      this.video = video;
+      this.playerId = "player_" + this.video.videoId;
     };
 
     /**
-     * Gets player url.
-     * @return String The player url
+     * Gets video timecodes.
+     * @return Object The video timecodes
      */
-    Player.prototype.getPlayerUrl = function(){throw new Error("getPlayerUrl method not implemented for this player");};
+    Player.prototype.getVideoTimecodes = function(){
+      return this.video.timecodes;
+    };
 
     /**
-     * Intitializes the player.
+     * Gets video id.
+     * @return String The video id
+     */
+    Player.prototype.getVideoId = function(){
+      return this.video.videoId;
+    };
+
+    /**
+     * Gets player id.
+     * @return String The player id
+     */
+    Player.prototype.getId = function(){
+      return this.playerId;
+    };
+
+    /**
+     * Gets video url.
+     * @return String The video url
+     */
+    Player.prototype.getVideoUrl = function(){throw new Error("getVideoUrl method not implemented for this player");};
+    
+    /**
+     * Gets video thumbnail.
+     * @return String The video thumbnail
+     */
+    Player.prototype.getVideoThumbnail = function(){throw new Error("getVideoThumbnail method not implemented for this player");};
+    
+    /**
+     * Inititializes the player after DOM is loaded.
      */
     Player.prototype.initialize = function(){throw new Error("initialize method not implemented for this player");};
     
@@ -100,13 +170,7 @@
      * Sets time.
      * @param Number time The time to seek to in milliseconds
      */
-    Player.prototype.setTime = function(time){throw new Error("setTime method not implemented for this player");};    
-    
-    /**
-     * Gets video id.
-     * @return String The video id
-     */
-    Player.prototype.getVideoId = function(){throw new Error("getVideoId method not implemented for this player");};    
+    Player.prototype.setTime = function(time){throw new Error("setTime method not implemented for this player");};
     
     /**
      * Gets player type.

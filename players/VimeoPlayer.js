@@ -18,39 +18,60 @@
      * Creates a new VimeoPlayer.
      * @param Object jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param String playerId A unique id for the player, useful 
-     * if several players are available in the same page
-     * @param String videoId The vimeo id of the video
+     * @param Object video Details of the video
+     *   {
+     *     videoId : "136081112", // The id of the video
+     *     metadata : {
+     *      duration : 20 // Media duration in seconds
+     *     },
+     *     timecodes : { // Timecodes
+     *       0 : { // Timecode in milliseconds (0 ms)
+     *         image : { // Image to display at 0 ms
+     *           small : "slide_00000.jpeg", // Small version of the image
+     *           large : "slide_00000_large.jpeg" // Large version of the image
+     *         }
+     *       },
+     *       1200 : { // Timecode in milliseconds (1200 ms)
+     *         image : { // Image to display at 1200 ms
+     *           small : "slide_00001.jpeg", // Small version of the image
+     *           large : "slide_00001_large.jpeg" // Large version of the image
+     *         }
+     *       }
+     *       ...
+     *     }
+     *   }
      */
-    function VimeoPlayer(jPlayerElement, playerId, videoId){
-      OvPlayerInterface.prototype.init.call(this, jPlayerElement, playerId, videoId);
+    function VimeoPlayer(jPlayerElement, video){
+      OvPlayerInterface.prototype.init.call(this, jPlayerElement, video);
+      initialize.call(this);
     }
 
     VimeoPlayer.prototype = new OvPlayerInterface();
     VimeoPlayer.prototype.constructor = VimeoPlayer;
 
     /**
-     * Gets player url.
-     * @return String The player url
+     * Gets video url.
+     * @return String The video url
      */
-    VimeoPlayer.prototype.getPlayerUrl = function(){
-      return "//player.vimeo.com/video/" + this.videoId + "?api=1&player_id=" + this.playerId;
+    VimeoPlayer.prototype.getVideoUrl = function(){
+      return "//player.vimeo.com/video/" + this.video.videoId + "?api=1&player_id=" + this.playerId;
+    };
+
+    /**
+     * Gets video thumbnail.
+     * No need to manage the thumbnail it is already done by the Vimeo player.
+     *
+     * @return null
+     */
+    VimeoPlayer.prototype.getVideoThumbnail = function(){
+      return null;
     };
 
     /**
      * Intitializes the player.
-     * Vimeo player uses postMessage API to be able to communicate with 
-     * the player. 
-     * Before doing anything on the Vimeo player the ready event
-     * must be handled.
+     * Nothing to do, the player is already initialized.
      */
-    VimeoPlayer.prototype.initialize = function(){
-      this.loaded = false;
-
-      // Handle post messages
-      this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
-      angular.element($window).on("message", this.handlePlayerEventsFn);
-    };
+    VimeoPlayer.prototype.initialize = function(){};
 
     /**
      * Plays or pauses the video depending on video actual state.
@@ -83,14 +104,6 @@
     };
     
     /**
-     * Gets video id.
-     * @return String The video id
-     */
-    VimeoPlayer.prototype.getVideoId = function(){
-      return this.videoId;
-    };
-    
-    /**
      * Gets player type.
      * @return String A string representation of the player type
      */
@@ -110,6 +123,21 @@
     };
 
     /**
+     * Inititializes the player.
+     * Vimeo player uses postMessage API to be able to communicate with
+     * the player.
+     * Before doing anything on the Vimeo player the ready event
+     * must be handled.
+     */
+     function initialize(){
+       this.loaded = false;
+
+       // Handle post messages
+       this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
+       angular.element($window).on("message", this.handlePlayerEventsFn);
+     };
+
+    /**
      * Handles all player post messages.
      * @param MessageEvent/Event event The post message
      * @param Object data If post messages are not implemented, a simple
@@ -124,13 +152,24 @@
 
         // Events
         switch(data.event){
+
+          // Player is ready to accept commands
           case "ready":
             handleReady.call(this);
             postActionToPlayer.call(this, "getDuration");
+            this.jPlayerElement.triggerHandler("ready");
           break;
+
+          // Video is loading
           case "loadProgress":
-            this.jPlayerElement.triggerHandler("loadProgress", data.data.percent * 100);
+
+            // No indication about the playback position of the loading
+            // percentage, assume it to be 0
+            this.jPlayerElement.triggerHandler("loadProgress", {"loadedStart" : 0, "loadedPercent" : data.data.percent * 100});
+
           break;
+
+          // Video is playing
           case "playProgress":
             
             // In Internet Explorer 11 an extra "playProgress" event
@@ -140,14 +179,20 @@
               this.jPlayerElement.triggerHandler("playProgress", { "time" : data.data.seconds * 1000, "percent" : data.data.percent * 100 });
 
           break;
+
+          // Video begins to play
           case "play":
             this.playing = 1;
             this.jPlayerElement.triggerHandler("play");
           break;      
+
+          // Video pauses
           case "pause":
             this.playing = 0;
             this.jPlayerElement.triggerHandler("pause");
           break;
+
+          // Video playback reaches the end
           case "finish":
             this.playing = 0;
             this.jPlayerElement.triggerHandler("end");
@@ -158,7 +203,7 @@
         switch(data.method){
           case "getDuration":
             this.duration = data.value * 1000;
-            this.jPlayerElement.triggerHandler("ready", this.duration);
+            this.jPlayerElement.triggerHandler("durationChange", this.duration);
           break;
         }
       }
@@ -171,7 +216,7 @@
      * iframe corresponding to the player.
      */
     function handleReady(){
-      this.postMessageTargetOrigin = "https:" + this.getPlayerUrl().split("?")[0];
+      this.postMessageTargetOrigin = "https:" + this.getVideoUrl().split("?")[0];
       this.player = $document[0].getElementById(this.playerId);
       this.loaded = true;
       this.playing = 0;

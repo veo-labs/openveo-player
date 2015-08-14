@@ -6,6 +6,7 @@
       <div class="ov-views">
         <ov-view title="Vidéo" view="ov-video-view" class="ov-mode-{{selectedMode}}" view-id="video">
           <div class="ov-video">
+            <div class="ov-loader" ng-show="loading" ng-bind="'Loading...'"></div>
             <ng-include src="videoTemplate"></ng-include>
           </div>
           <div class="ov-presentation">
@@ -24,7 +25,7 @@
 
       <div class="ov-time-bar" ng-click="setTime($event)">
         <div>
-          <div class="ov-loaded" ng-style="{'width' : loadingPercent + '%'}"></div>
+          <div class="ov-loaded" ng-style="{'left' : loadedStart + '%','width' : loadedPercent + '%'}"></div>
           <div class="ov-seen" ng-style="{'width' : seenPercent + '%'}"></div>
           <div class="ov-cursor" ng-style="{'left' : timePreviewPosition  + '%'}" ng-show="timePreviewOpened">
             <div>

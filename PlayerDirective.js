@@ -32,7 +32,8 @@
         ovVolumeIcon : "=?",
         ovModeIcon : "=?",
         ovTime : "=?",
-        ovFullViewport : "=?"
+        ovFullViewport : "=?",
+        ovPlayerType : "=?"
       },
       controller : ["$scope", "$element", "$attrs", function($scope, $element, $attrs){
         var self = this;
@@ -58,15 +59,20 @@
         $scope.ovFullViewport = (typeof $scope.ovFullViewport === "undefined") ? false : $scope.ovFullViewport;
 
         /**
-         * Initializes isolated scope properties.
+         * Initializes isolated scope properties and player.
          */
         function init(){
 
           // Set scope default values
           $scope.data = angular.copy($scope.ovData) || {};
-          $scope.timecodes = $scope.data.timecodes || {};
+          initPlayer();
+
+          if(!self.player)
+            return;
+
+          $scope.timecodes = self.player.getVideoTimecodes() || {};
           $scope.presentation = null;
-          $scope.playerId = "player_" + $scope.data.videoId;
+          $scope.playerId = self.player.getId();
           $scope.timePreviewOpened = false;
           $scope.volumeOpened = false;
           $scope.modesOpened = false;
@@ -75,14 +81,18 @@
           $scope.playPauseButton = "play";
           $scope.fullscreenButton = "enlarge";
           $scope.volumePreview = 0;
-          $scope.volume = 25;
-          $scope.loadingPercent = 0;
+          $scope.volume = 100;
+          $scope.loadedStart = 0;
+          $scope.loadedPercent = 0;
           $scope.seenPercent = 0;
           $scope.time = 0;
           $scope.duration = 0;
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
           $scope.sortedTimecodes = $filter("orderTimeCodes")($scope.timecodes);
+          $scope.videoUrl = $sce.trustAsResourceUrl(self.player.getVideoUrl());
+          $scope.videoThumbnail = self.player.getVideoThumbnail();
+          $scope.loading = false;
 
           // Full viewport and no FullScreen API available
           // Consider the player as in fullscreen
@@ -119,26 +129,25 @@
         function initPlayer(){
           
           if($scope.data.type && $scope.data.videoId){
-            $scope.videoTemplate = ovPlayerDirectory + "/templates/" +  $scope.data.type + ".html";
+            var playerType = $scope.ovPlayerType || $scope.data.type;
+            $scope.videoTemplate = ovPlayerDirectory + "/templates/" +  playerType + ".html";
 
             // Get an instance of a player depending on player's type
-            switch($scope.data.type){
+            switch(playerType.toLowerCase()){
               case "vimeo" :
                 var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
-                self.player = new OvVimeoPlayer($element, $scope.playerId, $scope.data.videoId);
+                self.player = new OvVimeoPlayer($element, $scope.data);
+              break;
+              case "html" :
+                var OvHTMLPlayer = $injector.get("OvHTMLPlayer");
+                self.player = new OvHTMLPlayer($element, $scope.data);
               break;
             }
 
-            // Initialize player
-            self.player.initialize();
-
-            // Set video url
-            $scope.videoUrl = $sce.trustAsResourceUrl(self.player.getPlayerUrl());
           }
         }
         
         init();
-        initPlayer();
 
         /**
          * Toggles display mode selection list.
@@ -232,6 +241,16 @@
           $scope.selectedMode = mode;
         };
 
+        // Listen to player template loaded event
+        $scope.$on("$includeContentLoaded", function(){
+          $timeout(function(){
+
+            // Initialize player
+            self.player.initialize();
+
+          }, 1);
+        });
+
         // Watch for ov-data attribute changes
         $scope.$watch("ovData", function(){
           $scope.data = angular.copy($scope.ovData) || {};
@@ -246,11 +265,8 @@
 
             }
 
-            // Reset all scope properties
+            // Reset all
             init();
-
-            // Initialize a new player
-            initPlayer();
 
           }
 
@@ -260,7 +276,7 @@
         $scope.$watch("ovModeIcon", function(){
 
           // Do not display mode icon if no timecodes are available
-          if(!$scope.sortedTimecodes.length && $scope.ovModeIcon)
+          if($scope.sortedTimecodes && !$scope.sortedTimecodes.length && $scope.ovModeIcon)
             $scope.ovModeIcon = false;
 
         });
@@ -431,7 +447,28 @@
         });
 
         // Listen to player ready event
-        $element.on("ready", function(event, duration){
+        $element.on("ready", function(event){
+          $scope.$apply(function(){
+            self.player.setVolume(100);
+          });
+        });
+
+        // Listen to player waiting event
+        $element.on("waiting", function(event){
+          $scope.$apply(function(){
+            $scope.loading = true;
+          });
+        });
+
+        // Listen to player playing event
+        $element.on("playing", function(event){
+          $scope.$apply(function(){
+            $scope.loading = false;
+          });
+        });
+
+        // Listen to player durationChange event
+        $element.on("durationChange", function(event, duration){
           $scope.$apply(function(){
             $scope.duration = duration;
           });
@@ -452,9 +489,10 @@
         });
 
         // Listen to player loadProgress event
-        $element.on("loadProgress", function(event, loadPercent){
+        $element.on("loadProgress", function(event, percents){
           $scope.$apply(function(){
-            $scope.loadingPercent = Math.min(loadPercent, 100);
+            $scope.loadedStart = Math.min(percents.loadedStart, 100);
+            $scope.loadedPercent = Math.min(percents.loadedPercent, 100);
           });
         });
 

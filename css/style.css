@@ -56,7 +56,7 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
 
 /* Video part of the video view */
 .ov-video{ width: 100%; height: 100%; }
-.ov-video iframe{ width: 100%; height: 100%; }
+.ov-video iframe, .ov-video video{ width: 100%; height: 100%; }
 .ov-mode-presentation .ov-video{ display: none; }
 
 /* 
@@ -193,3 +193,6 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
 @media(min-width: 768px){
   .ov-icon-fullscreen{ display: block; }
 }
+
+/* Loader */
+.ov-loader{ position: absolute; bottom: 10px; left: 10px; color: #fff; }
