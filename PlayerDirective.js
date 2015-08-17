@@ -33,7 +33,7 @@
         ovModeIcon : "=?",
         ovTime : "=?",
         ovFullViewport : "=?",
-        ovPlayerType : "=?"
+        ovPlayerType : "@?"
       },
       controller : ["$scope", "$element", "$attrs", function($scope, $element, $attrs){
         var self = this;
@@ -128,8 +128,8 @@
          */
         function initPlayer(){
           
-          if($scope.data.type && $scope.data.videoId){
-            var playerType = $scope.ovPlayerType || $scope.data.type;
+          if($scope.data.videoId){
+            var playerType = $scope.ovPlayerType || $scope.data.type || "html";
             $scope.videoTemplate = ovPlayerDirectory + "/templates/" +  playerType + ".html";
 
             // Get an instance of a player depending on player's type
