@@ -4,10 +4,10 @@
     <ov-tabs>
 
       <div class="ov-views">
-        <ov-view title="Vidéo" view="ov-video-view" class="ov-mode-{{selectedMode}}" view-id="video">
-          <div class="ov-video">
+        <ov-view title="Vidéo" view="ov-media-view" class="ov-mode-{{selectedMode}}" view-id="media">
+          <div class="ov-media">
             <div class="ov-loader" ng-show="loading" ng-bind="'Loading...'"></div>
-            <ng-include src="videoTemplate"></ng-include>
+            <ng-include src="mediaTemplate"></ng-include>
           </div>
           <div class="ov-presentation">
             <div ng-style="{'background-image': presentation ? 'url(' + presentation + ')' : 'none'}"></div>

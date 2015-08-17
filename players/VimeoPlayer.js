@@ -18,9 +18,9 @@
      * Creates a new VimeoPlayer.
      * @param Object jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param Object video Details of the video
+     * @param Object media Details of the media
      *   {
-     *     videoId : "136081112", // The id of the video
+     *     mediaId : "136081112", // The id of the media
      *     metadata : {
      *      duration : 20 // Media duration in seconds
      *     },
@@ -41,8 +41,8 @@
      *     }
      *   }
      */
-    function VimeoPlayer(jPlayerElement, video){
-      OvPlayerInterface.prototype.init.call(this, jPlayerElement, video);
+    function VimeoPlayer(jPlayerElement, media){
+      OvPlayerInterface.prototype.init.call(this, jPlayerElement, media);
       initialize.call(this);
     }
 
@@ -50,20 +50,20 @@
     VimeoPlayer.prototype.constructor = VimeoPlayer;
 
     /**
-     * Gets video url.
-     * @return String The video url
+     * Gets media url.
+     * @return String The media url
      */
-    VimeoPlayer.prototype.getVideoUrl = function(){
-      return "//player.vimeo.com/video/" + this.video.videoId + "?api=1&player_id=" + this.playerId;
+    VimeoPlayer.prototype.getMediaUrl = function(){
+      return "//player.vimeo.com/video/" + this.media.mediaId + "?api=1&player_id=" + this.playerId;
     };
 
     /**
-     * Gets video thumbnail.
+     * Gets media thumbnail.
      * No need to manage the thumbnail it is already done by the Vimeo player.
      *
      * @return null
      */
-    VimeoPlayer.prototype.getVideoThumbnail = function(){
+    VimeoPlayer.prototype.getMediaThumbnail = function(){
       return null;
     };
 
@@ -74,7 +74,7 @@
     VimeoPlayer.prototype.initialize = function(){};
 
     /**
-     * Plays or pauses the video depending on video actual state.
+     * Plays or pauses the media depending on media actual state.
      */
     VimeoPlayer.prototype.playPause = function(){
       postActionToPlayer.call(this, this.playing ? "pause" : "play");
@@ -160,7 +160,7 @@
             this.jPlayerElement.triggerHandler("ready");
           break;
 
-          // Video is loading
+          // Media is loading
           case "loadProgress":
 
             // No indication about the playback position of the loading
@@ -169,7 +169,7 @@
 
           break;
 
-          // Video is playing
+          // Media is playing
           case "playProgress":
             
             // In Internet Explorer 11 an extra "playProgress" event
@@ -180,19 +180,19 @@
 
           break;
 
-          // Video begins to play
+          // Media begins to play
           case "play":
             this.playing = 1;
             this.jPlayerElement.triggerHandler("play");
           break;      
 
-          // Video pauses
+          // Media pauses
           case "pause":
             this.playing = 0;
             this.jPlayerElement.triggerHandler("pause");
           break;
 
-          // Video playback reaches the end
+          // Media playback reaches the end
           case "finish":
             this.playing = 0;
             this.jPlayerElement.triggerHandler("end");
@@ -216,7 +216,7 @@
      * iframe corresponding to the player.
      */
     function handleReady(){
-      this.postMessageTargetOrigin = "https:" + this.getVideoUrl().split("?")[0];
+      this.postMessageTargetOrigin = "https:" + this.getMediaUrl().split("?")[0];
       this.player = $document[0].getElementById(this.playerId);
       this.loaded = true;
       this.playing = 0;

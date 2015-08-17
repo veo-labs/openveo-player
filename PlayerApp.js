@@ -18,8 +18,7 @@
    * Available attributes are :
    *  - Object ov-data A data object as :
    *   {
-   *     type : "vimeo", // The player type
-   *     videoId : "136081112", // The id of the video
+   *     mediaId : "136081112", // The id of the media
    *     timecodes : { // Timecodes
    *       0 : { // Timecode in milliseconds (0 ms)
    *         image : { // Image to display at 0 ms
@@ -35,20 +34,20 @@
    *       }
    *       ...
    *     },
-   *     files : [ // The list of video files (required for "html" player)
+   *     files : [ // The list of media files (only for "html" player)
    *       {
-   *         width : 640, // Video width for this file
-   *         height : 360, // Video height for this file
-   *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Video url
+   *         width : 640, // Media width for this file
+   *         height : 360, // Media height for this file
+   *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Media url
    *       },
    *       {
-   *         width : 1280, // Video width for this file
-   *         height : 720, // Video height for this file
-   *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Video url
+   *         width : 1280, // Media width for this file
+   *         height : 720, // Media height for this file
+   *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Media url
    *       },
    *       ...
    *     ],
-   *     pictures : [ // The list of video thumbnails (required for "html" player)
+   *     pictures : [ // The list of media thumbnails (only for "html" player)
    *       {
    *         width : 960,
    *         height : 540,
@@ -62,11 +61,11 @@
    *     ]
    *   }
    *   nb : Note that small images must be at least 200 pixels width.
-   *  - String ov-player-type The type of player to use to play the video. It
+   *  - String ov-player-type The type of player to use to play the media. It
    *    can be either :
-   *      - html : To play the video using HTML player
+   *      - html : To play the media using HTML player
    *    If no player type is provided, ov-player will figure out which player
-   *    to use depending on the video type.
+   *    to use depending on the media type.
    *  - Boolean ov-fullscreen-icon true to display the 
    *    enlarge/reduce icon (CAUTION : It must be an assignable variable)
    *  - Boolean ov-volume-icon true to display the volume icon

@@ -41,7 +41,7 @@
    *
    * // Listen to "durationChange" event
    * element.on("durationChange", function(event, duration){
-   *   console.log("Video duration " + duration);
+   *   console.log("Media duration " + duration);
    * });
    * 
    * // Listen to "play" event
@@ -56,19 +56,19 @@
    * 
    * // Listen to "loadProgress" event
    * element.on("loadProgress", function(event, data){
-   *   console.log("Loading started at" + data.loadedStart + " percents of the video");
-   *   console.log(data.loadedPercent + " percents of the video loaded");
+   *   console.log("Loading started at" + data.loadedStart + " percents of the media");
+   *   console.log(data.loadedPercent + " percents of the media loaded");
    * });
    * 
    * // Listen to "playProgress" event
    * element.on("playProgress", function(event, data){
    *   console.log("Actual time " + data.time);
-   *   console.log(data.percent + " percents of the video played");
+   *   console.log(data.percent + " percents of the media played");
    * });
    * 
    * // Listen to "end" event
    * element.on("end", function(event){
-   *   console.log("Video has reached the end");
+   *   console.log("Media has reached the end");
    * }); 
    */
   app.factory("OvPlayerInterface", OvPlayer);
@@ -82,9 +82,9 @@
      * @param Object jPlayerElement The JQLite HTML element corresponding
      * to the HTML element which will receive events dispatched by
      * the player
-     * @param Object video Details of the video
+     * @param Object media Details of the Media
      *   {
-     *     videoId : "136081112", // The id of the video
+     *     mediaId : "136081112", // The id of the media
      *     metadata : {
      *      duration : 20 // Media duration in seconds
      *     },
@@ -105,29 +105,29 @@
      *     }
      *   }
      */
-    Player.prototype.init = function(jPlayerElement, video){
-      if(!jPlayerElement || !video)
-        throw new Error("A player JQLite Element and a video object are expected as Player arguments");
+    Player.prototype.init = function(jPlayerElement, media){
+      if(!jPlayerElement || !media)
+        throw new Error("A player JQLite Element and a media object are expected as Player arguments");
       
       this.jPlayerElement = jPlayerElement;
-      this.video = video;
-      this.playerId = "player_" + this.video.videoId;
+      this.media = media;
+      this.playerId = "player_" + this.media.mediaId;
     };
 
     /**
-     * Gets video timecodes.
-     * @return Object The video timecodes
+     * Gets media timecodes.
+     * @return Object The media timecodes
      */
-    Player.prototype.getVideoTimecodes = function(){
-      return this.video.timecodes;
+    Player.prototype.getMediaTimecodes = function(){
+      return this.media.timecodes;
     };
 
     /**
-     * Gets video id.
-     * @return String The video id
+     * Gets media id.
+     * @return String The media id
      */
-    Player.prototype.getVideoId = function(){
-      return this.video.videoId;
+    Player.prototype.getMediaId = function(){
+      return this.media.mediaId;
     };
 
     /**
@@ -139,16 +139,16 @@
     };
 
     /**
-     * Gets video url.
-     * @return String The video url
+     * Gets media url.
+     * @return String The media url
      */
-    Player.prototype.getVideoUrl = function(){throw new Error("getVideoUrl method not implemented for this player");};
+    Player.prototype.getMediaUrl = function(){throw new Error("getMediaUrl method not implemented for this player");};
     
     /**
-     * Gets video thumbnail.
-     * @return String The video thumbnail
+     * Gets media thumbnail.
+     * @return String The media thumbnail
      */
-    Player.prototype.getVideoThumbnail = function(){throw new Error("getVideoThumbnail method not implemented for this player");};
+    Player.prototype.getMediaThumbnail = function(){throw new Error("getMediaThumbnail method not implemented for this player");};
     
     /**
      * Inititializes the player after DOM is loaded.
@@ -156,7 +156,7 @@
     Player.prototype.initialize = function(){throw new Error("initialize method not implemented for this player");};
     
     /**
-     * Plays or pauses the video depending on video actual state.
+     * Plays or pauses the media depending on media actual state.
      */
     Player.prototype.playPause = function(){throw new Error("play method not implemented for this player");};
     

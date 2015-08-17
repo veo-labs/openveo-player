@@ -14,13 +14,13 @@
   ovPlayer.$inject = ["$injector", "$document", "$sce", "$filter", "$timeout"];
 
   // Available display modes
-  // Display mode tells how presentation and video are structured
-  //  - "video" mode : Only the video is displayed
-  //  - "both" mode : Both video and presentation are displayed (50/50)
-  //  - "both-presentation" mode : Both video and presentation 
+  // Display mode tells how presentation and media are structured
+  //  - "media" mode : Only the media is displayed
+  //  - "both" mode : Both media and presentation are displayed (50/50)
+  //  - "both-presentation" mode : Both media and presentation
   //    are displayed with more interest on the presentation (25/75)
   //  - "presentation" mode : Only the presentation is displayed 
-  var modes = ["video", "both", "both-presentation", "presentation"];
+  var modes = ["media", "both", "both-presentation", "presentation"];
 
   function ovPlayer($injector, $document, $sce, $filter, $timeout){
     return{
@@ -70,7 +70,7 @@
           if(!self.player)
             return;
 
-          $scope.timecodes = self.player.getVideoTimecodes() || {};
+          $scope.timecodes = self.player.getMediaTimecodes() || {};
           $scope.presentation = null;
           $scope.playerId = self.player.getId();
           $scope.timePreviewOpened = false;
@@ -90,8 +90,8 @@
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
           $scope.sortedTimecodes = $filter("orderTimeCodes")($scope.timecodes);
-          $scope.videoUrl = $sce.trustAsResourceUrl(self.player.getVideoUrl());
-          $scope.videoThumbnail = self.player.getVideoThumbnail();
+          $scope.mediaUrl = $sce.trustAsResourceUrl(self.player.getMediaUrl());
+          $scope.mediaThumbnail = self.player.getMediaThumbnail();
           $scope.loading = false;
 
           // Full viewport and no FullScreen API available
@@ -101,11 +101,11 @@
             fullscreen = true;
           }
 
-          // Video volume can't be changed on touch devices
+          // Media volume can't be changed on touch devices
           if(isTouchDevice())
             $scope.ovVolumeIcon = false;
 
-          // Got timecodes associated to the video
+          // Got timecodes associated to the media
           // Use the first image of the first timecode as
           // the current presentation image
           if($scope.sortedTimecodes.length){
@@ -114,7 +114,7 @@
 
           // No timecodes
           // Without timecodes, the index can't be built
-          // It also means that the video has no associated presentation
+          // It also means that the media has no associated presentation
           else{
             $scope.displayIndexTab = false;
             $scope.selectedMode = modes[0];
@@ -128,9 +128,9 @@
          */
         function initPlayer(){
           
-          if($scope.data.videoId){
+          if($scope.data.mediaId){
             var playerType = $scope.ovPlayerType || $scope.data.type || "html";
-            $scope.videoTemplate = ovPlayerDirectory + "/templates/" +  playerType + ".html";
+            $scope.mediaTemplate = ovPlayerDirectory + "/templates/" +  playerType + ".html";
 
             // Get an instance of a player depending on player's type
             switch(playerType.toLowerCase()){
@@ -255,8 +255,8 @@
         $scope.$watch("ovData", function(){
           $scope.data = angular.copy($scope.ovData) || {};
 
-          // Video id has changed
-          if($scope.data.videoId && (!self.player || $scope.data.videoId != self.player.getVideoId())){
+          // Media id has changed
+          if($scope.data.mediaId && (!self.player || $scope.data.mediaId != self.player.getMediaId())){
 
             if(self.player){
 
@@ -284,7 +284,7 @@
         // Watch for ov-volume-icon attribute changes
         $scope.$watch("ovVolumeIcon", function(){
 
-          // Video volume can't be changed on touch devices
+          // Media volume can't be changed on touch devices
           if(isTouchDevice())
             $scope.ovVolumeIcon = false;
 

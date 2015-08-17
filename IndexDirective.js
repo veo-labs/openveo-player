@@ -41,7 +41,7 @@
       };
 
       /**
-       * Seeks video to the given timecode.
+       * Seeks media to the given timecode.
        * @param Number timecode The timecode to seek to
        */
       scope.goToTimecode = function(timecode){

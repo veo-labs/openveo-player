@@ -5,7 +5,7 @@
   /**
    * Creates an HTML player which observes OvPlayerInterface interface.
    * More information on HTML player
-   * at http://www.w3.org/TR/html5/embedded-content-0.html#the-video-element.
+   * at http://www.w3.org/TR/html5/embedded-content-0.html.
    */
   app.factory("OvHTMLPlayer", OvHTMLPlayer);
   OvHTMLPlayer.$inject = ["OvPlayerInterface", "$window", "$document"];
@@ -28,9 +28,9 @@
      * Creates a new HTMLPlayer.
      * @param Object jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param Object video Details about the video
+     * @param Object media Details about the media
      *   {
-     *     videoId : "136081112", // The id of the video
+     *     mediaId : "136081112", // The id of the media
      *     metadata : {
      *      duration : 20 // Media duration in seconds
      *     },     
@@ -49,20 +49,20 @@
      *       }
      *       ...
      *     },
-     *     files : [ // The list of video files (required for "html" player)
+     *     files : [ // The list of media files (required for "html" player)
      *       {
-     *         width : 640, // Video width for this file
-     *         height : 360, // Video height for this file
-     *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Video url
+     *         width : 640, // Media width for this file
+     *         height : 360, // Media height for this file
+     *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Media url
      *       },
      *       {
-     *         width : 1280, // Video width for this file
-     *         height : 720, // Video height for this file
-     *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Video url
+     *         width : 1280, // Media width for this file
+     *         height : 720, // Media height for this file
+     *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Media url
      *       },
      *       ...
      *     ],
-     *     pictures : [ // The list of video thumbnails (required for "html" player)
+     *     pictures : [ // The list of media thumbnails (required for "html" player)
      *       {
      *         width : 960,
      *         height : 540,
@@ -76,31 +76,31 @@
      *     ]
      *   }
      */
-    function HTMLPlayer(jPlayerElement, video){
-      OvPlayerInterface.prototype.init.call(this, jPlayerElement, video);
+    function HTMLPlayer(jPlayerElement, media){
+      OvPlayerInterface.prototype.init.call(this, jPlayerElement, media);
     }
 
     HTMLPlayer.prototype = new OvPlayerInterface();
     HTMLPlayer.prototype.constructor = HTMLPlayer;
 
     /**
-     * Gets video url.
-     * Get the lowest video quality.
+     * Gets media url.
+     * Get the lowest media quality.
      *
-     * @return String The video url
+     * @return String The media url
      */
-    HTMLPlayer.prototype.getVideoUrl = function(){
-      return this.video.files[0].link;
+    HTMLPlayer.prototype.getMediaUrl = function(){
+      return this.media.files[0].link;
     };
     
     /**
-     * Gets video thumbnail.
+     * Gets media thumbnail.
      * Get the higher thumbnail quality.
      *
-     * @return String The video thumbnail url
+     * @return String The media thumbnail url
      */
-    HTMLPlayer.prototype.getVideoThumbnail = function(){
-      return this.video.pictures && this.video.pictures.length && this.video.pictures[this.video.pictures.length - 1].link;
+    HTMLPlayer.prototype.getMediaThumbnail = function(){
+      return this.media.pictures && this.media.pictures.length && this.media.pictures[this.media.pictures.length - 1].link;
     };
 
     /**
@@ -121,12 +121,12 @@
       for(var i = 0 ; i < events.length ; i++)
         jPlayer.on(events[i], this.handlePlayerEventsFn);
       
-      // Start loading video
+      // Start loading media
       this.player.load();
     };
 
     /**
-     * Plays or pauses the video depending on video actual state.
+     * Plays or pauses the media depending on media actual state.
      */
     HTMLPlayer.prototype.playPause = function(){
       if(this.playing)
@@ -202,7 +202,7 @@
           
         // The duration attribute has just been updated
         case "durationchange":
-          var duration = this.player.duration || this.video.metadata && this.video.metadata.duration;
+          var duration = this.player.duration || this.media.metadata && this.media.metadata.duration;
           this.jPlayerElement.triggerHandler("durationChange", duration * 1000);
         break;
           
@@ -214,36 +214,36 @@
           this.jPlayerElement.triggerHandler("ready");
         break;
         
-        // Video is no longer paused
+        // Media is no longer paused
         case "play":
           this.playing = 1;
           this.jPlayerElement.triggerHandler("play");
         break;
           
-        // Video has been paused
+        // Media has been paused
         case "pause":
           this.playing = 0;
           this.jPlayerElement.triggerHandler("pause");
         break;    
         
-        // Video playback has reached the end
+        // Media playback has reached the end
         case "ended":
           this.playing = 0;
           this.jPlayerElement.triggerHandler("end");
         break;
           
-        // Video playback has stopped because the next frame is not available
+        // Media playback has stopped because the next frame is not available
         case "waiting":
           this.jPlayerElement.triggerHandler("waiting");
         break;
           
-        // Video playback is ready to start after being paused or delayed
+        // Media playback is ready to start after being paused or delayed
         // due to lack of media data
         case "playing":
           this.jPlayerElement.triggerHandler("playing");
         break;
           
-        // Video playback position has changed
+        // Media playback position has changed
         case "timeupdate":
           var playedPercent = (this.player.currentTime / this.player.duration) * 100;
           this.jPlayerElement.triggerHandler("playProgress", { "time" : this.player.currentTime * 1000, "percent" : playedPercent });

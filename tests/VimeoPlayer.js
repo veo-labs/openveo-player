@@ -28,7 +28,7 @@ describe("VimeoPlayer", function(){
     var OvVimeoPlayer = $injector.get("OvVimeoPlayer"); 
     player = new OvVimeoPlayer(angular.element(playerElement), {
       type : "vimeo",
-      videoId : "1",
+      mediaId : "1",
       timecodes : {}
     });
     player.initialize();
@@ -42,7 +42,7 @@ describe("VimeoPlayer", function(){
   });
 
   it("Should be able to build Vimeo player url", function(){ 
-    assert.equal(player.getVideoUrl(), "//player.vimeo.com/video/1?api=1&player_id=player_1");
+    assert.equal(player.getMediaUrl(), "//player.vimeo.com/video/1?api=1&player_id=player_1");
   });
   
   it("Should register to Vimeo player events", function(done){
@@ -58,7 +58,7 @@ describe("VimeoPlayer", function(){
     jWindowElement.triggerHandler("message", {event : "ready", player_id : "player_1"});
   });
   
-  it("Should be able to play the video", function(done){
+  it("Should be able to play the media", function(done){
     player.playing = 0;
     
     angular.element(playerElement).on("play", function(){
@@ -76,7 +76,7 @@ describe("VimeoPlayer", function(){
     player.playPause();
   });
   
-  it("Should be able to pause the video", function(done){
+  it("Should be able to pause the media", function(done){
     player.playing = 1;
     
     angular.element(playerElement).on("pause", function(){
@@ -95,7 +95,7 @@ describe("VimeoPlayer", function(){
     player.playPause();
   });
   
-  it("Should be able to change video volume", function(done){
+  it("Should be able to change media volume", function(done){
 
     // Simulate Vimeo player
     playerElement.contentWindow.postMessage = function(data){
@@ -111,7 +111,7 @@ describe("VimeoPlayer", function(){
     player.setVolume(50);
   });
   
-  it("Should be able to seek to video specific time", function(done){
+  it("Should be able to seek to media specific time", function(done){
 
     // Simulate Vimeo player
     playerElement.contentWindow.postMessage = function(data){
