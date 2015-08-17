@@ -1,4 +1,9 @@
-<video preload="none" id="{{playerId}}" poster="{{videoThumbnail}}">
+<video preload="none" id="{{playerId}}" poster="{{videoThumbnail}}" ng-click="playPause()">
   <source id="mp4" ng-src="{{videoUrl}}" type="video/mp4">
   <p>Your user agent does not support the HTML5 Video element.</p>
 </video>
+<div class="ov-overlay-play-button" ng-show="playPauseButton === 'play'">
+  <div>
+    <span class="ov-icon-{{playPauseButton}} ov-button" ng-click="playPause()"></span>
+  </div>
+</div>

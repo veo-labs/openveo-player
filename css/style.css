@@ -55,7 +55,7 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
 .ov-video-view.ng-hide{ opacity: 0; }
 
 /* Video part of the video view */
-.ov-video{ width: 100%; height: 100%; }
+.ov-video{ position: relative; width: 100%; height: 100%; }
 .ov-video iframe, .ov-video video{ width: 100%; height: 100%; }
 .ov-mode-presentation .ov-video{ display: none; }
 
@@ -153,8 +153,12 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
 /* Left buttons */
 .ov-buttons .ov-left{ display: table; position: absolute; left: 10px; font-size: 1.5em; height: 100%; line-height: 36px; }
 
-/* Play button */
+/* Play/pause button */
 .ov-icon-play{ display: table-cell; vertical-align: middle; }
+.ov-overlay-play-button{ display: table; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.ov-overlay-play-button > div{ display: table-cell; vertical-align: middle; text-align: center; }
+.ov-overlay-play-button .ov-button{ display: block; width: 20px; padding: 10px 20px 10px 16px; margin: 0 auto; font-size: 2em; background-color: #000; color: #fff; transition: background-color linear 0.2s; }
+.ov-overlay-play-button .ov-button:hover{ background-color: #1bbbe9; }
 
 /* Right buttons */
 .ov-buttons .ov-right{ position: absolute; right: 10px; height: 100%; }
