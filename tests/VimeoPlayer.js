@@ -26,7 +26,11 @@ describe("VimeoPlayer", function(){
     playerElement.contentWindow = { postMessage : function(data){}};
     
     var OvVimeoPlayer = $injector.get("OvVimeoPlayer"); 
-    player = new OvVimeoPlayer(angular.element(playerElement), "player_1", "5");
+    player = new OvVimeoPlayer(angular.element(playerElement), {
+      type : "vimeo",
+      videoId : "1",
+      timecodes : {}
+    });
     player.initialize();
   });
   
@@ -38,7 +42,7 @@ describe("VimeoPlayer", function(){
   });
 
   it("Should be able to build Vimeo player url", function(){ 
-    assert.equal(player.getPlayerUrl(), "//player.vimeo.com/video/5?api=1&player_id=player_1");
+    assert.equal(player.getVideoUrl(), "//player.vimeo.com/video/1?api=1&player_id=player_1");
   });
   
   it("Should register to Vimeo player events", function(done){
@@ -96,7 +100,8 @@ describe("VimeoPlayer", function(){
     // Simulate Vimeo player
     playerElement.contentWindow.postMessage = function(data){
       data = JSON.parse(data);
-      if(data.method === "setVolume"){
+
+      if(data.method === "setVolume" && data.value !== 1){
         assert.equal(data.value, 0.5);
         done();
       }

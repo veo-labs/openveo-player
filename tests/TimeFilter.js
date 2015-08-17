@@ -25,6 +25,12 @@ describe("TimeFilter", function(){
     assert.isString(emptyTime);
   });
   
+  it("Should return an empty String if time is undefined", function(){
+    var emptyTime = millisecondsToTimeFilter(undefined);
+    assert.notOk(emptyTime);
+    assert.isString(emptyTime);
+  });
+
   it("Should be able to convert milliseconds to hh:mm:ss", function(){
     var time = millisecondsToTimeFilter(8804555);
     assert.equal(time, "02:26:44");
