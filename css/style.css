@@ -24,7 +24,7 @@ ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player{ position: absolu
  */
 .ov-player nav{ display: none; position: absolute; top: 0; color: #fff; font-weight: bold; font-size: 1.1em; }
 .ov-player nav ul{ display: table; }
-.ov-player nav li{ display: table-cell; padding: 0 40px; line-height: 35px; border-top: 5px solid #fff; background-color: #3d3932; }
+.ov-player nav li{ display: table-cell; padding: 0 40px; line-height: 35px; background-color: #3d3932; }
 .ov-player nav li:hover{ border-top: 5px solid #1bbbe9; cursor: pointer; }
 .ov-player nav li.ov-selected{ border-top: 5px solid #1bbbe9; }
 @media(min-width: 768px){
