@@ -1,0 +1,31 @@
+{
+  "name": "openveo-player",
+  "version": "0.0.2",
+  "description": "TODO",
+  "private": true,
+  "keywords": [
+    "TODO"
+  ],
+  "homepage": "https://github.com/TODO",
+  "bugs": {
+    "url": "https://github.com/TODO"
+  },
+  "license": "MIT",
+  "author": "Veo-Labs <info@veo-labs.com> (http://www.veo-labs.com/)",
+  "files": [
+    "An array of files to automatically include in the project's package"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/TODO"
+  },
+  "devDependencies": {
+    "glob": "^5.0.12",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-uglify": "^0.9.1"
+  },
+  "engines": {
+    "node": "^0.10.0"
+  }
+}

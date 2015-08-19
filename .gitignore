@@ -14,3 +14,9 @@ Desktop.ini
 
 # Windows XP
 ehthumbs.db
+
+# Project npm dependencies
+node_modules/*
+
+# Buildin files
+dist/*
