@@ -1,9 +1,6 @@
 {
   "name": "openveo-player",
-  "version": "0.0.1",
-  "main": [
-    "**/*" 
-  ],
+  "version": "0.0.2",
   "keywords": ["TODO"],
   "ignore" : [
     "tests"
