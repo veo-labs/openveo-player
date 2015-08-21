@@ -298,7 +298,8 @@
          * Starts / Pauses the player.
          */
         $scope.playPause = function(){
-          self.player.playPause();
+          if(!$scope.loading)
+            self.player.playPause();
         };
 
         /**
@@ -370,7 +371,7 @@
          * @param MouseEvent event The dispatched event
          */
         function volumeMouseMove(event){
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.volumePreview = Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100);
           });
         };
@@ -383,7 +384,7 @@
           $document.off("mousemove", volumeMouseMove);
           angular.element(volumeBar).off("mouseout", volumeMouseOut);
 
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.volumePreview = 0;
           });
         };
@@ -396,13 +397,36 @@
         function timeMouseMove(event){
           var timecode = findTimecode(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
 
-          $scope.$apply(function(){
+          safeApply(function(){
             if($scope.timecodes[timecode])
               $scope.timePreview = $scope.timecodes[timecode].image.large;
 
             $scope.timePreviewPosition = ((event.pageX - timeBarRect.left) / timeBarWidth) * 100;
           });
         };
+
+        /**
+         * Executes, safely, the given function in AngularJS process.
+         *
+         * @param Function functionToExecute The function to execute as part of
+         * the angular digest process.
+         */
+        function safeApply(functionToExecute){
+
+          // Execute each apply on a different loop
+          $timeout(function(){
+
+            // Make sure we're not on a digestion cycle
+            var phase = $scope.$root.$$phase;
+
+            if(phase === "$apply" || phase === "$digest")
+              functionToExecute();
+            else
+              $scope.$apply(functionToExecute);
+
+          }, 1);
+
+        }
 
         /**
          * Handles mouse out events on time bar area to reset the 
@@ -412,7 +436,7 @@
           $document.off("mousemove", timeMouseMove);
           angular.element(timeBar).off("mouseout", timeMouseOut);
 
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.timePreviewPosition = 0;
             $scope.timePreviewOpened = false;
           });
@@ -436,7 +460,7 @@
          * @param MouseEvent event The dispatched event
          */
         angular.element(timeBar).on("mouseover", function(event){
-          if($scope.sortedTimecodes.length){
+          if($scope.sortedTimecodes && $scope.sortedTimecodes.length){
             timeBarRect = timeBar.getBoundingClientRect();
             timeBarWidth = timeBarRect.right - timeBarRect.left;
 
@@ -444,7 +468,7 @@
             $document.on("mousemove", timeMouseMove);
             angular.element(timeBar).on("mouseout", timeMouseOut);
 
-            $scope.$apply(function(){
+            safeApply(function(){
               $scope.timePreviewOpened = true;
             });
           }
@@ -452,49 +476,52 @@
 
         // Listen to player ready event
         $element.on("ready", function(event){
-          $scope.$apply(function(){
+          safeApply(function(){
             self.player.setVolume(100);
+            $scope.loading = false;
           });
         });
 
         // Listen to player waiting event
         $element.on("waiting", function(event){
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.loading = true;
           });
         });
 
         // Listen to player playing event
         $element.on("playing", function(event){
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.loading = false;
+            $scope.playPauseButton = "pause";
           });
         });
 
         // Listen to player durationChange event
         $element.on("durationChange", function(event, duration){
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.duration = duration;
           });
         });
 
         // Listen to player play event
         $element.on("play", function(event){
-          $scope.$apply(function(){
+          safeApply(function(){
+            $scope.loading = false;
             $scope.playPauseButton = "pause";
           });
         });
 
         // Listen to player pause event
         $element.on("pause", function(event){
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.playPauseButton = "play";
           });
         });
 
         // Listen to player loadProgress event
         $element.on("loadProgress", function(event, percents){
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.loadedStart = Math.min(percents.loadedStart, 100);
             $scope.loadedPercent = Math.min(percents.loadedPercent, 100);
           });
@@ -502,6 +529,7 @@
 
         // Listen to player playProgress event
         $element.on("playProgress", function(event, data){
+          $scope.loading = false;
           var timecode = findTimecode(data.time);
 
           function updateTime(){
@@ -512,18 +540,12 @@
               $scope.presentation = $scope.timecodes[timecode].image.large;
           }
 
-          // Make sure we're not on a digestion cycle
-          var phase = $scope.$root.$$phase;
-          if(phase === "$apply" || phase === "$digest")
-            updateTime();
-          else
-            $scope.$apply(updateTime);
-
+          safeApply(updateTime);
         });
 
         // Listen to player end event
         $element.on("end", function(event){
-          $scope.$apply(function(){
+          safeApply(function(){
             $scope.time = $scope.seenPercent = 0;
             $scope.playPauseButton = "play";
 

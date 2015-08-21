@@ -14,6 +14,7 @@
 
     // All HTML player events
     var events = [
+      "loadeddata",
       "progress",
       "playing",
       "waiting",
@@ -113,7 +114,7 @@
       this.loaded = false;
       this.player = $document[0].getElementById(this.playerId);
       
-      // Handle post messages
+      // Handle events
       this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
       var jPlayer = angular.element(this.player);
       
@@ -129,10 +130,10 @@
      * Plays or pauses the media depending on media actual state.
      */
     HTMLPlayer.prototype.playPause = function(){
-      if(this.playing)
-        this.player.pause();
-      else
+      if(this.player.paused || this.player.ended)
         this.player.play();
+      else
+        this.player.pause();
     };
 
     /**
@@ -154,7 +155,7 @@
     
     /**
      * Gets player type.
-     * @return String A string representation of the player type
+     * @return String "html"
      */
     HTMLPlayer.prototype.getPlayerType = function(){
       return "html";
@@ -172,7 +173,6 @@
         jPlayer.off(events[i], this.handlePlayerEventsFn);
       
       this.loaded = false;
-      this.playing = 0;
       this.player = null;
     };
 
@@ -210,25 +210,21 @@
         // for the first time
         case "loadeddata":
           this.loaded = true;
-          this.playing = 0;
           this.jPlayerElement.triggerHandler("ready");
         break;
         
         // Media is no longer paused
         case "play":
-          this.playing = 1;
           this.jPlayerElement.triggerHandler("play");
         break;
           
         // Media has been paused
         case "pause":
-          this.playing = 0;
           this.jPlayerElement.triggerHandler("pause");
-        break;    
+        break;
         
         // Media playback has reached the end
         case "ended":
-          this.playing = 0;
           this.jPlayerElement.triggerHandler("end");
         break;
           
