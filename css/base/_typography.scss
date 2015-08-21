@@ -9,7 +9,7 @@
   font-style: normal;
 }
 
-[class^="ov-icon-"], [class*=" ov-icon-"] {
+[class^="ov-icon-"], [class*=" ov-icon-"]{
   font-family: "playerIcons";
   speak: none;
   font-style: normal;
@@ -30,3 +30,8 @@
 .ov-icon-play:before{ content: "\ea1c"; }
 .ov-icon-pause:before{ content: "\ea1d"; }
 .ov-icon-volume:before{ content: "\e606"; }
+
+body{ 
+  font-family: arial, sans-serif;
+  font-size: 12px;
+}

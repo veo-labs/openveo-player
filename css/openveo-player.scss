@@ -1,0 +1,9 @@
+.ov-player{
+  position: relative; 
+  height: 500px;
+  overflow: hidden;
+}
+
+@import "base/all";
+@import "mixins/all";
+@import "modules/all";

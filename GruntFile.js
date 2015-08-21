@@ -37,10 +37,14 @@ module.exports = function(grunt){
   grunt.config.merge(loadConfig("./tasks/player"));
 
   // Load grunt plugins
+  grunt.loadNpmTasks("grunt-contrib-compass");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-contrib-concat");
   
+  // Register default task to compile sass files on any changes
+  grunt.registerTask("default", ["compass:dev"]);
+
   // Register dist task to obfuscate and concatenate project sources
-  grunt.registerTask("dist", ["concat", "uglify"]);
+  grunt.registerTask("dist", ["concat", "uglify", "compass:dist"]);
   
 };

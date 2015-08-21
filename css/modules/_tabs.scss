@@ -1,0 +1,37 @@
+/*
+ * *************************
+ * Navigation tabs
+ * *************************
+ */
+.ov-player nav{
+  display: none; 
+  position: absolute; 
+  top: 0; 
+  color: $foreground-color;
+  font-weight: bold; 
+  font-size: 1.1em;
+  
+  @media(min-width: $media-min-width){
+    display: block;
+  }
+  
+  ul{ 
+    display: table; 
+  }
+  
+  li{ 
+    display: table-cell; 
+    padding: 0 40px; 
+    line-height: 35px; 
+    background-color: $neutral-color;
+  }
+  
+  li:hover{ 
+    border-top: 5px solid $highlight-color; 
+    cursor: pointer; 
+  }
+  
+  li.ov-selected{ 
+    border-top: 5px solid $highlight-color; 
+  }
+}

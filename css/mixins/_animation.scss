@@ -1,0 +1,26 @@
+@mixin width-transition($time){
+  $property : width;
+  $form : linear;
+  transition: $property $form $time;
+  -ms-transition: $property $form $time;
+  -moz-transition: $property $form $time;
+  -webkit-transition: $property $form $time;
+}
+
+@mixin fade-out-transition($time){
+  $property : opacity;
+  $form : cubic-bezier(0, 0.96, 0.4, 1);
+  transition: $property $form $time;
+  -ms-transition: $property $form $time;
+  -moz-transition: $property $form $time;
+  -webkit-transition: $property $form $time;
+}
+
+@mixin background-color-transition($time){
+  $property : background-color;
+  $form : linear;
+  transition: $property $form $time;
+  -ms-transition: $property $form $time;
+  -moz-transition: $property $form $time;
+  -webkit-transition: $property $form $time;
+}

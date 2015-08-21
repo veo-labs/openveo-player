@@ -19,4 +19,5 @@ ehthumbs.db
 node_modules/*
 
 # Buildin files
+.sass-cache/*
 dist/*
