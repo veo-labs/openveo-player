@@ -105,7 +105,7 @@
     
     /**
      * Gets player type.
-     * @return String A string representation of the player type
+     * @return String "vimeo"
      */
     VimeoPlayer.prototype.getPlayerType = function(){
       return "vimeo";
@@ -202,8 +202,8 @@
         // Actions
         switch(data.method){
           case "getDuration":
-            this.duration = data.value * 1000;
-            this.jPlayerElement.triggerHandler("durationChange", this.duration);
+            this.duration = data.value || this.media.metadata && this.media.metadata.duration;
+            this.jPlayerElement.triggerHandler("durationChange", this.duration * 1000);
           break;
         }
       }
