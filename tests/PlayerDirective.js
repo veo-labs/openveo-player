@@ -4,7 +4,7 @@ window.assert = chai.assert;
 
 // PlayerDirective.js
 describe("PlayerDirective", function(){
-  var $compile, $rootScope, $injector, $sce, scope;
+  var $compile, $rootScope, $injector, $sce, scope, $timeout;
   
   // Load modules player and templates (to mock templates)
   beforeEach(function(){
@@ -13,11 +13,12 @@ describe("PlayerDirective", function(){
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$injector_, _$sce_){
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$injector_, _$sce_, _$timeout_){
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $injector = _$injector_;
     $sce = _$sce_;
+    $timeout = _$timeout_;
   }));
 
   // Initializes tests
@@ -44,7 +45,7 @@ describe("PlayerDirective", function(){
       }
     };
     
-    var element = angular.element("<ov-player ov-fullscreen-icon=\"true\" ov-full-viewport=\"fullViewport\" ov-time=\"displayTime\" ov-volume-icon=\"displayVolumeIcon\" ov-mode-icon=\"displayModeIcon\" ov-data=\"data\" ov-player-type=\"playerType\"></ov-player>");
+    var element = angular.element("<ov-player ov-fullscreen-icon=\"true\" ov-full-viewport=\"fullViewport\" ov-time=\"displayTime\" ov-volume-icon=\"displayVolumeIcon\" ov-mode-icon=\"displayModeIcon\" ov-data=\"data\" ov-player-type=\"{{playerType}}\"></ov-player>");
     element = $compile(element)(scope);
     scope.$digest();
     
@@ -135,9 +136,9 @@ describe("PlayerDirective", function(){
   });  
   
   it("Should create an HTML player if player type is html", function(){
-    $rootScope.data = {mediaId : "1", type : "vimeo", files: [{}]};
+    $rootScope.data = {mediaId : "1", files: [{}]};
     $rootScope.playerType = "html";
-    var element = angular.element("<ov-player ov-data=\"data\" ov-player-type=\"playerType\"></ov-player>");
+    var element = angular.element("<ov-player ov-data=\"data\" ov-player-type=\"{{playerType}}\"></ov-player>");
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -147,15 +148,30 @@ describe("PlayerDirective", function(){
     assert.isNotNull(controller.player);
     assert.ok(controller.player instanceof OvHTMLPlayer);
   });
+  
+  it("Should create a Flow player if player type is flowplayer", function(){
+    $rootScope.data = {mediaId : "1", files: [{}]};
+    $rootScope.playerType = "flowplayer";
+    var element = angular.element("<ov-player ov-data=\"data\" ov-player-type=\"{{playerType}}\"></ov-player>");
+    element = $compile(element)(scope);
+    scope.$digest();
 
-  it("Should not create a player if no media type", function(){
-    $rootScope.data = {mediaId : "1"};
+    var controller = element.controller("ovPlayer");
+    var isolateScope = element.isolateScope();
+    var OvFlowPlayer = $injector.get("OvFlowPlayer");
+    assert.isNotNull(controller.player);
+    assert.ok(controller.player instanceof OvFlowPlayer);
+  });
+
+  it("Should create an HTML player if no media type is specified", function(){
+    $rootScope.data = {mediaId : "1", files: [{}]};
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
     scope.$digest();
     
+    var OvHTMLPlayer = $injector.get("OvHTMLPlayer");
     var controller = element.controller("ovPlayer");
-    assert.isNull(controller.player);
+    assert.ok(controller.player instanceof OvHTMLPlayer);
   });
   
   it("Should not create a player if no media id", function(){
@@ -240,21 +256,6 @@ describe("PlayerDirective", function(){
     
     isolateScope.playPause();
   });
-  
-  it("Should handle player ready event and set the volume of the media to 100%", function(){
-    $rootScope.data = {
-      type : "vimeo",
-      mediaId : "1",
-      timecodes : {}
-    };
-    var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
-    element = $compile(element)(scope);
-    scope.$digest();
-
-    var isolateScope = element.isolateScope();
-    element.triggerHandler("ready");
-    assert.equal(isolateScope.volume, 100);
-  });
 
   it("Should handle player waiting event and set player as \"loading\"", function(){
     $rootScope.data = {
@@ -267,11 +268,14 @@ describe("PlayerDirective", function(){
     scope.$digest();
 
     var isolateScope = element.isolateScope();
+    isolateScope.loading = false;
     element.triggerHandler("waiting");
+    $timeout.flush();
+    
     assert.ok(isolateScope.loading);
   });
 
-  it("Should handle player playing event and set player as \"not loading\"", function(){
+  it("Should handle player playing event and set player as \"not loading\" and pause button", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
@@ -284,7 +288,10 @@ describe("PlayerDirective", function(){
     var isolateScope = element.isolateScope();
     isolateScope.loading = true;
     element.triggerHandler("playing");
+    $timeout.flush();
+    
     assert.notOk(isolateScope.loading);
+    assert.equal(isolateScope.playPauseButton, "pause");
   });
 
   it("Should handle player durationChange event and set media duration", function(){
@@ -299,6 +306,8 @@ describe("PlayerDirective", function(){
 
     var isolateScope = element.isolateScope();
     element.triggerHandler("durationChange", 50000);
+    $timeout.flush();
+    
     assert.equal(isolateScope.duration, 50000);
   });  
   
@@ -314,6 +323,8 @@ describe("PlayerDirective", function(){
 
     var isolateScope = element.isolateScope();
     element.triggerHandler("play");
+    $timeout.flush();
+    
     assert.equal(isolateScope.playPauseButton, "pause");
   });
   
@@ -329,6 +340,8 @@ describe("PlayerDirective", function(){
 
     var isolateScope = element.isolateScope();
     element.triggerHandler("pause");
+    $timeout.flush();
+    
     assert.equal(isolateScope.playPauseButton, "play");
   });
   
@@ -344,6 +357,8 @@ describe("PlayerDirective", function(){
 
     var isolateScope = element.isolateScope();
     element.triggerHandler("loadProgress", {"loadedStart" : 2, "loadedPercent" : 98});
+    $timeout.flush();
+    
     assert.equal(isolateScope.loadedStart, 2);
     assert.equal(isolateScope.loadedPercent, 98);
   });
@@ -379,6 +394,8 @@ describe("PlayerDirective", function(){
 
     var isolateScope = element.isolateScope();
     element.triggerHandler("playProgress", {time : 7000, percent : 75});
+    $timeout.flush();
+    
     assert.equal(isolateScope.time, 7000);
     assert.equal(isolateScope.seenPercent, 75);
     assert.equal(isolateScope.presentation, "large2");
@@ -398,6 +415,8 @@ describe("PlayerDirective", function(){
     isolateScope.time = 5000;
     isolateScope.seenPercent = 50;
     element.triggerHandler("end");
+    $timeout.flush();
+    
     assert.equal(isolateScope.time, 0);
     assert.equal(isolateScope.seenPercent, 0);
   });

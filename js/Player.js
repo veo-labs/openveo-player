@@ -3,8 +3,8 @@
   "use strict"
   
   /**
-   * Defines a service describing the interface for a player. 
-   * All players must implements the methods of this interface.
+   * Defines a service describing a player. 
+   * All players must implements the methods of this object.
    * All events are dispatched to the given jPlayerElement.
    * The following events are emitted by the player : 
    *  - "play" : Player starts playing
@@ -20,7 +20,7 @@
    * e.g.
    * 
    * // Get an instance of the OvVimeoPlayer
-   * // (which extends OvPlayerInterface)
+   * // (which extends OvPlayer)
    * var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
    * var player = new OvVimeoPlayer(element, "player_id", "118786909");
    * 
@@ -71,7 +71,7 @@
    *   console.log("Media has reached the end");
    * }); 
    */
-  app.factory("OvPlayerInterface", OvPlayer);
+  app.factory("OvPlayer", OvPlayer);
   
   function OvPlayer(){
     

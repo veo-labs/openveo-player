@@ -134,13 +134,17 @@
 
             // Get an instance of a player depending on player's type
             switch(playerType.toLowerCase()){
-              case "vimeo" :
+              case "vimeo":
                 var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
                 self.player = new OvVimeoPlayer($element, $scope.data);
               break;
-              case "html" :
+              case "html":
                 var OvHTMLPlayer = $injector.get("OvHTMLPlayer");
                 self.player = new OvHTMLPlayer($element, $scope.data);
+              break;
+              case "flowplayer":
+                var OvFlowPlayer = $injector.get("OvFlowPlayer");
+                self.player = new OvFlowPlayer($element, $scope.data);
               break;
             }
 

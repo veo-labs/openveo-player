@@ -3,16 +3,16 @@
   "use strict"
 
   /**
-   * Creates a Vimeo player which observes OvPlayerInterface interface.
+   * Creates a Vimeo player which observes OvPlayer interface.
    * More information on Vimeo player can be found
    * at https://developer.vimeo.com/player.
    * The Vimeo embeded player exposes a JavaSript API to interact with
    * (https://developer.vimeo.com/player/js-api).
    */
   app.factory("OvVimeoPlayer", OvVimeoPlayer);
-  OvVimeoPlayer.$inject = ["OvPlayerInterface", "$window", "$document"];
+  OvVimeoPlayer.$inject = ["OvPlayer", "$window", "$document"];
   
-  function OvVimeoPlayer(OvPlayerInterface, $window, $document){
+  function OvVimeoPlayer(OvPlayer, $window, $document){
 
     /**
      * Creates a new VimeoPlayer.
@@ -42,11 +42,11 @@
      *   }
      */
     function VimeoPlayer(jPlayerElement, media){
-      OvPlayerInterface.prototype.init.call(this, jPlayerElement, media);
+      OvPlayer.prototype.init.call(this, jPlayerElement, media);
       initialize.call(this);
     }
 
-    VimeoPlayer.prototype = new OvPlayerInterface();
+    VimeoPlayer.prototype = new OvPlayer();
     VimeoPlayer.prototype.constructor = VimeoPlayer;
 
     /**

@@ -3,29 +3,26 @@
   "use strict"
 
   /**
-   * Creates an HTML player which observes OvPlayer interface.
-   * More information on HTML player
-   * at http://www.w3.org/TR/html5/embedded-content-0.html.
+   * Creates a Flow player which observes OvPlayer interface.
+   * More information on the flow player
+   * at https://flowplayer.org/docs/api.html.
    */
-  app.factory("OvHTMLPlayer", OvHTMLPlayer);
-  OvHTMLPlayer.$inject = ["OvPlayer", "$window", "$document"];
+  app.factory("OvFlowPlayer", OvFlowPlayer);
+  OvFlowPlayer.$inject = ["OvPlayer", "$window", "$document", "$timeout"];
   
-  function OvHTMLPlayer(OvPlayer, $window, $document){
-
+  function OvFlowPlayer(OvPlayer, $window, $document, $timeout){
+    
     // All HTML player events
     var events = [
+      "finish",
+      "pause",
       "progress",
-      "playing",
-      "waiting",
-      "ended",
-      "durationchange",
-      "timeupdate",
-      "play",
-      "pause"
+      "ready",
+      "resume"
     ];
     
     /**
-     * Creates a new HTMLPlayer.
+     * Creates a new FlowPlayer.
      * @param Object jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
      * @param Object media Details about the media
@@ -76,12 +73,15 @@
      *     ]
      *   }
      */
-    function HTMLPlayer(jPlayerElement, media){
+    function FlowPlayer(jPlayerElement, media){
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
+      
+      if(typeof ovFlashPlayer === "undefined" || typeof ovFlashPlayer !== "string")
+        throw new Error("ovFlashPlayer global variable must be defined and set to the flowplayer.swf file");
     }
 
-    HTMLPlayer.prototype = new OvPlayer();
-    HTMLPlayer.prototype.constructor = HTMLPlayer;
+    FlowPlayer.prototype = new OvPlayer();
+    FlowPlayer.prototype.constructor = FlowPlayer;
 
     /**
      * Gets media url.
@@ -89,7 +89,7 @@
      *
      * @return String The media url
      */
-    HTMLPlayer.prototype.getMediaUrl = function(){
+    FlowPlayer.prototype.getMediaUrl = function(){
       return this.media.files[0].link;
     };
     
@@ -99,72 +99,92 @@
      *
      * @return String The media thumbnail url
      */
-    HTMLPlayer.prototype.getMediaThumbnail = function(){
+    FlowPlayer.prototype.getMediaThumbnail = function(){
       return this.media.pictures && this.media.pictures.length && this.media.pictures[this.media.pictures.length - 1].link;
     };
 
     /**
      * Inititializes the player when DOM is loaded.
      *
-     * Retrieves player HTML element and attach listeners to it to be able 
-     * to receive media events.
+     * Retrieves player container HTML element and install flowplayer into it.
+     * Then bind listeners to it.
      */
-    HTMLPlayer.prototype.initialize = function(){
+    FlowPlayer.prototype.initialize = function(){
       this.loaded = false;
-      this.player = $document[0].getElementById(this.playerId);
+      this.jPlayerElement.triggerHandler("waiting");
+      var playerContainer = $document[0].getElementById(this.playerId);
       
-      // Handle post messages
+      // Install flowplayer into selected container
+      this.player = flowplayer(playerContainer, {
+        swf : ovFlashPlayer,
+        clip : { 
+          sources : [
+            {
+              type : "video/mp4",
+              src : this.getMediaUrl()
+            }          
+          ]
+        }
+      });
+      
+      // Handle events
       this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
-      var jPlayer = angular.element(this.player);
       
       // Set media events listeners
       for(var i = 0 ; i < events.length ; i++)
-        jPlayer.on(events[i], this.handlePlayerEventsFn);
-      
-      // Start loading media
-      this.player.load();
+        this.player.on(events[i], this.handlePlayerEventsFn);
     };
 
     /**
      * Plays or pauses the media depending on media actual state.
      */
-    HTMLPlayer.prototype.playPause = function(){
+    FlowPlayer.prototype.playPause = function(){
       if(this.playing)
         this.player.pause();
       else
-        this.player.play();
+        this.player.resume();
     };
 
     /**
      * Sets volume.
      * @param Number volume The new volume from 0 to 100.
      */
-    HTMLPlayer.prototype.setVolume = function(volume){
-      this.player.volume = volume / 100;
+    FlowPlayer.prototype.setVolume = function(volume){
+      this.player.volume(volume / 100);
     };
 
     /**
      * Sets time.
      * @param Number time The time to seek to in milliseconds
      */
-    HTMLPlayer.prototype.setTime = function(time){
+    FlowPlayer.prototype.setTime = function(time){
+      var self = this;
       time = parseInt(time) || 0.1;
-      this.player.currentTime = time / 1000;
+
+      this.player.pause();
+      
+      // Avoid digestion phase by executing treatment on the next loop
+      $timeout(function(){
+        self.jPlayerElement.triggerHandler("waiting");
+        self.player.seek(time / 1000, function(){
+          self.player.resume();
+        });
+      }, 1);
     };
     
     /**
      * Gets player type.
-     * @return String A string representation of the player type
+     * @return String "flowplayer"
      */
-    HTMLPlayer.prototype.getPlayerType = function(){
-      return "html";
+    FlowPlayer.prototype.getPlayerType = function(){
+      return "flowplayer";
     };
     
     /**
      * Destroys the player.
      * Remove all events listeners.
      */
-    HTMLPlayer.prototype.destroy = function(){
+    FlowPlayer.prototype.destroy = function(){
       this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
       var jPlayer = angular.element(this.player);
       
@@ -185,36 +205,18 @@
       // Events
       switch(event.type){
           
-        // Fetching metadata
-        case "progress":
-          
-          // Got buffering information
-          // Caution, the progress event maybe dispatched even if buffer
-          // is empty
-          if(this.player.buffered.length === 1){
-            var loadedStart = (this.player.buffered.start(0) / this.player.duration) * 100;
-            var loadedPercent = ((this.player.buffered.end(0) - this.player.buffered.start(0)) / this.player.duration) * 100;
-
-            this.jPlayerElement.triggerHandler("loadProgress", {"loadedStart" : loadedStart, "loadedPercent" : loadedPercent});
-          }
-          
-        break;
-          
-        // The duration attribute has just been updated
-        case "durationchange":
-          var duration = this.player.duration || this.media.metadata && this.media.metadata.duration;
-          this.jPlayerElement.triggerHandler("durationChange", duration * 1000);
-        break;
-          
         // Ready to render the media data at the current playback position
         // for the first time
-        case "loadeddata":
+        case "ready":
+          var duration = this.player.video.duration || this.media.metadata && this.media.metadata.duration;
           this.loaded = true;
           this.playing = 0;
+          this.jPlayerElement.triggerHandler("durationChange", duration * 1000);          
           this.jPlayerElement.triggerHandler("ready");
         break;
         
         // Media is no longer paused
+        case "resume":
         case "play":
           this.playing = 1;
           this.jPlayerElement.triggerHandler("play");
@@ -227,31 +229,23 @@
         break;    
         
         // Media playback has reached the end
-        case "ended":
+        case "finish":
           this.playing = 0;
           this.jPlayerElement.triggerHandler("end");
         break;
           
-        // Media playback has stopped because the next frame is not available
-        case "waiting":
-          this.jPlayerElement.triggerHandler("waiting");
-        break;
-          
-        // Media playback is ready to start after being paused or delayed
-        // due to lack of media data
-        case "playing":
-          this.jPlayerElement.triggerHandler("playing");
-        break;
-          
         // Media playback position has changed
-        case "timeupdate":
-          var playedPercent = (this.player.currentTime / this.player.duration) * 100;
-          this.jPlayerElement.triggerHandler("playProgress", { "time" : this.player.currentTime * 1000, "percent" : playedPercent });
+        case "progress":
+          // No indication about the playback position of the loading
+          // percentage, assume it to be 0
+          this.jPlayerElement.triggerHandler("loadProgress", {"loadedStart" : 0, "loadedPercent" : (this.player.video.buffer / this.player.video.duration) * 100});
+          var playedPercent = (this.player.video.time / this.player.video.duration) * 100;
+          this.jPlayerElement.triggerHandler("playProgress", { "time" : this.player.video.time * 1000, "percent" : playedPercent });
         break;
       }
     };
 
-    return HTMLPlayer;
+    return FlowPlayer;
   }
   
 })(angular, angular.module("ov.player"));

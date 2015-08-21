@@ -1,0 +1,7 @@
+/* Flowplayer specific style */
+
+/* Hide all flow player user interface */
+.ov-player .fp-ui{ display: none; }
+
+/* Set flowplayer background to black instead of grey */
+.ov-player .flowplayer.is-playing{ background-color: #000; }

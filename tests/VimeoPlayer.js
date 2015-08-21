@@ -4,7 +4,7 @@ window.assert = chai.assert;
 
 // VimeoPlayer.js
 describe("VimeoPlayer", function(){
-  var player, playerElement, $document, $injector, jWindowElement,$window;
+  var player, playerElement, videoElement, $document, $injector, jWindowElement, $window;
   
   // Load module player
   beforeEach(module("ov.player"));
@@ -20,10 +20,11 @@ describe("VimeoPlayer", function(){
   beforeEach(function(){
     jWindowElement = angular.element($window);
     playerElement = $document[0].createElement("div");
-    playerElement.setAttribute("id", "player_1");
-    $document[0].body.appendChild(playerElement);
+    videoElement = $document[0].createElement("div");
+    videoElement.setAttribute("id", "player_1");
+    $document[0].body.appendChild(videoElement);
     
-    playerElement.contentWindow = { postMessage : function(data){}};
+    videoElement.contentWindow = { postMessage : function(data){}};
     
     var OvVimeoPlayer = $injector.get("OvVimeoPlayer"); 
     player = new OvVimeoPlayer(angular.element(playerElement), {
@@ -36,8 +37,8 @@ describe("VimeoPlayer", function(){
   
   // Destroy player after each test
   afterEach(function(){
-    $document[0].body.removeChild(playerElement);
-    playerElement = null;
+    $document[0].body.removeChild(videoElement);
+    videoElement = null;
     player.destroy();
   });
 
@@ -49,8 +50,8 @@ describe("VimeoPlayer", function(){
     var events = [];
     
     // Simulate Vimeo player
-    playerElement.contentWindow.postMessage = function(data){
-      events.push(data.value);
+    videoElement.contentWindow.postMessage = function(data){
+      events.push({});
       if(events.length === 6)
         done();
     };
@@ -66,7 +67,7 @@ describe("VimeoPlayer", function(){
     });
     
     // Simulate Vimeo player
-    playerElement.contentWindow.postMessage = function(data){
+    videoElement.contentWindow.postMessage = function(data){
       data = JSON.parse(data);
       if(data.value === "play")
         jWindowElement.triggerHandler("message", {event : "play", player_id : "player_1"});
@@ -84,7 +85,7 @@ describe("VimeoPlayer", function(){
     });
     
     // Simulate Vimeo player
-    playerElement.contentWindow.postMessage = function(data){
+    videoElement.contentWindow.postMessage = function(data){
       data = JSON.parse(data);
       if(data.value === "pause"){
         jWindowElement.triggerHandler("message", {event : "pause", player_id : "player_1"});
@@ -98,7 +99,7 @@ describe("VimeoPlayer", function(){
   it("Should be able to change media volume", function(done){
 
     // Simulate Vimeo player
-    playerElement.contentWindow.postMessage = function(data){
+    videoElement.contentWindow.postMessage = function(data){
       data = JSON.parse(data);
 
       if(data.method === "setVolume" && data.value !== 1){
@@ -114,7 +115,7 @@ describe("VimeoPlayer", function(){
   it("Should be able to seek to media specific time", function(done){
 
     // Simulate Vimeo player
-    playerElement.contentWindow.postMessage = function(data){
+    videoElement.contentWindow.postMessage = function(data){
       data = JSON.parse(data);
       if(data.method === "seekTo"){
         assert.equal(data.value, 50);
