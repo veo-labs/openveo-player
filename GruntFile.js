@@ -40,6 +40,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks("grunt-contrib-compass");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-contrib-concat");
+  grunt.loadNpmTasks("grunt-karma");
   
   // Register default task to compile sass files on any changes
   grunt.registerTask("default", ["compass:dev"]);

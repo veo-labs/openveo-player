@@ -1,0 +1,2 @@
+ovFlashPlayer = "flowplayer.swf";
+ovPlayerDirectory = "";
