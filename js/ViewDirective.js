@@ -33,7 +33,7 @@
       restrict : "E",
       require : "^ovTabs",
       transclude : true,
-      templateUrl : ovPlayerDirectory + "/templates/view.html",
+      templateUrl : ovPlayerDirectory + "templates/view.html",
       scope : {
         title : "@",
         view : "@"

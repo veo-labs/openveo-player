@@ -25,7 +25,7 @@
   function ovTabs(){
     return{
       restrict : "E",
-      templateUrl : ovPlayerDirectory + "/templates/tabs.html",
+      templateUrl : ovPlayerDirectory + "templates/tabs.html",
       scope : {},
       transclude : true,
       controller : ["$scope", function($scope){

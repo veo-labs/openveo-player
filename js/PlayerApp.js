@@ -13,7 +13,7 @@
    * must be set to the root directory of the player. 
    *
    * e.g.
-   * var ovPlayerDirectory = "/js/player";
+   * var ovPlayerDirectory = "/js/player/";
    *
    * Available attributes are :
    *  - Object ov-data A data object as :

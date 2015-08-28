@@ -25,7 +25,7 @@
   function ovPlayer($injector, $document, $sce, $filter, $timeout){
     return{
       restrict : "E",
-      templateUrl : ovPlayerDirectory + "/templates/player.html",
+      templateUrl : ovPlayerDirectory + "templates/player.html",
       scope : {
         ovData : "=",
         ovFullscreenIcon : "=?",
@@ -136,7 +136,7 @@
           
           if($scope.data.mediaId){
             var playerType = $scope.ovPlayerType || $scope.data.type || "html";
-            $scope.mediaTemplate = ovPlayerDirectory + "/templates/" +  playerType + ".html";
+            $scope.mediaTemplate = ovPlayerDirectory + "templates/" +  playerType + ".html";
 
             // Get an instance of a player depending on player's type
             switch(playerType.toLowerCase()){
