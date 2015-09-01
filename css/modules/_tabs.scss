@@ -24,10 +24,12 @@
     padding: 0 40px; 
     line-height: 35px; 
     background-color: $neutral-color;
+    transition: border-top 0.4s ease;
+    border-top: 0px solid;
   }
   
   li:hover{ 
-    border-top: 5px solid $highlight-color; 
+    border-top: 5px solid $light-gray; 
     cursor: pointer; 
   }
   

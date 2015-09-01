@@ -71,6 +71,7 @@
             return;
 
           $scope.timecodes = self.player.getMediaTimecodes() || {};
+          $scope.chapter = self.player.getMediaChapter() || {};
           $scope.presentation = null;
           $scope.playerId = self.player.getId();
           $scope.timePreviewOpened = false;
@@ -89,6 +90,7 @@
           $scope.duration = 0;
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
+          $scope.displayChapterTab = true;
           $scope.sortedTimecodes = $filter("orderTimeCodes")($scope.timecodes);
           $scope.mediaUrl = $sce.trustAsResourceUrl(self.player.getMediaUrl());
           $scope.mediaThumbnail = self.player.getMediaThumbnail();
@@ -105,6 +107,10 @@
           if(isTouchDevice())
             $scope.ovVolumeIcon = false;
 
+          // Got Chapter associated with the media
+          if(!$scope.chapter.length){
+            $scope.displayChapterTab = false;
+          }
           // Got timecodes associated to the media
           // Use the first image of the first timecode as
           // the current presentation image

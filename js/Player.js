@@ -129,6 +129,14 @@
     Player.prototype.getMediaId = function(){
       return this.media.mediaId;
     };
+    
+    /**
+     * Gets chapter list.
+     * @return Object The media chapter
+     */
+    Player.prototype.getMediaChapter = function(){
+      return this.media.chapter;
+    }
 
     /**
      * Gets player id.

@@ -1,0 +1,10 @@
+<div class="ov-chapters">
+  <ul>
+    <li ng-repeat-start="chapter in chapters" ng-if='chapter.type!="end" && chapter.type!="begin"' ng-class="{'open':chapter.isOpen}">
+      <div class="title"  ng-click="open(chapter)">{{chapter.name}}</div>
+      <div class="ov-icon-play ov-button" ng-click="goToTimecode(chapter.value)"></div>
+      <!--<div class="title"></div>-->
+    </li>
+    <p ng-repeat-end>{{chapter.description}}</p>
+  </ul>
+</div>
