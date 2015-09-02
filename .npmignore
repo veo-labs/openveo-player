@@ -1,0 +1,49 @@
+# Linux
+# *.swp is already ignored by npm
+.directory
+*~
+
+# OS X
+# .DS_Store* and ._* are already ignored by npm
+Icon?
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Windows XP
+ehthumbs.db
+
+# Project npm dependencies
+node_modules
+
+# Bower libraries
+lib
+
+# IDE
+nbproject
+
+# Sass files
+css
+
+# JavaScript files
+js
+
+# Sass cache files
+.sass-cache
+
+# Grunt files
+GruntFile.js
+tasks
+
+# Git
+.gitignore
+.gitattributes
+
+# Bower
+.bowerrc
+bower.json
+
+# Unit tests
+tests
+karmaConf.js

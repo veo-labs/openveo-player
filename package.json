@@ -1,23 +1,28 @@
 {
-  "name": "openveo-player",
+  "name": "@openveo/player",
   "version": "0.0.2",
-  "description": "TODO",
-  "private": true,
-  "keywords": [
-    "TODO"
-  ],
-  "homepage": "https://github.com/TODO",
-  "bugs": {
-    "url": "https://github.com/TODO"
+  "description": "OpenVeo player to play a video with associated slides",
+  "publishConfig": {
+    "registry": "http://87.98.155.235:4873/"
   },
-  "license": "MIT",
-  "author": "Veo-Labs <info@veo-labs.com> (http://www.veo-labs.com/)",
-  "files": [
-    "An array of files to automatically include in the project's package"
+  "keywords": [
+    "openveo",
+    "veo-labs",
+    "player",
+    "vimeo",
+    "html",
+    "flowplayer",
+    "video"
   ],
+  "homepage": "https://gitlab.com/veo-labs/openveo-player",
+  "bugs": {
+    "url": "https://gitlab.com/veo-labs/openveo-player/issues"
+  },
+  "license": "AGPL-3.0",
+  "author": "Veo-Labs <info@veo-labs.com> (http://www.veo-labs.com/)",
   "repository": {
     "type": "git",
-    "url": "http://github.com/TODO"
+    "url": "https://gitlab.com/veo-labs/openveo-player.git"
   },
   "devDependencies": {
     "chai": "^1.10.0",

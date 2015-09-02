@@ -1,10 +1,51 @@
 {
   "name": "openveo-player",
-  "version": "0.0.2",
-  "keywords": ["TODO"],
-  "ignore" : [
-    "tests"
+  "description": "OpenVeo player to play a video with associated slides",
+  "private": true,
+  "main": [
+    "dist/openveo-player.min.js",
+    "dist/openveo-player.css"
   ],
+  "keywords": [
+    "openveo",
+    "veo-labs",
+    "player",
+    "vimeo",
+    "html",
+    "flowplayer",
+    "video"
+  ],
+  "ignore" : [
+    "*~",
+    "Icon?",
+    ".DS_Store*",
+    ".directory",
+    "Thumbs.db",
+    "Desktop.ini",
+    "._*",
+    "ehthumbs.db",
+    "node_modules",
+    "lib",
+    "nbproject",
+    "css",
+    "js",
+    ".sass-cache",
+    "Gruntfile.js",
+    "tasks",
+    ".gitignore",
+    "tests",
+    "karmaConf.js",
+    "package.json"
+  ],
+  "license" : "AGPL-3.0",
+  "authors": [
+    "Veo-Labs <info@veo-labs.com> (http://www.veo-labs.com/)"
+  ],
+  "homepage" : "https://gitlab.com/veo-labs/openveo-player",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/veo-labs/openveo-player.git"
+  },
   "devDependencies": {
     "angular": "1.4.1",
     "angular-animate": "1.4.1",
