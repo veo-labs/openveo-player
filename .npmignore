@@ -15,26 +15,26 @@ Desktop.ini
 ehthumbs.db
 
 # Project npm dependencies
-node_modules
+/node_modules
 
 # Bower libraries
-lib
+/lib
 
 # IDE
 nbproject
 
 # Sass files
-css
+/css
 
 # JavaScript files
-js
+/js
 
 # Sass cache files
 .sass-cache
 
 # Grunt files
-GruntFile.js
-tasks
+/GruntFile.js
+/tasks
 
 # Git
 .gitignore
@@ -45,5 +45,5 @@ tasks
 bower.json
 
 # Unit tests
-tests
-karmaConf.js
+/tests
+/karmaConf.js

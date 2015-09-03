@@ -16,11 +16,11 @@ Desktop.ini
 ehthumbs.db
 
 # Project npm dependencies
-node_modules/*
+/node_modules
 
 # Buildin files
-.sass-cache/*
-dist/*
+.sass-cache
+/dist
 
 # Dev dependencies
-lib/*
+/lib
