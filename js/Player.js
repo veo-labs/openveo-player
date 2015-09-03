@@ -137,6 +137,14 @@
     Player.prototype.getMediaChapter = function(){
       return this.media.chapter;
     }
+    
+    /**
+     * Gets chapter list.
+     * @return Object The media chapter
+     */
+    Player.prototype.getMediaCut = function(){
+      return this.media.cut;
+    }
 
     /**
      * Gets player id.

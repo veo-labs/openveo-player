@@ -38,6 +38,7 @@
     margin: 10px; 
     border: 1px solid #ddd; 
     color: $highlight-color; 
+    @include transition(color 0.35s, background-color 0.35s);
   }
   
   li:hover{ 
