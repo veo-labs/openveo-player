@@ -44,6 +44,9 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-ng-html2js-preprocessor": "~0.1.2"
   },
+  "scripts": {
+    "postinstall": "bower install"
+  },
   "engines": {
     "node": "^0.10.0"
   }
