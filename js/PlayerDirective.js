@@ -49,7 +49,7 @@
         var volumeBarHeight = volumeBarRect.bottom - volumeBarRect.top;
         var timeBarRect = timeBar.getBoundingClientRect();
         var timeBarWidth = timeBarRect.right - timeBarRect.left;        
-        this.player = null;
+        $scope.player = null;
 
         // Set default value for attributes
         $scope.ovFullscreenIcon = (typeof $scope.ovFullscreenIcon === "undefined") ? true : $scope.ovFullscreenIcon;
@@ -67,13 +67,13 @@
           $scope.data = angular.copy($scope.ovData) || {};
           initPlayer();
 
-          if(!self.player)
+          if(!$scope.player)
             return;
 
-          $scope.timecodes = self.player.getMediaTimecodes() || {};
-          $scope.chapter = self.player.getMediaChapter() || {};
+          $scope.timecodes = $scope.player.getMediaTimecodes() || {};
+          $scope.chapter = $scope.player.getMediaChapter() || {};
           $scope.presentation = null;
-          $scope.playerId = self.player.getId();
+          $scope.playerId = $scope.player.getId();
           $scope.timePreviewOpened = false;
           $scope.volumeOpened = false;
           $scope.modesOpened = false;
@@ -92,8 +92,8 @@
           $scope.displayIndexTab = true;
           $scope.displayChapterTab = true;
           $scope.sortedTimecodes = $filter("orderTimeCodes")($scope.timecodes);
-          $scope.mediaUrl = $sce.trustAsResourceUrl(self.player.getMediaUrl());
-          $scope.mediaThumbnail = self.player.getMediaThumbnail();
+          $scope.mediaUrl = $sce.trustAsResourceUrl($scope.player.getMediaUrl());
+          $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
           $scope.loading = false;
 
           // Full viewport and no FullScreen API available
@@ -142,15 +142,15 @@
             switch(playerType.toLowerCase()){
               case "vimeo":
                 var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
-                self.player = new OvVimeoPlayer($element, $scope.data);
+                $scope.player = new OvVimeoPlayer($element, $scope.data);
               break;
               case "html":
                 var OvHTMLPlayer = $injector.get("OvHTMLPlayer");
-                self.player = new OvHTMLPlayer($element, $scope.data);
+                $scope.player = new OvHTMLPlayer($element, $scope.data);
               break;
               case "flowplayer":
                 var OvFlowPlayer = $injector.get("OvFlowPlayer");
-                self.player = new OvFlowPlayer($element, $scope.data);
+                $scope.player = new OvFlowPlayer($element, $scope.data);
               break;
             }
 
@@ -165,7 +165,7 @@
          * otherwise. Close volume if opened.
          * Automatically close display modes after 3 seconds.
          */
-        this.toggleModes = $scope.toggleModes = function(){
+        $scope.toggleModes = function(){
           if(modesTimeoutPromise)
             $timeout.cancel(modesTimeoutPromise);
 
@@ -182,7 +182,7 @@
          * otherwise. Close display modes if opened.
          * Automatically close volume after 3 seconds.
          */
-        this.toggleVolume = $scope.toggleVolume = function(){
+        $scope.toggleVolume = function(){
           if(volumeTimeoutPromise)
             $timeout.cancel(volumeTimeoutPromise);
 
@@ -198,7 +198,7 @@
          * If player is in full screen, reduce player to frame,
          * otherwise, display player in full screen.
          */
-        this.toggleFullscreen = $scope.toggleFullscreen = function(){
+        $scope.toggleFullscreen = function(){
 
           // Fullscreen API is available
           if(rootElement.requestFullScreen 
@@ -242,21 +242,12 @@
           }
         };
 
-        /**
-         * Sets the display mode.
-         * @param String mode The display mode to activate, available
-         * display modes are available just before ovPlayer definition
-         */
-        this.selectMode = $scope.selectMode = function(mode){
-          $scope.selectedMode = mode;
-        };
-
         // Listen to player template loaded event
         $scope.$on("$includeContentLoaded", function(){
           $timeout(function(){
 
             // Initialize player
-            self.player.initialize();
+            $scope.player.initialize();
 
           }, 1);
         });
@@ -266,12 +257,12 @@
           $scope.data = angular.copy($scope.ovData) || {};
 
           // Media id has changed
-          if($scope.data.mediaId && (!self.player || $scope.data.mediaId != self.player.getMediaId())){
+          if($scope.data.mediaId && (!$scope.player || $scope.data.mediaId != $scope.player.getMediaId())){
 
-            if(self.player){
+            if($scope.player){
 
               // Destroy previous player
-              self.player.destroy();
+              $scope.player.destroy();
 
             }
 
@@ -301,14 +292,6 @@
         });
 
         /**
-         * Starts / Pauses the player.
-         */
-        $scope.playPause = function(){
-          if(!$scope.loading)
-            self.player.playPause();
-        };
-
-        /**
          * Sets the player volume.
          * Volume is retrieved from the position of the cursor on the 
          * volume selector area.
@@ -316,8 +299,8 @@
          * on the volume selector. 
          */
         $scope.setVolume = function(event){
-          $scope.volume = Math.min(Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100), 100);
-          self.player.setVolume($scope.volume);
+          var volume = Math.min(Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100), 100);
+          self.setVolume(volume);
         };
 
         /**
@@ -328,9 +311,43 @@
          * on the volume selector. 
          */
         $scope.setTime = function(event){
-          self.player.setTime(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
+          self.setTime(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
         };
-        
+
+        /**
+         * Sets the display mode.
+         * @param String mode The display mode to activate, available
+         * display modes are set just before ovPlayer definition
+         */
+        this.selectMode = $scope.selectMode = function(mode){
+          $scope.selectedMode = mode;
+        };
+
+        /**
+         * Starts / Pauses the player.
+         */
+        this.playPause = $scope.playPause = function(){
+          if(!$scope.loading)
+            $scope.player.playPause();
+        };
+
+        /**
+         * Sets the player volume.
+         * @param Number volume The volume to set from 0 to 100
+         */
+        this.setVolume = function(volume){
+          $scope.volume = volume;
+          $scope.player.setVolume($scope.volume);
+        };
+
+        /**
+         * Sets the player time.
+         * @param Number time The time to set in milliseconds
+         */
+        this.setTime = function(time){
+          player.setTime(time);
+        };
+
         /**
          * Tests if browser implements the fullscreen API or not.
          * @return true if fullscreen API is implemented, false otherwise
@@ -480,10 +497,16 @@
           }
         });
 
+        // Listen to action events used to control the player
+        $element.on("action", function(event, parameters){
+          if(parameters && parameters.action)
+            self[parameters.action].apply(self, parameters.arguments);
+        });
+
         // Listen to player ready event
         $element.on("ready", function(event){
           safeApply(function(){
-            self.player.setVolume(100);
+            $scope.player.setVolume(100);
             $scope.loading = false;
           });
         });

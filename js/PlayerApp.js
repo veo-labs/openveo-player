@@ -128,6 +128,95 @@
    * CAUTION : To update the data of the player the whole object 
    * must be changed. There aren't any two way bindings on the data
    * object properties.
+   *
+   * Listening to events :
+   * You can listen to player events using ov-player HTMLElement.
+   * Dispatched events are :
+   *  - ready The player is ready to receive actions
+   *  - waiting Media playback has stopped because the next frame is not available
+   *  - playing Media playback is ready to start after being paused or
+   *    delayed due to lack of media data
+   *  - durationChange The duration attribute has just been updated
+   *  - play Media is no longer paused
+   *  - pause Media has been paused
+   *  - loadProgress Got buffering information
+   *  - playProgress Media playback position has changed
+   *  - end Media playback has reached the end
+   *
+   * e.g.
+   * <ov-player ... id="myPlayer"></ov-player>
+   *
+   * var myPlayer = document.getElementById("myPlayer");
+   * angular.element(myPlayer).on("ready", function(event){
+   *   console.log("ready");
+   * });
+   *
+   * angular.element(test).on("waiting", function(event){
+   *   console.log("waiting");
+   * });
+   *
+   * angular.element(test).on("playing", function(event){
+   *   console.log("playing");
+   * });
+   *
+   * angular.element(test).on("durationChange", function(event, duration){
+   *   console.log("durationChange with new duration = " + duration);
+   * });
+   *
+   * angular.element(test).on("play", function(event){
+   *   console.log("play");
+   * });
+   *
+   * angular.element(test).on("pause", function(event){
+   *   console.log("pause");
+   * });
+   *
+   * angular.element(test).on("loadProgress", function(event, percents){
+   *   console.log("loadProgress");
+   *   console.log("Buffering start = " + percents.loadedStart);
+   *   console.log("Buffering end = " + percents.loadedPercent);
+   * });
+   *
+   * angular.element(test).on("playProgress", function(event, data){
+   *   console.log("playProgress");
+   *   console.log("Current time = " + data.time + "ms");
+   *   console.log("Played percent = " + data.percent);
+   * });
+   *
+   * angular.element(test).on("end", function(event){
+   *   console.log("end");
+   * });
+   *
+   * Controlling the player :
+   * You can control the player with some basic actions
+   * - selectMode To select the display mode (can be "media", "both",
+   *   "both-presentation" or "presentation")
+   * - playPause To start / stop the media
+   * - setVolume To change player's volume
+   * - setTime To seek media to a specific time
+   *
+   * e.g.
+   * <ov-player ... id="myPlayer"></ov-player>
+   * var myPlayer = document.getElementById("myPlayer");
+   *
+   * angular.element(myPlayer).on("ready", function(event){
+   *  console.log("ready");
+   *  var playerController = angular.element(myPlayer).controller("ovPlayer");
+   *
+   *  // Selects a new display mode ("media")
+   *  playerController.selectMode("media");
+   *
+   *  // Starts / Pauses the player
+   *  playerController.playPause();
+   *
+   *  // Sets volume to 10%
+   *  playerController.setVolume(10);
+   *
+   *  // Seeks media to time 20s
+   *  playerController.setTime(20000);
+   * 
+   * });
+   *
    */
   var app = angular.module("ov.player", []);
   

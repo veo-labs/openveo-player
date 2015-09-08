@@ -128,11 +128,10 @@ describe("PlayerDirective", function(){
     element = $compile(element)(scope);
     scope.$digest();
     
-    var controller = element.controller("ovPlayer");
     var isolateScope = element.isolateScope();
     var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
-    assert.isNotNull(controller.player);
-    assert.ok(controller.player instanceof OvVimeoPlayer);
+    assert.isNotNull(isolateScope.player);
+    assert.ok(isolateScope.player instanceof OvVimeoPlayer);
   });  
   
   it("Should create an HTML player if player type is html", function(){
@@ -142,11 +141,10 @@ describe("PlayerDirective", function(){
     element = $compile(element)(scope);
     scope.$digest();
 
-    var controller = element.controller("ovPlayer");
     var isolateScope = element.isolateScope();
     var OvHTMLPlayer = $injector.get("OvHTMLPlayer");
-    assert.isNotNull(controller.player);
-    assert.ok(controller.player instanceof OvHTMLPlayer);
+    assert.isNotNull(isolateScope.player);
+    assert.ok(isolateScope.player instanceof OvHTMLPlayer);
   });
   
   it("Should create a Flow player if player type is flowplayer", function(){
@@ -156,11 +154,10 @@ describe("PlayerDirective", function(){
     element = $compile(element)(scope);
     scope.$digest();
 
-    var controller = element.controller("ovPlayer");
     var isolateScope = element.isolateScope();
     var OvFlowPlayer = $injector.get("OvFlowPlayer");
-    assert.isNotNull(controller.player);
-    assert.ok(controller.player instanceof OvFlowPlayer);
+    assert.isNotNull(isolateScope.player);
+    assert.ok(isolateScope.player instanceof OvFlowPlayer);
   });
 
   it("Should create an HTML player if no media type is specified", function(){
@@ -170,8 +167,8 @@ describe("PlayerDirective", function(){
     scope.$digest();
     
     var OvHTMLPlayer = $injector.get("OvHTMLPlayer");
-    var controller = element.controller("ovPlayer");
-    assert.ok(controller.player instanceof OvHTMLPlayer);
+    var isolateScope = element.isolateScope();
+    assert.ok(isolateScope.player instanceof OvHTMLPlayer);
   });
   
   it("Should not create a player if no media id", function(){
@@ -180,8 +177,8 @@ describe("PlayerDirective", function(){
     element = $compile(element)(scope);
     scope.$digest();
     
-    var controller = element.controller("ovPlayer");
-    assert.isNull(controller.player);
+    var isolateScope = element.isolateScope();
+    assert.isNull(isolateScope.player);
   });
 
   it("Should set time preview image and default presentation image", function(){
@@ -246,9 +243,8 @@ describe("PlayerDirective", function(){
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    var controller = element.controller("ovPlayer");
     
-    controller.player = {
+    isolateScope.player = {
       playPause : function(){
         done();
       }
@@ -421,17 +417,17 @@ describe("PlayerDirective", function(){
     assert.equal(isolateScope.seenPercent, 0);
   });
   
-  it("Should expose an API with toggleModes, toggleVolume, toggleFullscreen, selectMode", function(){
+  it("Should expose an API with selectMode, playPause, setVolume, setTime", function(){
     $rootScope.data = {};
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
     scope.$digest();
 
     var controller = element.controller("ovPlayer");
-    assert.isDefined(controller.toggleModes);
-    assert.isDefined(controller.toggleVolume);
-    assert.isDefined(controller.toggleFullscreen);
     assert.isDefined(controller.selectMode);
+    assert.isDefined(controller.playPause);
+    assert.isDefined(controller.setVolume);
+    assert.isDefined(controller.setTime);
   });   
   
 });
