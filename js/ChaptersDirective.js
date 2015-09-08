@@ -19,7 +19,7 @@
     return {
       require : "^ovPlayer",
       restrict : "E",
-      templateUrl : ovPlayerDirectory + "/templates/chapters.html",
+      templateUrl : ovPlayerDirectory + "templates/chapters.html",
       scope : true,
       link : ovChaptersLink
     }
