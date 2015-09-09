@@ -42,7 +42,7 @@
        */
       scope.goToTimecode = function(time){
         if(time <= 1)
-          playerCtrl.player.setTime(time * scope.duration);
+          playerCtrl.setTime(time * scope.duration);
       };
       
     };
