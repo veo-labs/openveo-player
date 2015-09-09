@@ -497,12 +497,6 @@
           }
         });
 
-        // Listen to action events used to control the player
-        $element.on("action", function(event, parameters){
-          if(parameters && parameters.action)
-            self[parameters.action].apply(self, parameters.arguments);
-        });
-
         // Listen to player ready event
         $element.on("ready", function(event){
           safeApply(function(){
