@@ -345,7 +345,7 @@
          * @param Number time The time to set in milliseconds
          */
         this.setTime = function(time){
-          player.setTime(time);
+          $scope.player.setTime(time);
         };
 
         /**
