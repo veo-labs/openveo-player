@@ -137,6 +137,10 @@
             $scope.displayChapterTab = $scope.chapters.length;
             displayChapters();
           }
+
+          // No chapters
+          else
+            hideChapters();
         }
 
         /**
