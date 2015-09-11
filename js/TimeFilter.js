@@ -17,6 +17,8 @@
       if(time < 0 || isNaN(time))
         return "";
       
+      time = parseInt(time);
+
       var seconds = parseInt((time / 1000) % 60);
       var minutes = parseInt((time / (60000)) % 60);
       var hours = parseInt((time / (3600000)) % 24);
