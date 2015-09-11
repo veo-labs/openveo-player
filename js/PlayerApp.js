@@ -19,21 +19,36 @@
    *  - Object ov-data A data object as :
    *   {
    *     mediaId : "136081112", // The id of the media
-   *     timecodes : { // Timecodes
-   *       0 : { // Timecode in milliseconds (0 ms)
+   *     timecodes : [ // Timecodes
+   *       {
+   *         timecode : 0, // Timecode in milliseconds (0 ms)
    *         image : { // Image to display at 0 ms
    *           small : "slide_00000.jpeg", // Small version of the image
    *           large : "slide_00000_large.jpeg" // Large version of the image
    *         }
    *       },
-   *       1200 : { // Timecode in milliseconds (1200 ms)
+   *       {
+   *         timecode : 1200, // Timecode in milliseconds (1200 ms)
    *         image : { // Image to display at 1200 ms
    *           small : "slide_00001.jpeg", // Small version of the image
    *           large : "slide_00001_large.jpeg" // Large version of the image
    *         }
    *       }
    *       ...
-   *     },
+   *     ],
+   *     chapter : [ // Chapters
+   *       {
+   *         name : "Chapter 1", // Chapter name
+   *         description : "Chapter 1", // Chapter description
+   *         value : 0.04666666666666667 // Chapter timecode in percent
+   *       },
+   *       {
+   *         name : "Chapter 2", // Chapter name
+   *         description : "Chapter 2", // Chapter description
+   *         value : 0.31666666666666665 // Chapter timecode in percent
+   *       }
+   *       ...
+   *     ],
    *     files : [ // The list of media files (only for "html" player)
    *       {
    *         width : 640, // Media width for this file
@@ -83,15 +98,16 @@
    * $scope.data = 
    *  {
    *    "type" : "vimeo",
-   *    "id" : "118502922",
-   *    "timecodes" : {
-   *      50000 : {
+   *    "mediaId" : "118502922",
+   *    "timecodes" : [
+   *      {
+   *        "timecode" : 50000,
    *        "image" : {
    *          "small" : "./slides/slide_00000.jpeg",
    *          "large" : "./slides/slide_00000_large.jpeg"
    *        }
    *      }
-   *    }
+   *    ]
    *  }
    *
    * <ov-player 
@@ -108,20 +124,22 @@
    * $scope.data = 
    *  {
    *    "type" : "vimeo",
-   *    "id" : "118502919",
+   *    "mediaId" : "118502919",
    *    "timecodes" : {
-   *      0 : {
+   *      {
+   *        "timecode" : 0,
    *        "image" : {
    *          "small" : "./slides/slide_00000.jpeg",
    *          "large" : "./slides/slide_00000_large.jpeg"
    *        }
    *      },
-   *      20000 : {
+   *      {
+   *        "timecode" : 20000,
    *        "image" : {
    *          "small" : "./slides/slide_00001.jpeg",
    *          "large" : "./slides/slide_00001_large.jpeg"
    *        }
-   *      }   
+   *      }
    *    }
    *  }
    *

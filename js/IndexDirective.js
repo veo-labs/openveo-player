@@ -28,16 +28,15 @@
   app.factory("ovIndexLink", function(){
     return function(scope, element, attrs, playerCtrl){
         
-      if(Object.keys(scope.data.timecodes).length){
-        scope.imagePreview = scope.data.timecodes[Object.keys(scope.data.timecodes)[0]].image.large;
-      }
+      if(scope.timecodes.length)
+        scope.imagePreview = scope.timecodes[0].image.large;
 
       /**
        * Sets presentation preview corresponding to the given timecode.
        * @param Number timecode The timecode (in milliseconds)
        */
       scope.setImagePreview = function(timecode){
-        scope.imagePreview = scope.data.timecodes[timecode].image.large;
+        scope.imagePreview = scope.timecodesByTime[timecode].image.large;
       };
 
       /**
@@ -46,7 +45,7 @@
        */
       scope.goToTimecode = function(timecode){
         if(timecode <= scope.duration)
-          playerCtrl.player.setTime(timecode);
+          playerCtrl.setTime(timecode);
       };
       
     };

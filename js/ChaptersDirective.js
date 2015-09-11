@@ -27,7 +27,6 @@
 
   app.factory("ovChaptersLink", function(){
     return function(scope, element, attrs, playerCtrl){
-      scope.chapters = scope.data.chapter;
      
       scope.open = function(chapter){
         if(!chapter.isOpen)

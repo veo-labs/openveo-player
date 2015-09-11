@@ -18,12 +18,19 @@ describe("IndexDirective", function(){
   // Initializes tests
   beforeEach(function(){
     playerScope = $rootScope.$new();
-    playerScope.data = {
-      timecodes : {
-        20 : {
-          image : {
-            large : "largeFilePath" 
-          }
+    playerScope.timecodes = [
+      {
+        timecode : 20,
+        image : {
+          large : "largeFilePath"
+        }
+      }
+    ];
+
+    playerScope.timecodesByTime = {
+      20 : {
+        image : {
+          large : "largeFilePath"
         }
       }
     };
@@ -46,11 +53,9 @@ describe("IndexDirective", function(){
     playerScope.duration = 10000;
     
     var playerController = {
-      player : {
-        setTime : function(time){
-          assert.equal(time, 50);
-          done();
-        }
+      setTime : function(time){
+        assert.equal(time, 50);
+        done();
       }
     };
     

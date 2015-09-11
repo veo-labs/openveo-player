@@ -20,25 +20,7 @@
      * to the element which will receive events dispatched by the player
      * @param Object media Details of the media
      *   {
-     *     mediaId : "136081112", // The id of the media
-     *     metadata : {
-     *      duration : 20 // Media duration in seconds
-     *     },
-     *     timecodes : { // Timecodes
-     *       0 : { // Timecode in milliseconds (0 ms)
-     *         image : { // Image to display at 0 ms
-     *           small : "slide_00000.jpeg", // Small version of the image
-     *           large : "slide_00000_large.jpeg" // Large version of the image
-     *         }
-     *       },
-     *       1200 : { // Timecode in milliseconds (1200 ms)
-     *         image : { // Image to display at 1200 ms
-     *           small : "slide_00001.jpeg", // Small version of the image
-     *           large : "slide_00001_large.jpeg" // Large version of the image
-     *         }
-     *       }
-     *       ...
-     *     }
+     *     mediaId : "136081112" // The id of the media
      *   }
      */
     function VimeoPlayer(jPlayerElement, media){

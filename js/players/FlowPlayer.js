@@ -28,24 +28,6 @@
      * @param Object media Details about the media
      *   {
      *     mediaId : "136081112", // The id of the media
-     *     metadata : {
-     *      duration : 20 // Media duration in seconds
-     *     },     
-     *     timecodes : { // Timecodes
-     *       0 : { // Timecode in milliseconds (0 ms)
-     *         image : { // Image to display at 0 ms
-     *           small : "slide_00000.jpeg", // Small version of the image
-     *           large : "slide_00000_large.jpeg" // Large version of the image
-     *         }
-     *       },
-     *       1200 : { // Timecode in milliseconds (1200 ms)
-     *         image : { // Image to display at 1200 ms
-     *           small : "slide_00001.jpeg", // Small version of the image
-     *           large : "slide_00001_large.jpeg" // Large version of the image
-     *         }
-     *       }
-     *       ...
-     *     },
      *     files : [ // The list of media files (required for "html" player)
      *       {
      *         width : 640, // Media width for this file
@@ -236,11 +218,13 @@
           
         // Media playback position has changed
         case "progress":
+
           // No indication about the playback position of the loading
           // percentage, assume it to be 0
           this.jPlayerElement.triggerHandler("loadProgress", {"loadedStart" : 0, "loadedPercent" : (this.player.video.buffer / this.player.video.duration) * 100});
           var playedPercent = (this.player.video.time / this.player.video.duration) * 100;
           this.jPlayerElement.triggerHandler("playProgress", { "time" : this.player.video.time * 1000, "percent" : playedPercent });
+          
         break;
       }
     };

@@ -85,24 +85,23 @@
      * @param Object media Details of the Media
      *   {
      *     mediaId : "136081112", // The id of the media
-     *     metadata : {
-     *      duration : 20 // Media duration in seconds
-     *     },
-     *     timecodes : { // Timecodes
-     *       0 : { // Timecode in milliseconds (0 ms)
+     *     timecodes : [ // Timecodes
+     *       {
+     *         timecode : 0, // Timecode in milliseconds (0 ms)
      *         image : { // Image to display at 0 ms
      *           small : "slide_00000.jpeg", // Small version of the image
      *           large : "slide_00000_large.jpeg" // Large version of the image
      *         }
      *       },
-     *       1200 : { // Timecode in milliseconds (1200 ms)
+     *       {
+     *         timecode : 1200, // Timecode in milliseconds (1200 ms)
      *         image : { // Image to display at 1200 ms
      *           small : "slide_00001.jpeg", // Small version of the image
      *           large : "slide_00001_large.jpeg" // Large version of the image
      *         }
      *       }
      *       ...
-     *     }
+     *     ]
      *   }
      */
     Player.prototype.init = function(jPlayerElement, media){
@@ -115,36 +114,12 @@
     };
 
     /**
-     * Gets media timecodes.
-     * @return Object The media timecodes
-     */
-    Player.prototype.getMediaTimecodes = function(){
-      return this.media.timecodes;
-    };
-
-    /**
      * Gets media id.
      * @return String The media id
      */
     Player.prototype.getMediaId = function(){
       return this.media.mediaId;
     };
-    
-    /**
-     * Gets chapter list.
-     * @return Object The media chapter
-     */
-    Player.prototype.getMediaChapter = function(){
-      return this.media.chapter;
-    }
-    
-    /**
-     * Gets chapter list.
-     * @return Object The media chapter
-     */
-    Player.prototype.getMediaCut = function(){
-      return this.media.cut;
-    }
 
     /**
      * Gets player id.

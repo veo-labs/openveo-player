@@ -32,24 +32,6 @@
      * @param Object media Details about the media
      *   {
      *     mediaId : "136081112", // The id of the media
-     *     metadata : {
-     *      duration : 20 // Media duration in seconds
-     *     },     
-     *     timecodes : { // Timecodes
-     *       0 : { // Timecode in milliseconds (0 ms)
-     *         image : { // Image to display at 0 ms
-     *           small : "slide_00000.jpeg", // Small version of the image
-     *           large : "slide_00000_large.jpeg" // Large version of the image
-     *         }
-     *       },
-     *       1200 : { // Timecode in milliseconds (1200 ms)
-     *         image : { // Image to display at 1200 ms
-     *           small : "slide_00001.jpeg", // Small version of the image
-     *           large : "slide_00001_large.jpeg" // Large version of the image
-     *         }
-     *       }
-     *       ...
-     *     },
      *     files : [ // The list of media files (required for "html" player)
      *       {
      *         width : 640, // Media width for this file
@@ -192,10 +174,9 @@
           // Caution, the progress event maybe dispatched even if buffer
           // is empty
           if(this.player.buffered.length === 1){
-            var loadedStart = (this.player.buffered.start(0) / this.player.duration) * 100;
-            var loadedPercent = ((this.player.buffered.end(0) - this.player.buffered.start(0)) / this.player.duration) * 100;
-
-            this.jPlayerElement.triggerHandler("loadProgress", {"loadedStart" : loadedStart, "loadedPercent" : loadedPercent});
+            var loadedStart = (this.player.buffered.start(0) / this.player.duration);
+            var loadedEnd = (this.player.buffered.end(0) / this.player.duration);
+            this.jPlayerElement.triggerHandler("loadProgress", {"loadedStart" : Math.max(0, Math.min(loadedStart, 1)) * 100, "loadedPercent" : Math.max(0, Math.min(loadedEnd - loadedStart, 1)) * 100});
           }
           
         break;

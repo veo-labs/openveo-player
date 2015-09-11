@@ -11,7 +11,7 @@
    * PlayerApp.js file.
    */
   app.directive("ovPlayer", ovPlayer);
-  ovPlayer.$inject = ["$injector", "$document", "$sce", "$filter", "$timeout"];
+  ovPlayer.$inject = ["$injector", "$document", "$sce", "$filter", "$timeout", "playerService"];
 
   // Available display modes
   // Display mode tells how presentation and media are structured
@@ -22,7 +22,7 @@
   //  - "presentation" mode : Only the presentation is displayed 
   var modes = ["media", "both", "both-presentation", "presentation"];
 
-  function ovPlayer($injector, $document, $sce, $filter, $timeout){
+  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService){
     return{
       restrict : "E",
       templateUrl : ovPlayerDirectory + "templates/player.html",
@@ -65,13 +65,16 @@
 
           // Set scope default values
           $scope.data = angular.copy($scope.ovData) || {};
+          playerService.setMedia($scope.data);
           initPlayer();
 
           if(!$scope.player)
             return;
 
-          $scope.timecodes = $scope.player.getMediaTimecodes() || {};
-          $scope.chapter = $scope.player.getMediaChapter() || {};
+          $scope.isCut = $scope.data.cut && $scope.data.cut.length;
+          $scope.timecodes = [];
+          $scope.timecodesByTime = {};
+          $scope.chapters = [];
           $scope.presentation = null;
           $scope.playerId = $scope.player.getId();
           $scope.timePreviewOpened = false;
@@ -91,10 +94,9 @@
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
           $scope.displayChapterTab = true;
-          $scope.sortedTimecodes = $filter("orderTimeCodes")($scope.timecodes);
           $scope.mediaUrl = $sce.trustAsResourceUrl($scope.player.getMediaUrl());
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
-          $scope.loading = false;
+          $scope.loading = true;
 
           // Full viewport and no FullScreen API available
           // Consider the player as in fullscreen
@@ -107,27 +109,98 @@
           if(isTouchDevice())
             $scope.ovVolumeIcon = false;
 
-          // Got Chapter associated with the media
-          if(!$scope.chapter.length){
+          // Video is cut
+          // Real media duration is required to be able to display either the
+          // list of chapters or the list of timecodes
+          if($scope.isCut){
             $scope.displayChapterTab = false;
+            hideTimecodes();
+            hideChapters();
           }
+
+          // Video is not cut
+          // Timecodes and chapters can be immediately displayed
+          else{
+            initTimecodes();
+            initChapters();
+          }
+
+        };
+
+        /**
+         * Initializes the list of chapters.
+         * Display the chapters tab only if there is at least one chapter.
+         */
+        function initChapters(){
+          $scope.chapters = playerService.getMediaChapters() || [];
+          if($scope.chapters.length){
+            $scope.displayChapterTab = $scope.chapters.length;
+            displayChapters();
+          }
+        }
+
+        /**
+         * Initializes the list of timecodes.
+         * Display the index tab only if there is at least one timecode.
+         * Also prepare a copy of the list of timecodes ordered by time to avoid
+         * parsing it systematically.
+         */
+        function initTimecodes(){
+          $scope.timecodes = playerService.getMediaTimecodes() || [];
+          $scope.timecodesByTime = playerService.getMediaTimecodesByTime() || {};
+
           // Got timecodes associated to the media
-          // Use the first image of the first timecode as
-          // the current presentation image
-          if($scope.sortedTimecodes.length){
-            $scope.timePreview = $scope.presentation = $scope.sortedTimecodes[0].image.large;
+          if($scope.timecodes.length){
+
+            // Use the first image of the first timecode as
+            // the current presentation image
+            $scope.timePreview = $scope.presentation = $scope.timecodes[0].image.large;
+
+            displayTimecodes();
           }
 
           // No timecodes
-          // Without timecodes, the index can't be built
-          // It also means that the media has no associated presentation
-          else{
-            $scope.displayIndexTab = false;
-            $scope.selectedMode = modes[0];
-            $scope.modes = [modes[0]];
-            $scope.ovModeIcon = false;
-          }
-        };
+          else
+            hideTimecodes();
+        }
+
+        /**
+         * Hides timecodes.
+         * Hide the index tab, the display mode selector and set display mode to
+         * "media" (only player is visible).
+         */
+        function hideTimecodes(){
+          $scope.displayIndexTab = false;
+          $scope.selectedMode = modes[0];
+          $scope.ovModeIcon = false;
+        }
+
+        /**
+         * Displays timecodes.
+         * Display the index tab, the display mode selector and set display mode
+         * to "both" (both player and presentation)
+         */
+        function displayTimecodes(){
+          $scope.displayIndexTab = true;
+          $scope.selectedMode = modes[1];
+          $scope.ovModeIcon = true;
+        }
+
+        /**
+         * Hides chapters.
+         * Hide the chapters tab.
+         */
+        function hideChapters(){
+          $scope.displayChapterTab = false;
+        }
+
+        /**
+         * Displays chapters.
+         * Display the chapters tab.
+         */
+        function displayChapters(){
+          $scope.displayChapterTab = true;
+        }
 
         /**
          * Initializes the player.
@@ -277,7 +350,7 @@
         $scope.$watch("ovModeIcon", function(){
 
           // Do not display mode icon if no timecodes are available
-          if($scope.sortedTimecodes && !$scope.sortedTimecodes.length && $scope.ovModeIcon)
+          if($scope.timecodes && !$scope.timecodes.length && $scope.ovModeIcon)
             $scope.ovModeIcon = false;
 
         });
@@ -345,7 +418,7 @@
          * @param Number time The time to set in milliseconds
          */
         this.setTime = function(time){
-          $scope.player.setTime(time);
+          $scope.player.setTime(playerService.getRealTime(time));
         };
 
         /**
@@ -357,7 +430,7 @@
              || rootElement.mozRequestFullScreen
              || rootElement.webkitRequestFullScreen
              || rootElement.msRequestFullscreen);
-        };
+        }
 
         /**
          * Tests if device is a touch device.
@@ -366,7 +439,7 @@
          */
         function isTouchDevice(){
           return true == ("ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch);
-        };
+        }
 
         /**
          * Gets closest timecode, from the list of timecodes, to
@@ -376,17 +449,17 @@
          */
         function findTimecode(time){
 
-          if($scope.sortedTimecodes.length){
-            for(var i = 0 ; i < $scope.sortedTimecodes.length ; i++){
-              if(time > $scope.sortedTimecodes[i].timecode && ($scope.sortedTimecodes[i + 1] && time < $scope.sortedTimecodes[i + 1].timecode))
-                return $scope.sortedTimecodes[i].timecode;
+          if($scope.timecodes.length){
+            for(var i = 0 ; i < $scope.timecodes.length ; i++){
+              if(time > $scope.timecodes[i].timecode && ($scope.timecodes[i + 1] && time < $scope.timecodes[i + 1].timecode))
+                return $scope.timecodes[i].timecode;
             }
 
-            return $scope.sortedTimecodes[$scope.sortedTimecodes.length - 1].timecode;
+            return $scope.timecodes[$scope.timecodes.length - 1].timecode;
           }
           
           return 0;
-        };
+        }
 
         /**
          * Handles mouse move events on volume bar area to update the 
@@ -397,7 +470,7 @@
           safeApply(function(){
             $scope.volumePreview = Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100);
           });
-        };
+        }
 
         /**
          * Handles mouse out events on volume bar area to reset volume
@@ -410,7 +483,7 @@
           safeApply(function(){
             $scope.volumePreview = 0;
           });
-        };
+        }
 
         /**
          * Handles mouse move events on time bar area to update the 
@@ -421,12 +494,12 @@
           var timecode = findTimecode(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
 
           safeApply(function(){
-            if($scope.timecodes[timecode])
-              $scope.timePreview = $scope.timecodes[timecode].image.large;
+            if($scope.timecodesByTime[timecode])
+              $scope.timePreview = $scope.timecodesByTime[timecode].image.large;
 
             $scope.timePreviewPosition = ((event.pageX - timeBarRect.left) / timeBarWidth) * 100;
           });
-        };
+        }
 
         /**
          * Executes, safely, the given function in AngularJS process.
@@ -463,7 +536,7 @@
             $scope.timePreviewPosition = 0;
             $scope.timePreviewOpened = false;
           });
-        };
+        }
 
         /**
          * Handles mouse over events on volume bar area to be able to 
@@ -483,7 +556,7 @@
          * @param MouseEvent event The dispatched event
          */
         angular.element(timeBar).on("mouseover", function(event){
-          if($scope.sortedTimecodes && $scope.sortedTimecodes.length){
+          if($scope.timecodes && $scope.timecodes.length){
             timeBarRect = timeBar.getBoundingClientRect();
             timeBarWidth = timeBarRect.right - timeBarRect.left;
 
@@ -502,6 +575,7 @@
           safeApply(function(){
             $scope.player.setVolume(100);
             $scope.loading = false;
+            console.log("ready");
           });
         });
 
@@ -523,7 +597,15 @@
         // Listen to player durationChange event
         $element.on("durationChange", function(event, duration){
           safeApply(function(){
-            $scope.duration = duration;
+            playerService.setRealMediaDuration(duration);
+            $scope.duration = playerService.getCutDuration();
+
+            // Media is cut and was waiting for the real media duration
+            if($scope.isCut){
+              initTimecodes();
+              initChapters();
+              $scope.player.setTime(playerService.getRealTime(0));
+            }
           });
         });
 
@@ -543,10 +625,10 @@
         });
 
         // Listen to player loadProgress event
-        $element.on("loadProgress", function(event, percents){
+        $element.on("loadProgress", function(event, data){
           safeApply(function(){
-            $scope.loadedStart = Math.min(percents.loadedStart, 100);
-            $scope.loadedPercent = Math.min(percents.loadedPercent, 100);
+            $scope.loadedStart = playerService.getCutPercent(data.loadedStart);
+            $scope.loadedPercent = playerService.getCutPercent(data.loadedPercent);
           });
         });
 
@@ -556,14 +638,20 @@
           var timecode = findTimecode(data.time);
 
           function updateTime(){
-            $scope.time = data.time;
-            $scope.seenPercent = data.percent;
+            $scope.time = playerService.getCutTime(data.time);
+            $scope.seenPercent = playerService.getCutPercent(data.percent);
 
-            if($scope.timecodes[timecode])
-              $scope.presentation = $scope.timecodes[timecode].image.large;
+            if($scope.timecodesByTime[timecode])
+              $scope.presentation = $scope.timecodesByTime[timecode].image.large;
           }
 
-          safeApply(updateTime);
+          // Media virtual end reached
+          if(playerService.getCutTime(data.time) > playerService.getCutDuration()){
+            $scope.player.setTime(playerService.getRealTime(0));
+            $scope.player.playPause();
+          }
+          else
+            safeApply(updateTime);
         });
 
         // Listen to player end event
@@ -572,8 +660,13 @@
             $scope.time = $scope.seenPercent = 0;
             $scope.playPauseButton = "play";
 
-            if($scope.sortedTimecodes.length)
-              $scope.presentation = $scope.timecodes[$scope.sortedTimecodes[0].timecode].image.large;
+            if($scope.timecodes.length)
+              $scope.presentation = $scope.timecodes[0].image.large;
+
+            // Media is cut
+            // Return to the cut start edge
+            if($scope.isCut)
+              $scope.player.setTime(playerService.getRealTime(0));
           });
         });
 

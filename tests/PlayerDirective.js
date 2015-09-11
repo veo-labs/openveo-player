@@ -35,14 +35,15 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {
-        10 : {
+      timecodes : [
+        {
+           timecode : 10,
            image : {
               small : "",
               large : "" 
            }
         }
-      }
+      ]
     };
     
     var element = angular.element("<ov-player ov-fullscreen-icon=\"true\" ov-full-viewport=\"fullViewport\" ov-time=\"displayTime\" ov-volume-icon=\"displayVolumeIcon\" ov-mode-icon=\"displayModeIcon\" ov-data=\"data\" ov-player-type=\"{{playerType}}\"></ov-player>");
@@ -51,7 +52,7 @@ describe("PlayerDirective", function(){
     
     var isolateScope = element.isolateScope();
     assert.isDefined(isolateScope.data.timecodes);
-    assert.isObject(isolateScope.data.timecodes);
+    assert.isArray(isolateScope.data.timecodes);
     assert.isDefined(isolateScope.ovFullscreenIcon);
     assert.isDefined(isolateScope.ovVolumeIcon);
     assert.isDefined(isolateScope.ovModeIcon);
@@ -64,14 +65,15 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {
-        10 : {
-           image : {
-              small : "",
-              large : ""
-           }
+      timecodes : [
+        {
+          timecode : 20,
+          image : {
+            small : "",
+            large : ""
+          }
         }
-      }
+      ]
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -103,11 +105,11 @@ describe("PlayerDirective", function(){
     assert.notOk(isolateScope.displayIndexTab);
   });
   
-  it("Should propose the media display mode if no timecodes", function(){
+  it("Should select the media display mode if no timecodes", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -115,9 +117,6 @@ describe("PlayerDirective", function(){
     
     var isolateScope = element.isolateScope();
     assert.isArray(isolateScope.modes);
-    assert.equal(isolateScope.modes.length, 1);
-    assert.equal(isolateScope.modes.length, 1);
-    assert.equal(isolateScope.modes[0], "media");
     assert.equal(isolateScope.selectedMode, "media");
   });
   
@@ -185,14 +184,15 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {
-        10 : {
-           image : {
-              small : "small",
-              large : "large" 
-           }
+      timecodes : [
+        {
+          timecode : 10,
+          image : {
+            small : "small",
+            large : "large" 
+          }
         }
-      }      
+      ]
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -257,7 +257,7 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -275,7 +275,7 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -294,7 +294,7 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -311,7 +311,7 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -328,7 +328,7 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -345,7 +345,7 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -363,32 +363,37 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {
-        10 : {
-           image : {
-              small : "small",
-              large : "large"
-           }
+      timecodes : [
+        {
+          timecode : 10,
+          image : {
+            small : "small",
+            large : "large"
+          }
         },
-        5000 : {
-           image : {
-              small : "small1",
-              large : "large2"
-           }
+        {
+          timecode : 5000,
+          image : {
+            small : "small2",
+            large : "large2"
+          }
         },
-        10000 : {
-           image : {
-              small : "small3",
-              large : "large3"
-           }
-        }        
-      }    
+        {
+          timecode : 10000,
+          image : {
+            small : "small3",
+            large : "large3"
+          }
+        }
+      ]
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
     scope.$digest();
 
     var isolateScope = element.isolateScope();
+    element.triggerHandler("durationChange", 10000);
+    $timeout.flush();
     element.triggerHandler("playProgress", {time : 7000, percent : 75});
     $timeout.flush();
     
@@ -401,7 +406,7 @@ describe("PlayerDirective", function(){
     $rootScope.data = {
       type : "vimeo",
       mediaId : "1",
-      timecodes : {}
+      timecodes : []
     };
     var element = angular.element("<ov-player ov-data=\"data\"></ov-player>");
     element = $compile(element)(scope);
@@ -428,6 +433,6 @@ describe("PlayerDirective", function(){
     assert.isDefined(controller.playPause);
     assert.isDefined(controller.setVolume);
     assert.isDefined(controller.setTime);
-  });   
+  });
   
 });
