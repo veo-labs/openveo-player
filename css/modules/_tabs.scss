@@ -17,6 +17,8 @@
   
   ul{ 
     display: table; 
+    background-color: $neutral-color;
+    height: 40px; 
   }
   
   li{ 
@@ -24,7 +26,7 @@
     padding: 0 40px; 
     line-height: 35px; 
     background-color: $neutral-color;
-    transition: border-top 0.4s ease;
+    @include transition(border-top 0.4s);
     border-top: 0px solid;
   }
   

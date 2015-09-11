@@ -17,7 +17,7 @@
 
   function ovIndex(ovIndexLink){
     return {
-      require : "^ovPlayer",
+      require : ["^ovPlayer","^ovTabs"],
       restrict : "E",
       templateUrl : ovPlayerDirectory + "templates/index.html",
       scope : true,
@@ -26,7 +26,9 @@
   }
 
   app.factory("ovIndexLink", function(){
-    return function(scope, element, attrs, playerCtrl){
+    return function(scope, element, attrs, controllers){
+       var playerCtrl = controllers[0],
+          tabsCtrl = controllers[1];
         
       if(scope.timecodes.length)
         scope.imagePreview = scope.timecodes[0].image.large;
@@ -46,6 +48,7 @@
       scope.goToTimecode = function(timecode){
         if(timecode <= scope.duration)
           playerCtrl.setTime(timecode);
+          tabsCtrl.selectTabs("media");
       };
       
     };

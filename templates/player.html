@@ -14,15 +14,11 @@
           </div>
         </ov-view>
 
-        <ov-view title="Index" ng-if="displayIndexTab" view="ov-index-view">
+        <ov-view title="Index" ng-if="displayIndexTab" view="ov-index-view" view-id="index">
           <ov-index></ov-index>
         </ov-view>
         
-        <ov-view title="Chapter" ng-if="displayChapterTab" view="ov-chapters-view" class="ov-mode-{{selectedMode}}">
-          <div class="ov-media">
-            <div class="ov-loader" ng-show="loading" ng-bind="'Loading...'"></div>
-            <ng-include src="mediaTemplate"></ng-include>
-          </div>
+        <ov-view title="Chapter" ng-if="displayChapterTab" view="ov-chapters-view" class="ov-mode-{{selectedMode}}" view-id="chapter">
           <ov-chapters></ov-chapters>
         </ov-view>
       </div>

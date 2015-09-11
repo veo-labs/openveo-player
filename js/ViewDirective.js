@@ -36,7 +36,8 @@
       templateUrl : ovPlayerDirectory + "templates/view.html",
       scope : {
         title : "@",
-        view : "@"
+        view : "@",
+        viewId : "@"
       },
       link : ovViewLink
     };

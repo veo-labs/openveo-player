@@ -28,9 +28,9 @@
       templateUrl : ovPlayerDirectory + "templates/tabs.html",
       scope : {},
       transclude : true,
-      controller : ["$scope", function($scope){
+      controller : ["$scope","$filter", function($scope, $filter){
         $scope.views = [];
-
+        
         // Selects the given view
         $scope.select = function(view){
           angular.forEach($scope.views, function(view){
@@ -38,6 +38,12 @@
           });
           view.selected = true;
         };
+        
+        this.selectTabs = function(viewId){
+          var view = $filter('filter')($scope.views, {viewId:viewId}, true);
+          if(view.length !=0)
+            $scope.select(view[0]);
+        }
 
         // Add the scope of an ovView directive to the list of views
         this.addView = function(view){
@@ -45,6 +51,7 @@
             $scope.select(view);
           
           $scope.views.push(view);
+          console.log($scope.views);
         };
 
       }]

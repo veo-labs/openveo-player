@@ -17,7 +17,7 @@
 
   function ovChapters(ovChaptersLink){
     return {
-      require : "^ovPlayer",
+      require : ["^ovPlayer","^ovTabs"],
       restrict : "E",
       templateUrl : ovPlayerDirectory + "templates/chapters.html",
       scope : true,
@@ -26,8 +26,10 @@
   }
 
   app.factory("ovChaptersLink", function(){
-    return function(scope, element, attrs, playerCtrl){
-     
+    return function(scope, element, attrs, controllers){
+      var playerCtrl = controllers[0],
+          tabsCtrl = controllers[1];
+  
       scope.open = function(chapter){
         if(!chapter.isOpen)
           angular.forEach(scope.chapters, function (value, key) {
@@ -42,6 +44,7 @@
       scope.goToTimecode = function(time){
         if(time <= 1)
           playerCtrl.setTime(time * scope.duration);
+          tabsCtrl.selectTabs("media");
       };
       
     };
