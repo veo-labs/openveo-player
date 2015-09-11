@@ -62,7 +62,7 @@
     function getMediaTimecodes(){
       
       // Media is cut
-      if(isCut && realMediaDuration){
+      if(isCut && realMediaDuration && media.timecodes){
         var filteredTimecodes = [];
         var realCutStart = getRealCutStart();
         var realCutEnd = getRealCutEnd();
@@ -114,24 +114,24 @@
     function getMediaChapters(){
       
       // Media is cut
-      if(isCut && realMediaDuration){
+      if(isCut && realMediaDuration && media.chapters){
         var filteredChapters = [];
         var realCutStart = getRealCutStart();
         var realCutEnd = getRealCutEnd();
         
         // Filter chapters depending on cut edges
         // Chapters not in the range [startCut - endCut] must be removed
-        for(var i = 0 ; i < media.chapter.length ; i++){
-          var timecode = realMediaDuration * media.chapter[i].value;
+        for(var i = 0 ; i < media.chapters.length ; i++){
+          var timecode = realMediaDuration * media.chapters[i].value;
           
           if(timecode >= realCutStart && timecode <= realCutEnd)
-            filteredChapters.push(media.chapter[i]);
+            filteredChapters.push(media.chapters[i]);
           
         }
         return filteredChapters;
       }   
       
-      return media.chapter;
+      return media.chapters;
     }
     
     /**

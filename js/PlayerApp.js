@@ -36,7 +36,7 @@
    *       }
    *       ...
    *     ],
-   *     chapter : [ // Chapters
+   *     chapters : [ // Chapters
    *       {
    *         name : "Chapter 1", // Chapter name
    *         description : "Chapter 1", // Chapter description

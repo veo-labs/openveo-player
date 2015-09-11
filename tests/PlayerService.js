@@ -43,7 +43,7 @@ describe("PlayerService", function(){
           }
         }
       ],
-      chapter: [
+      chapters: [
         { value: 0.04 },
         { value: 0.31 },
         { value: 0.35 },
