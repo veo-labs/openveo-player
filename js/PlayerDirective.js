@@ -579,7 +579,6 @@
           safeApply(function(){
             $scope.player.setVolume(100);
             $scope.loading = false;
-            console.log("ready");
           });
         });
 
