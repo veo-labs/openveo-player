@@ -51,7 +51,6 @@
             $scope.select(view);
           
           $scope.views.push(view);
-          console.log($scope.views);
         };
 
       }]
