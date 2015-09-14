@@ -27,8 +27,6 @@
 
   app.factory("ovChaptersLink", function(){
     return function(scope, element, attrs, controllers){
-      var playerCtrl = controllers[0],
-          tabsCtrl = controllers[1];
   
       scope.open = function(chapter){
         if(!chapter.isOpen)
@@ -42,6 +40,8 @@
        * @param Number timecode The timecode to seek to
        */
       scope.goToTimecode = function(time){
+        var playerCtrl = controllers[0],
+          tabsCtrl = controllers[1];
         if(time <= 1)
           playerCtrl.setTime(time * scope.duration);
           tabsCtrl.selectTabs("media");

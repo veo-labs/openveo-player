@@ -27,8 +27,6 @@
 
   app.factory("ovIndexLink", function(){
     return function(scope, element, attrs, controllers){
-       var playerCtrl = controllers[0],
-          tabsCtrl = controllers[1];
         
       if(scope.timecodes.length)
         scope.imagePreview = scope.timecodes[0].image.large;
@@ -46,6 +44,8 @@
        * @param Number timecode The timecode to seek to
        */
       scope.goToTimecode = function(timecode){
+        var playerCtrl = controllers[0],
+          tabsCtrl = controllers[1];
         if(timecode <= scope.duration)
           playerCtrl.setTime(timecode);
           tabsCtrl.selectTabs("media");

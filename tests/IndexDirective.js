@@ -5,7 +5,6 @@ window.assert = chai.assert;
 // IndexDirective.js
 describe("IndexDirective", function(){
   var ovIndexLink, $rootScope, playerScope, indexScope;
-  
   // Load module player
   beforeEach(module("ov.player"));
 
@@ -39,6 +38,7 @@ describe("IndexDirective", function(){
   });
 
   it("Should set image preview to the first one at initialization time", function(){
+    
     ovIndexLink(indexScope, null, null, null);
     assert.equal(indexScope.imagePreview, "largeFilePath");
   });
@@ -55,11 +55,18 @@ describe("IndexDirective", function(){
     var playerController = {
       setTime : function(time){
         assert.equal(time, 50);
+      }
+    };
+    var tabController = {
+      selectTabs : function(target){
+        assert.equal(target, "media");
         done();
       }
     };
     
-    ovIndexLink(indexScope, null, null, playerController);
+    var controllers = [playerController, tabController];
+    
+    ovIndexLink(indexScope, null, null, controllers);
     indexScope.goToTimecode(50);
   });  
   
