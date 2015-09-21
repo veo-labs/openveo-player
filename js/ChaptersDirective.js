@@ -28,12 +28,14 @@
   app.factory("ovChaptersLink", function(){
     return function(scope, element, attrs, controllers){
   
-      scope.open = function(chapter){
-        if(!chapter.isOpen)
-          angular.forEach(scope.chapters, function (value, key) {
-            value.isOpen = false;
-          });
-        chapter.isOpen = !chapter.isOpen;
+      scope.open = function (chapter) {
+        if (chapter.description && chapter.description != "") {
+          if (!chapter.isOpen)
+            angular.forEach(scope.chapters, function (value, key) {
+              value.isOpen = false;
+            });
+          chapter.isOpen = !chapter.isOpen;
+        }
       }
       /**
        * Seeks media to the given timecode.

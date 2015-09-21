@@ -18,17 +18,17 @@
  * *************************
  */
 .ov-time-bar{ 
-  height: 10px; 
-  padding: 3px; 
-  border: 1px solid $highlight-color; 
+  height: 10px;
+  padding: 3px;
+  border: 1px solid $highlight-color;
+  box-sizing: content-box;
 
-  & > div{ 
+  & > div{
     position: relative; 
     height: 100%; 
     cursor: pointer; 
     background-color: #666;
   }
-  
 }
 
 .ov-seen{ 
