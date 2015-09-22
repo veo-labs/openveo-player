@@ -1,24 +1,26 @@
+'use strict';
+
 module.exports = {
-  js : {
-    options : {
-      
+  js: {
+    options: {
+
       // Generated file header
-      banner : "/* openveo-player v<%= pkg.version %> */\n",      
-      
+      banner: '/* openveo-player v<%= pkg.version %> */\n',
+
       // Do not make it compatible with IE8
-      screwIE8 : true
-      
+      screwIE8: true
+
     },
-    files : [
+    files: [
       {
-        
+
         // Obfuscate openveo-player.js
-        src : ["<%= player.distPath %>/openveo-player.js"], 
-        
+        src: ['<%= player.distPath %>/openveo-player.js'],
+
         // Destination file
-        dest : "<%= player.distPath %>/openveo-player.min.js"
-        
+        dest: '<%= player.distPath %>/openveo-player.min.js'
+
       }
     ]
   }
-}
+};

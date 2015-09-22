@@ -1,12 +1,12 @@
-(function(app){
+'use strict';
 
-  "use strict"
-  
+(function(app) {
+
   /**
-   * Defines a service describing a player. 
+   * Defines a service describing a player.
    * All players must implements the methods of this object.
    * All events are dispatched to the given jPlayerElement.
-   * The following events are emitted by the player : 
+   * The following events are emitted by the player :
    *  - "play" : Player starts playing
    *  - "pause" : Player pauses
    *  - "loadProgress" : Player is buffering
@@ -18,12 +18,12 @@
    *  - "playing" : Media is ready to play after buffering
    *
    * e.g.
-   * 
+   *
    * // Get an instance of the OvVimeoPlayer
    * // (which extends OvPlayer)
    * var OvVimeoPlayer = $injector.get("OvVimeoPlayer");
    * var player = new OvVimeoPlayer(element, "player_id", "118786909");
-   * 
+   *
    * // Listen to "ready" event
    * element.on("ready", function(event){
    *   console.log("Player is ready");
@@ -43,40 +43,41 @@
    * element.on("durationChange", function(event, duration){
    *   console.log("Media duration " + duration);
    * });
-   * 
+   *
    * // Listen to "play" event
    * element.on("play", function(event){
    *   console.log("Player is playing");
    * });
-   * 
+   *
    * // Listen to "pause" event
    * element.on("pause", function(event){
    *   console.log("Player is in pause");
    * });
-   * 
+   *
    * // Listen to "loadProgress" event
    * element.on("loadProgress", function(event, data){
    *   console.log("Loading started at" + data.loadedStart + " percents of the media");
    *   console.log(data.loadedPercent + " percents of the media loaded");
    * });
-   * 
+   *
    * // Listen to "playProgress" event
    * element.on("playProgress", function(event, data){
    *   console.log("Actual time " + data.time);
    *   console.log(data.percent + " percents of the media played");
    * });
-   * 
+   *
    * // Listen to "end" event
    * element.on("end", function(event){
    *   console.log("Media has reached the end");
-   * }); 
+   * });
    */
-  app.factory("OvPlayer", OvPlayer);
-  
-  function OvPlayer(){
-    
-    function Player(){}
-    
+  function OvPlayer() {
+
+    /**
+     * Defines a Player interface which every Player must implement.
+     */
+    function Player() {}
+
     /**
      * Checks if data object is valid.
      * @param Object jPlayerElement The JQLite HTML element corresponding
@@ -104,20 +105,20 @@
      *     ]
      *   }
      */
-    Player.prototype.init = function(jPlayerElement, media){
-      if(!jPlayerElement || !media)
-        throw new Error("A player JQLite Element and a media object are expected as Player arguments");
-      
+    Player.prototype.init = function(jPlayerElement, media) {
+      if (!jPlayerElement || !media)
+        throw new Error('A player JQLite Element and a media object are expected as Player arguments');
+
       this.jPlayerElement = jPlayerElement;
       this.media = media;
-      this.playerId = "player_" + this.media.mediaId;
+      this.playerId = 'player_' + this.media.mediaId;
     };
 
     /**
      * Gets media id.
      * @return String The media id
      */
-    Player.prototype.getMediaId = function(){
+    Player.prototype.getMediaId = function() {
       return this.media.mediaId;
     };
 
@@ -125,7 +126,7 @@
      * Gets player id.
      * @return String The player id
      */
-    Player.prototype.getId = function(){
+    Player.prototype.getId = function() {
       return this.playerId;
     };
 
@@ -133,48 +134,66 @@
      * Gets media url.
      * @return String The media url
      */
-    Player.prototype.getMediaUrl = function(){throw new Error("getMediaUrl method not implemented for this player");};
-    
+    Player.prototype.getMediaUrl = function() {
+      throw new Error('getMediaUrl method not implemented for this player');
+    };
+
     /**
      * Gets media thumbnail.
      * @return String The media thumbnail
      */
-    Player.prototype.getMediaThumbnail = function(){throw new Error("getMediaThumbnail method not implemented for this player");};
-    
+    Player.prototype.getMediaThumbnail = function() {
+      throw new Error('getMediaThumbnail method not implemented for this player');
+    };
+
     /**
      * Inititializes the player after DOM is loaded.
      */
-    Player.prototype.initialize = function(){throw new Error("initialize method not implemented for this player");};
-    
+    Player.prototype.initialize = function() {
+      throw new Error('initialize method not implemented for this player');
+    };
+
     /**
      * Plays or pauses the media depending on media actual state.
      */
-    Player.prototype.playPause = function(){throw new Error("play method not implemented for this player");};
-    
+    Player.prototype.playPause = function() {
+      throw new Error('play method not implemented for this player');
+    };
+
     /**
      * Sets volume.
      * @param Number volume The new volume from 0 to 100.
      */
-    Player.prototype.setVolume = function(volume){throw new Error("setVolume method not implemented for this player");}; 
-    
+    Player.prototype.setVolume = function() {
+      throw new Error('setVolume method not implemented for this player');
+    };
+
     /**
      * Sets time.
      * @param Number time The time to seek to in milliseconds
      */
-    Player.prototype.setTime = function(time){throw new Error("setTime method not implemented for this player");};
-    
+    Player.prototype.setTime = function() {
+      throw new Error('setTime method not implemented for this player');
+    };
+
     /**
      * Gets player type.
      * @return String A string representation of the player type
      */
-    Player.prototype.getPlayerType = function(){throw new Error("getPlayerType method not implemented for this player");};
+    Player.prototype.getPlayerType = function() {
+      throw new Error('getPlayerType method not implemented for this player');
+    };
 
     /**
      * Destroys the player.
      */
-    Player.prototype.destroy = function(){throw new Error("destroy method not implemented for this player");};     
+    Player.prototype.destroy = function() {
+      throw new Error('destroy method not implemented for this player');
+    };
 
     return Player;
   }
-  
-})(angular.module("ov.player"));
+
+  app.factory('OvPlayer', OvPlayer);
+
+})(angular.module('ov.player'));

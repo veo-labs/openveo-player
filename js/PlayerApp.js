@@ -1,16 +1,16 @@
-(function(angular){
+'use strict';
 
-  "use strict"
+(function(angular) {
 
   /**
    * Creates the ov.player module.
-   * ov.player offers a directive to easily create a player with 
-   * associated presentation images. All you have to do is use the 
+   * ov.player offers a directive to easily create a player with
+   * associated presentation images. All you have to do is use the
    * directive ovPlayer.
    *
-   * The ov-player HTML element needs partials. To be able to locate the 
+   * The ov-player HTML element needs partials. To be able to locate the
    * directory of the partials, a global variable "ovPlayerDirectory"
-   * must be set to the root directory of the player. 
+   * must be set to the root directory of the player.
    *
    * e.g.
    * var ovPlayerDirectory = "/js/player/";
@@ -81,7 +81,7 @@
    *      - html : To play the media using HTML player
    *    If no player type is provided, ov-player will figure out which player
    *    to use depending on the media type.
-   *  - Boolean ov-fullscreen-icon true to display the 
+   *  - Boolean ov-fullscreen-icon true to display the
    *    enlarge/reduce icon (CAUTION : It must be an assignable variable)
    *  - Boolean ov-volume-icon true to display the volume icon
    *    (CAUTION : It must be an assignable variable)
@@ -93,9 +93,9 @@
    *    full viewport (CAUTION : It must be an assignable variable)
    *
    * e.g.
-   * 
-   * // Define the data object as input for the ov-player 
-   * $scope.data = 
+   *
+   * // Define the data object as input for the ov-player
+   * $scope.data =
    *  {
    *    "type" : "vimeo",
    *    "mediaId" : "118502922",
@@ -110,7 +110,7 @@
    *    ]
    *  }
    *
-   * <ov-player 
+   * <ov-player
    *   ov-data="data"
    *   ov-fullscreen-icon="displayFullscreenIcon"
    *   ov-volume="displayVolumeIcon"
@@ -121,7 +121,7 @@
    * ></ov-player>
    *
    * // The whole object can also be changed dynamically
-   * $scope.data = 
+   * $scope.data =
    *  {
    *    "type" : "vimeo",
    *    "mediaId" : "118502919",
@@ -143,7 +143,7 @@
    *    }
    *  }
    *
-   * CAUTION : To update the data of the player the whole object 
+   * CAUTION : To update the data of the player the whole object
    * must be changed. There aren't any two way bindings on the data
    * object properties.
    *
@@ -232,13 +232,13 @@
    *
    *  // Seeks media to time 20s
    *  playerController.setTime(20000);
-   * 
+   *
    * });
    *
    */
-  var app = angular.module("ov.player", []);
-  
-  if(typeof ovPlayerDirectory === "undefined" || typeof ovPlayerDirectory !== "string")
-    throw new Error("ovPlayerDirectory global variable must be defined and set to the root path of the openVeo player");
-  
+  angular.module('ov.player', []);
+
+  if (typeof ovPlayerDirectory === 'undefined' || typeof ovPlayerDirectory !== 'string')
+    throw new Error('ovPlayerDirectory global variable must be defined and set to the root path of the openVeo player');
+
 })(angular);

@@ -1,2 +1,2 @@
-ovFlashPlayer = "flowplayer.swf";
-ovPlayerDirectory = "";
+ovFlashPlayer = 'flowplayer.swf';
+ovPlayerDirectory = '';

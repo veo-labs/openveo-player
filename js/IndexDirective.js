@@ -1,41 +1,38 @@
-(function(app){
+'use strict';
 
-  "use strict"
+(function(app) {
 
   /**
-   * Creates a new HTML element ov-index to create an openVeo player 
+   * Creates a new HTML element ov-index to create an openVeo player
    * index, with a list of presentation slides.
    * It requires ovPlayerDirectory global variable to be defined and have
-   * a value corresponding to the path of the openVeo Player 
+   * a value corresponding to the path of the openVeo Player
    * root directory.
    *
    * e.g.
    * <ov-index></ov-index>
    */
-  app.directive("ovIndex", ovIndex);
-  ovIndex.$inject = ["ovIndexLink"];  
-
-  function ovIndex(ovIndexLink){
+  function ovIndex(ovIndexLink) {
     return {
-      require : ["^ovPlayer","^ovTabs"],
-      restrict : "E",
-      templateUrl : ovPlayerDirectory + "templates/index.html",
-      scope : true,
-      link : ovIndexLink
-    }
+      require: ['^ovPlayer', '^ovTabs'],
+      restrict: 'E',
+      templateUrl: ovPlayerDirectory + 'templates/index.html',
+      scope: true,
+      link: ovIndexLink
+    };
   }
 
-  app.factory("ovIndexLink", function(){
-    return function(scope, element, attrs, controllers){
-        
-      if(scope.timecodes.length)
+  app.factory('ovIndexLink', function() {
+    return function(scope, element, attrs, controllers) {
+
+      if (scope.timecodes.length)
         scope.imagePreview = scope.timecodes[0].image.large;
 
       /**
        * Sets presentation preview corresponding to the given timecode.
        * @param Number timecode The timecode (in milliseconds)
        */
-      scope.setImagePreview = function(timecode){
+      scope.setImagePreview = function(timecode) {
         scope.imagePreview = scope.timecodesByTime[timecode].image.large;
       };
 
@@ -43,15 +40,18 @@
        * Seeks media to the given timecode.
        * @param Number timecode The timecode to seek to
        */
-      scope.goToTimecode = function(timecode){
+      scope.goToTimecode = function(timecode) {
         var playerCtrl = controllers[0],
           tabsCtrl = controllers[1];
-        if(timecode <= scope.duration)
+        if (timecode <= scope.duration)
           playerCtrl.setTime(timecode);
-          tabsCtrl.selectTabs("media");
+        tabsCtrl.selectTabs('media');
       };
-      
-    };
-  });  
 
-})(angular.module("ov.player"));
+    };
+  });
+
+  app.directive('ovIndex', ovIndex);
+  ovIndex.$inject = ['ovIndexLink'];
+
+})(angular.module('ov.player'));

@@ -1,17 +1,19 @@
+'use strict';
+
 module.exports = {
-  options : {
-    
+  options: {
+
     // Generated file header
-    banner : "/* openveo-player v<%= pkg.version %> */\n" 
-    
+    banner: '/* openveo-player v<%= pkg.version %> */\n'
+
   },
-  js : {
-    
+  js: {
+
     // Match all JavaScript files to concat (PlayerApp.js must be the first one)
-    src : ["<%= player.jsPath %>/PlayerApp.js", "<%= player.jsPath %>/**/*.js"], 
-    
+    src: ['<%= player.jsPath %>/PlayerApp.js', '<%= player.jsPath %>/**/*.js'],
+
     // Destination file
-    dest : "<%= player.distPath %>/openveo-player.js"
-    
+    dest: '<%= player.distPath %>/openveo-player.js'
+
   }
-}
+};
