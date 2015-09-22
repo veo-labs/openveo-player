@@ -64,7 +64,7 @@
 
           break;
         default:
-          return;
+          break;
       }
     }
 

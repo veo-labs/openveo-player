@@ -118,7 +118,7 @@
             break;
 
           default:
-            return;
+            break;
         }
 
         // Actions

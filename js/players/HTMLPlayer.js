@@ -83,7 +83,7 @@
           });
           break;
         default:
-          return;
+          break;
       }
     }
 
