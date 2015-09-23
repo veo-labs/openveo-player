@@ -35,7 +35,7 @@
     "grunt-extend-config": "^0.9.2",
     "grunt-init": "^0.3.2",
     "grunt-karma": "^0.11.2",
-    "grunt-eslint": "^17.1.0",    
+    "grunt-eslint": "^17.1.0",
     "karma": "^0.12.31",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.1.7",
@@ -43,11 +43,15 @@
     "karma-ie-launcher": "^0.1.5",
     "karma-mocha": "^0.1.10",
     "karma-phantomjs-launcher": "^0.1.4",
-    "karma-ng-html2js-preprocessor": "~0.1.2"
+    "karma-ng-html2js-preprocessor": "~0.1.2",
+    "pre-commit": "^1.1.1"
   },
   "scripts": {
-    "postinstall": "bower install"
+    "postinstall": "bower install",
+    "eslint": "grunt eslint",
+    "karma": "grunt karma"
   },
+  "precommit": ["eslint", "karma"],
   "engines": {
     "node": "^0.10.0"
   }
