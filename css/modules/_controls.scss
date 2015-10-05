@@ -194,6 +194,7 @@
   }
   
   .ov-button{ 
+    box-sizing: content-box;
     display: block; 
     width: 20px; 
     padding: 10px 20px 10px 16px; 
