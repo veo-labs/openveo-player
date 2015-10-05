@@ -1,10 +1,13 @@
 <div class="ov-chapters">
   <ul>
-    <li ng-repeat-start="chapter in chapters | orderBy:'+value'" ng-class="{'open':chapter.isOpen}">
-      <div class="title"  ng-click="open(chapter)">{{chapter.name}}</div>
-      <div class="ov-icon-play ov-button" ng-click="goToTimecode(chapter.value)"></div>
+    <li ng-repeat-start="chapter in chapters | orderBy:'+value'"  ng-click="goToTimecode(chapter.value)" class="open">
+      <div class="title" >
+        <span class="time" >{{chapter.value*duration | date:'H:mm:ss':'+0000'}}</span>
+        {{chapter.name}}
+      </div>
+      
       <!--<div class="title"></div>-->
     </li>
-    <p ng-repeat-end>{{chapter.description}}</p>
+    <p ng-repeat-end ng-if="chapter.description && chapter.description!=''">{{chapter.description}}</p>
   </ul>
 </div>

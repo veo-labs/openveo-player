@@ -25,6 +25,7 @@
   app.factory('ovChaptersLink', function() {
     return function(scope, element, attrs, controllers) {
 
+      // toggle chapter
       scope.open = function(chapter) {
         if (chapter.description && chapter.description != '') {
           if (!chapter.isOpen)
