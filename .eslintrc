@@ -3,21 +3,24 @@
   // Extends eslint recommended rules
   "extends": "eslint:recommended",
   "env": {
-  
+
     // Add browser environment globals
-    "browser": true,  
+    "browser": true,
 
     // Add node.js environment globals
     "node": true
 
   },
   "globals": {
-  
+
     // Add angular to environment globals but do not authorize to overwrite it
     angular: false
-    
-  },  
+
+  },
   "rules": {
+
+    // Disallow unused vars but not unused arguments
+    "no-unused-vars": [2, {"vars": "local", "args": "none"}],
 
     // Treat var as block scoped
     "block-scoped-var": 2,
