@@ -18,7 +18,7 @@
    * For more information on the ov-player element, have a look at the
    * PlayerApp.js file.
    */
-  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService) {
+  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService, i18nPlayerService) {
     return {
       restrict: 'E',
       templateUrl: ovPlayerDirectory + 'templates/player.html',
@@ -29,6 +29,7 @@
         ovModeIcon: '=?',
         ovTime: '=?',
         ovFullViewport: '=?',
+        ovLanguage: '=?',
         ovPlayerType: '@?'
       },
       controller: ['$scope', '$element', function($scope, $element) {
@@ -53,6 +54,7 @@
         $scope.ovModeIcon = (typeof $scope.ovModeIcon === 'undefined') ? true : $scope.ovModeIcon;
         $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
         $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
+        $scope.ovLanguage = (typeof $scope.ovLanguage === 'undefined') ? 'en' : $scope.ovLanguage;
 
         /**
          * Tests if browser implements the fullscreen API or not.
@@ -321,6 +323,9 @@
           $scope.mediaUrl = $sce.trustAsResourceUrl($scope.player.getMediaUrl());
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
           $scope.loading = true;
+
+          // Set player language
+          i18nPlayerService.setLanguage($scope.ovLanguage);
 
           // Full viewport and no FullScreen API available
           // Consider the player as in fullscreen
@@ -685,6 +690,6 @@
   }
 
   app.directive('ovPlayer', ovPlayer);
-  ovPlayer.$inject = ['$injector', '$document', '$sce', '$filter', '$timeout', 'playerService'];
+  ovPlayer.$inject = ['$injector', '$document', '$sce', '$filter', '$timeout', 'playerService', 'i18nPlayerService'];
 
 })(angular, angular.module('ov.player'));

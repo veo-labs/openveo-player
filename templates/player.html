@@ -4,9 +4,9 @@
     <ov-tabs>
 
       <div class="ov-views">
-        <ov-view title="Vidéo" view="ov-media-view" class="ov-mode-{{selectedMode}}" view-id="media">
+        <ov-view title="{{'VIDEO_TAB_TITLE' | ovTranslate}}" view="ov-media-view" class="ov-mode-{{selectedMode}}" view-id="media">
           <div class="ov-media">
-            <div class="ov-loader" ng-show="loading" ng-bind="'Loading...'"></div>
+            <div class="ov-loader" ng-show="loading" ng-bind="'LOADING' | ovTranslate"></div>
             <ng-include src="mediaTemplate"></ng-include>
           </div>
           <div class="ov-presentation">
@@ -14,11 +14,11 @@
           </div>
         </ov-view>
 
-        <ov-view title="Index" ng-if="displayIndexTab" view="ov-index-view" view-id="index">
+        <ov-view title="{{'INDEX_TAB_TITLE' | ovTranslate}}" ng-if="displayIndexTab" view="ov-index-view" view-id="index">
           <ov-index></ov-index>
         </ov-view>
-        
-        <ov-view title="Chapter" ng-if="displayChapterTab" view="ov-chapters-view" class="ov-mode-{{selectedMode}}" view-id="chapter">
+
+        <ov-view title="{{'CHAPTERS_TAB_TITLE' | ovTranslate}}" ng-if="displayChapterTab" view="ov-chapters-view" class="ov-mode-{{selectedMode}}" view-id="chapter">
           <ov-chapters></ov-chapters>
         </ov-view>
       </div>

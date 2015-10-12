@@ -236,9 +236,25 @@
    * });
    *
    */
-  angular.module('ov.player', []);
+  var app = angular.module('ov.player', []);
 
   if (typeof ovPlayerDirectory === 'undefined' || typeof ovPlayerDirectory !== 'string')
     throw new Error('ovPlayerDirectory global variable must be defined and set to the root path of the openVeo player');
+
+  // Player translations
+  app.constant('i18nTranslations', {
+    en: {
+      VIDEO_TAB_TITLE: 'Video',
+      INDEX_TAB_TITLE: 'Index',
+      CHAPTERS_TAB_TITLE: 'Chapters',
+      LOADING: 'Loading...'
+    },
+    fr: {
+      VIDEO_TAB_TITLE: 'Vidéo',
+      INDEX_TAB_TITLE: 'Index',
+      CHAPTERS_TAB_TITLE: 'Chapitres',
+      LOADING: 'Chargement...'
+    }
+  });
 
 })(angular);
