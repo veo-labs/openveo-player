@@ -1,0 +1,23 @@
+site_name: Openveo Player
+repo_url: https://github.com/veo-labs/openveo-player
+theme: readthedocs
+site_dir: site/version
+markdown_extensions:
+  - fenced_code
+  - tables
+pages:
+- 'INTRODUCTION': 'index.md'
+- 'USERS':
+  - 'Prerequisites': 'prerequisites.md'
+  - 'Getting started': 'getting-started.md'
+  - 'Animations': 'animations.md'
+  - 'API': 'api.md'
+  - 'Examples': 'examples.md'
+- 'DEVELOPERS':
+  - 'The basics': 'developers/basics.md'
+  - 'Prerequisites': 'developers/prerequisites.md'
+  - 'Installation': 'developers/installation.md'
+  - 'CSS / SASS / JS compilation': 'developers/compilation.md'
+  - 'I18N and I10N': 'developers/i18n.md'
+  - 'Coding standards': 'developers/coding-standards.md'
+  - 'Unit tests': 'developers/unit-tests.md'

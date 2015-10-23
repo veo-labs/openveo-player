@@ -47,3 +47,8 @@ bower.json
 # Unit tests
 /tests
 /karmaConf.js
+
+# Documentation
+/site
+/.grunt
+/docs

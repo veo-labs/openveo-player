@@ -42,11 +42,21 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-mkdocs');
+  grunt.loadNpmTasks('grunt-gh-pages');
+  grunt.loadNpmTasks('grunt-rename');
+  grunt.loadNpmTasks('grunt-remove');
 
-  // Register default task to compile sass files on any changes
+  // Listen to changes on SCSS files and generate CSS files
   grunt.registerTask('default', ['compass:dev']);
 
-  // Register dist task to obfuscate and concatenate project sources
-  grunt.registerTask('dist', ['concat', 'uglify', 'compass:dist']);
+  // Generate documentation
+  grunt.registerTask('doc', ['remove:doc', 'mkdocs', 'rename:doc']);
+
+  // Prepare project for production
+  grunt.registerTask('dist', ['concat', 'uglify', 'compass:dist', 'doc']);
+
+  // Deploy documentation to github pages
+  grunt.registerTask('deploy-doc', ['doc', 'gh-pages:doc']);
 
 };

@@ -24,3 +24,7 @@ ehthumbs.db
 
 # Dev dependencies
 /lib
+
+# Documentation
+/site
+/.grunt

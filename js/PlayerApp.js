@@ -13,38 +13,38 @@
    * must be set to the root directory of the player.
    *
    * e.g.
-   * var ovPlayerDirectory = "/js/player/";
+   * var ovPlayerDirectory = '/js/player/';
    *
    * Available attributes are :
    *  - Object ov-data A data object as :
    *   {
-   *     mediaId : "136081112", // The id of the media
+   *     mediaId : '136081112', // The id of the media
    *     timecodes : [ // Timecodes
    *       {
    *         timecode : 0, // Timecode in milliseconds (0 ms)
    *         image : { // Image to display at 0 ms
-   *           small : "slide_00000.jpeg", // Small version of the image
-   *           large : "slide_00000_large.jpeg" // Large version of the image
+   *           small : 'slide_00000.jpeg', // Small version of the image
+   *           large : 'slide_00000_large.jpeg' // Large version of the image
    *         }
    *       },
    *       {
    *         timecode : 1200, // Timecode in milliseconds (1200 ms)
    *         image : { // Image to display at 1200 ms
-   *           small : "slide_00001.jpeg", // Small version of the image
-   *           large : "slide_00001_large.jpeg" // Large version of the image
+   *           small : 'slide_00001.jpeg', // Small version of the image
+   *           large : 'slide_00001_large.jpeg' // Large version of the image
    *         }
    *       }
    *       ...
    *     ],
    *     chapters : [ // Chapters
    *       {
-   *         name : "Chapter 1", // Chapter name
-   *         description : "Chapter 1", // Chapter description
+   *         name : 'Chapter 1', // Chapter name
+   *         description : 'Chapter 1', // Chapter description
    *         value : 0.04666666666666667 // Chapter timecode in percent
    *       },
    *       {
-   *         name : "Chapter 2", // Chapter name
-   *         description : "Chapter 2", // Chapter description
+   *         name : 'Chapter 2', // Chapter name
+   *         description : 'Chapter 2', // Chapter description
    *         value : 0.31666666666666665 // Chapter timecode in percent
    *       }
    *       ...
@@ -53,12 +53,12 @@
    *       {
    *         width : 640, // Media width for this file
    *         height : 360, // Media height for this file
-   *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Media url
+   *         link : 'https://player.vimeo.com/external/136081112.sd.mp4' // Media url
    *       },
    *       {
    *         width : 1280, // Media width for this file
    *         height : 720, // Media height for this file
-   *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Media url
+   *         link : 'https://player.vimeo.com/external/136081112.hd.mp4' // Media url
    *       },
    *       ...
    *     ],
@@ -66,12 +66,34 @@
    *       {
    *         width : 960,
    *         height : 540,
-   *         link : "https://i.vimeocdn.com/video/530445364_960x540.jpg"
+   *         link : 'https://i.vimeocdn.com/video/530445364_960x540.jpg'
    *       },
    *       {
    *         width : 1280,
    *         height : 720,
-   *         link : "https://i.vimeocdn.com/video/530445364_1280x720.jpg"
+   *         link : 'https://i.vimeocdn.com/video/530445364_1280x720.jpg'
+   *       }
+   *     ],
+   *     chapters : [ // Chapters
+   *       {
+   *         name : 'Chapter 1', // Chapter name
+   *         description : 'Chapter 1', // Chapter description
+   *         value : 0.04 // Chapter timecode in percent (percentage of the video)
+   *       },
+   *       {
+   *         name : 'Chapter 2', // Chapter name
+   *         description : 'Chapter 2', // Chapter description
+   *         value : 0.3 // Chapter timecode in percent (percentage of the video)
+   *       }
+   *     ],
+   *     cut : [ // Cut information (begin and end)
+   *       {
+   *         type : 'begin', // Cut type
+   *         value : 0 // Begin timecode (percentage of the media)
+   *       },
+   *       {
+   *         type : 'end', // Cut type
+   *         value : 0.9 // End timecode (percentage of the media)
    *       }
    *     ]
    *   }
@@ -97,14 +119,14 @@
    * // Define the data object as input for the ov-player
    * $scope.data =
    *  {
-   *    "type" : "vimeo",
-   *    "mediaId" : "118502922",
-   *    "timecodes" : [
+   *    'type' : 'vimeo',
+   *    'mediaId' : '118502922',
+   *    'timecodes' : [
    *      {
-   *        "timecode" : 50000,
-   *        "image" : {
-   *          "small" : "./slides/slide_00000.jpeg",
-   *          "large" : "./slides/slide_00000_large.jpeg"
+   *        'timecode' : 50000,
+   *        'image' : {
+   *          'small' : './slides/slide_00000.jpeg',
+   *          'large' : './slides/slide_00000_large.jpeg'
    *        }
    *      }
    *    ]
@@ -118,26 +140,27 @@
    *   ov-time="displayTime"
    *   ov-full-viewport="fullViewport"
    *   ov-player-type="html"
+   *   ov-language="fr"
    * ></ov-player>
    *
    * // The whole object can also be changed dynamically
    * $scope.data =
    *  {
-   *    "type" : "vimeo",
-   *    "mediaId" : "118502919",
-   *    "timecodes" : {
+   *    'type' : 'vimeo',
+   *    'mediaId' : '118502919',
+   *    'timecodes' : {
    *      {
-   *        "timecode" : 0,
-   *        "image" : {
-   *          "small" : "./slides/slide_00000.jpeg",
-   *          "large" : "./slides/slide_00000_large.jpeg"
+   *        'timecode' : 0,
+   *        'image' : {
+   *          'small' : './slides/slide_00000.jpeg',
+   *          'large' : './slides/slide_00000_large.jpeg'
    *        }
    *      },
    *      {
-   *        "timecode" : 20000,
-   *        "image" : {
-   *          "small" : "./slides/slide_00001.jpeg",
-   *          "large" : "./slides/slide_00001_large.jpeg"
+   *        'timecode' : 20000,
+   *        'image' : {
+   *          'small' : './slides/slide_00001.jpeg',
+   *          'large' : './slides/slide_00001_large.jpeg'
    *        }
    *      }
    *    }
@@ -164,65 +187,65 @@
    * e.g.
    * <ov-player ... id="myPlayer"></ov-player>
    *
-   * var myPlayer = document.getElementById("myPlayer");
-   * angular.element(myPlayer).on("ready", function(event){
-   *   console.log("ready");
+   * var myPlayer = document.getElementById('myPlayer');
+   * angular.element(myPlayer).on('ready', function(event){
+   *   console.log('ready');
    * });
    *
-   * angular.element(test).on("waiting", function(event){
-   *   console.log("waiting");
+   * angular.element(test).on('waiting', function(event){
+   *   console.log('waiting');
    * });
    *
-   * angular.element(test).on("playing", function(event){
-   *   console.log("playing");
+   * angular.element(test).on('playing', function(event){
+   *   console.log('playing');
    * });
    *
-   * angular.element(test).on("durationChange", function(event, duration){
-   *   console.log("durationChange with new duration = " + duration);
+   * angular.element(test).on('durationChange', function(event, duration){
+   *   console.log('durationChange with new duration = ' + duration);
    * });
    *
-   * angular.element(test).on("play", function(event){
-   *   console.log("play");
+   * angular.element(test).on('play', function(event){
+   *   console.log('play');
    * });
    *
-   * angular.element(test).on("pause", function(event){
-   *   console.log("pause");
+   * angular.element(test).on('pause', function(event){
+   *   console.log('pause');
    * });
    *
-   * angular.element(test).on("loadProgress", function(event, percents){
-   *   console.log("loadProgress");
-   *   console.log("Buffering start = " + percents.loadedStart);
-   *   console.log("Buffering end = " + percents.loadedPercent);
+   * angular.element(test).on('loadProgress', function(event, percents){
+   *   console.log('loadProgress');
+   *   console.log('Buffering start = ' + percents.loadedStart);
+   *   console.log('Buffering end = ' + percents.loadedPercent);
    * });
    *
-   * angular.element(test).on("playProgress", function(event, data){
-   *   console.log("playProgress");
-   *   console.log("Current time = " + data.time + "ms");
-   *   console.log("Played percent = " + data.percent);
+   * angular.element(test).on('playProgress', function(event, data){
+   *   console.log('playProgress');
+   *   console.log('Current time = ' + data.time + 'ms');
+   *   console.log('Played percent = ' + data.percent);
    * });
    *
-   * angular.element(test).on("end", function(event){
-   *   console.log("end");
+   * angular.element(test).on('end', function(event){
+   *   console.log('end');
    * });
    *
    * Controlling the player :
    * You can control the player with some basic actions
-   * - selectMode To select the display mode (can be "media", "both",
-   *   "both-presentation" or "presentation")
+   * - selectMode To select the display mode (can be 'media', 'both',
+   *   'both-presentation' or 'presentation')
    * - playPause To start / stop the media
    * - setVolume To change player's volume
    * - setTime To seek media to a specific time
    *
    * e.g.
    * <ov-player ... id="myPlayer"></ov-player>
-   * var myPlayer = document.getElementById("myPlayer");
+   * var myPlayer = document.getElementById('myPlayer');
    *
-   * angular.element(myPlayer).on("ready", function(event){
-   *  console.log("ready");
-   *  var playerController = angular.element(myPlayer).controller("ovPlayer");
+   * angular.element(myPlayer).on('ready', function(event){
+   *  console.log('ready');
+   *  var playerController = angular.element(myPlayer).controller('ovPlayer');
    *
-   *  // Selects a new display mode ("media")
-   *  playerController.selectMode("media");
+   *  // Selects a new display mode ('media')
+   *  playerController.selectMode('media');
    *
    *  // Starts / Pauses the player
    *  playerController.playPause();
