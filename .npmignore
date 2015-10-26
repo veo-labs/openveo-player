@@ -52,3 +52,7 @@ bower.json
 /site
 /.grunt
 /docs
+/mkdocs.yml
+
+# Eslint
+.eslintrc

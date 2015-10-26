@@ -1,28 +1,27 @@
 {
   "name": "@openveo/player",
-  "version": "0.0.2",
-  "description": "OpenVeo player to play a video with associated slides",
-  "publishConfig": {
-    "registry": "http://87.98.155.235:4873/"
-  },
+  "version": "1.0.0",
+  "description": "OpenVeo player to play a video with associated images and chapters",
   "keywords": [
     "openveo",
     "veo-labs",
     "player",
     "vimeo",
     "html",
-    "flowplayer",
+    "embed",
+    "chapters",
+    "synchronization",
     "video"
   ],
-  "homepage": "https://gitlab.com/veo-labs/openveo-player",
+  "homepage": "https://github.com/veo-labs/openveo-player",
   "bugs": {
-    "url": "https://gitlab.com/veo-labs/openveo-player/issues"
+    "url": "https://github.com/veo-labs/openveo-player/issues"
   },
   "license": "AGPL-3.0",
   "author": "Veo-Labs <info@veo-labs.com> (http://www.veo-labs.com/)",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/veo-labs/openveo-player.git"
+    "url": "https://github.com/veo-labs/openveo-player.git"
   },
   "devDependencies": {
     "chai": "^1.10.0",
@@ -51,6 +50,7 @@
     "pre-commit": "^1.1.1"
   },
   "scripts": {
+    "prepublish": "grunt dist",
     "postinstall": "bower install",
     "eslint": "grunt eslint",
     "karma": "grunt karma"

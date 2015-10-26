@@ -1,7 +1,6 @@
 {
   "name": "openveo-player",
-  "description": "OpenVeo player to play a video with associated slides",
-  "private": true,
+  "description": "OpenVeo player to play a video with associated images and chapters",
   "main": [
     "dist/openveo-player.min.js",
     "dist/openveo-player.css"
@@ -12,7 +11,9 @@
     "player",
     "vimeo",
     "html",
-    "flowplayer",
+    "embed",
+    "chapters",
+    "synchronization",
     "video"
   ],
   "ignore" : [
@@ -24,27 +25,33 @@
     "Desktop.ini",
     "._*",
     "ehthumbs.db",
-    "node_modules",
-    "lib",
-    "nbproject",
-    "css",
-    "js",
-    ".sass-cache",
-    "Gruntfile.js",
-    "tasks",
-    ".gitignore",
-    "tests",
-    "karmaConf.js",
-    "package.json"
+    "/node_modules",
+    "/lib",
+    "/nbproject",
+    "/css",
+    "/js",
+    "/.sass-cache",
+    "/Gruntfile.js",
+    "/tasks",
+    "/.gitignore",
+    "/.npmignore",
+    "/tests",
+    "/docs",
+    "/.grunt",
+    "/site",
+    "/karmaConf.js",
+    "/mkdocs.yml",
+    "/.eslint.rc",
+    "/package.json"
   ],
   "license" : "AGPL-3.0",
   "authors": [
     "Veo-Labs <info@veo-labs.com> (http://www.veo-labs.com/)"
   ],
-  "homepage" : "https://gitlab.com/veo-labs/openveo-player",
+  "homepage" : "https://github.com/veo-labs/openveo-player",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/veo-labs/openveo-player.git"
+    "url": "git@github.com:veo-labs/openveo-player.git"
   },
   "devDependencies": {
     "angular": "1.4.1",
