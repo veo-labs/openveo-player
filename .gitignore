@@ -20,7 +20,6 @@ ehthumbs.db
 
 # Buildin files
 .sass-cache
-/dist
 
 # Dev dependencies
 /lib
