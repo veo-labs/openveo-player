@@ -85,19 +85,7 @@
          }
          ...
        ],
-       pictures : [ // The list of video thumbnails (only for "html" player)
-         {
-           width : 960,
-           height : 540,
-           link : 'http://pathToSmallThumbnail.jpg'
-         },
-         {
-           width : 1280,
-           height : 720,
-           link : 'http://pathToLargeThumbnail.jpg'
-         }
-         ...
-       ],
+       thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
        chapters : [ // Chapters
          {
            name : 'Chapter 1', // Chapter name

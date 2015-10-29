@@ -62,18 +62,7 @@
    *       },
    *       ...
    *     ],
-   *     pictures : [ // The list of media thumbnails (only for "html" player)
-   *       {
-   *         width : 960,
-   *         height : 540,
-   *         link : 'https://i.vimeocdn.com/video/530445364_960x540.jpg'
-   *       },
-   *       {
-   *         width : 1280,
-   *         height : 720,
-   *         link : 'https://i.vimeocdn.com/video/530445364_1280x720.jpg'
-   *       }
-   *     ],
+   *     thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
    *     chapters : [ // Chapters
    *       {
    *         name : 'Chapter 1', // Chapter name

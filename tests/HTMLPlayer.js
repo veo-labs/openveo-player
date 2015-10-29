@@ -40,13 +40,7 @@ describe('HTMLPlayer', function() {
         height: 360,
         link: 'http://video.mp4'
       }],
-      pictures: [
-        {
-          width: 960,
-          height: 540,
-          link: 'thumbnail.jpg'
-        }
-      ]
+      thumbnail: '/1439286245225/thumbnail.jpg'
     });
     player.initialize();
   });
@@ -63,7 +57,7 @@ describe('HTMLPlayer', function() {
   });
 
   it('Should be able to get media thumbnail', function() {
-    assert.equal(player.getMediaThumbnail(), 'thumbnail.jpg');
+    assert.equal(player.getMediaThumbnail(), '/1439286245225/thumbnail.jpg');
   });
 
   it('Should be able to play the media if paused', function(done) {

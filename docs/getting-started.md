@@ -86,19 +86,7 @@ Sets player data, synchronize images, chapters and cut.
     },
     ...
   ],
-  pictures : [ // The list of video thumbnails (only for "html" player)
-    {
-      width : 960, // Thumbnail width
-      height : 540, // Thumbnail height
-      link : 'pathToSmallThumbnail.jpg' // Thumbnail link
-    },
-    {
-      width : 1280, // Thumbnail width
-      height : 720, // Thumbnail height
-      link : 'pathToHDThumbnail.jpg' // Thumbnail link
-    }
-    ...
-  ],
+  thumbnail : '/1439286245225/thumbnail.jpg', // The media thumbnail (only for "html" player)
   chapters : [ // Chapters
     {
       name : 'Chapter 1', // Chapter name

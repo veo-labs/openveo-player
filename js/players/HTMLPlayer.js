@@ -120,18 +120,7 @@
      *       },
      *       ...
      *     ],
-     *     pictures : [ // The list of media thumbnails (required for "html" player)
-     *       {
-     *         width : 960,
-     *         height : 540,
-     *         link : "https://i.vimeocdn.com/video/530445364_960x540.jpg"
-     *       },
-     *       {
-     *         width : 1280,
-     *         height : 720,
-     *         link : "https://i.vimeocdn.com/video/530445364_1280x720.jpg"
-     *       }
-     *     ]
+     *     thumbnail : "/1439286245225/thumbnail.jpg" // The media thumbnail (only for "html" player)
      *   }
      */
     function HTMLPlayer(jPlayerElement, media) {
@@ -158,9 +147,7 @@
      * @return String The media thumbnail url
      */
     HTMLPlayer.prototype.getMediaThumbnail = function() {
-      return this.media.pictures &&
-        this.media.pictures.length &&
-        this.media.pictures[this.media.pictures.length - 1].link;
+      return this.media.thumbnail;
     };
 
     /**
