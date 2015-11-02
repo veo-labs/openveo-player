@@ -54,7 +54,7 @@ module.exports = function(grunt) {
   grunt.registerTask('doc', ['remove:doc', 'mkdocs', 'rename:doc']);
 
   // Prepare project for production
-  grunt.registerTask('dist', ['concat', 'uglify', 'compass:dist', 'doc']);
+  grunt.registerTask('dist', ['concat', 'uglify', 'compass:dist']);
 
   // Deploy documentation to github pages
   grunt.registerTask('deploy-doc', ['doc', 'gh-pages:doc']);
