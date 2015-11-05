@@ -1,0 +1,910 @@
+/* line 1, ../css/openveo-player.scss */
+.ov-player {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+}
+
+/* line 3, ../css/base/_reset.scss */
+.ov-player ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* line 9, ../css/base/_reset.scss */
+.ov-player p {
+  margin: 0;
+  padding: 0;
+}
+/* line 14, ../css/base/_reset.scss */
+.ov-player img {
+  border: 0;
+}
+/* line 18, ../css/base/_reset.scss */
+.ov-player nav {
+  display: block;
+}
+
+@font-face {
+  font-family: "playerIcons";
+  src: url("../font/playerIcons.eot?d66fq8");
+  src: url("../font/playerIcons.eot?#iefixd66fq8") format("embedded-opentype"), url("../font/playerIcons.woff?d66fq8") format("woff"), url("../font/playerIcons.ttf?d66fq8") format("truetype"), url("../font/playerIcons.svg?d66fq8#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+/* line 12, ../css/base/_typography.scss */
+[class^="ov-icon-"], [class*=" ov-icon-"] {
+  font-family: "playerIcons";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 24, ../css/base/_typography.scss */
+.ov-icon-both:before {
+  content: "\e600";
+}
+
+/* line 25, ../css/base/_typography.scss */
+.ov-icon-both-presentation:before {
+  content: "\e601";
+}
+
+/* line 26, ../css/base/_typography.scss */
+.ov-icon-presentation:before {
+  content: "\e603";
+}
+
+/* line 27, ../css/base/_typography.scss */
+.ov-icon-media:before {
+  content: "\e605";
+}
+
+/* line 28, ../css/base/_typography.scss */
+.ov-icon-enlarge:before {
+  content: "\e602";
+}
+
+/* line 29, ../css/base/_typography.scss */
+.ov-icon-reduce:before {
+  content: "\e604";
+}
+
+/* line 30, ../css/base/_typography.scss */
+.ov-icon-play:before {
+  content: "\ea1c";
+}
+
+/* line 31, ../css/base/_typography.scss */
+.ov-icon-pause:before {
+  content: "\ea1d";
+}
+
+/* line 32, ../css/base/_typography.scss */
+.ov-icon-volume:before {
+  content: "\e606";
+}
+
+/* line 34, ../css/base/_typography.scss */
+.ov-player {
+  font-family: arial, sans-serif;
+  font-size: 12px;
+}
+
+/*
+ * *************************
+ * Player fullscreen
+ * *************************
+ */
+/* line 6, ../css/modules/_fullscreen.scss */
+.ov-fullscreen > .ov-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Full screen for browsers who supports the fullscreen API */
+/* line 15, ../css/modules/_fullscreen.scss */
+ov-player > div:full-screen, :full-screen .ov-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+/* line 23, ../css/modules/_fullscreen.scss */
+ov-player > div:-webkit-full-screen, :-webkit-full-screen .ov-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+/* line 31, ../css/modules/_fullscreen.scss */
+ov-player > div:-ms-fullscreen, :-ms-fullscreen .ov-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+/* line 39, ../css/modules/_fullscreen.scss */
+ov-player > div:-o-full-screen, :-o-full-screen .ov-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+/* line 47, ../css/modules/_fullscreen.scss */
+ov-player > div:-moz-full-screen, :-moz-full-screen .ov-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+/*
+ * *************************
+ * Navigation tabs
+ * *************************
+ */
+/* line 6, ../css/modules/_tabs.scss */
+.ov-player nav {
+  display: none;
+  position: absolute;
+  top: 0;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+@media (min-width: 768px) {
+  /* line 6, ../css/modules/_tabs.scss */
+  .ov-player nav {
+    display: block;
+  }
+}
+/* line 18, ../css/modules/_tabs.scss */
+.ov-player nav ul {
+  display: table;
+  background-color: #3d3932;
+  height: 40px;
+}
+/* line 24, ../css/modules/_tabs.scss */
+.ov-player nav li {
+  display: table-cell;
+  padding: 0 40px;
+  line-height: 35px;
+  background-color: #3d3932;
+  -moz-transition: border-top 0.4s;
+  -o-transition: border-top 0.4s;
+  -webkit-transition: border-top 0.4s;
+  transition: border-top 0.4s;
+  border-top: 0px solid;
+}
+/* line 33, ../css/modules/_tabs.scss */
+.ov-player nav li:hover {
+  border-top: 5px solid #cccccc;
+  cursor: pointer;
+}
+/* line 38, ../css/modules/_tabs.scss */
+.ov-player nav li.ov-selected {
+  border-top: 5px solid #1bbbe9;
+}
+
+/* Views (central part between navigation and player controls) */
+/* line 2, ../css/modules/_views.scss */
+.ov-views {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 50px;
+}
+@media (min-width: 768px) {
+  /* line 2, ../css/modules/_views.scss */
+  .ov-views {
+    top: 40px;
+  }
+}
+
+/*
+ * *************************
+ * Media view
+ * *************************
+ */
+/* Media view with half media and half presentation */
+/* line 8, ../css/modules/_mediaView.scss */
+.ov-media-view {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+/* line 14, ../css/modules/_mediaView.scss */
+.ov-media-view.ng-hide {
+  opacity: 0;
+}
+/* line 18, ../css/modules/_mediaView.scss */
+.ov-media-view.ng-hide-add.ng-hide-add-active, .ov-media-view.ng-hide-remove.ng-hide-remove-active {
+  transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -ms-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -moz-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -webkit-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+}
+
+/* Media part of the media view */
+/* line 25, ../css/modules/_mediaView.scss */
+.ov-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* line 31, ../css/modules/_mediaView.scss */
+.ov-media-player {
+  width: 100%;
+  height: 100%;
+}
+
+/* line 36, ../css/modules/_mediaView.scss */
+.ov-mode-presentation .ov-media {
+  display: none;
+}
+
+/* 
+ * Presentation part of the media view.
+ * Only media on small devices for modes media, both and
+ * both-presentation.
+ */
+/* line 43, ../css/modules/_mediaView.scss */
+.ov-presentation {
+  height: 100%;
+}
+/* line 46, ../css/modules/_mediaView.scss */
+.ov-presentation > div {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+/* Both, both-presentation and media modes for small devices */
+/* line 57, ../css/modules/_mediaView.scss */
+.ov-mode-both .ov-presentation,
+.ov-mode-both-presentation .ov-presentation,
+.ov-mode-media .ov-presentation {
+  display: none;
+}
+
+/* Presentation mode for small devices */
+/* line 62, ../css/modules/_mediaView.scss */
+.ov-mode-presentation .ov-presentation {
+  width: 100%;
+}
+
+/* Large devices may display both presentation and media */
+@media (min-width: 768px) {
+  /* line 66, ../css/modules/_mediaView.scss */
+  .ov-media, .ov-presentation {
+    display: block;
+    float: left;
+    width: 50%;
+  }
+
+  /* line 71, ../css/modules/_mediaView.scss */
+  .ov-mode-both .ov-presentation,
+  .ov-mode-both-presentation .ov-presentation {
+    display: block;
+  }
+
+  /* Media alone mode */
+  /* line 75, ../css/modules/_mediaView.scss */
+  .ov-mode-media .ov-presentation {
+    display: none;
+  }
+
+  /* line 76, ../css/modules/_mediaView.scss */
+  .ov-mode-media .ov-media {
+    width: 100%;
+  }
+
+  /* Small media and large presentation mode */
+  /* line 79, ../css/modules/_mediaView.scss */
+  .ov-mode-both-presentation .ov-presentation {
+    width: 75%;
+  }
+
+  /* line 80, ../css/modules/_mediaView.scss */
+  .ov-mode-both-presentation .ov-media {
+    width: 25%;
+  }
+
+  /* Presentation mode (repeat second selector to be more clear) */
+  /* line 83, ../css/modules/_mediaView.scss */
+  .ov-mode-presentation .ov-media {
+    display: none;
+  }
+
+  /* line 84, ../css/modules/_mediaView.scss */
+  .ov-mode-presentation .ov-presentation {
+    width: 100%;
+  }
+}
+/* Loader */
+/* line 88, ../css/modules/_mediaView.scss */
+.ov-loader {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #ffffff;
+}
+
+/*
+ * *************************
+ * Index view
+ * *************************
+ */
+/* Index view with half the list of slides and half the focused slide */
+/* line 8, ../css/modules/_indexView.scss */
+.ov-index-view {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+/* line 14, ../css/modules/_indexView.scss */
+.ov-index-view.ng-hide-add.ng-hide-add-active, .ov-index-view.ng-hide-remove.ng-hide-remove-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -ms-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -moz-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -webkit-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+}
+/* line 22, ../css/modules/_indexView.scss */
+.ov-index-view.ng-hide {
+  opacity: 0;
+}
+
+/* Slides part of the index view */
+/* line 28, ../css/modules/_indexView.scss */
+.ov-slides {
+  height: 100%;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  font-size: 1.8em;
+}
+/* line 34, ../css/modules/_indexView.scss */
+.ov-slides li {
+  display: inline-block;
+  width: 200px;
+  padding: 5px;
+  margin: 10px;
+  border: 1px solid #ddd;
+  color: #1bbbe9;
+  -moz-transition: color 0.35s, background-color 0.35s;
+  -o-transition: color 0.35s, background-color 0.35s;
+  -webkit-transition: color 0.35s, background-color 0.35s;
+  transition: color 0.35s, background-color 0.35s;
+}
+/* line 44, ../css/modules/_indexView.scss */
+.ov-slides li:hover {
+  cursor: pointer;
+  background-color: #1bbbe9;
+  color: #fff;
+}
+/* line 50, ../css/modules/_indexView.scss */
+.ov-slides img {
+  width: 100%;
+}
+/* line 54, ../css/modules/_indexView.scss */
+.ov-slides p {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* line 60, ../css/modules/_indexView.scss */
+.ov-past-timecode {
+  opacity: 0.5;
+}
+
+/*
+ * Focused slide part of the index view.
+ * Half right part of the view is not displayed on small devices. 
+ */
+/* line 68, ../css/modules/_indexView.scss */
+.ov-focused-slide {
+  display: none;
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  /* line 74, ../css/modules/_indexView.scss */
+  .ov-slides, .ov-focused-slide {
+    display: block;
+    float: left;
+    width: 50%;
+  }
+
+  /* line 79, ../css/modules/_indexView.scss */
+  .ov-focused-slide > div {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+/*
+ * *************************
+ * Index view
+ * *************************
+ */
+/* Index view with half the list of slides and half the focused slide */
+/* line 8, ../css/modules/_chapterView.scss */
+.ov-chapters-view {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+/* line 14, ../css/modules/_chapterView.scss */
+.ov-chapters-view.ng-hide-add.ng-hide-add-active, .ov-chapters-view.ng-hide-remove.ng-hide-remove-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -ms-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -moz-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -webkit-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+}
+/* line 22, ../css/modules/_chapterView.scss */
+.ov-chapters-view.ng-hide {
+  opacity: 0;
+}
+
+/* Slides part of the index view */
+/* line 28, ../css/modules/_chapterView.scss */
+.ov-chapters {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  font-size: 1.8em;
+  background-color: #eee;
+  /*  li.open{
+      color: #fff; 
+      background-color: $highlight-color; 
+      .ov-icon-play{
+        color: #fff; 
+        &:hover {
+          color: lighten($highlight-color, 30%); 
+        }
+      }
+      
+    }*/
+}
+/* line 34, ../css/modules/_chapterView.scss */
+.ov-chapters ul {
+  width: 100%;
+}
+/* line 39, ../css/modules/_chapterView.scss */
+.ov-chapters li {
+  background-color: #fff;
+  padding: 5px;
+  margin: auto;
+  color: #3d3932;
+  min-height: 34px;
+  line-height: 34px;
+  transition: all 0.35s ease;
+}
+/* line 47, ../css/modules/_chapterView.scss */
+.ov-chapters li .title {
+  width: 80%;
+  float: left;
+  text-indent: 20px;
+}
+/* line 52, ../css/modules/_chapterView.scss */
+.ov-chapters li .ov-icon-play {
+  transition: all 0.35s ease;
+  width: 20%;
+  line-height: 34px;
+  float: left;
+  color: #3d3932;
+  text-align: center;
+}
+/* line 62, ../css/modules/_chapterView.scss */
+.ov-chapters li:hover {
+  cursor: pointer;
+  color: #1bbbe9;
+  background-color: #fff;
+}
+/* line 66, ../css/modules/_chapterView.scss */
+.ov-chapters li:hover .ov-icon-play {
+  color: #1bbbe9;
+}
+/* line 82, ../css/modules/_chapterView.scss */
+.ov-chapters img {
+  width: 100%;
+}
+/* line 86, ../css/modules/_chapterView.scss */
+.ov-chapters p {
+  -moz-transition: border 0.35s ease;
+  -o-transition: border 0.35s ease;
+  -webkit-transition: border 0.35s ease;
+  transition: border 0.35s ease;
+  background-color: #fff;
+  /*display:none;*/
+  /*height:0;*/
+  max-height: 0px;
+  padding: 0 20px;
+  /*border-left: 0px solid transparent;*/
+  overflow: hidden;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  border-left: 5px solid #ddd;
+  font-size: 16px;
+  line-height: 20px;
+}
+/* line 100, ../css/modules/_chapterView.scss */
+.ov-chapters p:hover {
+  border-left: 5px solid #1bbbe9;
+}
+/* line 104, ../css/modules/_chapterView.scss */
+.ov-chapters li:hover + p {
+  border-left: 5px solid #1bbbe9;
+}
+/* line 107, ../css/modules/_chapterView.scss */
+.ov-chapters li.open + p {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  max-height: 800px;
+  display: block;
+}
+
+/*.ov-past-timecode{ 
+  opacity: 0.5; 
+}*/
+/*
+ * Focused slide part of the index view.
+ * Half right part of the view is not displayed on small devices. 
+ */
+/*.ov-focused-slide{ 
+  display: none; 
+  height: 100%; 
+}*/
+/*@media(min-width: $media-min-width){
+  .ov-slides, .ov-focused-slide{ 
+    display: block; 
+    float: left; 
+    width: 50%; 
+  }
+  .ov-focused-slide > div{ 
+    width: 100%; 
+    height: 100%; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-size: contain; 
+  }
+}*/
+/*
+ * *************************
+ * Player controls 
+ * *************************
+ */
+/* line 6, ../css/modules/_controls.scss */
+.ov-controls {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/*
+ * *************************
+ * Time bar
+ * *************************
+ */
+/* line 20, ../css/modules/_controls.scss */
+.ov-time-bar {
+  height: 10px;
+  padding: 3px;
+  border: 1px solid #1bbbe9;
+  box-sizing: content-box;
+}
+/* line 26, ../css/modules/_controls.scss */
+.ov-time-bar > div {
+  position: relative;
+  height: 100%;
+  cursor: pointer;
+  background-color: #666;
+}
+
+/* line 34, ../css/modules/_controls.scss */
+.ov-seen {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  background-color: #1bbbe9;
+  transition: width linear 0.2s;
+  -ms-transition: width linear 0.2s;
+  -moz-transition: width linear 0.2s;
+  -webkit-transition: width linear 0.2s;
+}
+
+/* line 42, ../css/modules/_controls.scss */
+.ov-loaded {
+  position: absolute;
+  width: 70%;
+  height: 100%;
+  background-color: #3d3932;
+  transition: width linear 0.2s;
+  -ms-transition: width linear 0.2s;
+  -moz-transition: width linear 0.2s;
+  -webkit-transition: width linear 0.2s;
+}
+
+/* line 49, ../css/modules/_controls.scss */
+.ov-ghost {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+/* line 55, ../css/modules/_controls.scss */
+.ov-cursor {
+  display: none;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background-color: #ffffff;
+}
+@media (min-width: 768px) {
+  /* line 55, ../css/modules/_controls.scss */
+  .ov-cursor {
+    display: block;
+  }
+}
+/* line 67, ../css/modules/_controls.scss */
+.ov-cursor > div {
+  z-index: 1;
+  position: absolute;
+  top: -130px;
+  left: -65px;
+  width: 130px;
+  height: 100px;
+  padding: 5px;
+  border: 1px solid #3d3932;
+  background-color: #fff;
+}
+/* line 79, ../css/modules/_controls.scss */
+.ov-cursor img {
+  width: 130px;
+  height: 100px;
+}
+
+/*
+ * *************************
+ * Buttons
+ * *************************
+ */
+/* line 90, ../css/modules/_controls.scss */
+.ov-buttons {
+  position: relative;
+  height: 32px;
+  /* Left buttons */
+  /* Right buttons */
+}
+/* line 95, ../css/modules/_controls.scss */
+.ov-buttons .ov-left {
+  display: table;
+  position: absolute;
+  left: 10px;
+  font-size: 1.5em;
+  height: 100%;
+  line-height: 36px;
+}
+/* line 105, ../css/modules/_controls.scss */
+.ov-buttons .ov-right {
+  position: absolute;
+  right: 10px;
+  height: 100%;
+}
+/* line 110, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-time, .ov-buttons .ov-right > div {
+  float: left;
+  font-size: 1.5em;
+  line-height: 32px;
+  padding: 0 5px;
+}
+/* line 118, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-time {
+  font-size: 1.1em;
+}
+/* line 121, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-time > span {
+  color: #aaa;
+}
+/* line 126, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-mode {
+  display: none;
+  position: relative;
+  font-size: 4em;
+  line-height: 32px;
+}
+/* line 132, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-mode ul {
+  z-index: 1;
+  position: absolute;
+  top: -140px;
+  left: -3px;
+  padding: 5px;
+  border: 1px solid #1bbbe9;
+  background-color: #000000;
+}
+/* line 142, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-mode li {
+  line-height: 30px;
+  height: 30px;
+}
+@media (min-width: 768px) {
+  /* line 126, ../css/modules/_controls.scss */
+  .ov-buttons .ov-right .ov-mode {
+    display: block;
+  }
+}
+/* line 151, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-mode .ov-modes-animate {
+  opacity: 1;
+}
+/* line 154, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-mode .ov-modes-animate.ng-hide-add.ng-hide-add-active, .ov-buttons .ov-right .ov-mode .ov-modes-animate.ng-hide-remove.ng-hide-remove-active {
+  transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -ms-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -moz-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -webkit-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+}
+/* line 159, ../css/modules/_controls.scss */
+.ov-buttons .ov-right .ov-mode .ov-modes-animate.ng-hide {
+  opacity: 0;
+}
+
+/* line 165, ../css/modules/_controls.scss */
+.ov-button {
+  color: #ffffff;
+}
+/* line 168, ../css/modules/_controls.scss */
+.ov-button:hover {
+  cursor: pointer;
+  color: #1bbbe9;
+}
+
+/* Play/pause button */
+/* line 175, ../css/modules/_controls.scss */
+.ov-icon-play {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* Overlay play/pause button */
+/* line 181, ../css/modules/_controls.scss */
+.ov-overlay-play-button {
+  z-index: 1;
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+/* line 190, ../css/modules/_controls.scss */
+.ov-overlay-play-button > div {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+/* line 196, ../css/modules/_controls.scss */
+.ov-overlay-play-button .ov-button {
+  box-sizing: content-box;
+  display: block;
+  width: 20px;
+  padding: 10px 20px 10px 16px;
+  margin: 0 auto;
+  font-size: 2em;
+  background-color: #000000;
+  color: #ffffff;
+  transition: background-color ease 0.2s;
+  -ms-transition: background-color ease 0.2s;
+  -moz-transition: background-color ease 0.2s;
+  -webkit-transition: background-color ease 0.2s;
+}
+/* line 207, ../css/modules/_controls.scss */
+.ov-overlay-play-button .ov-button:hover {
+  background-color: #1bbbe9;
+}
+
+/* Volume button */
+/* line 214, ../css/modules/_controls.scss */
+.ov-icon-volume {
+  display: none;
+  position: relative;
+}
+@media (min-width: 768px) {
+  /* line 214, ../css/modules/_controls.scss */
+  .ov-icon-volume {
+    display: block;
+  }
+}
+/* line 222, ../css/modules/_controls.scss */
+.ov-icon-volume > div {
+  z-index: 1;
+  position: absolute;
+  top: -90px;
+  left: 5px;
+  width: 10px;
+  height: 70px;
+  padding: 5px;
+  border: 1px solid #1bbbe9;
+  background-color: #000000;
+}
+/* line 234, ../css/modules/_controls.scss */
+.ov-icon-volume .ov-volume {
+  background-color: #1bbbe9;
+}
+/* line 235, ../css/modules/_controls.scss */
+.ov-icon-volume .ov-volume-preview {
+  background-color: #3d3932;
+}
+/* line 237, ../css/modules/_controls.scss */
+.ov-icon-volume .ov-volume,
+.ov-icon-volume .ov-volume-preview {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+/* line 245, ../css/modules/_controls.scss */
+.ov-icon-volume .ov-volume-animate {
+  opacity: 1;
+}
+/* line 248, ../css/modules/_controls.scss */
+.ov-icon-volume .ov-volume-animate.ng-hide-add.ng-hide-add-active, .ov-icon-volume .ov-volume-animate.ng-hide-remove.ng-hide-remove-active {
+  transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -ms-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -moz-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+  -webkit-transition: opacity cubic-bezier(0, 0.96, 0.4, 1) 0.5s;
+}
+/* line 253, ../css/modules/_controls.scss */
+.ov-icon-volume .ov-volume-animate.ng-hide {
+  opacity: 0;
+}
+
+/* Fullscreen icon */
+/* line 261, ../css/modules/_controls.scss */
+.ov-icon-fullscreen {
+  display: none;
+}
+@media (min-width: 768px) {
+  /* line 261, ../css/modules/_controls.scss */
+  .ov-icon-fullscreen {
+    display: block;
+  }
+}
+
+/*# sourceMappingURL=openveo-player.css.map */

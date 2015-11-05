@@ -517,6 +517,8 @@
          * on the volume selector.
          */
         $scope.setTime = function(event) {
+          timeBarRect = timeBar.getBoundingClientRect();
+          timeBarWidth = timeBarRect.right - timeBarRect.left;
           self.setTime(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
         };
 
@@ -572,10 +574,11 @@
          * @param MouseEvent event The dispatched event
          */
         angular.element(timeBar).on('mouseover', function(event) {
-          if ($scope.timecodes && $scope.timecodes.length) {
-            timeBarRect = timeBar.getBoundingClientRect();
-            timeBarWidth = timeBarRect.right - timeBarRect.left;
 
+          timeBarRect = timeBar.getBoundingClientRect();
+          timeBarWidth = timeBarRect.right - timeBarRect.left;
+
+          if ($scope.timecodes && $scope.timecodes.length) {
             timeMouseMove(event);
             $document.on('mousemove', timeMouseMove);
             angular.element(timeBar).on('mouseout', timeMouseOut);
