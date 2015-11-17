@@ -202,11 +202,14 @@
     font-size: 2em; 
     background-color: $background-color; 
     color: $foreground-color; 
-    @include background-color-transition(0.2s); 
+    @include transition(background-color 0.2s ease); 
     
     &:hover{
       background-color: $highlight-color;
     }
+  }
+  .ov-error{
+    color: $foreground-color; 
   }
 }
 

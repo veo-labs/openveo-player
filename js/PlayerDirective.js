@@ -280,7 +280,6 @@
               default:
                 throw new Error('Player ' + playerType + ' is not supported');
             }
-
           }
         }
 
@@ -323,6 +322,7 @@
           $scope.mediaUrl = $sce.trustAsResourceUrl($scope.player.getMediaUrl());
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
           $scope.loading = true;
+          $scope.error = null;
 
           // Set player language
           i18nPlayerService.setLanguage($scope.ovLanguage);
@@ -688,6 +688,28 @@
           });
         });
 
+        // Listen to player error event
+        $element.on('error', function(event, data) {
+          safeApply(function() {
+            switch (data.target.error.code) {
+              case data.target.error.MEDIA_NO_SOURCE:
+                $scope.error = $filter('ovTranslate')('MEDIA_NO_SOURCE');
+                break;
+              case data.target.error.MEDIA_ERR_NETWORK:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_NETWORK');
+                break;
+              case data.target.error.MEDIA_ERR_DECODE:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_DECODE');
+                break;
+              case data.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_SRC_NOT_SUPPORTED');
+                break;
+              default:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_DEFAULT');
+                break;
+            }
+          });
+        });
       }]
     };
   }

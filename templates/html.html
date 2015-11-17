@@ -4,6 +4,7 @@
 </video>
 <div class="ov-overlay-play-button" ng-show="playPauseButton === 'play'">
   <div>
-    <span class="ov-icon-{{playPauseButton}} ov-button" ng-click="playPause()"></span>
+    <div ng-if='!error' class="ov-icon-{{playPauseButton}} ov-button" ng-click="playPause()"></div>
+    <div ng-if='error' class="ov-error" ng-bind='error'></div>
   </div>
 </div>

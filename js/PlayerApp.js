@@ -259,13 +259,27 @@
       VIDEO_TAB_TITLE: 'Video',
       INDEX_TAB_TITLE: 'Index',
       CHAPTERS_TAB_TITLE: 'Chapters',
-      LOADING: 'Loading...'
+      LOADING: 'Loading...',
+      MEDIA_NO_SOURCE: 'A network error caused the video download to fail part-way.',
+      MEDIA_ERR_NETWORK: 'A network error caused the video download to fail part-way.',
+      MEDIA_ERR_DECODE: 'The video playback was aborted due to a corruption problem ' +
+      'or because the video used features your browser did not support.',
+      MEDIA_ERR_SRC_NOT_SUPPORTED: 'The video could not be loaded, either because the server or network failed ' +
+      'or because the format is not supported.',
+      MEDIA_ERR_DEFAULT: 'An unknown error occurred.'
     },
     fr: {
       VIDEO_TAB_TITLE: 'Vidéo',
       INDEX_TAB_TITLE: 'Index',
       CHAPTERS_TAB_TITLE: 'Chapitres',
-      LOADING: 'Chargement...'
+      LOADING: 'Chargement...',
+      MEDIA_NO_SOURCE: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
+      MEDIA_ERR_NETWORK: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
+      MEDIA_ERR_DECODE: 'La lecture de la vidéo a été abandonnée en raison d\' un problème de corruption ' +
+      'ou parce que la vidéo utilise des fonctionnalités que votre navigateur ne supporte pas.',
+      MEDIA_ERR_SRC_NOT_SUPPORTED: 'La vidéo ne peut être chargée , soit parce que le serveur ou le réseau à échoué ' +
+      'ou parce que le format ne sont pas supportées.',
+      MEDIA_ERR_DEFAULT: 'Une erreur inconnue est survenue.'
     }
   });
 

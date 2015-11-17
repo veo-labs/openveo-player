@@ -14,7 +14,6 @@
      * @param Event event The received event
      */
     function handlePlayerEvents(event) {
-
       // Events
       switch (event.type) {
 
@@ -82,6 +81,11 @@
             percent: playedPercent
           });
           break;
+
+        // Media error
+        case 'error':
+          this.jPlayerElement.triggerHandler('error', event);
+          break;
         default:
           break;
       }
@@ -97,7 +101,8 @@
       'durationchange',
       'timeupdate',
       'play',
-      'pause'
+      'pause',
+      'error'
     ];
 
     /**
@@ -157,6 +162,7 @@
      * to receive media events.
      */
     HTMLPlayer.prototype.initialize = function() {
+      var self = this;
       this.loaded = false;
       this.player = $document[0].getElementById(this.playerId);
 
@@ -167,6 +173,16 @@
       // Set media events listeners
       for (var i = 0; i < events.length; i++)
         jPlayer.on(events[i], this.handlePlayerEventsFn);
+
+      // Set error event listener on last source (called only if no source are available)
+      var lastSources = this.player.getElementsByTagName('source');
+      var jPlayerLastSource = angular.element(lastSources[lastSources.length - 1]);
+      jPlayerLastSource.on('error', function(e) {
+        if (self.player.networkState == self.player.NETWORK_NO_SOURCE) {
+          e.target.error = {code: 'NO_SOURCE', MEDIA_NO_SOURCE: 'NO_SOURCE'};
+        }
+        self.handlePlayerEventsFn(e);
+      });
 
       // Start loading media
       this.player.load();
