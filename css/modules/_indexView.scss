@@ -7,80 +7,81 @@
 /* Index view with half the list of slides and half the focused slide */
 .ov-index-view{
   opacity: 1;
-  width: 100%; 
-  height: 100%; 
-  background-color: #fff; 
-  
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  @include no-select;
+
   &.ng-hide-add.ng-hide-add-active,
   &.ng-hide-remove.ng-hide-remove-active{
-    position: absolute; 
-    top: 0; 
-    left: 0; 
+    position: absolute;
+    top: 0;
+    left: 0;
     @include fade-out-transition(0.5s);
   }
-  
-  &.ng-hide{ 
-    opacity: 0; 
+
+  &.ng-hide{
+    opacity: 0;
   }
 }
 
 /* Slides part of the index view */
 .ov-slides{
-  height: 100%; 
-  overflow-y: scroll; 
-  -webkit-overflow-scrolling: touch; 
-  font-size: 1.8em; 
-  
-  li{ 
-    display: inline-block; 
-    width: 200px; 
-    padding: 5px; 
-    margin: 10px; 
-    border: 1px solid #ddd; 
-    color: $highlight-color; 
+  height: 100%;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  font-size: 1.8em;
+
+  li{
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    color: $highlight-color;
     @include transition(color 0.35s, background-color 0.35s);
   }
-  
-  li:hover{ 
-    cursor: pointer; 
-    background-color: $highlight-color; 
-    color: #fff; 
+
+  li:hover{
+    cursor: pointer;
+    background-color: $highlight-color;
+    color: #fff;
   }
-  
-  img{ 
-    width: 100%; 
+
+  img{
+    width: 100%;
   }
-  
-  p{ 
-    margin-top: 10px; 
-    text-align: center; 
+
+  p{
+    margin-top: 10px;
+    text-align: center;
   }
 }
 
-.ov-past-timecode{ 
-  opacity: 0.5; 
+.ov-past-timecode{
+  opacity: 0.5;
 }
 
 /*
  * Focused slide part of the index view.
- * Half right part of the view is not displayed on small devices. 
+ * Half right part of the view is not displayed on small devices.
  */
-.ov-focused-slide{ 
-  display: none; 
-  height: 100%; 
+.ov-focused-slide{
+  display: none;
+  height: 100%;
 }
 
 @media(min-width: $media-min-width){
-  .ov-slides, .ov-focused-slide{ 
-    display: block; 
-    float: left; 
-    width: 50%; 
+  .ov-slides, .ov-focused-slide{
+    display: block;
+    float: left;
+    width: 50%;
   }
-  .ov-focused-slide > div{ 
-    width: 100%; 
-    height: 100%; 
-    background-position: center; 
-    background-repeat: no-repeat; 
-    background-size: contain; 
+  .ov-focused-slide > div{
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 }

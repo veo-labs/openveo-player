@@ -4,38 +4,39 @@
  * *************************
  */
 .ov-player nav{
-  display: none; 
-  position: absolute; 
-  top: 0; 
+  display: none;
+  position: absolute;
+  top: 0;
   color: $foreground-color;
-  font-weight: bold; 
+  font-weight: bold;
   font-size: 1.1em;
-  
+  @include no-select;
+
   @media(min-width: $media-min-width){
     display: block;
   }
-  
-  ul{ 
-    display: table; 
+
+  ul{
+    display: table;
     background-color: $neutral-color;
-    height: 40px; 
+    height: 40px;
   }
-  
-  li{ 
-    display: table-cell; 
-    padding: 0 40px; 
-    line-height: 35px; 
+
+  li{
+    display: table-cell;
+    padding: 0 40px;
+    line-height: 35px;
     background-color: $neutral-color;
     @include transition(border-top 0.4s);
     border-top: 0px solid;
   }
-  
-  li:hover{ 
-    border-top: 5px solid $light-gray; 
-    cursor: pointer; 
+
+  li:hover{
+    border-top: 5px solid $light-gray;
+    cursor: pointer;
   }
-  
-  li.ov-selected{ 
-    border-top: 5px solid $highlight-color; 
+
+  li.ov-selected{
+    border-top: 5px solid $highlight-color;
   }
 }

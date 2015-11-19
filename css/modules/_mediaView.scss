@@ -7,50 +7,51 @@
 /* Media view with half media and half presentation */
 .ov-media-view{
   opacity: 1;
-  width: 100%; 
-  height: 100%; 
-  background-color: $background-color; 
-  
-  &.ng-hide{ 
-    opacity: 0; 
+  width: 100%;
+  height: 100%;
+  background-color: $background-color;
+  @include no-select;
+
+  &.ng-hide{
+    opacity: 0;
   }
-  
+
   &.ng-hide-add.ng-hide-add-active,
-  &.ng-hide-remove.ng-hide-remove-active{ 
+  &.ng-hide-remove.ng-hide-remove-active{
     @include fade-out-transition(0.5s);
   }
 }
 
 /* Media part of the media view */
-.ov-media{ 
-  position: relative; 
-  width: 100%; 
-  height: 100%; 
+.ov-media{
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-.ov-media-player{ 
-  width: 100%; 
-  height: 100%; 
+.ov-media-player{
+  width: 100%;
+  height: 100%;
 }
 
 .ov-mode-presentation .ov-media{ display: none; }
 
-/* 
+/*
  * Presentation part of the media view.
  * Only media on small devices for modes media, both and
  * both-presentation.
  */
-.ov-presentation{ 
-  height: 100%; 
-  
-  & > div{ 
-    width: 100%; 
-    height: 100%; 
-    background-position: center; 
-    background-repeat: no-repeat; 
-    background-size: contain; 
+.ov-presentation{
+  height: 100%;
+
+  & > div{
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
-  
+
 }
 
 /* Both, both-presentation and media modes for small devices */
@@ -63,31 +64,31 @@
 
 /* Large devices may display both presentation and media */
 @media(min-width: $media-min-width){
-  .ov-media, .ov-presentation{ 
-    display: block; 
-    float: left; 
-    width: 50%; 
+  .ov-media, .ov-presentation{
+    display: block;
+    float: left;
+    width: 50%;
   }
-  .ov-mode-both .ov-presentation, 
+  .ov-mode-both .ov-presentation,
   .ov-mode-both-presentation .ov-presentation{ display: block; }
-  
+
   /* Media alone mode */
   .ov-mode-media .ov-presentation{ display: none; }
   .ov-mode-media .ov-media{ width: 100%; }
-  
+
   /* Small media and large presentation mode */
   .ov-mode-both-presentation .ov-presentation{ width: 75%; }
   .ov-mode-both-presentation .ov-media{ width: 25%; }
-  
+
   /* Presentation mode (repeat second selector to be more clear) */
   .ov-mode-presentation .ov-media{ display: none; }
   .ov-mode-presentation .ov-presentation{ width: 100%; }
 }
 
 /* Loader */
-.ov-loader{ 
-  position: absolute; 
-  bottom: 10px; 
-  left: 10px; 
-  color: $foreground-color; 
+.ov-loader{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: $foreground-color;
 }

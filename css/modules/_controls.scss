@@ -10,6 +10,7 @@
   height: 50px;
   background-color: $background-color; 
   color: $foreground-color;
+  @include no-select;
 }
 
 /*
