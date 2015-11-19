@@ -1,2 +1,1 @@
-ovFlashPlayer = 'flowplayer.swf';
 ovPlayerDirectory = '';

@@ -276,10 +276,6 @@
                 var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
                 $scope.player = new OvHTMLPlayer($element, $scope.data);
                 break;
-              case 'flowplayer':
-                var OvFlowPlayer = $injector.get('OvFlowPlayer');
-                $scope.player = new OvFlowPlayer($element, $scope.data);
-                break;
               default:
                 throw new Error('Player ' + playerType + ' is not supported');
             }
@@ -563,7 +559,7 @@
          * Starts / Pauses the player.
          */
         this.playPause = $scope.playPause = function() {
-          if (!$scope.loading)
+          if (!$scope.loading && !$scope.error)
             $scope.player.playPause();
         };
 
