@@ -39,6 +39,10 @@ describe('HTMLPlayer', function() {
         width: 640,
         height: 360,
         link: 'http://video.mp4'
+      }, {
+        width: 1280,
+        height: 720,
+        link: 'http://video.mp4'
       }],
       thumbnail: '/1439286245225/thumbnail.jpg'
     });
@@ -101,6 +105,13 @@ describe('HTMLPlayer', function() {
     player.player.currentTime = 0;
     player.setTime(1000);
     assert.equal(player.player.currentTime, 1);
+  });
+
+  it('Should order the list of media definitions', function() {
+    var definitions = player.getAvailableDefinitions();
+    assert.isDefined(definitions);
+    assert.equal(definitions[0].width, 1280);
+    assert.equal(definitions[1].width, 640);
   });
 
 });

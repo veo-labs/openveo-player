@@ -87,21 +87,25 @@
    *     ]
    *   }
    *   nb : Note that small images must be at least 200 pixels width.
-   *  - String ov-player-type The type of player to use to play the media. It
-   *    can be either :
-   *      - html : To play the media using HTML player
-   *    If no player type is provided, ov-player will figure out which player
-   *    to use depending on the media type.
    *  - Boolean ov-fullscreen-icon true to display the
    *    enlarge/reduce icon (CAUTION : It must be an assignable variable)
    *  - Boolean ov-volume-icon true to display the volume icon
    *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-mode-icon true to display the display mode icon
    *    (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-settings-icon true to display the settings icon
+   *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-time true to display the actual time and duration
    *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-full-viewport true to display the player in
    *    full viewport (CAUTION : It must be an assignable variable)
+   *  - String ov-language Player language code (e.g. fr)
+   *  - String ov-player-type The type of player to use to play the media. It
+   *    can be either :
+   *      - html : To play the media using HTML player
+   *    If no player type is provided, ov-player will figure out which player
+   *    to use depending on the media type.
+   *  - Boolean ov-auto-play true to start playing when media is ready
    *
    * e.g.
    *
@@ -123,13 +127,15 @@
    *
    * <ov-player
    *   ov-data="data"
-   *   ov-fullscreen-icon="displayFullscreenIcon"
-   *   ov-volume="displayVolumeIcon"
-   *   ov-mode="displayModeIcon"
-   *   ov-time="displayTime"
-   *   ov-full-viewport="fullViewport"
+   *   ov-fullscreen-icon="isFullscreenIconDisplayed"
+   *   ov-volume-icon="isVolumeIconDisplayed"
+   *   ov-mode-icon="isModeIconDisplayed"
+   *   ov-settings-icon="isSettingsIconDisplayed"
+   *   ov-time="isTimeDisplayed"
+   *   ov-full-viewport="isFullViewport"
+   *   ov-language="en"
    *   ov-player-type="html"
-   *   ov-language="fr"
+   *   ov-auto-play="true"
    * ></ov-player>
    *
    * // The whole object can also be changed dynamically

@@ -1,14 +1,14 @@
 /*
  * *************************
- * Player controls 
+ * Player controls
  * *************************
  */
 .ov-controls{
-  position: absolute; 
-  bottom: 0; 
-  width: 100%; 
+  position: absolute;
+  bottom: 0;
+  width: 100%;
   height: 50px;
-  background-color: $background-color; 
+  background-color: $background-color;
   color: $foreground-color;
   @include no-select;
 }
@@ -18,68 +18,69 @@
  * Time bar
  * *************************
  */
-.ov-time-bar{ 
+.ov-time-bar{
   height: 10px;
   padding: 3px;
   border: 1px solid $highlight-color;
   box-sizing: content-box;
 
   & > div{
-    position: relative; 
-    height: 100%; 
-    cursor: pointer; 
+    position: relative;
+    height: 100%;
+    cursor: pointer;
     background-color: #666;
   }
 }
 
-.ov-seen{ 
-  position: absolute; 
-  width: 50%; 
-  height: 100%; 
+.ov-seen{
+  position: absolute;
+  width: 50%;
+  height: 100%;
   background-color: $highlight-color;
   @include width-transition(0.2s);
 }
 
-.ov-loaded{ 
-  position: absolute; 
-  width: 70%; height: 100%; 
-  background-color: $neutral-color; 
+.ov-loaded{
+  position: absolute;
+  width: 70%;
+  height: 100%;
+  background-color: $neutral-color;
   @include width-transition(0.2s);
 }
 
-.ov-ghost{ 
-  position: absolute; 
-  width: 100%; 
-  height: 100%; 
+.ov-ghost{
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
-.ov-cursor{ 
-  display: none; 
-  position: absolute; 
-  top: 0; 
-  height:100%; 
-  width: 2px; 
-  background-color: $foreground-color; 
-  
+.ov-cursor{
+  display: none;
+  position: absolute;
+  top: 0;
+  height:100%;
+  width: 2px;
+  background-color: $foreground-color;
+
   @media(min-width: $media-min-width){
     display: block;
   }
-  
-  & > div{ 
-    z-index: 1; 
-    position: absolute; 
-    top: -130px; 
-    left: -65px; 
-    width: 130px; 
-    height: 100px; 
-    padding: 5px; 
-    border: 1px solid #3d3932; 
-    background-color: #fff; 
+
+  & > div{
+    z-index: 1;
+    position: absolute;
+    top: -130px;
+    left: -65px;
+    width: 130px;
+    height: 100px;
+    padding: 5px;
+    border: 1px solid #3d3932;
+    background-color: #fff;
   }
-  
-  img{ 
-    width: 130px; 
-    height: 100px; 
+
+  img{
+    width: 130px;
+    height: 100px;
   }
 }
 
@@ -89,182 +90,268 @@
  * *************************
  */
 .ov-buttons{
-  position: relative; 
-  height: 32px; 
-  
+  position: relative;
+  height: 32px;
+
   /* Left buttons */
   .ov-left{
-    display: table; 
-    position: absolute; 
-    left: 10px; 
-    font-size: 1.5em; 
-    height: 100%; 
-    line-height: 36px; 
+    display: table;
+    position: absolute;
+    left: 10px;
+    font-size: 1.5em;
+    height: 100%;
+    line-height: 36px;
   }
-  
+
   /* Right buttons */
-  .ov-right{ 
-    position: absolute; 
-    right: 10px; 
-    height: 100%; 
-    
+  .ov-right{
+    position: absolute;
+    right: 10px;
+    height: 100%;
+
     .ov-time,
     & > div{
-      float: left; 
-      font-size: 1.5em; 
-      line-height: 32px; 
+      float: left;
+      font-size: 1.5em;
+      line-height: 32px;
       padding: 0 5px;
     }
-    
-    .ov-time{ 
+
+    .ov-time{
       font-size: 1.1em;
-      
+
       & > span{
         color: #aaa;
       }
     }
-    
-    .ov-mode{ 
-      display: none; 
-      position: relative; 
-      font-size: 4em; 
-      line-height: 32px;
-      
-      ul{ 
-        z-index: 1;
-        position: absolute; 
-        top: -140px; 
-        left: -3px; 
-        padding: 5px; 
-        border: 1px solid $highlight-color; 
-        background-color: $background-color; 
-      }    
-      
-      li{ 
-        line-height: 30px; 
-        height: 30px; 
-      }
-      
-      @media(min-width: $media-min-width){
-        display: block;
-      }
-      
-      .ov-modes-animate{
-        opacity: 1;
-        
-        &.ng-hide-add.ng-hide-add-active,
-        &.ng-hide-remove.ng-hide-remove-active{
-          @include fade-out-transition(0.5s);
-        }
-        
-        &.ng-hide{ opacity: 0; }
-      }
-    }
+
   }
 }
 
-.ov-button{ 
+.ov-button{
   color: $foreground-color;
-  
+
   &:hover{
-    cursor: pointer; 
+    cursor: pointer;
+    color: $highlight-color;
+  }
+
+  &.ov-selected{
     color: $highlight-color;
   }
 }
 
 /* Play/pause button */
-.ov-icon-play{ 
-  display: table-cell; 
-  vertical-align: middle; 
+.ov-icon-play{
+  display: table-cell;
+  vertical-align: middle;
 }
 
 /* Overlay play/pause button */
-.ov-overlay-play-button{ 
-  z-index: 1; 
-  display: table; 
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
-  
-  & > div{ 
-    display: table-cell; 
-    vertical-align: middle; 
-    text-align: center; 
+.ov-overlay-play-button{
+  z-index: 1;
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  & > div{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
   }
-  
-  .ov-button{ 
+
+  .ov-button{
     box-sizing: content-box;
-    display: block; 
-    width: 20px; 
-    padding: 10px 20px 10px 16px; 
-    margin: 0 auto; 
-    font-size: 2em; 
-    background-color: $background-color; 
-    color: $foreground-color; 
-    @include transition(background-color 0.2s ease); 
-    
+    display: block;
+    width: 20px;
+    padding: 10px 20px 10px 16px;
+    margin: 0 auto;
+    font-size: 2em;
+    background-color: $background-color;
+    color: $foreground-color;
+    @include transition(background-color 0.2s ease);
+
     &:hover{
       background-color: $highlight-color;
     }
   }
   .ov-error{
-    color: $foreground-color; 
+    color: $foreground-color;
+  }
+}
+
+/* Modes button */
+.ov-buttons .ov-right .ov-mode{
+  display: none;
+  position: relative;
+  font-size: 4em;
+  line-height: 32px;
+
+  ul{
+    z-index: 1;
+    position: absolute;
+    bottom: 32px;
+    left: -3px;
+    padding: 5px;
+    border: 1px solid $highlight-color;
+    background-color: $background-color;
+  }
+
+  li{
+    line-height: 30px;
+    height: 30px;
+  }
+
+  @media(min-width: $media-min-width){
+    display: block;
+  }
+
+  .ov-modes-animate{
+    opacity: 1;
+
+    &.ng-hide-add.ng-hide-add-active,
+    &.ng-hide-remove.ng-hide-remove-active{
+      @include fade-out-transition(0.5s);
+    }
+
+    &.ng-hide{ opacity: 0; }
   }
 }
 
 /* Volume button */
-.ov-icon-volume{ 
-  display: none; 
-  position: relative; 
-  
+.ov-icon-volume{
+  display: none;
+  position: relative;
+
   @media(min-width: $media-min-width){
     display: block;
-  }  
-  
-  & > div{ 
-    z-index: 1; 
-    position: absolute; 
-    top: -90px; 
-    left: 5px; 
-    width: 10px; 
-    height: 70px; 
-    padding: 5px; 
-    border: 1px solid $highlight-color; 
-    background-color: $background-color;   
   }
-  
+
+  & > div{
+    z-index: 1;
+    position: absolute;
+    bottom: 32px;
+    left: 5px;
+    width: 10px;
+    height: 70px;
+    padding: 5px;
+    border: 1px solid $highlight-color;
+    background-color: $background-color;
+  }
+
   .ov-volume{ background-color: $highlight-color; }
   .ov-volume-preview{ background-color: $neutral-color; }
-  
-  .ov-volume, 
-  .ov-volume-preview{ 
-    position: absolute; 
-    left: 0; 
-    bottom: 0; 
-    width: 100%; 
+
+  .ov-volume,
+  .ov-volume-preview{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
   }
-  
+
   .ov-volume-animate{
     opacity: 1;
-    
+
     &.ng-hide-add.ng-hide-add-active,
-    &.ng-hide-remove.ng-hide-remove-active{ 
+    &.ng-hide-remove.ng-hide-remove-active{
       @include fade-out-transition(0.5s);
     }
-    
-    &.ng-hide{ 
-      opacity: 0; 
+
+    &.ng-hide{
+      opacity: 0;
     }
   }
-  
+
+}
+
+/* Definitions button */
+.ov-buttons .ov-right .ov-icon-settings{
+  display: none;
+  position: relative;
+  line-height: 32px;
+
+  ul{
+    z-index: 1;
+    position: absolute;
+    bottom: 32px;
+    left: -10px;
+    border: 1px solid $highlight-color;
+    font-size: 0.6em;
+    background-color: $background-color;
+  }
+
+  li{
+    color: $foreground-color;
+    line-height: 25px;
+    height: 25px;
+    padding: 0 5px;
+
+    &.ov-hd{
+      line-height: 25px;
+      height: 30px;
+    }
+
+    &:hover{
+      background-color: $highlight-color;
+    }
+
+    &.ov-selected{
+      color: $highlight-color;
+      font-weight: bold;
+    }
+
+    &.ov-hd:after{
+      content: 'HD';
+      font-size: 0.7em;
+      font-weight: bold;
+      vertical-align: super;
+      color: $highlight-color;
+    }
+
+    &.ov-selected:hover, &.ov-hd:hover:after{
+      color: $foreground-color;
+    }
+  }
+
+  & > div{
+    position: absolute;
+    top: 3px;
+    left: 12px;
+    height: 10px;
+    padding: 1px;
+    font-size: 0.5em;
+    line-height: 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-family: Tahoma;
+    background-color: $highlight-color;
+    color: $background-color;
+  }
+
+  @media(min-width: $media-min-width){
+    display: block;
+  }
+
+  .ov-definitions-animate{
+    opacity: 1;
+
+    &.ng-hide-add.ng-hide-add-active,
+    &.ng-hide-remove.ng-hide-remove-active{
+      @include fade-out-transition(0.5s);
+    }
+
+    &.ng-hide{ opacity: 0; }
+  }
 }
 
 /* Fullscreen icon */
-.ov-icon-fullscreen{ 
-  display: none; 
-  
+.ov-icon-fullscreen{
+  display: none;
+
   @media(min-width: $media-min-width){
     display: block;
   }

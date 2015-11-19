@@ -10,8 +10,10 @@ OpenVeo Player defines an AngularJS directive **ov-player** :
   ov-fullscreen-icon="isFullscreenIconDisplayed"
   ov-volume-icon="isVolumeIconDisplayed"
   ov-mode-icon="isModeIconDisplayed"
-  ov-language="playerLanguage"
+  ov-settings-icon="isSettingsIconDisplayed"
+  ov-language="en"
   ov-player-type="html"
+  ov-auto-play="true"
 ></ov-player>
 ```
 
@@ -56,7 +58,7 @@ OpenVeo player needs to be aware of its root path to load AngularJS partials.
 Sets player data, synchronize images, chapters and cut.
 
 ```javascript
-{
+$scope.data = {
   mediaId : '34532ezr54sdf87', // The id of the video
   timecodes : { // Timecodes
     0 : { // Timecode in milliseconds (0 ms)
@@ -113,12 +115,26 @@ Sets player data, synchronize images, chapters and cut.
 }
 ```
 
+```html
+<ov-player
+  ...
+  ov-data="data"
+></ov-player>
+```
+
 ## ov-full-viewport (optional)
 
 Indicates if player must take the full viewport or not. **This must be an assignable variable evaluated as a boolean.** (Default to false)
 
 ```javascript
-var isFullViewport = false;
+$scope.isFullViewport = false;
+```
+
+```html
+<ov-player
+  ...
+  ov-full-viewport="isFullViewport"
+></ov-player>
 ```
 
 ## ov-time (optional)
@@ -126,7 +142,14 @@ var isFullViewport = false;
 Indicates if video time / duration must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
 
 ```javascript
-var isTimeDisplayed = true;
+$scope.isTimeDisplayed = true;
+```
+
+```html
+<ov-player
+  ...
+  ov-time="isTimeDisplayed"
+></ov-player>
 ```
 
 ## ov-fullscreen-icon (optional)
@@ -134,7 +157,14 @@ var isTimeDisplayed = true;
 Indicates if fullscreen icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
 
 ```javascript
-var isFullscreenIconDisplayed = true;
+$scope.isFullscreenIconDisplayed = true;
+```
+
+```html
+<ov-player
+  ...
+  ov-fullscreen-icon="isFullscreenIconDisplayed"
+></ov-player>
 ```
 
 ## ov-volume-icon (optional)
@@ -142,7 +172,14 @@ var isFullscreenIconDisplayed = true;
 Indicates if volume icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
 
 ```javascript
-var isVolumeIconDisplayed = true;
+$scope.isVolumeIconDisplayed = true;
+```
+
+```html
+<ov-player
+  ...
+  ov-volume-icon="isVolumeIconDisplayed"
+></ov-player>
 ```
 
 ## ov-mode-icon (optional)
@@ -150,20 +187,45 @@ var isVolumeIconDisplayed = true;
 Indicates if mode icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
 
 ```javascript
-var isModeIconDisplayed = true;
+$scope.isModeIconDisplayed = true;
+```
+
+```html
+<ov-player
+  ...
+  ov-mode-icon="isModeIconDisplayed"
+></ov-player>
+```
+
+## ov-settings-icon (optional)
+
+Indicates if settings icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
+
+```javascript
+$scope.isSettingsIconDisplayed = true;
+```
+
+```html
+<ov-player
+  ...
+  ov-settings-icon="isSettingsIconDisplayed"
+></ov-player>
 ```
 
 ## ov-language (optional)
 
-Indicates player language. **This must be an assignable variable evaluated as a boolean.** (Default to **en**)
+Indicates player language. (Default to **en**)
 
 Supported values are :
 
 - fr
 - en
 
-```javascript
-var playerLanguage = 'en';
+```html
+<ov-player
+  ...
+  ov-language="en"
+></ov-player>
 ```
 
 ## ov-player-type (optional)
@@ -175,6 +237,20 @@ Supported values are :
 - vimeo
 - html
 
-```javascript
-var playerLanguage = 'html';
+```html
+<ov-player
+  ...
+  ov-player-type="html"
+></ov-player>
+```
+
+## ov-auto-play (optional)
+
+Indicates if player must automatically start when media is ready. (Default to **false**)
+
+```html
+<ov-player
+  ...
+  ov-auto-play="true"
+></ov-player>
 ```

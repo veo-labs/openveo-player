@@ -76,7 +76,7 @@ describe('VimeoPlayer', function() {
     var message = {};
     player.playing = 0;
 
-    angular.element(playerElement).on('play', function() {
+    angular.element(playerElement).on('ovPlay', function() {
       done();
     });
 
@@ -102,7 +102,7 @@ describe('VimeoPlayer', function() {
     var message = {};
     player.playing = 1;
 
-    angular.element(playerElement).on('pause', function() {
+    angular.element(playerElement).on('ovPause', function() {
       done();
     });
 

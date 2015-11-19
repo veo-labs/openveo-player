@@ -70,7 +70,7 @@
           case 'ready':
             handleReady.call(this);
             postActionToPlayer.call(this, 'getDuration');
-            this.jPlayerElement.triggerHandler('ready');
+            this.jPlayerElement.triggerHandler('ovReady');
             break;
 
             // Media is loading
@@ -78,7 +78,7 @@
 
             // No indication about the playback position of the loading
             // percentage, assume it to be 0
-            this.jPlayerElement.triggerHandler('loadProgress', {
+            this.jPlayerElement.triggerHandler('ovLoadProgress', {
               loadedStart: 0,
               loadedPercent: data.data.percent * 100
             });
@@ -92,7 +92,7 @@
             // is emitted with a percent greater than 1, after the "end"
             // event
             if (data.data.percent <= 1)
-              this.jPlayerElement.triggerHandler('playProgress', {
+              this.jPlayerElement.triggerHandler('ovPlayProgress', {
                 time: data.data.seconds * 1000,
                 percent: data.data.percent * 100
               });
@@ -102,19 +102,19 @@
             // Media begins to play
           case 'play':
             this.playing = 1;
-            this.jPlayerElement.triggerHandler('play');
+            this.jPlayerElement.triggerHandler('ovPlay');
             break;
 
             // Media pauses
           case 'pause':
             this.playing = 0;
-            this.jPlayerElement.triggerHandler('pause');
+            this.jPlayerElement.triggerHandler('ovPause');
             break;
 
             // Media playback reaches the end
           case 'finish':
             this.playing = 0;
-            this.jPlayerElement.triggerHandler('end');
+            this.jPlayerElement.triggerHandler('ovEnd');
             break;
 
           default:
@@ -125,7 +125,7 @@
         switch (data.method) {
           case 'getDuration':
             this.duration = data.value || this.media.metadata && this.media.metadata.duration;
-            this.jPlayerElement.triggerHandler('durationChange', this.duration * 1000);
+            this.jPlayerElement.triggerHandler('ovDurationChange', this.duration * 1000);
             break;
 
           default:
@@ -212,14 +212,14 @@
      * @param Number time The time to seek to in milliseconds
      */
     VimeoPlayer.prototype.setTime = function(time) {
-      time = parseInt(time) || 0.1;
+      time = parseInt(time) || 0;
       postActionToPlayer.call(this, 'seekTo', time / 1000);
 
       // Send a playProgress event because the Vimeo flash player (old
       // browsers) does not trigger the playProgress event while in pause
       // as the HTML5 player does
       if (!this.playing)
-        this.jPlayerElement.triggerHandler('playProgress', {
+        this.jPlayerElement.triggerHandler('ovPlayProgress', {
           time: time,
           percent: (time / this.duration) * 100
         });
@@ -231,6 +231,15 @@
      */
     VimeoPlayer.prototype.getPlayerType = function() {
       return 'vimeo';
+    };
+
+    /**
+     * Gets media definitions.
+     * No definitions available for vimeo player, adaptive streaming is managed by vimeo player.
+     * @return Null null
+     */
+    VimeoPlayer.prototype.getAvailableDefinitions = function() {
+      return null;
     };
 
     /**

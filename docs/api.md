@@ -90,6 +90,33 @@ Param | Type | Details
 ----- | ---- | ----
 time  | Number  | The time to set (in milliseconds)
 
+## setDefinition(definition)
+
+Sets actual media definition.
+
+Usage :
+
+```javascript
+var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  playerController.setDefinition({
+    width: 1280,
+    height: 720,
+    link: 'http(s)://linkToTheHDFile'
+  });
+});
+```
+
+Arguments :
+
+Param | Type | Details
+----- | ---- | ----
+definition  | Object  | The definition description object
+
 # Events
 
 ## ready

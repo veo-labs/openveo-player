@@ -1,4 +1,5 @@
 'use strict';
+
 (function(angular, app) {
 
   // Available display modes
@@ -27,15 +28,17 @@
         ovFullscreenIcon: '=?',
         ovVolumeIcon: '=?',
         ovModeIcon: '=?',
+        ovSettingsIcon: '=?',
         ovTime: '=?',
         ovFullViewport: '=?',
-        ovLanguage: '=?',
-        ovPlayerType: '@?'
+        ovLanguage: '@?',
+        ovPlayerType: '@?',
+        ovAutoPlay: '@?'
       },
       controller: ['$scope', '$element', function($scope, $element) {
         var self = this;
-        var modesTimeoutPromise;
-        var volumeTimeoutPromise;
+        var lastTime = 0;
+        var hideSettingsTimeoutPromise;
         var fullscreen = false;
         var document = $document[0];
         var element = $element[0];
@@ -52,9 +55,11 @@
         $scope.ovFullscreenIcon = (typeof $scope.ovFullscreenIcon === 'undefined') ? true : $scope.ovFullscreenIcon;
         $scope.ovVolumeIcon = (typeof $scope.ovVolumeIcon === 'undefined') ? true : $scope.ovVolumeIcon;
         $scope.ovModeIcon = (typeof $scope.ovModeIcon === 'undefined') ? true : $scope.ovModeIcon;
+        $scope.ovSettingsIcon = (typeof $scope.ovSettingsIcon === 'undefined') ? true : $scope.ovSettingsIcon;
         $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
         $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
         $scope.ovLanguage = (typeof $scope.ovLanguage === 'undefined') ? 'en' : $scope.ovLanguage;
+        var autoPlay = (typeof $scope.ovAutoPlay === 'undefined') ? false : JSON.parse($scope.ovAutoPlay);
 
         /**
          * Tests if browser implements the fullscreen API or not.
@@ -183,7 +188,6 @@
         function hideTimecodes() {
           $scope.displayIndexTab = false;
           $scope.selectedMode = modes[0];
-          $scope.ovModeIcon = false;
         }
 
         /**
@@ -194,7 +198,6 @@
         function displayTimecodes() {
           $scope.displayIndexTab = true;
           $scope.selectedMode = modes[1];
-          $scope.ovModeIcon = true;
         }
 
         /**
@@ -284,6 +287,38 @@
         }
 
         /**
+         * Initializes player attributes.
+         * Some attributes may change regarding on player data.
+         */
+        function initAttributes() {
+
+          if (!$scope.player)
+            return;
+
+          // Icon to change player definition is only available for the html player with, at least, one definition
+          if ($scope.player.getPlayerType() !== 'html' || !$scope.player.getAvailableDefinitions())
+            $scope.ovSettingsIcon = false;
+
+          // Media volume can't be changed on touch devices
+          if (isTouchDevice())
+            $scope.ovVolumeIcon = false;
+
+          // Icon to change player's display mode is only available if an index is associated to the video
+          if (!$scope.displayIndexTab)
+            $scope.ovModeIcon = false;
+
+          // Full viewport and no FullScreen API available
+          // Consider the player as in fullscreen
+          if ($scope.ovFullViewport && !implementFullScreenAPI()) {
+            $scope.fullscreenButton = 'reduce';
+            fullscreen = true;
+          }
+
+          // Set player language
+          i18nPlayerService.setLanguage($scope.ovLanguage);
+        }
+
+        /**
          * Initializes isolated scope properties and player.
          */
         function init() {
@@ -305,6 +340,7 @@
           $scope.timePreviewOpened = false;
           $scope.volumeOpened = false;
           $scope.modesOpened = false;
+          $scope.definitionOpened = false;
           $scope.modes = angular.copy(modes);
           $scope.selectedMode = modes[1];
           $scope.playPauseButton = 'play';
@@ -323,20 +359,10 @@
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
           $scope.loading = true;
           $scope.error = null;
-
-          // Set player language
-          i18nPlayerService.setLanguage($scope.ovLanguage);
-
-          // Full viewport and no FullScreen API available
-          // Consider the player as in fullscreen
-          if ($scope.ovFullViewport && !implementFullScreenAPI()) {
-            $scope.fullscreenButton = 'reduce';
-            fullscreen = true;
-          }
-
-          // Media volume can't be changed on touch devices
-          if (isTouchDevice())
-            $scope.ovVolumeIcon = false;
+          $scope.initializing = true;
+          $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
+          $scope.selectedDefinition = $scope.mediaDefinitions &&
+            $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
 
           // Video is cut
           // Real media duration is required to be able to display either the
@@ -354,9 +380,24 @@
 
           }
 
+          initAttributes();
+
         }
 
         init();
+
+        /**
+         * Hides all opened settings menu with a timeout.
+         */
+        function hideSettingsWithTimeout() {
+          if (hideSettingsTimeoutPromise)
+            $timeout.cancel(hideSettingsTimeoutPromise);
+
+          if ($scope.modesOpened || $scope.definitionOpened || $scope.volumeOpened)
+            hideSettingsTimeoutPromise = $timeout(function() {
+              $scope.modesOpened = $scope.definitionOpened = $scope.volumeOpened = false;
+            }, 3000);
+        }
 
         /**
          * Toggles display mode selection list.
@@ -365,17 +406,10 @@
          * Automatically close display modes after 3 seconds.
          */
         $scope.toggleModes = function() {
-          if (modesTimeoutPromise)
-            $timeout.cancel(modesTimeoutPromise);
-
           $scope.volumeOpened = false;
+          $scope.definitionOpened = false;
           $scope.modesOpened = !$scope.modesOpened;
-
-          if ($scope.modesOpened)
-            modesTimeoutPromise = $timeout(function() {
-              $scope.modesOpened = false;
-            },
-              3000);
+          hideSettingsWithTimeout();
         };
 
         /**
@@ -385,17 +419,23 @@
          * Automatically close volume after 3 seconds.
          */
         $scope.toggleVolume = function() {
-          if (volumeTimeoutPromise)
-            $timeout.cancel(volumeTimeoutPromise);
-
           $scope.modesOpened = false;
+          $scope.definitionOpened = false;
           $scope.volumeOpened = !$scope.volumeOpened;
+          hideSettingsWithTimeout();
+        };
 
-          if ($scope.volumeOpened)
-            volumeTimeoutPromise = $timeout(function() {
-              $scope.volumeOpened = false;
-            },
-              3000);
+        /**
+         * Toggles definition selector.
+         * If definition selector is already opened, close it, open it otherwise.
+         * Close both volume and modes if opened.
+         * Automatically close definition selector after 3 seconds.
+         */
+        $scope.toggleDefinition = function() {
+          $scope.volumeOpened = false;
+          $scope.modesOpened = false;
+          $scope.definitionOpened = !$scope.definitionOpened;
+          hideSettingsWithTimeout();
         };
 
         /**
@@ -479,23 +519,11 @@
 
         });
 
-        // Watch for ov-mode-icon attribute changes
-        $scope.$watch('ovModeIcon', function() {
-
-          // Do not display mode icon if no timecodes are available
-          if ($scope.timecodes && !$scope.timecodes.length && $scope.ovModeIcon)
-            $scope.ovModeIcon = false;
-
-        });
-
-        // Watch for ov-volume-icon attribute changes
-        $scope.$watch('ovVolumeIcon', function() {
-
-          // Media volume can't be changed on touch devices
-          if (isTouchDevice())
-            $scope.ovVolumeIcon = false;
-
-        });
+        // Watch for icons attributes changes
+        $scope.$watch('ovModeIcon', initAttributes);
+        $scope.$watch('ovVolumeIcon', initAttributes);
+        $scope.$watch('ovSettingsIcon', initAttributes);
+        $scope.$watch('ovFullViewport', initAttributes);
 
         /**
          * Sets the player volume.
@@ -557,6 +585,22 @@
         };
 
         /**
+         * Sets the media definition.
+         * @param Object definition The new definition
+         */
+        this.setDefinition = $scope.setDefinition = function(definition) {
+          if (definition && definition.link !== $scope.selectedDefinition.link) {
+            lastTime = $scope.time;
+            autoPlay = !$scope.player.isPaused();
+            $scope.selectedDefinition = definition;
+            $scope.mediaUrl = $sce.trustAsResourceUrl($scope.selectedDefinition.link);
+            $scope.loading = true;
+            $scope.initializing = true;
+            $scope.player.load();
+          }
+        };
+
+        /**
          * Handles mouse over events on volume bar area to be able to
          * display a preview of the future volume level.
          * @param MouseEvent event The dispatched event
@@ -574,7 +618,6 @@
          * @param MouseEvent event The dispatched event
          */
         angular.element(timeBar).on('mouseover', function(event) {
-
           timeBarRect = timeBar.getBoundingClientRect();
           timeBarWidth = timeBarRect.right - timeBarRect.left;
 
@@ -590,30 +633,49 @@
         });
 
         // Listen to player ready event
-        $element.on('ready', function() {
+        $element.on('ovReady', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.player.setVolume(100);
             $scope.loading = false;
+            $scope.initializing = false;
+            self.setTime(lastTime);
+            $element.triggerHandler('ready');
+
+            if (autoPlay)
+              self.playPause();
           });
+          return false;
         });
 
         // Listen to player waiting event
-        $element.on('waiting', function() {
+        $element.on('ovWaiting', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loading = true;
+            $element.triggerHandler('waiting');
           });
+          return false;
         });
 
         // Listen to player playing event
-        $element.on('playing', function() {
+        $element.on('ovPlaying', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loading = false;
             $scope.playPauseButton = 'pause';
+            $element.triggerHandler('playing');
           });
+          return false;
         });
 
         // Listen to player durationChange event
-        $element.on('durationChange', function(event, duration) {
+        $element.on('ovDurationChange', function(event, duration) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             playerService.setRealMediaDuration(duration);
             $scope.duration = playerService.getCutDuration();
@@ -622,36 +684,60 @@
             if ($scope.isCut) {
               initTimecodes();
               initChapters();
-              $scope.player.setTime(playerService.getRealTime(0));
+              self.setTime(0);
             }
+
+            $element.triggerHandler('durationChange', $scope.duration);
           });
+          return false;
         });
 
         // Listen to player play event
-        $element.on('play', function() {
+        $element.on('ovPlay', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loading = false;
             $scope.playPauseButton = 'pause';
+            $element.triggerHandler('play');
           });
+          return false;
         });
 
         // Listen to player pause event
-        $element.on('pause', function() {
+        $element.on('ovPause', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.playPauseButton = 'play';
+            $element.triggerHandler('pause');
           });
+          return false;
         });
 
         // Listen to player loadProgress event
-        $element.on('loadProgress', function(event, data) {
+        $element.on('ovLoadProgress', function(event, data) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loadedStart = playerService.getCutPercent(data.loadedStart);
             $scope.loadedPercent = playerService.getCutPercent(data.loadedPercent);
+            $element.triggerHandler('loadProgress', {
+              loadedStart: $scope.loadedStart,
+              loadedPercent: $scope.loadedPercent
+            });
           });
+          return false;
         });
 
         // Listen to player playProgress event
-        $element.on('playProgress', function(event, data) {
+        $element.on('ovPlayProgress', function(event, data) {
+          event.stopImmediatePropagation();
+
+          // Unnecessary playProgress events are sometimes dispatched when initializing the media
+          if ($scope.initializing)
+            return;
+
           $scope.loading = false;
           var timecode = findTimecode(data.time);
 
@@ -661,6 +747,11 @@
 
             if ($scope.timecodesByTime[timecode])
               $scope.presentation = $scope.timecodesByTime[timecode].image.large;
+
+            $element.triggerHandler('playProgress', {
+              time: $scope.time,
+              percent: $scope.seenPercent
+            });
           };
 
           // Media virtual end reached
@@ -670,10 +761,14 @@
           }
           else
             safeApply(updateTime);
+
+          return false;
         });
 
         // Listen to player end event
-        $element.on('end', function() {
+        $element.on('ovEnd', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.time = $scope.seenPercent = 0;
             $scope.playPauseButton = 'play';
@@ -685,7 +780,11 @@
             // Return to the cut start edge
             if ($scope.isCut)
               $scope.player.setTime(playerService.getRealTime(0));
+
+            $element.triggerHandler('end');
           });
+
+          return false;
         });
 
         // Listen to player error event

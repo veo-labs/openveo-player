@@ -26,7 +26,7 @@
           if (this.player.buffered.length === 1) {
             var loadedStart = (this.player.buffered.start(0) / this.player.duration);
             var loadedEnd = (this.player.buffered.end(0) / this.player.duration);
-            this.jPlayerElement.triggerHandler('loadProgress', {
+            this.jPlayerElement.triggerHandler('ovLoadProgress', {
               loadedStart: Math.max(0, Math.min(loadedStart, 1)) * 100,
               loadedPercent: Math.max(0, Math.min(loadedEnd - loadedStart, 1)) * 100
             });
@@ -37,46 +37,46 @@
         // The duration attribute has just been updated
         case 'durationchange':
           var duration = this.player.duration || this.media.metadata && this.media.metadata.duration;
-          this.jPlayerElement.triggerHandler('durationChange', duration * 1000);
+          this.jPlayerElement.triggerHandler('ovDurationChange', duration * 1000);
           break;
 
         // Ready to render the media data at the current playback position
         // for the first time
         case 'loadeddata':
           this.loaded = true;
-          this.jPlayerElement.triggerHandler('ready');
+          this.jPlayerElement.triggerHandler('ovReady');
           break;
 
         // Media is no longer paused
         case 'play':
-          this.jPlayerElement.triggerHandler('play');
+          this.jPlayerElement.triggerHandler('ovPlay');
           break;
 
         // Media has been paused
         case 'pause':
-          this.jPlayerElement.triggerHandler('pause');
+          this.jPlayerElement.triggerHandler('ovPause');
           break;
 
         // Media playback has reached the end
         case 'ended':
-          this.jPlayerElement.triggerHandler('end');
+          this.jPlayerElement.triggerHandler('ovEnd');
           break;
 
         // Media playback has stopped because the next frame is not available
         case 'waiting':
-          this.jPlayerElement.triggerHandler('waiting');
+          this.jPlayerElement.triggerHandler('ovWaiting');
           break;
 
         // Media playback is ready to start after being paused or delayed
         // due to lack of media data
         case 'playing':
-          this.jPlayerElement.triggerHandler('playing');
+          this.jPlayerElement.triggerHandler('ovPlaying');
           break;
 
         // Media playback position has changed
         case 'timeupdate':
           var playedPercent = (this.player.currentTime / this.player.duration) * 100;
-          this.jPlayerElement.triggerHandler('playProgress', {
+          this.jPlayerElement.triggerHandler('ovPlayProgress', {
             time: this.player.currentTime * 1000,
             percent: playedPercent
           });
@@ -130,6 +130,14 @@
      */
     function HTMLPlayer(jPlayerElement, media) {
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
+
+      // Order media definitions from better quality to lower quality
+      this.media.files.sort(function(def1, def2) {
+        if (def1.width < def2.width)
+          return 1;
+
+        return -1;
+      });
     }
 
     HTMLPlayer.prototype = new OvPlayer();
@@ -185,7 +193,22 @@
       });
 
       // Start loading media
+      this.load();
+    };
+
+    /**
+     * Starts loading current media.
+     */
+    HTMLPlayer.prototype.load = function() {
       this.player.load();
+    };
+
+    /**
+     * Tests if player actual state is pause.
+     * @param Boolean true if paused, false otherwise
+     */
+    HTMLPlayer.prototype.isPaused = function() {
+      return this.player.paused;
     };
 
     /**
@@ -221,6 +244,14 @@
      */
     HTMLPlayer.prototype.getPlayerType = function() {
       return 'html';
+    };
+
+    /**
+     * Gets media definitions.
+     * @return Array The list of available media definitions
+     */
+    HTMLPlayer.prototype.getAvailableDefinitions = function() {
+      return this.media.files;
     };
 
     /**

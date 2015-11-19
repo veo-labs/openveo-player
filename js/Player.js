@@ -139,6 +139,14 @@
     };
 
     /**
+     * Gets media definitions.
+     * @return Array The list of definitions
+     */
+    Player.prototype.getAvailableDefinitions = function() {
+      throw new Error('getAvailableDefinitions method not implemented for this player');
+    };
+
+    /**
      * Gets media thumbnail.
      * @return String The media thumbnail
      */
@@ -151,6 +159,21 @@
      */
     Player.prototype.initialize = function() {
       throw new Error('initialize method not implemented for this player');
+    };
+
+    /**
+     * Loads current media.
+     */
+    Player.prototype.load = function() {
+      throw new Error('load method not implemented for this player');
+    };
+
+    /**
+     * Tests if player actual state is pause.
+     * @param Boolean true if paused, false otherwise
+     */
+    Player.prototype.isPaused = function() {
+      throw new Error('isPaused method not implemented for this player');
     };
 
     /**

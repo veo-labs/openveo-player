@@ -21,17 +21,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.ov-icon-both:before{ content: "\e600"; }
-.ov-icon-both-presentation:before{ content: "\e601"; }
-.ov-icon-presentation:before{ content: "\e603"; }
-.ov-icon-media:before{ content: "\e605"; }
-.ov-icon-enlarge:before{ content: "\e602"; }
-.ov-icon-reduce:before{ content: "\e604"; }
-.ov-icon-play:before{ content: "\ea1c"; }
-.ov-icon-pause:before{ content: "\ea1d"; }
-.ov-icon-volume:before{ content: "\e606"; }
+.ov-icon-both:before{ content: "\e900"; }
+.ov-icon-both-presentation:before{ content: "\e901"; }
+.ov-icon-enlarge:before{ content: "\e902"; }
+.ov-icon-presentation:before{ content: "\e903"; }
+.ov-icon-reduce:before{ content: "\e904"; }
+.ov-icon-media:before{ content: "\e905"; }
+.ov-icon-volume:before{ content: "\e906"; }
+.ov-icon-play:before{ content: "\e908"; }
+.ov-icon-pause:before{ content: "\e909"; }
+.ov-icon-settings:before{ content: "\e907"; }
 
-.ov-player{ 
+.ov-player{
   font-family: arial, sans-serif;
   font-size: 12px;
 }

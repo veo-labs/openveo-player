@@ -48,7 +48,7 @@
           <p class="ov-time" ng-show="ovTime">{{time | millisecondsToTime}} - <span>{{duration | millisecondsToTime}}</span></p>
           <div class="ov-icon-{{selectedMode}} ov-button ov-mode" ng-show="ovModeIcon" ng-click="toggleModes()">
             <ul ng-show="modesOpened" class="ov-modes-animate">
-              <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="ov-button ov-icon-{{mode}}"></li>
+              <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="ov-button ov-icon-{{mode}}" ng-class="{'ov-selected' : mode === selectedMode}"></li>
             </ul>
           </div>
           <div class="ov-icon-volume ov-button" ng-show="ovVolumeIcon" ng-click="toggleVolume()">
@@ -57,6 +57,12 @@
               <div class="ov-volume" ng-style="{'height' : volume + '%'}"></div>
               <div class="ov-volume-ghost ov-ghost"></div>
             </div>
+          </div>
+          <div class="ov-button ov-icon-settings" ng-show="ovSettingsIcon" ng-click="toggleDefinition()">
+            <div ng-show="selectedDefinition.width >= 1280">HD</div>
+            <ul ng-show="definitionOpened" class="ov-definitions-animate" ng-click="">
+              <li ng-repeat="definition in mediaDefinitions" ng-click="setDefinition(definition)" ng-bind-template="{{definition.width}}p" ng-class="{'ov-selected' : selectedDefinition.width === definition.width, 'ov-hd' : definition.width >= 1280}"></li>
+            </ul>
           </div>
           <div class="ov-icon-{{fullscreenButton}} ov-button ov-icon-fullscreen" ng-show="ovFullscreenIcon" ng-click="toggleFullscreen()"></div>
         </div>

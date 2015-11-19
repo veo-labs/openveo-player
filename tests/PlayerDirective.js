@@ -30,13 +30,13 @@ describe('PlayerDirective', function() {
   });
 
   it('Should define attributes ov-fullscreen-icon, ov-time, ov-volume-icon, ov-mode-icon, ' +
-     'ov-fullscreen, ov-data, ov-player-type',
+     'ov-full-viewport, ov-data, ov-player-type, ov-settings-icon, ov-language, ov-auto-play',
   function() {
     $rootScope.fullViewport = false;
     $rootScope.displayTime = true;
     $rootScope.displayVolumeIcon = true;
     $rootScope.displayModeIcon = true;
-    $rootScope.playerType = 'vimeo';
+    $rootScope.displaySettingsIcon = true;
     $rootScope.data = {
       type: 'vimeo',
       mediaId: '1',
@@ -48,13 +48,23 @@ describe('PlayerDirective', function() {
             large: ''
           }
         }
-      ]
+      ],
+      files: [{
+        width: 640,
+        height: 360,
+        link: 'http://video.mp4'
+      }, {
+        width: 1280,
+        height: 720,
+        link: 'http://video.mp4'
+      }]
     };
 
     var element = angular.element(
       '<ov-player ov-fullscreen-icon="true" ov-full-viewport="fullViewport" ov-time="displayTime" ' +
       'ov-volume-icon="displayVolumeIcon" ov-mode-icon="displayModeIcon" ov-data="data" ' +
-      'ov-player-type="{{playerType}}"></ov-player>');
+      'ov-player-type="html" ov-settings-icon="displaySettingsIcon" ov-language="en" ' +
+      'ov-auto-play="true"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -64,14 +74,17 @@ describe('PlayerDirective', function() {
     assert.isDefined(isolateScope.ovFullscreenIcon);
     assert.isDefined(isolateScope.ovVolumeIcon);
     assert.isDefined(isolateScope.ovModeIcon);
+    assert.isDefined(isolateScope.ovSettingsIcon);
     assert.isDefined(isolateScope.ovTime);
     assert.isDefined(isolateScope.ovFullViewport);
     assert.isDefined(isolateScope.ovPlayerType);
+    assert.isDefined(isolateScope.ovLanguage);
+    assert.isDefined(isolateScope.ovAutoPlay);
   });
 
   it('Should display all icons and time if not specified', function() {
     $rootScope.data = {
-      type: 'vimeo',
+      type: 'html',
       mediaId: '1',
       timecodes: [
         {
@@ -81,19 +94,28 @@ describe('PlayerDirective', function() {
             large: ''
           }
         }
-      ]
+      ],
+      files: [{
+        width: 640,
+        height: 360,
+        link: 'http://video.mp4'
+      }, {
+        width: 1280,
+        height: 720,
+        link: 'http://video.mp4'
+      }]
     };
     var element = angular.element('<ov-player ov-data="data"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
     var isolateScope = element.isolateScope();
-    assert.ok(isolateScope.ovFullscreenIcon);
-    assert.ok(isolateScope.ovTime);
+    assert.ok(isolateScope.ovSettingsIcon);
     assert.ok(isolateScope.ovModeIcon);
+    assert.ok(isolateScope.ovTime);
   });
 
   it('Should not display modes icon if no timecodes', function() {
-    $rootScope.data = {};
+    $rootScope.data = { };
     $rootScope.displayModeIcon = true;
     var element = angular.element('<ov-player ov-mode-icon="displayModeIcon" ov-data="data"></ov-player>');
     element = $compile(element)(scope);
@@ -104,7 +126,7 @@ describe('PlayerDirective', function() {
   });
 
   it('Should not display index tab if no timecodes', function() {
-    $rootScope.data = {};
+    $rootScope.data = { };
     var element = angular.element('<ov-player ov-data="data"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
@@ -158,22 +180,6 @@ describe('PlayerDirective', function() {
     var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
     assert.isNotNull(isolateScope.player);
     assert.ok(isolateScope.player instanceof OvHTMLPlayer);
-  });
-
-  it('Should create a Flow player if player type is flowplayer', function() {
-    $rootScope.data = {
-      mediaId: '1',
-      files: [{}]
-    };
-    $rootScope.playerType = 'flowplayer';
-    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
-    element = $compile(element)(scope);
-    scope.$digest();
-
-    var isolateScope = element.isolateScope();
-    var OvFlowPlayer = $injector.get('OvFlowPlayer');
-    assert.isNotNull(isolateScope.player);
-    assert.ok(isolateScope.player instanceof OvFlowPlayer);
   });
 
   it('Should create an HTML player if no media type is specified', function() {
@@ -234,6 +240,8 @@ describe('PlayerDirective', function() {
     var isolateScope = element.isolateScope();
     isolateScope.toggleModes();
     assert.ok(isolateScope.modesOpened);
+    assert.notOk(isolateScope.definitionOpened);
+    assert.notOk(isolateScope.volumeOpened);
   });
 
   it('Should be able to open/close the volume', function() {
@@ -245,6 +253,21 @@ describe('PlayerDirective', function() {
     var isolateScope = element.isolateScope();
     isolateScope.toggleVolume();
     assert.ok(isolateScope.volumeOpened);
+    assert.notOk(isolateScope.definitionOpened);
+    assert.notOk(isolateScope.modesOpened);
+  });
+
+  it('Should be able to open/close the list of definitions', function() {
+    $rootScope.data = {};
+    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    var isolateScope = element.isolateScope();
+    isolateScope.toggleDefinition();
+    assert.ok(isolateScope.definitionOpened);
+    assert.notOk(isolateScope.volumeOpened);
+    assert.notOk(isolateScope.modesOpened);
   });
 
   it('Should be able to select a mode', function() {
@@ -257,6 +280,7 @@ describe('PlayerDirective', function() {
     isolateScope.selectMode('both-presentation');
     assert.equal(isolateScope.selectedMode, 'both-presentation');
   });
+
 
   it('Should be able to play/pause the player', function(done) {
     $rootScope.data = {};
@@ -275,6 +299,49 @@ describe('PlayerDirective', function() {
     isolateScope.playPause();
   });
 
+  it('Should be able to change media definition', function(done) {
+    $rootScope.data = {
+      type: 'html',
+      mediaId: '1',
+      timecodes: {},
+      files: [{
+        width: 640,
+        height: 360,
+        link: 'http://video.mp4'
+      }, {
+        width: 1280,
+        height: 720,
+        link: 'http://videoHD.mp4'
+      }],
+      thumbnail: '/1439286245225/thumbnail.jpg'
+    };
+
+    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    var isolateScope = element.isolateScope();
+
+    isolateScope.player = {
+      load: function() {
+        assert.notOk(isolateScope.autoPlay, false);
+        assert.equal(isolateScope.mediaUrl, 'http://videoHD.mp4');
+        assert.ok(isolateScope.loading);
+        assert.ok(isolateScope.initializing);
+        done();
+      },
+      isPaused: function() {
+        return true;
+      }
+    };
+
+    isolateScope.setDefinition({
+      width: 1280,
+      height: 720,
+      link: 'http://videoHD.mp4'
+    });
+  });
+
   it('Should handle player waiting event and set player as "loading"', function() {
     $rootScope.data = {
       type: 'vimeo',
@@ -287,7 +354,7 @@ describe('PlayerDirective', function() {
 
     var isolateScope = element.isolateScope();
     isolateScope.loading = false;
-    element.triggerHandler('waiting');
+    element.triggerHandler('ovWaiting');
     $timeout.flush();
 
     assert.ok(isolateScope.loading);
@@ -305,7 +372,7 @@ describe('PlayerDirective', function() {
 
     var isolateScope = element.isolateScope();
     isolateScope.loading = true;
-    element.triggerHandler('playing');
+    element.triggerHandler('ovPlaying');
     $timeout.flush();
 
     assert.notOk(isolateScope.loading);
@@ -323,7 +390,7 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    element.triggerHandler('durationChange', 50000);
+    element.triggerHandler('ovDurationChange', 50000);
     $timeout.flush();
 
     assert.equal(isolateScope.duration, 50000);
@@ -340,7 +407,7 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    element.triggerHandler('play');
+    element.triggerHandler('ovPlay');
     $timeout.flush();
 
     assert.equal(isolateScope.playPauseButton, 'pause');
@@ -357,7 +424,7 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    element.triggerHandler('pause');
+    element.triggerHandler('ovPause');
     $timeout.flush();
 
     assert.equal(isolateScope.playPauseButton, 'play');
@@ -374,7 +441,7 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    element.triggerHandler('loadProgress', {
+    element.triggerHandler('ovLoadProgress', {
       loadedStart: 2,
       loadedPercent: 98
     });
@@ -419,9 +486,10 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    element.triggerHandler('durationChange', 10000);
+    isolateScope.initializing = false;
+    element.triggerHandler('ovDurationChange', 10000);
     $timeout.flush();
-    element.triggerHandler('playProgress', {
+    element.triggerHandler('ovPlayProgress', {
       time: 7000,
       percent: 75
     });
@@ -445,14 +513,14 @@ describe('PlayerDirective', function() {
     var isolateScope = element.isolateScope();
     isolateScope.time = 5000;
     isolateScope.seenPercent = 50;
-    element.triggerHandler('end');
+    element.triggerHandler('ovEnd');
     $timeout.flush();
 
     assert.equal(isolateScope.time, 0);
     assert.equal(isolateScope.seenPercent, 0);
   });
 
-  it('Should expose an API with selectMode, playPause, setVolume, setTime', function() {
+  it('Should expose an API with selectMode, playPause, setVolume, setTime and setDefinition', function() {
     $rootScope.data = {};
     var element = angular.element('<ov-player ov-data="data"></ov-player>');
     element = $compile(element)(scope);
@@ -463,6 +531,13 @@ describe('PlayerDirective', function() {
     assert.isDefined(controller.playPause);
     assert.isDefined(controller.setVolume);
     assert.isDefined(controller.setTime);
+    assert.isDefined(controller.setDefinition);
+
+    assert.isFunction(controller.selectMode);
+    assert.isFunction(controller.playPause);
+    assert.isFunction(controller.setVolume);
+    assert.isFunction(controller.setTime);
+    assert.isFunction(controller.setDefinition);
   });
 
 });
