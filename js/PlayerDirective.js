@@ -634,6 +634,7 @@
 
           safeApply(function() {
             $scope.player.setVolume(100);
+            $scope.error = null;
             $scope.loading = false;
             $scope.initializing = false;
             self.setTime(lastTime);
@@ -786,6 +787,9 @@
         // Listen to player error event
         $element.on('error', function(event, data) {
           safeApply(function() {
+            $scope.loading = false;
+            $scope.initializing = false;
+
             switch (data.target.error.code) {
               case data.target.error.MEDIA_NO_SOURCE:
                 $scope.error = $filter('ovTranslate')('MEDIA_NO_SOURCE');
