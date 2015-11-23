@@ -270,7 +270,7 @@
 
 /* Definitions button */
 .ov-buttons .ov-right .ov-icon-settings{
-  display: none;
+  display: block;
   position: relative;
   line-height: 32px;
 
@@ -278,10 +278,13 @@
     z-index: 1;
     position: absolute;
     bottom: 32px;
-    left: -10px;
+    left: -18px;
     border: 1px solid $highlight-color;
     font-size: 0.6em;
     background-color: $background-color;
+    @media(min-width: $media-min-width){
+     left: -10px;
+    }
   }
 
   li{
@@ -330,10 +333,6 @@
     font-family: Tahoma;
     background-color: $highlight-color;
     color: $background-color;
-  }
-
-  @media(min-width: $media-min-width){
-    display: block;
   }
 
   .ov-definitions-animate{
