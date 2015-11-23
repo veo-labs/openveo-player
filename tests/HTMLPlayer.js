@@ -56,10 +56,6 @@ describe('HTMLPlayer', function() {
     player.destroy();
   });
 
-  it('Should be able to build Vimeo player url', function() {
-    assert.equal(player.getMediaUrl(), 'http://video.mp4');
-  });
-
   it('Should be able to get media thumbnail', function() {
     assert.equal(player.getMediaThumbnail(), '/1439286245225/thumbnail.jpg');
   });

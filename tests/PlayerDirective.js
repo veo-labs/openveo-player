@@ -332,6 +332,8 @@ describe('PlayerDirective', function() {
       },
       isPaused: function() {
         return true;
+      },
+      initialize: function() {
       }
     };
 
@@ -340,6 +342,8 @@ describe('PlayerDirective', function() {
       height: 720,
       link: 'http://videoHD.mp4'
     });
+
+    $timeout.flush();
   });
 
   it('Should handle player waiting event and set player as "loading"', function() {

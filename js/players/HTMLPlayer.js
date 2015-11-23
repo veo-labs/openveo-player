@@ -133,7 +133,7 @@
 
       // Order media definitions from better quality to lower quality
       this.media.files.sort(function(def1, def2) {
-        if (def1.width < def2.width)
+        if (def1.height < def2.height)
           return 1;
 
         return -1;
@@ -142,16 +142,6 @@
 
     HTMLPlayer.prototype = new OvPlayer();
     HTMLPlayer.prototype.constructor = HTMLPlayer;
-
-    /**
-     * Gets media url.
-     * Get the lowest media quality.
-     *
-     * @return String The media url
-     */
-    HTMLPlayer.prototype.getMediaUrl = function() {
-      return this.media.files[0].link;
-    };
 
     /**
      * Gets media thumbnail.
