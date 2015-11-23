@@ -351,14 +351,15 @@
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
           $scope.displayChapterTab = true;
-          $scope.mediaUrl = $sce.trustAsResourceUrl($scope.player.getMediaUrl());
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
-          $scope.loading = true;
-          $scope.error = null;
-          $scope.initializing = true;
           $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
           $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
+          $scope.mediaUrl = $scope.selectedDefinition ? $sce.trustAsResourceUrl($scope.selectedDefinition.link) :
+                  $sce.trustAsResourceUrl($scope.player.getMediaUrl());
+          $scope.loading = true;
+          $scope.initializing = true;
+          $scope.error = null;
 
           // Video is cut
           // Real media duration is required to be able to display either the
@@ -592,7 +593,9 @@
             $scope.mediaUrl = $sce.trustAsResourceUrl($scope.selectedDefinition.link);
             $scope.loading = true;
             $scope.initializing = true;
-            $scope.player.load();
+            safeApply(function() {
+              $scope.player.load();
+            });
           }
         };
 
