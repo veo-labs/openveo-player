@@ -16,7 +16,7 @@
     "synchronization",
     "video"
   ],
-  "ignore" : [
+  "ignore": [
     "*~",
     "Icon?",
     ".DS_Store*",
@@ -44,11 +44,11 @@
     "/.eslint.rc",
     "/package.json"
   ],
-  "license" : "AGPL-3.0",
+  "license": "AGPL-3.0",
   "authors": [
     "Veo-Labs <info@veo-labs.com> (http://www.veo-labs.com/)"
   ],
-  "homepage" : "https://github.com/veo-labs/openveo-player",
+  "homepage": "https://github.com/veo-labs/openveo-player",
   "repository": {
     "type": "git",
     "url": "git@github.com:veo-labs/openveo-player.git"
@@ -58,5 +58,6 @@
     "angular-animate": "1.4.1",
     "angular-route": "1.4.1",
     "angular-mocks": "1.4.1"
-  }
+  },
+  "version": "1.1.0"
 }
