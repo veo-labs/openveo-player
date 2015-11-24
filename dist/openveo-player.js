@@ -1,4 +1,4 @@
-/* openveo-player v1.0.1 */
+/* openveo-player v1.1.0 */
 'use strict';
 
 (function(angular) {
@@ -88,21 +88,25 @@
    *     ]
    *   }
    *   nb : Note that small images must be at least 200 pixels width.
-   *  - String ov-player-type The type of player to use to play the media. It
-   *    can be either :
-   *      - html : To play the media using HTML player
-   *    If no player type is provided, ov-player will figure out which player
-   *    to use depending on the media type.
    *  - Boolean ov-fullscreen-icon true to display the
    *    enlarge/reduce icon (CAUTION : It must be an assignable variable)
    *  - Boolean ov-volume-icon true to display the volume icon
    *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-mode-icon true to display the display mode icon
    *    (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-settings-icon true to display the settings icon
+   *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-time true to display the actual time and duration
    *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-full-viewport true to display the player in
    *    full viewport (CAUTION : It must be an assignable variable)
+   *  - String ov-language Player language code (e.g. fr)
+   *  - String ov-player-type The type of player to use to play the media. It
+   *    can be either :
+   *      - html : To play the media using HTML player
+   *    If no player type is provided, ov-player will figure out which player
+   *    to use depending on the media type.
+   *  - Boolean ov-auto-play true to start playing when media is ready
    *
    * e.g.
    *
@@ -124,13 +128,15 @@
    *
    * <ov-player
    *   ov-data="data"
-   *   ov-fullscreen-icon="displayFullscreenIcon"
-   *   ov-volume="displayVolumeIcon"
-   *   ov-mode="displayModeIcon"
-   *   ov-time="displayTime"
-   *   ov-full-viewport="fullViewport"
+   *   ov-fullscreen-icon="isFullscreenIconDisplayed"
+   *   ov-volume-icon="isVolumeIconDisplayed"
+   *   ov-mode-icon="isModeIconDisplayed"
+   *   ov-settings-icon="isSettingsIconDisplayed"
+   *   ov-time="isTimeDisplayed"
+   *   ov-full-viewport="isFullViewport"
+   *   ov-language="en"
    *   ov-player-type="html"
-   *   ov-language="fr"
+   *   ov-auto-play="true"
    * ></ov-player>
    *
    * // The whole object can also be changed dynamically
@@ -260,13 +266,27 @@
       VIDEO_TAB_TITLE: 'Video',
       INDEX_TAB_TITLE: 'Index',
       CHAPTERS_TAB_TITLE: 'Chapters',
-      LOADING: 'Loading...'
+      LOADING: 'Loading...',
+      MEDIA_NO_SOURCE: 'A network error caused the video download to fail part-way.',
+      MEDIA_ERR_NETWORK: 'A network error caused the video download to fail part-way.',
+      MEDIA_ERR_DECODE: 'The video playback was aborted due to a corruption problem ' +
+      'or because the video used features your browser did not support.',
+      MEDIA_ERR_SRC_NOT_SUPPORTED: 'The video could not be loaded, either because the server or network failed ' +
+      'or because the format is not supported.',
+      MEDIA_ERR_DEFAULT: 'An unknown error occurred.'
     },
     fr: {
       VIDEO_TAB_TITLE: 'Vidéo',
       INDEX_TAB_TITLE: 'Index',
       CHAPTERS_TAB_TITLE: 'Chapitres',
-      LOADING: 'Chargement...'
+      LOADING: 'Chargement...',
+      MEDIA_NO_SOURCE: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
+      MEDIA_ERR_NETWORK: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
+      MEDIA_ERR_DECODE: 'La lecture de la vidéo a été abandonnée en raison d\' un problème de corruption ' +
+      'ou parce que la vidéo utilise des fonctionnalités que votre navigateur ne supporte pas.',
+      MEDIA_ERR_SRC_NOT_SUPPORTED: 'La vidéo ne peut être chargée , soit parce que le serveur ou le réseau à échoué ' +
+      'ou parce que le format ne sont pas supportées.',
+      MEDIA_ERR_DEFAULT: 'Une erreur inconnue est survenue.'
     }
   });
 
@@ -529,6 +549,14 @@
     };
 
     /**
+     * Gets media definitions.
+     * @return Array The list of definitions
+     */
+    Player.prototype.getAvailableDefinitions = function() {
+      throw new Error('getAvailableDefinitions method not implemented for this player');
+    };
+
+    /**
      * Gets media thumbnail.
      * @return String The media thumbnail
      */
@@ -541,6 +569,21 @@
      */
     Player.prototype.initialize = function() {
       throw new Error('initialize method not implemented for this player');
+    };
+
+    /**
+     * Loads current media.
+     */
+    Player.prototype.load = function() {
+      throw new Error('load method not implemented for this player');
+    };
+
+    /**
+     * Tests if player actual state is pause.
+     * @param Boolean true if paused, false otherwise
+     */
+    Player.prototype.isPaused = function() {
+      throw new Error('isPaused method not implemented for this player');
     };
 
     /**
@@ -589,6 +632,7 @@
 })(angular.module('ov.player'));
 
 'use strict';
+
 (function(angular, app) {
 
   // Available display modes
@@ -617,15 +661,17 @@
         ovFullscreenIcon: '=?',
         ovVolumeIcon: '=?',
         ovModeIcon: '=?',
+        ovSettingsIcon: '=?',
         ovTime: '=?',
         ovFullViewport: '=?',
-        ovLanguage: '=?',
-        ovPlayerType: '@?'
+        ovLanguage: '@?',
+        ovPlayerType: '@?',
+        ovAutoPlay: '@?'
       },
       controller: ['$scope', '$element', function($scope, $element) {
         var self = this;
-        var modesTimeoutPromise;
-        var volumeTimeoutPromise;
+        var lastTime = 0;
+        var hideSettingsTimeoutPromise;
         var fullscreen = false;
         var document = $document[0];
         var element = $element[0];
@@ -642,9 +688,11 @@
         $scope.ovFullscreenIcon = (typeof $scope.ovFullscreenIcon === 'undefined') ? true : $scope.ovFullscreenIcon;
         $scope.ovVolumeIcon = (typeof $scope.ovVolumeIcon === 'undefined') ? true : $scope.ovVolumeIcon;
         $scope.ovModeIcon = (typeof $scope.ovModeIcon === 'undefined') ? true : $scope.ovModeIcon;
+        $scope.ovSettingsIcon = (typeof $scope.ovSettingsIcon === 'undefined') ? true : $scope.ovSettingsIcon;
         $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
         $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
         $scope.ovLanguage = (typeof $scope.ovLanguage === 'undefined') ? 'en' : $scope.ovLanguage;
+        var autoPlay = (typeof $scope.ovAutoPlay === 'undefined') ? false : JSON.parse($scope.ovAutoPlay);
 
         /**
          * Tests if browser implements the fullscreen API or not.
@@ -773,7 +821,6 @@
         function hideTimecodes() {
           $scope.displayIndexTab = false;
           $scope.selectedMode = modes[0];
-          $scope.ovModeIcon = false;
         }
 
         /**
@@ -784,7 +831,6 @@
         function displayTimecodes() {
           $scope.displayIndexTab = true;
           $scope.selectedMode = modes[1];
-          $scope.ovModeIcon = true;
         }
 
         /**
@@ -863,15 +909,42 @@
                 var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
                 $scope.player = new OvHTMLPlayer($element, $scope.data);
                 break;
-              case 'flowplayer':
-                var OvFlowPlayer = $injector.get('OvFlowPlayer');
-                $scope.player = new OvFlowPlayer($element, $scope.data);
-                break;
               default:
                 throw new Error('Player ' + playerType + ' is not supported');
             }
-
           }
+        }
+
+        /**
+         * Initializes player attributes.
+         * Some attributes may change regarding on player data.
+         */
+        function initAttributes() {
+
+          if (!$scope.player)
+            return;
+
+          // Icon to change player definition is only available for the html player with, at least, one definition
+          if ($scope.player.getPlayerType() !== 'html' || !$scope.player.getAvailableDefinitions())
+            $scope.ovSettingsIcon = false;
+
+          // Media volume can't be changed on touch devices
+          if (isTouchDevice())
+            $scope.ovVolumeIcon = false;
+
+          // Icon to change player's display mode is only available if an index is associated to the video
+          if (!$scope.displayIndexTab)
+            $scope.ovModeIcon = false;
+
+          // Full viewport and no FullScreen API available
+          // Consider the player as in fullscreen
+          if ($scope.ovFullViewport && !implementFullScreenAPI()) {
+            $scope.fullscreenButton = 'reduce';
+            fullscreen = true;
+          }
+
+          // Set player language
+          i18nPlayerService.setLanguage($scope.ovLanguage);
         }
 
         /**
@@ -896,6 +969,7 @@
           $scope.timePreviewOpened = false;
           $scope.volumeOpened = false;
           $scope.modesOpened = false;
+          $scope.definitionOpened = false;
           $scope.modes = angular.copy(modes);
           $scope.selectedMode = modes[1];
           $scope.playPauseButton = 'play';
@@ -910,23 +984,15 @@
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
           $scope.displayChapterTab = true;
-          $scope.mediaUrl = $sce.trustAsResourceUrl($scope.player.getMediaUrl());
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
+          $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
+          $scope.selectedDefinition = $scope.mediaDefinitions &&
+            $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
+          $scope.mediaUrl = $scope.selectedDefinition ? $sce.trustAsResourceUrl($scope.selectedDefinition.link) :
+                  $sce.trustAsResourceUrl($scope.player.getMediaUrl());
           $scope.loading = true;
-
-          // Set player language
-          i18nPlayerService.setLanguage($scope.ovLanguage);
-
-          // Full viewport and no FullScreen API available
-          // Consider the player as in fullscreen
-          if ($scope.ovFullViewport && !implementFullScreenAPI()) {
-            $scope.fullscreenButton = 'reduce';
-            fullscreen = true;
-          }
-
-          // Media volume can't be changed on touch devices
-          if (isTouchDevice())
-            $scope.ovVolumeIcon = false;
+          $scope.initializing = true;
+          $scope.error = null;
 
           // Video is cut
           // Real media duration is required to be able to display either the
@@ -944,9 +1010,24 @@
 
           }
 
+          initAttributes();
+
         }
 
         init();
+
+        /**
+         * Hides all opened settings menu with a timeout.
+         */
+        function hideSettingsWithTimeout() {
+          if (hideSettingsTimeoutPromise)
+            $timeout.cancel(hideSettingsTimeoutPromise);
+
+          if ($scope.modesOpened || $scope.definitionOpened || $scope.volumeOpened)
+            hideSettingsTimeoutPromise = $timeout(function() {
+              $scope.modesOpened = $scope.definitionOpened = $scope.volumeOpened = false;
+            }, 3000);
+        }
 
         /**
          * Toggles display mode selection list.
@@ -955,17 +1036,10 @@
          * Automatically close display modes after 3 seconds.
          */
         $scope.toggleModes = function() {
-          if (modesTimeoutPromise)
-            $timeout.cancel(modesTimeoutPromise);
-
           $scope.volumeOpened = false;
+          $scope.definitionOpened = false;
           $scope.modesOpened = !$scope.modesOpened;
-
-          if ($scope.modesOpened)
-            modesTimeoutPromise = $timeout(function() {
-              $scope.modesOpened = false;
-            },
-              3000);
+          hideSettingsWithTimeout();
         };
 
         /**
@@ -975,17 +1049,23 @@
          * Automatically close volume after 3 seconds.
          */
         $scope.toggleVolume = function() {
-          if (volumeTimeoutPromise)
-            $timeout.cancel(volumeTimeoutPromise);
-
           $scope.modesOpened = false;
+          $scope.definitionOpened = false;
           $scope.volumeOpened = !$scope.volumeOpened;
+          hideSettingsWithTimeout();
+        };
 
-          if ($scope.volumeOpened)
-            volumeTimeoutPromise = $timeout(function() {
-              $scope.volumeOpened = false;
-            },
-              3000);
+        /**
+         * Toggles definition selector.
+         * If definition selector is already opened, close it, open it otherwise.
+         * Close both volume and modes if opened.
+         * Automatically close definition selector after 3 seconds.
+         */
+        $scope.toggleDefinition = function() {
+          $scope.volumeOpened = false;
+          $scope.modesOpened = false;
+          $scope.definitionOpened = !$scope.definitionOpened;
+          hideSettingsWithTimeout();
         };
 
         /**
@@ -1069,23 +1149,11 @@
 
         });
 
-        // Watch for ov-mode-icon attribute changes
-        $scope.$watch('ovModeIcon', function() {
-
-          // Do not display mode icon if no timecodes are available
-          if ($scope.timecodes && !$scope.timecodes.length && $scope.ovModeIcon)
-            $scope.ovModeIcon = false;
-
-        });
-
-        // Watch for ov-volume-icon attribute changes
-        $scope.$watch('ovVolumeIcon', function() {
-
-          // Media volume can't be changed on touch devices
-          if (isTouchDevice())
-            $scope.ovVolumeIcon = false;
-
-        });
+        // Watch for icons attributes changes
+        $scope.$watch('ovModeIcon', initAttributes);
+        $scope.$watch('ovVolumeIcon', initAttributes);
+        $scope.$watch('ovSettingsIcon', initAttributes);
+        $scope.$watch('ovFullViewport', initAttributes);
 
         /**
          * Sets the player volume.
@@ -1107,6 +1175,8 @@
          * on the volume selector.
          */
         $scope.setTime = function(event) {
+          timeBarRect = timeBar.getBoundingClientRect();
+          timeBarWidth = timeBarRect.right - timeBarRect.left;
           self.setTime(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
         };
 
@@ -1123,7 +1193,7 @@
          * Starts / Pauses the player.
          */
         this.playPause = $scope.playPause = function() {
-          if (!$scope.loading)
+          if (!$scope.loading && !$scope.error)
             $scope.player.playPause();
         };
 
@@ -1145,6 +1215,24 @@
         };
 
         /**
+         * Sets the media definition.
+         * @param Object definition The new definition
+         */
+        this.setDefinition = $scope.setDefinition = function(definition) {
+          if (definition && definition.link !== $scope.selectedDefinition.link) {
+            lastTime = $scope.time;
+            autoPlay = !$scope.player.isPaused();
+            $scope.selectedDefinition = definition;
+            $scope.mediaUrl = $sce.trustAsResourceUrl($scope.selectedDefinition.link);
+            $scope.loading = true;
+            $scope.initializing = true;
+            safeApply(function() {
+              $scope.player.load();
+            });
+          }
+        };
+
+        /**
          * Handles mouse over events on volume bar area to be able to
          * display a preview of the future volume level.
          * @param MouseEvent event The dispatched event
@@ -1162,10 +1250,10 @@
          * @param MouseEvent event The dispatched event
          */
         angular.element(timeBar).on('mouseover', function(event) {
-          if ($scope.timecodes && $scope.timecodes.length) {
-            timeBarRect = timeBar.getBoundingClientRect();
-            timeBarWidth = timeBarRect.right - timeBarRect.left;
+          timeBarRect = timeBar.getBoundingClientRect();
+          timeBarWidth = timeBarRect.right - timeBarRect.left;
 
+          if ($scope.timecodes && $scope.timecodes.length) {
             timeMouseMove(event);
             $document.on('mousemove', timeMouseMove);
             angular.element(timeBar).on('mouseout', timeMouseOut);
@@ -1177,30 +1265,50 @@
         });
 
         // Listen to player ready event
-        $element.on('ready', function() {
+        $element.on('ovReady', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.player.setVolume(100);
+            $scope.error = null;
             $scope.loading = false;
+            $scope.initializing = false;
+            self.setTime(lastTime);
+            $element.triggerHandler('ready');
+
+            if (autoPlay)
+              self.playPause();
           });
+          return false;
         });
 
         // Listen to player waiting event
-        $element.on('waiting', function() {
+        $element.on('ovWaiting', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loading = true;
+            $element.triggerHandler('waiting');
           });
+          return false;
         });
 
         // Listen to player playing event
-        $element.on('playing', function() {
+        $element.on('ovPlaying', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loading = false;
             $scope.playPauseButton = 'pause';
+            $element.triggerHandler('playing');
           });
+          return false;
         });
 
         // Listen to player durationChange event
-        $element.on('durationChange', function(event, duration) {
+        $element.on('ovDurationChange', function(event, duration) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             playerService.setRealMediaDuration(duration);
             $scope.duration = playerService.getCutDuration();
@@ -1209,36 +1317,60 @@
             if ($scope.isCut) {
               initTimecodes();
               initChapters();
-              $scope.player.setTime(playerService.getRealTime(0));
+              self.setTime(0);
             }
+
+            $element.triggerHandler('durationChange', $scope.duration);
           });
+          return false;
         });
 
         // Listen to player play event
-        $element.on('play', function() {
+        $element.on('ovPlay', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loading = false;
             $scope.playPauseButton = 'pause';
+            $element.triggerHandler('play');
           });
+          return false;
         });
 
         // Listen to player pause event
-        $element.on('pause', function() {
+        $element.on('ovPause', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.playPauseButton = 'play';
+            $element.triggerHandler('pause');
           });
+          return false;
         });
 
         // Listen to player loadProgress event
-        $element.on('loadProgress', function(event, data) {
+        $element.on('ovLoadProgress', function(event, data) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.loadedStart = playerService.getCutPercent(data.loadedStart);
             $scope.loadedPercent = playerService.getCutPercent(data.loadedPercent);
+            $element.triggerHandler('loadProgress', {
+              loadedStart: $scope.loadedStart,
+              loadedPercent: $scope.loadedPercent
+            });
           });
+          return false;
         });
 
         // Listen to player playProgress event
-        $element.on('playProgress', function(event, data) {
+        $element.on('ovPlayProgress', function(event, data) {
+          event.stopImmediatePropagation();
+
+          // Unnecessary playProgress events are sometimes dispatched when initializing the media
+          if ($scope.initializing)
+            return;
+
           $scope.loading = false;
           var timecode = findTimecode(data.time);
 
@@ -1248,6 +1380,11 @@
 
             if ($scope.timecodesByTime[timecode])
               $scope.presentation = $scope.timecodesByTime[timecode].image.large;
+
+            $element.triggerHandler('playProgress', {
+              time: $scope.time,
+              percent: $scope.seenPercent
+            });
           };
 
           // Media virtual end reached
@@ -1257,10 +1394,14 @@
           }
           else
             safeApply(updateTime);
+
+          return false;
         });
 
         // Listen to player end event
-        $element.on('end', function() {
+        $element.on('ovEnd', function(event) {
+          event.stopImmediatePropagation();
+
           safeApply(function() {
             $scope.time = $scope.seenPercent = 0;
             $scope.playPauseButton = 'play';
@@ -1272,9 +1413,38 @@
             // Return to the cut start edge
             if ($scope.isCut)
               $scope.player.setTime(playerService.getRealTime(0));
+
+            $element.triggerHandler('end');
           });
+
+          return false;
         });
 
+        // Listen to player error event
+        $element.on('error', function(event, data) {
+          safeApply(function() {
+            $scope.loading = false;
+            $scope.initializing = false;
+
+            switch (data.target.error.code) {
+              case data.target.error.MEDIA_NO_SOURCE:
+                $scope.error = $filter('ovTranslate')('MEDIA_NO_SOURCE');
+                break;
+              case data.target.error.MEDIA_ERR_NETWORK:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_NETWORK');
+                break;
+              case data.target.error.MEDIA_ERR_DECODE:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_DECODE');
+                break;
+              case data.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_SRC_NOT_SUPPORTED');
+                break;
+              default:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_DEFAULT');
+                break;
+            }
+          });
+        });
       }]
     };
   }
@@ -1770,239 +1940,6 @@
 (function(angular, app) {
 
   /**
-   * Creates a Flow player which observes OvPlayer interface.
-   * More information on the flow player
-   * at https://flowplayer.org/docs/api.html.
-   */
-  function OvFlowPlayer(OvPlayer, $window, $document, $timeout) {
-
-    /**
-     * Handles all player media events.
-     * @param Event event The received event
-     */
-    function handlePlayerEvents(event) {
-
-      // Events
-      switch (event.type) {
-
-        // Ready to render the media data at the current playback position
-        // for the first time
-        case 'ready':
-          var duration = this.player.video.duration || this.media.metadata && this.media.metadata.duration;
-          this.loaded = true;
-          this.playing = 0;
-          this.jPlayerElement.triggerHandler('durationChange', duration * 1000);
-          this.jPlayerElement.triggerHandler('ready');
-          break;
-
-        // Media is no longer paused
-        case 'resume':
-        case 'play':
-          this.playing = 1;
-          this.jPlayerElement.triggerHandler('play');
-          break;
-
-        // Media has been paused
-        case 'pause':
-          this.playing = 0;
-          this.jPlayerElement.triggerHandler('pause');
-          break;
-
-        // Media playback has reached the end
-        case 'finish':
-          this.playing = 0;
-          this.jPlayerElement.triggerHandler('end');
-          break;
-
-        // Media playback position has changed
-        case 'progress':
-
-          // No indication about the playback position of the loading
-          // percentage, assume it to be 0
-          this.jPlayerElement.triggerHandler('loadProgress', {
-            loadedStart: 0,
-            loadedPercent: (this.player.video.buffer / this.player.video.duration) * 100
-          });
-          var playedPercent = (this.player.video.time / this.player.video.duration) * 100;
-          this.jPlayerElement.triggerHandler('playProgress', {
-            time: this.player.video.time * 1000,
-            percent: playedPercent
-          });
-
-          break;
-        default:
-          break;
-      }
-    }
-
-    // All HTML player events
-    var events = [
-      'finish',
-      'pause',
-      'progress',
-      'ready',
-      'resume'
-    ];
-
-    /**
-     * Creates a new FlowPlayer.
-     * @param Object jPlayerElement The JQLite HTML element corresponding
-     * to the element which will receive events dispatched by the player
-     * @param Object media Details about the media
-     *   {
-     *     mediaId : "136081112", // The id of the media
-     *     files : [ // The list of media files (required for "html" player)
-     *       {
-     *         width : 640, // Media width for this file
-     *         height : 360, // Media height for this file
-     *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Media url
-     *       },
-     *       {
-     *         width : 1280, // Media width for this file
-     *         height : 720, // Media height for this file
-     *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Media url
-     *       },
-     *       ...
-     *     ],
-     *     thumbnail : "/1439286245225/thumbnail.jpg" // The media thumbnail (only for "html" player)
-     *   }
-     */
-    function FlowPlayer(jPlayerElement, media) {
-      OvPlayer.prototype.init.call(this, jPlayerElement, media);
-
-      if (typeof ovFlashPlayer === 'undefined' || typeof ovFlashPlayer !== 'string')
-        throw new Error('ovFlashPlayer global variable must be defined and set to the flowplayer.swf file');
-    }
-
-    FlowPlayer.prototype = new OvPlayer();
-    FlowPlayer.prototype.constructor = FlowPlayer;
-
-    /**
-     * Gets media url.
-     * Get the lowest media quality.
-     *
-     * @return String The media url
-     */
-    FlowPlayer.prototype.getMediaUrl = function() {
-      return this.media.files[0].link;
-    };
-
-    /**
-     * Gets media thumbnail.
-     * Get the higher thumbnail quality.
-     *
-     * @return String The media thumbnail url
-     */
-    FlowPlayer.prototype.getMediaThumbnail = function() {
-      return this.media.thumbnail;
-    };
-
-    /**
-     * Inititializes the player when DOM is loaded.
-     *
-     * Retrieves player container HTML element and install flowplayer into it.
-     * Then bind listeners to it.
-     */
-    FlowPlayer.prototype.initialize = function() {
-      this.loaded = false;
-      this.jPlayerElement.triggerHandler('waiting');
-      var playerContainer = $document[0].getElementById(this.playerId);
-
-      // Install flowplayer into selected container
-      this.player = flowplayer(playerContainer, {
-        swf: ovFlashPlayer,
-        clip: {
-          sources: [
-            {
-              type: 'video/mp4',
-              src: this.getMediaUrl()
-            }
-          ]
-        }
-      });
-
-      // Handle events
-      this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
-
-      // Set media events listeners
-      for (var i = 0; i < events.length; i++)
-        this.player.on(events[i], this.handlePlayerEventsFn);
-    };
-
-    /**
-     * Plays or pauses the media depending on media actual state.
-     */
-    FlowPlayer.prototype.playPause = function() {
-      if (this.playing)
-        this.player.pause();
-      else
-        this.player.resume();
-    };
-
-    /**
-     * Sets volume.
-     * @param Number volume The new volume from 0 to 100.
-     */
-    FlowPlayer.prototype.setVolume = function(volume) {
-      this.player.volume(volume / 100);
-    };
-
-    /**
-     * Sets time.
-     * @param Number time The time to seek to in milliseconds
-     */
-    FlowPlayer.prototype.setTime = function(time) {
-      var self = this;
-      time = parseInt(time) || 0.1;
-
-      this.player.pause();
-
-      // Avoid digestion phase by executing treatment on the next loop
-      $timeout(function() {
-        self.jPlayerElement.triggerHandler('waiting');
-        self.player.seek(time / 1000, function() {
-          self.player.resume();
-        });
-      }, 1);
-    };
-
-    /**
-     * Gets player type.
-     * @return String "flowplayer"
-     */
-    FlowPlayer.prototype.getPlayerType = function() {
-      return 'flowplayer';
-    };
-
-    /**
-     * Destroys the player.
-     * Remove all events listeners.
-     */
-    FlowPlayer.prototype.destroy = function() {
-      this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
-      var jPlayer = angular.element(this.player);
-
-      for (var i = 0; i < events.length; i++)
-        jPlayer.off(events[i], this.handlePlayerEventsFn);
-
-      this.loaded = false;
-      this.playing = 0;
-      this.player = null;
-    };
-
-    return FlowPlayer;
-  }
-
-  app.factory('OvFlowPlayer', OvFlowPlayer);
-  OvFlowPlayer.$inject = ['OvPlayer', '$window', '$document', '$timeout'];
-
-})(angular, angular.module('ov.player'));
-
-'use strict';
-
-(function(angular, app) {
-
-  /**
    * Creates an HTML player which observes OvPlayer interface.
    * More information on HTML player
    * at http://www.w3.org/TR/html5/embedded-content-0.html.
@@ -2014,7 +1951,6 @@
      * @param Event event The received event
      */
     function handlePlayerEvents(event) {
-
       // Events
       switch (event.type) {
 
@@ -2027,7 +1963,7 @@
           if (this.player.buffered.length === 1) {
             var loadedStart = (this.player.buffered.start(0) / this.player.duration);
             var loadedEnd = (this.player.buffered.end(0) / this.player.duration);
-            this.jPlayerElement.triggerHandler('loadProgress', {
+            this.jPlayerElement.triggerHandler('ovLoadProgress', {
               loadedStart: Math.max(0, Math.min(loadedStart, 1)) * 100,
               loadedPercent: Math.max(0, Math.min(loadedEnd - loadedStart, 1)) * 100
             });
@@ -2038,49 +1974,54 @@
         // The duration attribute has just been updated
         case 'durationchange':
           var duration = this.player.duration || this.media.metadata && this.media.metadata.duration;
-          this.jPlayerElement.triggerHandler('durationChange', duration * 1000);
+          this.jPlayerElement.triggerHandler('ovDurationChange', duration * 1000);
           break;
 
         // Ready to render the media data at the current playback position
         // for the first time
         case 'loadeddata':
           this.loaded = true;
-          this.jPlayerElement.triggerHandler('ready');
+          this.jPlayerElement.triggerHandler('ovReady');
           break;
 
         // Media is no longer paused
         case 'play':
-          this.jPlayerElement.triggerHandler('play');
+          this.jPlayerElement.triggerHandler('ovPlay');
           break;
 
         // Media has been paused
         case 'pause':
-          this.jPlayerElement.triggerHandler('pause');
+          this.jPlayerElement.triggerHandler('ovPause');
           break;
 
         // Media playback has reached the end
         case 'ended':
-          this.jPlayerElement.triggerHandler('end');
+          this.jPlayerElement.triggerHandler('ovEnd');
           break;
 
         // Media playback has stopped because the next frame is not available
         case 'waiting':
-          this.jPlayerElement.triggerHandler('waiting');
+          this.jPlayerElement.triggerHandler('ovWaiting');
           break;
 
         // Media playback is ready to start after being paused or delayed
         // due to lack of media data
         case 'playing':
-          this.jPlayerElement.triggerHandler('playing');
+          this.jPlayerElement.triggerHandler('ovPlaying');
           break;
 
         // Media playback position has changed
         case 'timeupdate':
           var playedPercent = (this.player.currentTime / this.player.duration) * 100;
-          this.jPlayerElement.triggerHandler('playProgress', {
+          this.jPlayerElement.triggerHandler('ovPlayProgress', {
             time: this.player.currentTime * 1000,
             percent: playedPercent
           });
+          break;
+
+        // Media error
+        case 'error':
+          this.jPlayerElement.triggerHandler('error', event);
           break;
         default:
           break;
@@ -2097,7 +2038,8 @@
       'durationchange',
       'timeupdate',
       'play',
-      'pause'
+      'pause',
+      'error'
     ];
 
     /**
@@ -2125,20 +2067,18 @@
      */
     function HTMLPlayer(jPlayerElement, media) {
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
+
+      // Order media definitions from better quality to lower quality
+      this.media.files.sort(function(def1, def2) {
+        if (def1.height < def2.height)
+          return 1;
+
+        return -1;
+      });
     }
 
     HTMLPlayer.prototype = new OvPlayer();
     HTMLPlayer.prototype.constructor = HTMLPlayer;
-
-    /**
-     * Gets media url.
-     * Get the lowest media quality.
-     *
-     * @return String The media url
-     */
-    HTMLPlayer.prototype.getMediaUrl = function() {
-      return this.media.files[0].link;
-    };
 
     /**
      * Gets media thumbnail.
@@ -2157,6 +2097,7 @@
      * to receive media events.
      */
     HTMLPlayer.prototype.initialize = function() {
+      var self = this;
       this.loaded = false;
       this.player = $document[0].getElementById(this.playerId);
 
@@ -2168,8 +2109,33 @@
       for (var i = 0; i < events.length; i++)
         jPlayer.on(events[i], this.handlePlayerEventsFn);
 
+      // Set error event listener on last source (called only if no source are available)
+      var lastSources = this.player.getElementsByTagName('source');
+      var jPlayerLastSource = angular.element(lastSources[lastSources.length - 1]);
+      jPlayerLastSource.on('error', function(e) {
+        if (self.player.networkState == self.player.NETWORK_NO_SOURCE) {
+          e.target.error = {code: 'NO_SOURCE', MEDIA_NO_SOURCE: 'NO_SOURCE'};
+        }
+        self.handlePlayerEventsFn(e);
+      });
+
       // Start loading media
+      this.load();
+    };
+
+    /**
+     * Starts loading current media.
+     */
+    HTMLPlayer.prototype.load = function() {
       this.player.load();
+    };
+
+    /**
+     * Tests if player actual state is pause.
+     * @param Boolean true if paused, false otherwise
+     */
+    HTMLPlayer.prototype.isPaused = function() {
+      return this.player.paused;
     };
 
     /**
@@ -2205,6 +2171,14 @@
      */
     HTMLPlayer.prototype.getPlayerType = function() {
       return 'html';
+    };
+
+    /**
+     * Gets media definitions.
+     * @return Array The list of available media definitions
+     */
+    HTMLPlayer.prototype.getAvailableDefinitions = function() {
+      return this.media.files;
     };
 
     /**
@@ -2302,7 +2276,7 @@
           case 'ready':
             handleReady.call(this);
             postActionToPlayer.call(this, 'getDuration');
-            this.jPlayerElement.triggerHandler('ready');
+            this.jPlayerElement.triggerHandler('ovReady');
             break;
 
             // Media is loading
@@ -2310,7 +2284,7 @@
 
             // No indication about the playback position of the loading
             // percentage, assume it to be 0
-            this.jPlayerElement.triggerHandler('loadProgress', {
+            this.jPlayerElement.triggerHandler('ovLoadProgress', {
               loadedStart: 0,
               loadedPercent: data.data.percent * 100
             });
@@ -2324,7 +2298,7 @@
             // is emitted with a percent greater than 1, after the "end"
             // event
             if (data.data.percent <= 1)
-              this.jPlayerElement.triggerHandler('playProgress', {
+              this.jPlayerElement.triggerHandler('ovPlayProgress', {
                 time: data.data.seconds * 1000,
                 percent: data.data.percent * 100
               });
@@ -2334,19 +2308,19 @@
             // Media begins to play
           case 'play':
             this.playing = 1;
-            this.jPlayerElement.triggerHandler('play');
+            this.jPlayerElement.triggerHandler('ovPlay');
             break;
 
             // Media pauses
           case 'pause':
             this.playing = 0;
-            this.jPlayerElement.triggerHandler('pause');
+            this.jPlayerElement.triggerHandler('ovPause');
             break;
 
             // Media playback reaches the end
           case 'finish':
             this.playing = 0;
-            this.jPlayerElement.triggerHandler('end');
+            this.jPlayerElement.triggerHandler('ovEnd');
             break;
 
           default:
@@ -2357,7 +2331,7 @@
         switch (data.method) {
           case 'getDuration':
             this.duration = data.value || this.media.metadata && this.media.metadata.duration;
-            this.jPlayerElement.triggerHandler('durationChange', this.duration * 1000);
+            this.jPlayerElement.triggerHandler('ovDurationChange', this.duration * 1000);
             break;
 
           default:
@@ -2444,14 +2418,14 @@
      * @param Number time The time to seek to in milliseconds
      */
     VimeoPlayer.prototype.setTime = function(time) {
-      time = parseInt(time) || 0.1;
+      time = parseInt(time) || 0;
       postActionToPlayer.call(this, 'seekTo', time / 1000);
 
       // Send a playProgress event because the Vimeo flash player (old
       // browsers) does not trigger the playProgress event while in pause
       // as the HTML5 player does
       if (!this.playing)
-        this.jPlayerElement.triggerHandler('playProgress', {
+        this.jPlayerElement.triggerHandler('ovPlayProgress', {
           time: time,
           percent: (time / this.duration) * 100
         });
@@ -2463,6 +2437,15 @@
      */
     VimeoPlayer.prototype.getPlayerType = function() {
       return 'vimeo';
+    };
+
+    /**
+     * Gets media definitions.
+     * No definitions available for vimeo player, adaptive streaming is managed by vimeo player.
+     * @return Null null
+     */
+    VimeoPlayer.prototype.getAvailableDefinitions = function() {
+      return null;
     };
 
     /**
