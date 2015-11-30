@@ -19,7 +19,7 @@
    * For more information on the ov-player element, have a look at the
    * PlayerApp.js file.
    */
-  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService, i18nPlayerService) {
+  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService, i18nPlayerService, $cookies) {
     return {
       restrict: 'E',
       templateUrl: ovPlayerDirectory + 'templates/player.html',
@@ -347,6 +347,13 @@
           $scope.loadedPercent = 0;
           $scope.seenPercent = 0;
           $scope.time = 0;
+          var cookie = $cookies.getObject('videoStopped_' + $scope.data.mediaId);
+          if (cookie) {
+            $scope.seenPercent = cookie.percent;
+            $scope.time = cookie.time;
+            lastTime = $scope.time;
+          }
+
           $scope.duration = 0;
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = true;
@@ -488,7 +495,6 @@
         // Listen to player template loaded event
         $scope.$on('$includeContentLoaded', function() {
           $timeout(function() {
-
             // Initialize player
             $scope.player.initialize();
 
@@ -748,15 +754,21 @@
             if ($scope.timecodesByTime[timecode])
               $scope.presentation = $scope.timecodesByTime[timecode].image.large;
 
-            $element.triggerHandler('playProgress', {
+            var timeObject = {
               time: $scope.time,
               percent: $scope.seenPercent
-            });
+            };
+            $element.triggerHandler('playProgress', timeObject);
+            var expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 1);
+            $cookies.putObject('videoStopped_' + $scope.data.mediaId, timeObject, {expires: expireDate});
           };
 
           // Media virtual end reached
           if (playerService.getCutTime(data.time) > playerService.getCutDuration()) {
             $scope.player.setTime(playerService.getRealTime(0));
+            $cookies.remove('videoStopped_' + $scope.data.mediaId);
+            lastTime = 0;
             $scope.player.playPause();
           }
           else
@@ -770,7 +782,9 @@
           event.stopImmediatePropagation();
 
           safeApply(function() {
+            $cookies.remove('videoStopped_' + $scope.data.mediaId);
             $scope.time = $scope.seenPercent = 0;
+            lastTime = 0;
             $scope.playPauseButton = 'play';
 
             if ($scope.timecodes.length)
@@ -817,6 +831,15 @@
   }
 
   app.directive('ovPlayer', ovPlayer);
-  ovPlayer.$inject = ['$injector', '$document', '$sce', '$filter', '$timeout', 'playerService', 'i18nPlayerService'];
+  ovPlayer.$inject = [
+    '$injector',
+    '$document',
+    '$sce',
+    '$filter',
+    '$timeout',
+    'playerService',
+    'i18nPlayerService',
+    '$cookies'
+  ];
 
 })(angular, angular.module('ov.player'));

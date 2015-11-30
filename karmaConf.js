@@ -18,6 +18,7 @@ module.exports = function(config) {
     files: [
       'lib/angular/angular.js',
       'lib/angular-animate/angular-animate.js',
+      'lib/angular-cookies/angular-cookies.js',
       'lib/angular-route/angular-route.js',
       'lib/angular-mocks/angular-mocks.js',
       'templates/*.html',

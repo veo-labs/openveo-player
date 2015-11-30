@@ -254,7 +254,7 @@
    * });
    *
    */
-  var app = angular.module('ov.player', []);
+  var app = angular.module('ov.player', ['ngCookies']);
 
   if (typeof ovPlayerDirectory === 'undefined' || typeof ovPlayerDirectory !== 'string')
     throw new Error('ovPlayerDirectory global variable must be defined and set to the root path of the openVeo player');
