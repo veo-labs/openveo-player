@@ -134,7 +134,7 @@
      * Gets media url.
      * @return String The media url
      */
-    Player.prototype.getMediaUrl = function() {
+    Player.prototype.getMediaUrl = function(definition) {
       throw new Error('getMediaUrl method not implemented for this player');
     };
 

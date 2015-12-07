@@ -9,7 +9,7 @@
    * The Vimeo embeded player exposes a JavaSript API to interact with
    * (https://developer.vimeo.com/player/js-api).
    */
-  function OvVimeoPlayer(OvPlayer, $window, $document) {
+  function OvVimeoPlayer(OvPlayer, $window, $document, $sce) {
 
     /**
      * Sends a post message to the player with the action and the value.
@@ -37,7 +37,7 @@
      * iframe corresponding to the player.
      */
     function handleReady() {
-      this.postMessageTargetOrigin = 'https:' + this.getMediaUrl().split('?')[0];
+      this.postMessageTargetOrigin = 'https://player.vimeo.com/video/' + this.media.mediaId;
       this.player = $document[0].getElementById(this.playerId);
       this.loaded = true;
       this.playing = 0;
@@ -171,8 +171,11 @@
      * Gets media url.
      * @return String The media url
      */
-    VimeoPlayer.prototype.getMediaUrl = function() {
-      return '//player.vimeo.com/video/' + this.media.mediaId + '?api=1&player_id=' + this.playerId;
+    VimeoPlayer.prototype.getMediaUrl = function(definition) {
+      if (definition && definition.link)
+        return $sce.trustAsResourceUrl(definition.link);
+      else 
+        return $sce.trustAsResourceUrl('//player.vimeo.com/video/' + this.media.mediaId + '?api=1&player_id=' + this.playerId);
     };
 
     /**
@@ -257,6 +260,6 @@
   }
 
   app.factory('OvVimeoPlayer', OvVimeoPlayer);
-  OvVimeoPlayer.$inject = ['OvPlayer', '$window', '$document'];
+  OvVimeoPlayer.$inject = ['OvPlayer', '$window', '$document', '$sce'];
 
 })(angular, angular.module('ov.player'));

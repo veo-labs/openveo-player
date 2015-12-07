@@ -260,14 +260,19 @@
         /**
          * Initializes the player.
          */
-        function initPlayer() {
+        function initPlayer(lastTime) {
 
           if ($scope.data.mediaId) {
             var playerType = $scope.ovPlayerType || $scope.data.type || 'html';
             $scope.mediaTemplate = ovPlayerDirectory + 'templates/' + playerType + '.html';
+            $scope.data.lastTime = lastTime || 0;
 
             // Get an instance of a player depending on player's type
             switch (playerType.toLowerCase()) {
+              case 'youtube':
+                var OvYoutubePlayer = $injector.get('OvYoutubePlayer');
+                $scope.player = new OvYoutubePlayer($element, $scope.data);
+                break;
               case 'vimeo':
                 var OvVimeoPlayer = $injector.get('OvVimeoPlayer');
                 $scope.player = new OvVimeoPlayer($element, $scope.data);
@@ -292,7 +297,7 @@
             return;
 
           // Icon to change player definition is only available for the html player with, at least, one definition
-          if ($scope.player.getPlayerType() !== 'html' || !$scope.player.getAvailableDefinitions())
+          if ($scope.player.getPlayerType() == 'vimeo' || !$scope.player.getAvailableDefinitions())
             $scope.ovSettingsIcon = false;
 
           // Media volume can't be changed on touch devices
@@ -322,7 +327,16 @@
           // Set scope default values
           $scope.data = angular.copy($scope.ovData) || {};
           playerService.setMedia($scope.data);
-          initPlayer();
+
+          // Retrieve last stopped time
+          var cookie = $cookies.getObject('videoStopped_' + $scope.data.mediaId);
+          if (cookie) {
+            $scope.seenPercent = cookie.percent;
+            $scope.time = cookie.time;
+            lastTime = $scope.time;
+          }
+
+          initPlayer(lastTime);
 
           if (!$scope.player)
             return;
@@ -347,12 +361,6 @@
           $scope.loadedPercent = 0;
           $scope.seenPercent = 0;
           $scope.time = 0;
-          var cookie = $cookies.getObject('videoStopped_' + $scope.data.mediaId);
-          if (cookie) {
-            $scope.seenPercent = cookie.percent;
-            $scope.time = cookie.time;
-            lastTime = $scope.time;
-          }
 
           $scope.duration = 0;
           $scope.timePreviewPosition = 0;
@@ -362,8 +370,7 @@
           $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
           $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
-          $scope.mediaUrl = $scope.selectedDefinition ? $sce.trustAsResourceUrl($scope.selectedDefinition.link) :
-                  $sce.trustAsResourceUrl($scope.player.getMediaUrl());
+          $scope.mediaUrl = $scope.player.getMediaUrl($scope.selectedDefinition);
           $scope.loading = true;
           $scope.initializing = true;
           $scope.error = null;
@@ -592,11 +599,13 @@
          * @param Object definition The new definition
          */
         this.setDefinition = $scope.setDefinition = function(definition) {
-          if (definition && definition.link !== $scope.selectedDefinition.link) {
+          if (definition &&
+                  (definition.link !== $scope.selectedDefinition.link || $scope.player.getPlayerType() == 'youtube')
+              ) {
             lastTime = $scope.time;
             autoPlay = !$scope.player.isPaused();
             $scope.selectedDefinition = definition;
-            $scope.mediaUrl = $sce.trustAsResourceUrl($scope.selectedDefinition.link);
+            $scope.mediaUrl = $scope.player.getMediaUrl($scope.selectedDefinition);
             $scope.loading = true;
             $scope.initializing = true;
             safeApply(function() {
@@ -703,6 +712,12 @@
           event.stopImmediatePropagation();
 
           safeApply(function() {
+            $scope.mediaDefinitions = $scope.mediaDefinitions || $scope.player.getAvailableDefinitions();
+            $scope.selectedDefinition = $scope.selectedDefinition ||
+                    ($scope.mediaDefinitions && $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1]) ||
+                    null;
+            $scope.ovSettingsIcon = true;
+            initAttributes();
             $scope.loading = false;
             $scope.playPauseButton = 'pause';
             $element.triggerHandler('play');

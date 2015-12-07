@@ -61,7 +61,7 @@
           <div class="ov-button ov-icon-settings" ng-show="ovSettingsIcon" ng-click="toggleDefinition()">
             <div ng-show="selectedDefinition.height >= 720">HD</div>
             <ul ng-show="definitionOpened" class="ov-definitions-animate" ng-click="">
-              <li ng-repeat="definition in mediaDefinitions" ng-click="setDefinition(definition)" ng-bind-template="{{definition.height}}p" ng-class="{'ov-selected' : selectedDefinition.height === definition.height, 'ov-hd' : definition.height >= 720}"></li>
+              <li ng-repeat="definition in mediaDefinitions" ng-click="setDefinition(definition)" ng-bind-template="{{definition.height?definition.height+'p':definition}}" ng-class="{'ov-selected' : selectedDefinition.height?selectedDefinition.height === definition.height:selectedDefinition === definition, 'ov-hd' : definition.height >= 720}"></li>
             </ul>
           </div>
           <div class="ov-icon-{{fullscreenButton}} ov-button ov-icon-fullscreen" ng-show="ovFullscreenIcon" ng-click="toggleFullscreen()"></div>

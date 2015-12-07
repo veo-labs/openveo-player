@@ -1,0 +1,26 @@
+{
+
+  // Extends eslint recommended rules
+  "extends": "eslint:recommended",
+  "env": {
+
+    // Add browser environment globals
+    "browser": true,
+
+    // Add node.js environment globals
+    "node": true
+
+  },
+  "globals": {
+
+    // Add angular to environment globals but do not authorize to overwrite it
+    angular: false,
+    YT: false
+
+  },
+  "rules": {
+    // Require camelcase
+    "camelcase": 0,
+
+  }
+}

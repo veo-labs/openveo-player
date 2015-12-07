@@ -7,7 +7,7 @@
    * More information on HTML player
    * at http://www.w3.org/TR/html5/embedded-content-0.html.
    */
-  function OvHTMLPlayer(OvPlayer, $window, $document) {
+  function OvHTMLPlayer(OvPlayer, $window, $document, $sce) {
 
     /**
      * Handles all player media events.
@@ -144,6 +144,14 @@
     HTMLPlayer.prototype.constructor = HTMLPlayer;
 
     /**
+     * Gets media url.
+     * @return String The media url
+     */
+    HTMLPlayer.prototype.getMediaUrl = function(definition) {
+      return $sce.trustAsResourceUrl(definition.link);
+    };
+
+    /**
      * Gets media thumbnail.
      * Get the higher thumbnail quality.
      *
@@ -263,6 +271,6 @@
   }
 
   app.factory('OvHTMLPlayer', OvHTMLPlayer);
-  OvHTMLPlayer.$inject = ['OvPlayer', '$window', '$document'];
+  OvHTMLPlayer.$inject = ['OvPlayer', '$window', '$document', '$sce'];
 
 })(angular, angular.module('ov.player'));

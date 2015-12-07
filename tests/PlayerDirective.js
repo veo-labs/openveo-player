@@ -8,7 +8,8 @@ describe('PlayerDirective', function() {
     $rootScope,
     $injector,
     scope,
-    $timeout;
+    $timeout,
+    $sce;
 
   // Load modules player and templates (to mock templates)
   beforeEach(function() {
@@ -17,11 +18,12 @@ describe('PlayerDirective', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$injector_, _$timeout_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$injector_, _$timeout_, _$sce_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $injector = _$injector_;
     $timeout = _$timeout_;
+    $sce = _$sce_;
   }));
 
   // Initializes tests
@@ -334,6 +336,9 @@ describe('PlayerDirective', function() {
         return true;
       },
       initialize: function() {
+      },
+      getMediaUrl: function(def) {
+        return $sce.trustAsResourceUrl(def.link);
       }
     };
 
