@@ -235,6 +235,7 @@ Indicates player type. (Default to **html**)
 Supported values are :
 
 - vimeo
+- youtube
 - html
 
 ```html
