@@ -79,46 +79,49 @@
      * must be handled.
      */
     function initialize() {
-      var self = this;
-      this.loaded = false;
+      if (this.ressourceLoaded && this.apiLoaded){
 
-      this.player = new YT.Player(this.playerId, {
-        playerVars: {
-          fs: 0,
-          rel: 0,
-          autoplay: 0,
-          html5: 1,
-          theme: 'light',
-          modesbranding: 1,
-          color: 'white',
-          iv_load_policy: 3,
-          showinfo: 0,
-          controls: 0,
-          start: self.media.lastTime / 1000
-        },
-        events: {
-          onReady: function() { // Youtube API is ready to be called
+        var self = this;
+        this.loaded = false;
 
-            self.duration = self.player.getDuration() || self.media.metadata && self.media.metadata.duration;
+        this.player = new YT.Player(this.playerId, {
+          playerVars: {
+            fs: 0,
+            rel: 0,
+            autoplay: 0,
+            html5: 1,
+            theme: 'light',
+            modesbranding: 1,
+            color: 'white',
+            iv_load_policy: 3,
+            showinfo: 0,
+            controls: 0,
+            start: self.media.lastTime / 1000
+          },
+          events: {
+            onReady: function() { // Youtube API is ready to be called
 
-            self.jPlayerElement.triggerHandler('ovDurationChange', self.duration * 1000);
-            self.jPlayerElement.triggerHandler('ovReady');
+              self.duration = self.player.getDuration() || self.media.metadata && self.media.metadata.duration;
 
-            // Handle post messages
-            self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
-            angular.element($window).on('message', self.handlePlayerEventsFn);
+              self.jPlayerElement.triggerHandler('ovDurationChange', self.duration * 1000);
+              self.jPlayerElement.triggerHandler('ovReady');
 
-            // Set media events listeners
-            var jPlayer = angular.element(self.player);
-            for (var i = 0; i < events.length; i++)
-              jPlayer.on(events[i], self.handlePlayerEventsFn);
+              // Handle post messages
+              self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
+              angular.element($window).on('message', self.handlePlayerEventsFn);
 
-            self.loaded = true;
-            self.playing = 0;
-          }
-        },
-        videoId: this.media.mediaId
-      });
+              // Set media events listeners
+              var jPlayer = angular.element(self.player);
+              for (var i = 0; i < events.length; i++)
+                jPlayer.on(events[i], self.handlePlayerEventsFn);
+
+              self.loaded = true;
+              self.playing = 0;
+            }
+          },
+          videoId: this.media.mediaId
+        });
+      }
     }
 
     /**
@@ -139,6 +142,7 @@
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
       $window.onYouTubeIframeAPIReady = function() {
+        self.apiLoaded = true;
         initialize.call(self);
       };
     }
@@ -173,6 +177,8 @@
      * Nothing to do, the player is already initialized.
      */
     YoutubePlayer.prototype.initialize = function() {
+      this.ressourceLoaded = true;
+      initialize.call(this);
     };
 
     /**
