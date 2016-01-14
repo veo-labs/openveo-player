@@ -305,8 +305,7 @@
             $scope.ovVolumeIcon = false;
 
           // Icon to change player's display mode is only available if an index is associated to the video
-          if (!$scope.displayIndexTab)
-            $scope.ovModeIcon = false;
+          $scope.ovModeIcon = $scope.displayIndexTab;
 
           // Full viewport and no FullScreen API available
           // Consider the player as in fullscreen
