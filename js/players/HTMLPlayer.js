@@ -28,12 +28,12 @@
           // Got buffering information
           // Caution, the progress event maybe dispatched even if buffer
           // is empty
-          if (this.player.buffered.length === 1) {
-            var loadedStart = (this.player.buffered.start(0) / this.player.duration);
-            var loadedEnd = (this.player.buffered.end(0) / this.player.duration);
+          var buffer = this.player.buffered();
+          if (buffer.length >= 1) {
+            var loadedStart = (this.player.currentTime() / this.player.duration());
             this.jPlayerElement.triggerHandler('ovLoadProgress', {
               loadedStart: Math.max(0, Math.min(loadedStart, 1)) * 100,
-              loadedPercent: Math.max(0, Math.min(loadedEnd - loadedStart, 1)) * 100
+              loadedPercent: this.player.bufferedPercent() * 100
             });
           }
 
@@ -41,7 +41,8 @@
 
         // The duration attribute has just been updated
         case 'durationchange':
-          var duration = this.player.duration;
+//        case 'loadedmetadata':
+          var duration = this.player.duration() || this.media.metadata && this.media.metadata.duration;
           this.jPlayerElement.triggerHandler('ovDurationChange', duration * 1000);
           break;
 
@@ -80,15 +81,19 @@
 
         // Media playback position has changed
         case 'timeupdate':
-          var playedPercent = (this.player.currentTime / this.player.duration) * 100;
+          var current_time = this.player.currentTime();
+          var playedPercent = (current_time / this.player.duration()) * 100;
           this.jPlayerElement.triggerHandler('ovPlayProgress', {
-            time: this.player.currentTime * 1000,
+            time: current_time * 1000,
             percent: playedPercent
           });
           break;
 
         // Media error
         case 'error':
+          if (this.player.networkState == this.player.NETWORK_NO_SOURCE) {
+            event.target.error = {code: 'NO_SOURCE', MEDIA_NO_SOURCE: 'NO_SOURCE'};
+          }
           this.jPlayerElement.triggerHandler('error', event.target.error.code);
           break;
 
@@ -105,6 +110,7 @@
       'waiting',
       'ended',
       'durationchange',
+      'loadedmetadata',
       'timeupdate',
       'play',
       'pause',
@@ -163,6 +169,10 @@
       return $sce.trustAsResourceUrl(definition.link);
     };
 
+    HTMLPlayer.prototype.getMediaMIME = function(definition) {
+      return definition.type? definition.type : 'video/mp4';
+    }
+
     /**
      * Gets media thumbnail.
      * Get the higher thumbnail quality.
@@ -185,28 +195,19 @@
     HTMLPlayer.prototype.initialize = function() {
       var self = this;
       this.loaded = false;
-      this.player = $document[0].getElementById(this.playerId);
 
-      // Handle events
-      this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
-      var jPlayer = angular.element(this.player);
+      this.player = videojs(this.playerId, {"techOrder": ["html5", "flash"]}, function(){
+        self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
+        var jPlayer = angular.element(self.player)[0];
 
-      // Set media events listeners
-      for (var i = 0; i < events.length; i++)
-        jPlayer.on(events[i], this.handlePlayerEventsFn);
+        // Set media events listeners
+        for (var i = 0; i < events.length; i++)
+          jPlayer.on(events[i], self.handlePlayerEventsFn);
 
-      // Set error event listener on last source (called only if no source are available)
-      var lastSources = this.player.getElementsByTagName('source');
-      var jPlayerLastSource = angular.element(lastSources[lastSources.length - 1]);
-      jPlayerLastSource.on('error', function(e) {
-        if (self.player.networkState == self.player.NETWORK_NO_SOURCE) {
-          e.target.error = {code: 'NO_SOURCE', MEDIA_NO_SOURCE: 'NO_SOURCE'};
-        }
-        self.handlePlayerEventsFn(e);
+        // Start loading media
+        if(!this.error_)
+          self.load();
       });
-
-      // Start loading media
-      this.load();
     };
 
     /**
@@ -225,7 +226,7 @@
      * @return {Boolean} true if paused, false otherwise
      */
     HTMLPlayer.prototype.isPaused = function() {
-      return this.player.paused;
+      return this.player.paused();
     };
 
     /**
@@ -234,7 +235,7 @@
      * @method playPause
      */
     HTMLPlayer.prototype.playPause = function() {
-      if (this.player.paused || this.player.ended)
+      if (this.player.paused() || this.player.ended())
         this.player.play();
       else
         this.player.pause();
@@ -247,7 +248,7 @@
      * @param Number volume The new volume from 0 to 100.
      */
     HTMLPlayer.prototype.setVolume = function(volume) {
-      this.player.volume = volume / 100;
+      this.player.volume(volume / 100);
     };
 
     /**
@@ -258,7 +259,7 @@
      */
     HTMLPlayer.prototype.setTime = function(time) {
       time = parseInt(time) || 0.1;
-      this.player.currentTime = time / 1000;
+      this.player.currentTime(time / 1000);
     };
 
     /**

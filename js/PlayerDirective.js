@@ -396,6 +396,7 @@
           $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
           $scope.mediaUrl = $scope.player.getMediaUrl($scope.selectedDefinition);
+          $scope.mediaMIME = $scope.player.getMediaMIME($scope.selectedDefinition);
           $scope.loading = true;
           $scope.initializing = true;
           $scope.error = null;
@@ -646,6 +647,7 @@
             autoPlay = !$scope.player.isPaused();
             $scope.selectedDefinition = definition;
             $scope.mediaUrl = $scope.player.getMediaUrl($scope.selectedDefinition);
+            $scope.mediaMIME = $scope.player.getMediaMIME($scope.selectedDefinition);
             $scope.loading = true;
             $scope.initializing = true;
             safeApply(function() {
