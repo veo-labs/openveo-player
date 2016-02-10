@@ -216,7 +216,7 @@ describe('PlayerDirective', function() {
       mediaId: '1',
       timecodes: [
         {
-          timecode: 10,
+          timecode: 0,
           image: {
             small: 'small',
             large: 'large'
@@ -231,6 +231,38 @@ describe('PlayerDirective', function() {
     var isolateScope = element.isolateScope();
     assert.equal(isolateScope.timePreview, 'large');
     assert.equal(isolateScope.presentation, 'large');
+  });
+
+  it('Should not set time preview image and default presentation image if first timecode > time', function() {
+    $rootScope.data = {
+      type: 'vimeo',
+      mediaId: '1',
+      timecodes: [
+        {
+          timecode: 5000,
+          image: {
+            small: 'small',
+            large: 'large'
+          }
+        }
+      ]
+    };
+    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    var isolateScope = element.isolateScope();
+    isolateScope.initializing = false;
+    element.triggerHandler('ovDurationChange', 10000);
+    $timeout.flush();
+    element.triggerHandler('ovPlayProgress', {
+      time: 2500,
+      percent: 25
+    });
+    $timeout.flush();
+
+    assert.equal(isolateScope.timePreview, null);
+    assert.equal(isolateScope.presentation, null);
   });
 
   it('Should be able to open/close the list of display modes', function() {

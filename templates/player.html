@@ -32,7 +32,7 @@
           <div class="ov-loaded" ng-style="{'left' : loadedStart + '%','width' : loadedPercent + '%'}"></div>
           <div class="ov-seen" ng-style="{'width' : seenPercent + '%'}"></div>
           <div class="ov-cursor" ng-style="{'left' : timePreviewPosition  + '%'}" ng-show="timePreviewOpened">
-            <div>
+            <div ng-if="timePreview">
               <img ng-src="{{timePreview}}" />
             </div>
           </div>

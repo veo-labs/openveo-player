@@ -113,8 +113,11 @@
         function findTimecode(time) {
 
           if ($scope.timecodes.length) {
+
+            if (time < $scope.timecodes[0].timecode) return null;
+
             for (var i = 0; i < $scope.timecodes.length; i++) {
-              if (time > $scope.timecodes[i].timecode &&
+              if (time >= $scope.timecodes[i].timecode &&
                   ($scope.timecodes[i + 1] &&
                    time < $scope.timecodes[i + 1].timecode))
                 return $scope.timecodes[i].timecode;
@@ -156,11 +159,14 @@
          * @param MouseEvent event The dispatched event
          */
         function timeMouseMove(event) {
-          var timecode = findTimecode(((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration);
+          var timecode = findTimecode(
+                  ((event.pageX - timeBarRect.left) / timeBarWidth) * $scope.duration + playerService.getRealCutStart()
+                  );
 
           safeApply(function() {
-            if ($scope.timecodesByTime[timecode])
+            if (timecode !== null && $scope.timecodesByTime[timecode])
               $scope.timePreview = $scope.timecodesByTime[timecode].image.large;
+            else $scope.timePreview = null;
 
             $scope.timePreviewPosition = ((event.pageX - timeBarRect.left) / timeBarWidth) * 100;
           });
@@ -187,6 +193,7 @@
          */
         function hideTimecodes() {
           $scope.displayIndexTab = false;
+          $scope.ovModeIcon = false;
           $scope.selectedMode = modes[0];
         }
 
@@ -197,6 +204,7 @@
          */
         function displayTimecodes() {
           $scope.displayIndexTab = true;
+          $scope.ovModeIcon = true;
           $scope.selectedMode = modes[1];
         }
 
@@ -223,7 +231,6 @@
         function initChapters() {
           $scope.chapters = playerService.getMediaChapters() || [];
           if ($scope.chapters.length) {
-            $scope.displayChapterTab = $scope.chapters.length;
             displayChapters();
           }
 
@@ -244,10 +251,11 @@
 
           // Got timecodes associated to the media
           if ($scope.timecodes.length) {
-
             // Use the first image of the first timecode as
             // the current presentation image
-            $scope.timePreview = $scope.presentation = $scope.timecodes[0].image.large;
+            var timecode = findTimecode($scope.time);
+            $scope.timePreview = timecode !== null ? $scope.timecodesByTime[timecode].image.large : null;
+            $scope.presentation = timecode !== null ? $scope.timecodesByTime[timecode].image.large : null;
 
             displayTimecodes();
           }
@@ -303,9 +311,6 @@
           // Media volume can't be changed on touch devices
           if (isTouchDevice())
             $scope.ovVolumeIcon = false;
-
-          // Icon to change player's display mode is only available if an index is associated to the video
-          $scope.ovModeIcon = $scope.displayIndexTab;
 
           // Full viewport and no FullScreen API available
           // Consider the player as in fullscreen
@@ -378,20 +383,16 @@
           // Real media duration is required to be able to display either the
           // list of chapters or the list of timecodes
           if ($scope.isCut) {
-            $scope.displayChapterTab = false;
             hideTimecodes();
             hideChapters();
           } else {
-
             // Video is not cut
             // Timecodes and chapters can be immediately displayed
             initTimecodes();
             initChapters();
-
           }
 
           initAttributes();
-
         }
 
         init();
@@ -692,6 +693,7 @@
 
           safeApply(function() {
             playerService.setRealMediaDuration(duration);
+            $scope.startCutTime = playerService.getRealCutStart();
             $scope.duration = playerService.getCutDuration();
 
             // Media is cut and was waiting for the real media duration
@@ -765,8 +767,8 @@
             $scope.time = playerService.getCutTime(data.time);
             $scope.seenPercent = playerService.getCutPercent(data.percent);
 
-            if ($scope.timecodesByTime[timecode])
-              $scope.presentation = $scope.timecodesByTime[timecode].image.large;
+            $scope.presentation = timecode !== null &&
+                    $scope.timecodesByTime[timecode] ? $scope.timecodesByTime[timecode].image.large : null;
 
             var timeObject = {
               time: $scope.time,
@@ -801,8 +803,10 @@
             lastTime = 0;
             $scope.playPauseButton = 'play';
 
-            if ($scope.timecodes.length)
-              $scope.presentation = $scope.timecodes[0].image.large;
+            var timecode = findTimecode($scope.time);
+            if (timecode !== null && $scope.timecodes.length)
+              $scope.presentation =
+                    $scope.timecodesByTime[timecode] ? $scope.timecodesByTime[timecode].image.large : null;
 
             // Media is cut
             // Return to the cut start edge
