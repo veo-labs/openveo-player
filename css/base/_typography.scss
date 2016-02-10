@@ -1,10 +1,11 @@
+$hash: unique-id();
 @font-face{
   font-family: "playerIcons";
-  src: url("../font/playerIcons.eot?d66fq8");
-  src: url("../font/playerIcons.eot?#iefixd66fq8") format("embedded-opentype"),
-      url("../font/playerIcons.woff?d66fq8") format("woff"),
-      url("../font/playerIcons.ttf?d66fq8") format("truetype"),
-      url("../font/playerIcons.svg?d66fq8#icomoon") format("svg");
+  src: url("../font/playerIcons.eot?#{$hash}");
+  src: url("../font/playerIcons.eot?#iefix#{$hash}") format("embedded-opentype"),
+      url("../font/playerIcons.woff?#{$hash}") format("woff"),
+      url("../font/playerIcons.ttf?#{$hash}") format("truetype"),
+      url("../font/playerIcons.svg?#{$hash}#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }

@@ -16,7 +16,8 @@ module.exports = {
       sassDir: '<%= player.sass %>',
       cssDir: '<%= player.distPath %>',
       outputStyle: 'compressed',
-      environment: 'production'
+      environment: 'production',
+      force: true
     }
   }
 };
