@@ -599,8 +599,9 @@
          * @param Object definition The new definition
          */
         this.setDefinition = $scope.setDefinition = function(definition) {
-          if (definition &&
-                  (definition.link !== $scope.selectedDefinition.link || $scope.player.getPlayerType() == 'youtube')
+          if (definition && (
+                    definition.link !== $scope.selectedDefinition.link ||
+                    ($scope.player.getPlayerType() == 'youtube' && definition !== $scope.selectedDefinition))
               ) {
             lastTime = $scope.time;
             autoPlay = !$scope.player.isPaused();
