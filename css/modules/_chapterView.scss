@@ -44,6 +44,10 @@
     min-height: 34px;
     line-height: 34px;
     transition: all 0.35s ease;
+    width: 100%;
+    float: left;
+    box-sizing: border-box;
+    
     .title{
       width: 80%;
       float: left;
@@ -84,6 +88,7 @@
   }
   
   p{ 
+    box-sizing: border-box;
     @include transition(border 0.35s ease);
     background-color: #fff; 
     /*display:none;*/
@@ -92,17 +97,20 @@
     padding:0 20px;
     /*border-left: 0px solid transparent;*/
     overflow: hidden;
-    border-bottom: 1px solid #ddd; 
+    border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd; 
     border-left: 5px solid #ddd;
+    border-right: 5px solid #ddd;
     font-size: 16px;
     line-height: 20px;
     &:hover{
       border-left: 5px solid $highlight-color;
+      border-right: 5px solid $highlight-color;
     }
   }
   li:hover + p{
     border-left: 5px solid $highlight-color;
+    border-right: 5px solid $highlight-color;
   }
   li.open + p{
     padding-top: 10px;
