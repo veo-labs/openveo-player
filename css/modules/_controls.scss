@@ -55,7 +55,6 @@
 }
 
 .ov-cursor{
-  
   display: none;
   position: absolute;
   top: 0;
@@ -68,7 +67,6 @@
   }
 
   & > div{
-    box-sizing: content-box;
     z-index: 1;
     position: absolute;
     top: -130px;
@@ -233,7 +231,6 @@
   }
 
   & > div{
-    box-sizing: content-box;
     z-index: 1;
     position: absolute;
     bottom: 32px;

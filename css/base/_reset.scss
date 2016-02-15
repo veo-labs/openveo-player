@@ -1,4 +1,7 @@
 .ov-player{
+  * {
+    box-sizing: content-box;
+  }
   
   ul{ 
     margin: 0; 
