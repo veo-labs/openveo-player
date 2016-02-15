@@ -19,7 +19,8 @@
    * For more information on the ov-player element, have a look at the
    * PlayerApp.js file.
    */
-  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService, i18nPlayerService, $cookies) {
+  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService, i18nPlayerService, $cookies,
+                     ovPlayerErrors) {
     return {
       restrict: 'E',
       templateUrl: ovPlayerDirectory + 'templates/player.html',
@@ -273,7 +274,6 @@
           if ($scope.data.mediaId) {
             var playerType = $scope.ovPlayerType || $scope.data.type || 'html';
             $scope.mediaTemplate = ovPlayerDirectory + 'templates/' + playerType + '.html';
-            $scope.data.lastTime = lastTime || 0;
 
             // Get an instance of a player depending on player's type
             switch (playerType.toLowerCase()) {
@@ -821,28 +821,33 @@
         });
 
         // Listen to player error event
-        $element.on('error', function(event, data) {
+        $element.on('ovError', function(event, code) {
           safeApply(function() {
             $scope.loading = false;
             $scope.initializing = false;
 
-            switch (data.target.error.code) {
-              case data.target.error.MEDIA_NO_SOURCE:
+            switch (code) {
+              case ovPlayerErrors.MEDIA_ERR_NO_SOURCE:
                 $scope.error = $filter('ovTranslate')('MEDIA_NO_SOURCE');
                 break;
-              case data.target.error.MEDIA_ERR_NETWORK:
+              case ovPlayerErrors.MEDIA_ERR_NETWORK:
                 $scope.error = $filter('ovTranslate')('MEDIA_ERR_NETWORK');
                 break;
-              case data.target.error.MEDIA_ERR_DECODE:
+              case ovPlayerErrors.MEDIA_ERR_DECODE:
                 $scope.error = $filter('ovTranslate')('MEDIA_ERR_DECODE');
                 break;
-              case data.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+              case ovPlayerErrors.MEDIA_ERR_SRC_NOT_SUPPORTED:
                 $scope.error = $filter('ovTranslate')('MEDIA_ERR_SRC_NOT_SUPPORTED');
+                break;
+              case ovPlayerErrors.MEDIA_ERR_PERMISSION:
+                $scope.error = $filter('ovTranslate')('MEDIA_ERR_PERMISSION');
                 break;
               default:
                 $scope.error = $filter('ovTranslate')('MEDIA_ERR_DEFAULT');
                 break;
             }
+
+            $element.triggerHandler('error', {code: code, message: $scope.error});
           });
         });
       }]
@@ -858,7 +863,8 @@
     '$timeout',
     'playerService',
     'i18nPlayerService',
-    '$cookies'
+    '$cookies',
+    'ovPlayerErrors'
   ];
 
 })(angular, angular.module('ov.player'));

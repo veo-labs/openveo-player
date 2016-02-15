@@ -9,7 +9,7 @@
    * The Youtube embeded player exposes a JavaSript API to interact with
    * (https://developer.vimeo.com/player/js-api).
    */
-  function OvYoutubePlayer(OvPlayer, $window) {
+  function OvYoutubePlayer(OvPlayer, $window, ovPlayerErrors) {
 
     /**
      * Handles all player post messages.
@@ -126,6 +126,18 @@
 
               self.loaded = true;
               self.playing = 0;
+            },
+            onError: function(error) {
+              switch (error.data) {
+                case 100:
+                case 101:
+                case 150:
+                  self.jPlayerElement.triggerHandler('ovError', ovPlayerErrors.MEDIA_ERR_PERMISSION);
+                  break;
+                default:
+                  self.jPlayerElement.triggerHandler('ovError', ovPlayerErrors.MEDIA_ERR_UNKNOWN);
+                  break;
+              }
             }
           },
           videoId: this.media.mediaId
@@ -293,6 +305,6 @@
   }
 
   app.factory('OvYoutubePlayer', OvYoutubePlayer);
-  OvYoutubePlayer.$inject = ['OvPlayer', '$window'];
+  OvYoutubePlayer.$inject = ['OvPlayer', '$window', 'ovPlayerErrors'];
 
 })(angular, angular.module('ov.player'));

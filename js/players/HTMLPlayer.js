@@ -84,8 +84,9 @@
 
         // Media error
         case 'error':
-          this.jPlayerElement.triggerHandler('error', event);
+          this.jPlayerElement.triggerHandler('error', event.target.error.code);
           break;
+
         default:
           break;
       }
