@@ -25,7 +25,7 @@
       switch (data.event) {
         case 'infoDelivery':
 
-          if (data.info.currentTime)
+          if (data.info.currentTime && this.duration)
             this.jPlayerElement.triggerHandler('ovPlayProgress', {
               time: data.info.currentTime * 1000,
               percent: data.info.currentTime / this.duration * 100
@@ -49,6 +49,20 @@
           } else {
             this.playing = 1;
             this.jPlayerElement.triggerHandler('ovPlay');
+
+            if (this.requestPause) {
+              this.requestPause = false;
+              this.player.pauseVideo();
+            }
+
+            // As described in Youtube player API the video duration is only available when player have started
+            // (https://developers.google.com/youtube/iframe_api_reference#getDuration)
+            var duration = this.player.getDuration();
+            if (!self.duration && duration) {
+              this.duration = duration;
+              this.jPlayerElement.triggerHandler('ovDurationChange', this.duration * 1000);
+            }
+
           }
           break;
 
@@ -95,15 +109,10 @@
             color: 'white',
             iv_load_policy: 3,
             showinfo: 0,
-            controls: 0,
-            start: self.media.lastTime / 1000
+            controls: 0
           },
           events: {
             onReady: function() { // Youtube API is ready to be called
-
-              self.duration = self.player.getDuration() || self.media.metadata && self.media.metadata.duration;
-
-              self.jPlayerElement.triggerHandler('ovDurationChange', self.duration * 1000);
               self.jPlayerElement.triggerHandler('ovReady');
 
               // Handle post messages
@@ -137,6 +146,8 @@
       var self = this;
       var youtubeApiScriptId = 'youtube-iframe-api';
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
+      this.requestPause = false;
+
       var tag = document.createElement('script');
       tag.setAttribute('id', youtubeApiScriptId);
       tag.src = 'https://www.youtube.com/iframe_api';
@@ -196,8 +207,10 @@
     YoutubePlayer.prototype.playPause = function() {
       if (this.playing)
         this.player.pauseVideo();
-      else
+      else {
+        this.requestPause = false;
         this.player.playVideo();
+      }
     };
 
     /**
@@ -213,7 +226,17 @@
      * @param Number time The time to seek to in milliseconds
      */
     YoutubePlayer.prototype.setTime = function(time) {
+      var playerState = this.player.getPlayerState();
       time = parseInt(time) || 0;
+
+      // Youtube workaround to deactivate autoplay.
+      // Youtube seekTo method autoplay the video even if the video is in cued state with autoplay deactivated
+      // as described in Youtube player API (https://developers.google.com/youtube/iframe_api_reference#seekTo).
+      // Thus, if the video is in cued state, we have to wait for the video to start and then make a pause to have
+      // the excpected behavior.
+      if (!this.playing && playerState === YT.PlayerState.CUED)
+        this.requestPause = true;
+
       this.player.seekTo(time / 1000, true);
 
       // Send a playProgress event because the Youtube flash player (old
