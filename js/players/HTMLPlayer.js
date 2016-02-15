@@ -36,7 +36,7 @@
 
         // The duration attribute has just been updated
         case 'durationchange':
-          var duration = this.player.duration || this.media.metadata && this.media.metadata.duration;
+          var duration = this.player.duration;
           this.jPlayerElement.triggerHandler('ovDurationChange', duration * 1000);
           break;
 

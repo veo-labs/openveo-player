@@ -25,6 +25,7 @@
 
         if (value)
           data.value = value;
+
         return this.player.contentWindow.postMessage(JSON.stringify(data), this.postMessageTargetOrigin);
       }
 
@@ -124,7 +125,7 @@
         // Actions
         switch (data.method) {
           case 'getDuration':
-            this.duration = data.value || this.media.metadata && this.media.metadata.duration;
+            this.duration = data.value;
             this.jPlayerElement.triggerHandler('ovDurationChange', this.duration * 1000);
             break;
 
@@ -174,7 +175,7 @@
     VimeoPlayer.prototype.getMediaUrl = function(definition) {
       if (definition && definition.link)
         return $sce.trustAsResourceUrl(definition.link);
-      else 
+      else
         return $sce.trustAsResourceUrl('//player.vimeo.com/video/' + this.media.mediaId + '?api=1&player_id=' + this.playerId);
     };
 
