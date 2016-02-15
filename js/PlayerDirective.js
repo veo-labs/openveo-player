@@ -34,7 +34,8 @@
         ovFullViewport: '=?',
         ovLanguage: '@?',
         ovPlayerType: '@?',
-        ovAutoPlay: '@?'
+        ovAutoPlay: '@?',
+        ovRememberPosition: '@?'
       },
       controller: ['$scope', '$element', function($scope, $element) {
         var self = this;
@@ -59,6 +60,8 @@
         $scope.ovSettingsIcon = (typeof $scope.ovSettingsIcon === 'undefined') ? true : $scope.ovSettingsIcon;
         $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
         $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
+        var rememberPosition =
+                (typeof $scope.ovRememberPosition === 'undefined') ? false : JSON.parse($scope.ovRememberPosition);
         $scope.ovLanguage = (typeof $scope.ovLanguage === 'undefined') ? 'en' : $scope.ovLanguage;
         var autoPlay = (typeof $scope.ovAutoPlay === 'undefined') ? false : JSON.parse($scope.ovAutoPlay);
 
@@ -333,11 +336,13 @@
           playerService.setMedia($scope.data);
 
           // Retrieve last stopped time
-          var cookie = $cookies.getObject('videoStopped_' + $scope.data.mediaId);
-          if (cookie) {
-            $scope.seenPercent = cookie.percent;
-            $scope.time = cookie.time;
-            lastTime = $scope.time;
+          if (rememberPosition) {
+            var cookie = $cookies.getObject('videoStopped_' + $scope.data.mediaId);
+            if (cookie) {
+              $scope.seenPercent = cookie.percent;
+              $scope.time = cookie.time;
+              lastTime = $scope.time;
+            }
           }
 
           initPlayer(lastTime);
@@ -778,13 +783,15 @@
             $element.triggerHandler('playProgress', timeObject);
             var expireDate = new Date();
             expireDate.setDate(expireDate.getDate() + 1);
-            $cookies.putObject('videoStopped_' + $scope.data.mediaId, timeObject, {expires: expireDate});
+            if (rememberPosition)
+              $cookies.putObject('videoStopped_' + $scope.data.mediaId, timeObject, {expires: expireDate});
           };
 
           // Media virtual end reached
           if (playerService.getCutTime(data.time) > playerService.getCutDuration()) {
             $scope.player.setTime(playerService.getRealTime(0));
-            $cookies.remove('videoStopped_' + $scope.data.mediaId);
+            if (rememberPosition)
+              $cookies.remove('videoStopped_' + $scope.data.mediaId);
             lastTime = 0;
             $scope.player.playPause();
           }
@@ -799,7 +806,8 @@
           event.stopImmediatePropagation();
 
           safeApply(function() {
-            $cookies.remove('videoStopped_' + $scope.data.mediaId);
+            if (rememberPosition)
+              $cookies.remove('videoStopped_' + $scope.data.mediaId);
             $scope.time = $scope.seenPercent = 0;
             lastTime = 0;
             $scope.playPauseButton = 'play';
