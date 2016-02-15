@@ -135,16 +135,25 @@
      */
     function YoutubePlayer(jPlayerElement, media) {
       var self = this;
+      var youtubeApiScriptId = 'youtube-iframe-api';
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
       var tag = document.createElement('script');
+      tag.setAttribute('id', youtubeApiScriptId);
       tag.src = 'https://www.youtube.com/iframe_api';
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
       $window.onYouTubeIframeAPIReady = function() {
         self.apiLoaded = true;
         initialize.call(self);
       };
+
+      // Add youtube API script if not already included
+      if (!document.getElementById(youtubeApiScriptId)) {
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      } else {
+        this.apiLoaded = true;
+        initialize.call(self);
+      }
     }
 
     YoutubePlayer.prototype = new OvPlayer();
