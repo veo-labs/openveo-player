@@ -58,7 +58,7 @@
             // As described in Youtube player API the video duration is only available when player have started
             // (https://developers.google.com/youtube/iframe_api_reference#getDuration)
             var duration = this.player.getDuration();
-            if (!self.duration && duration) {
+            if (!this.duration && duration) {
               this.duration = duration;
               this.jPlayerElement.triggerHandler('ovDurationChange', this.duration * 1000);
             }
