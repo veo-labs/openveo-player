@@ -272,7 +272,7 @@
         /**
          * Initializes the player.
          */
-        function initPlayer(lastTime) {
+        function initPlayer() {
 
           if ($scope.data.mediaId) {
             var playerType = $scope.ovPlayerType || $scope.data.type || 'html';
@@ -345,7 +345,7 @@
             }
           }
 
-          initPlayer(lastTime);
+          initPlayer();
 
           if (!$scope.player)
             return;
@@ -783,12 +783,13 @@
             $element.triggerHandler('playProgress', timeObject);
             var expireDate = new Date();
             expireDate.setDate(expireDate.getDate() + 1);
+
             if (rememberPosition)
               $cookies.putObject('videoStopped_' + $scope.data.mediaId, timeObject, {expires: expireDate});
           };
 
           // Media virtual end reached
-          if (playerService.getCutTime(data.time) > playerService.getCutDuration()) {
+          if ($scope.duration && playerService.getCutTime(data.time) > playerService.getCutDuration()) {
             $scope.player.setTime(playerService.getRealTime(0));
             if (rememberPosition)
               $cookies.remove('videoStopped_' + $scope.data.mediaId);
