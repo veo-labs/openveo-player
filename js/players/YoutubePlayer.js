@@ -109,7 +109,8 @@
             color: 'white',
             iv_load_policy: 3,
             showinfo: 0,
-            controls: 0
+            controls: 0,
+            hl: this.media.language
           },
           events: {
             onReady: function() { // Youtube API is ready to be called

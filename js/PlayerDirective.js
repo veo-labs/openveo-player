@@ -277,6 +277,7 @@
           if ($scope.data.mediaId) {
             var playerType = $scope.ovPlayerType || $scope.data.type || 'html';
             $scope.mediaTemplate = ovPlayerDirectory + 'templates/' + playerType + '.html';
+            $scope.data.language = $scope.ovLanguage;
 
             // Get an instance of a player depending on player's type
             switch (playerType.toLowerCase()) {
