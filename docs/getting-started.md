@@ -255,3 +255,14 @@ Indicates if player must automatically start when media is ready. (Default to **
   ov-auto-play="true"
 ></ov-player>
 ```
+
+## ov-remember-position (optional)
+
+Indicates if player must automatically start at time which video has previously been stopped. (Default to **false**)
+
+```html
+<ov-player
+  ...
+  ov-remember-position="true"
+></ov-player>
+```
