@@ -176,7 +176,8 @@
       if (definition && definition.link)
         return $sce.trustAsResourceUrl(definition.link);
       else
-        return $sce.trustAsResourceUrl('//player.vimeo.com/video/' + this.media.mediaId + '?api=1&player_id=' + this.playerId);
+        return $sce.trustAsResourceUrl('//player.vimeo.com/video/' + this.media.mediaId + '?api=1&player_id=' +
+                                       this.playerId);
     };
 
     /**

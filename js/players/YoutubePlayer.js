@@ -93,7 +93,7 @@
      * must be handled.
      */
     function initialize() {
-      if (this.ressourceLoaded && this.apiLoaded){
+      if (this.ressourceLoaded && this.apiLoaded) {
 
         var self = this;
         this.loaded = false;
