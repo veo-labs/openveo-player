@@ -181,22 +181,29 @@
       // Media is cut
       if (isCut && realMediaDuration && media.chapters) {
         var filteredChapters = [];
-        var realCutStart = getRealCutStart();
-        var realCutEnd = getRealCutEnd();
 
         // Filter chapters depending on cut edges
         // Chapters not in the range [startCut - endCut] must be removed
         for (var i = 0; i < media.chapters.length; i++) {
-          var timecode = realMediaDuration * media.chapters[i].value;
+          var valuePercent = media.chapters[i].value;
 
-          if (timecode >= realCutStart && timecode <= realCutEnd)
+          if (valuePercent >= cutStart && valuePercent <= cutEnd)
             filteredChapters.push(media.chapters[i]);
-
         }
         return filteredChapters;
       }
-
       return media.chapters;
+    }
+
+    /**
+     * Change a list of chapters which value is a percent in a timestamp value according to media duration
+     * @param {Array} chapters chapters array to modify from percent to timestamp
+     * @param {int} mediaDuration media original duration in ms
+     */
+    function processChaptersTime(chapters) {
+      for (var i = 0; i < chapters.length; i++) {
+        chapters[i].value = (chapters[i].value - cutStart) * realMediaDuration;
+      }
     }
 
     /**
@@ -257,7 +264,8 @@
       getRealCutStart: getRealCutStart,
       getRealCutEnd: getRealCutEnd,
       getCutPercent: getCutPercent,
-      getCutTime: getCutTime
+      getCutTime: getCutTime,
+      processChaptersTime: processChaptersTime
     };
 
   }

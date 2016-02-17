@@ -35,8 +35,8 @@
       scope.goToTimecode = function(time) {
         var playerCtrl = controllers[0],
           tabsCtrl = controllers[1];
-        if (time <= 1)
-          playerCtrl.setTime(time * scope.duration);
+        if (time <= scope.duration)
+          playerCtrl.setTime(time);
         tabsCtrl.selectTabs('media');
       };
 

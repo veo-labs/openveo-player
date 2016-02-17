@@ -745,6 +745,9 @@
               self.setTime(0);
             }
 
+            // Change value of chapter to get timestamp once video duration is known
+            playerService.processChaptersTime($scope.chapters);
+
             $element.triggerHandler('durationChange', $scope.duration);
           });
           return false;
