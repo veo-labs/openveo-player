@@ -202,7 +202,7 @@
      */
     function processChaptersTime(chapters) {
       for (var i = 0; i < chapters.length; i++) {
-        chapters[i].value = (chapters[i].value - cutStart) * realMediaDuration;
+        chapters[i].value = (chapters[i].value * realMediaDuration) - Math.floor(cutStart * realMediaDuration);
       }
     }
 
