@@ -5,8 +5,6 @@
         <span class="time" >{{chapter.value*duration | date:'H:mm:ss':'+0000'}}</span>
         {{chapter.name}}
       </div>
-      
-      <!--<div class="title"></div>-->
     </li>
     <p ng-repeat-end ng-if="chapter.description && chapter.description!=''">{{chapter.description}}</p>
   </ul>
