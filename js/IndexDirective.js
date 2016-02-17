@@ -3,7 +3,7 @@
 (function(app) {
 
   /**
-   * Creates a new HTML element ov-index to create an openVeo player
+   * Creates a new Angular directive as an HTML element ov-index to create an openVeo player
    * index, with a list of presentation slides.
    * It requires ovPlayerDirectory global variable to be defined and have
    * a value corresponding to the path of the openVeo Player
@@ -11,6 +11,9 @@
    *
    * e.g.
    * <ov-index></ov-index>
+   *
+   * @module ov.player
+   * @class ovIndex
    */
   function ovIndex(ovIndexLink) {
     return {
@@ -30,7 +33,8 @@
 
       /**
        * Sets presentation preview corresponding to the given timecode.
-       * @param Number timecode The timecode (in milliseconds)
+       *
+       * @param {Number} timecode The timecode (in milliseconds)
        */
       scope.setImagePreview = function(timecode) {
         scope.imagePreview = scope.timecodesByTime[timecode].image.large;
@@ -38,7 +42,8 @@
 
       /**
        * Seeks media to the given timecode.
-       * @param Number timecode The timecode to seek to
+       *
+       * @param {Number} timecode The timecode to seek to
        */
       scope.goToTimecode = function(timecode) {
         var playerCtrl = controllers[0],

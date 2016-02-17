@@ -3,17 +3,22 @@
 (function(angular, app) {
 
   /**
-   * Creates an HTML player which observes OvPlayer interface.
+   * Creates an HTML player factory which observes OvPlayer interface.
    * More information on HTML player
    * at http://www.w3.org/TR/html5/embedded-content-0.html.
+   *
+   * @module ov.player
+   * @class OvHTMLPlayer
    */
   function OvHTMLPlayer(OvPlayer, $window, $document, $sce) {
 
     /**
      * Handles all player media events.
-     * @param Event event The received event
+     *
+     * @param {Event} event The received event
      */
     function handlePlayerEvents(event) {
+
       // Events
       switch (event.type) {
 
@@ -108,6 +113,9 @@
 
     /**
      * Creates a new HTMLPlayer.
+     *
+     * @constructor
+     * @extends Player
      * @param Object jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
      * @param Object media Details about the media
@@ -146,6 +154,9 @@
 
     /**
      * Gets media url.
+     *
+     * @method getMediaUrl
+     * @param {Object} definition Media definition object
      * @return String The media url
      */
     HTMLPlayer.prototype.getMediaUrl = function(definition) {
@@ -156,6 +167,7 @@
      * Gets media thumbnail.
      * Get the higher thumbnail quality.
      *
+     * @method getMediaThumbnail
      * @return String The media thumbnail url
      */
     HTMLPlayer.prototype.getMediaThumbnail = function() {
@@ -167,6 +179,8 @@
      *
      * Retrieves player HTML element and attach listeners to it to be able
      * to receive media events.
+     *
+     * @method initialize
      */
     HTMLPlayer.prototype.initialize = function() {
       var self = this;
@@ -197,6 +211,8 @@
 
     /**
      * Starts loading current media.
+     *
+     * @method load
      */
     HTMLPlayer.prototype.load = function() {
       this.player.load();
@@ -204,7 +220,9 @@
 
     /**
      * Tests if player actual state is pause.
-     * @param Boolean true if paused, false otherwise
+     *
+     * @method isPaused
+     * @return {Boolean} true if paused, false otherwise
      */
     HTMLPlayer.prototype.isPaused = function() {
       return this.player.paused;
@@ -212,6 +230,8 @@
 
     /**
      * Plays or pauses the media depending on media actual state.
+     *
+     * @method playPause
      */
     HTMLPlayer.prototype.playPause = function() {
       if (this.player.paused || this.player.ended)
@@ -222,6 +242,8 @@
 
     /**
      * Sets volume.
+     *
+     * @method setVolume
      * @param Number volume The new volume from 0 to 100.
      */
     HTMLPlayer.prototype.setVolume = function(volume) {
@@ -230,6 +252,8 @@
 
     /**
      * Sets time.
+     *
+     * @method setTime
      * @param Number time The time to seek to in milliseconds
      */
     HTMLPlayer.prototype.setTime = function(time) {
@@ -239,7 +263,9 @@
 
     /**
      * Gets player type.
-     * @return String "html"
+     *
+     * @method getPlayerType
+     * @return {String} "html"
      */
     HTMLPlayer.prototype.getPlayerType = function() {
       return 'html';
@@ -247,7 +273,9 @@
 
     /**
      * Gets media definitions.
-     * @return Array The list of available media definitions
+     *
+     * @method getAvailableDefinitions
+     * @return {Array} The list of available media definitions
      */
     HTMLPlayer.prototype.getAvailableDefinitions = function() {
       return this.media.files;
@@ -255,7 +283,10 @@
 
     /**
      * Destroys the player.
+     *
      * Remove all events listeners.
+     *
+     * @method destroy
      */
     HTMLPlayer.prototype.destroy = function() {
       this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);

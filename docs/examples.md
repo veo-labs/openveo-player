@@ -469,6 +469,11 @@
        console.log('end');
      });
 
+     angular.element(myPlayer).on('error', function(event, error){
+       console.log(error.message);
+       console.log(error.code);
+     });
+
   }
 
 })(angular);

@@ -3,18 +3,19 @@
 (function(angular, app) {
 
   /**
-   * Creates a Youtube player which observes OvPlayer interface.
+   * Creates a Youtube player factory which observes OvPlayer interface.
    * More information on Youtube player can be found
-   * at https://developers.google.com/youtube/v3/docs/
+   * at https://developers.google.com/youtube/v3/docs/.
    * The Youtube embeded player exposes a JavaSript API to interact with
-   * (https://developer.vimeo.com/player/js-api).
+   * (https://developers.google.com/youtube/iframe_api_reference).
    */
   function OvYoutubePlayer(OvPlayer, $window, ovPlayerErrors) {
 
     /**
      * Handles all player post messages.
-     * @param MessageEvent/Event event The post message
-     * @param Object data If post messages are not implemented, a simple
+     *
+     * @param {MessageEvent|Event} event The post message
+     * @param {Object} data If post messages are not implemented, a simple
      * event can by used with data as second parameter instead of data
      * inside the MessageEvent object (event.data)
      */
@@ -87,6 +88,7 @@
 
     /**
      * Inititializes the player.
+     *
      * Youtube player uses postMessage API to be able to communicate with
      * the player.
      * Before doing anything on the Youtube player the ready event
@@ -148,9 +150,12 @@
 
     /**
      * Creates a new YoutubePlayer.
-     * @param Object jPlayerElement The JQLite HTML element corresponding
+     *
+     * @constructor
+     * @extends Player
+     * @param {Object} jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param Object media Details of the media
+     * @param {Object} media Details of the media
      *   {
      *     mediaId : "136081112" // The id of the media
      *   }
@@ -185,7 +190,13 @@
 
     /**
      * Gets media url.
-     * @return String The media url
+     *
+     * Youtube player manages media urls itself, only the definition is exposed. This will set the new player
+     * definition.
+     *
+     * @method getMediaUrl
+     * @param {Object} definition Media definition object
+     * @return {Null} null
      */
     YoutubePlayer.prototype.getMediaUrl = function(definition) {
       if (this.player) {
@@ -197,9 +208,11 @@
 
     /**
      * Gets media thumbnail.
+     *
      * No need to manage the thumbnail it is already done by the Youtube player.
      *
-     * @return null
+     * @method getMediaThumbnail
+     * @return {Null} null
      */
     YoutubePlayer.prototype.getMediaThumbnail = function() {
       return null;
@@ -207,7 +220,10 @@
 
     /**
      * Intitializes the player.
+     *
      * Nothing to do, the player is already initialized.
+     *
+     * @method initialize
      */
     YoutubePlayer.prototype.initialize = function() {
       this.ressourceLoaded = true;
@@ -216,6 +232,8 @@
 
     /**
      * Plays or pauses the media depending on media actual state.
+     *
+     * @method playPause
      */
     YoutubePlayer.prototype.playPause = function() {
       if (this.playing)
@@ -228,7 +246,9 @@
 
     /**
      * Sets volume.
-     * @param Number volume The new volume from 0 to 100.
+     *
+     * @method setVolume
+     * @param {Number} volume The new volume from 0 to 100.
      */
     YoutubePlayer.prototype.setVolume = function(volume) {
       this.player.setVolume(volume);
@@ -236,7 +256,9 @@
 
     /**
      * Sets time.
-     * @param Number time The time to seek to in milliseconds
+     *
+     * @method setTime
+     * @param {Number} time The time to seek to in milliseconds
      */
     YoutubePlayer.prototype.setTime = function(time) {
       var playerState = this.player.getPlayerState();
@@ -264,23 +286,41 @@
 
     /**
      * Gets player type.
-     * @return String "youtube"
+     *
+     * @method getPlayerType
+     * @return {String} "youtube"
      */
     YoutubePlayer.prototype.getPlayerType = function() {
       return 'youtube';
     };
 
+    /**
+     * Tests if player actual state is pause.
+     *
+     * @method isPaused
+     * @return {Boolean} true if paused, false otherwise
+     */
     YoutubePlayer.prototype.isPaused = function() {
       return this.player.getPlayerState() != YT.PlayerState.PAUSED;
     };
 
+    /**
+     * Loads player.
+     *
+     * Nothing to do, load is made by getMediaUrl method...
+     *
+     * @method load
+     */
     YoutubePlayer.prototype.load = function() {
     };
 
     /**
      * Gets media definitions.
+     *
      * No definitions available for youtube player, adaptive streaming is managed by youtube player.
-     * @return Null null
+     *
+     * @method getAvailableDefinitions
+     * @return {Array} The list of available definitions
      */
     YoutubePlayer.prototype.getAvailableDefinitions = function() {
       var definitions;
@@ -292,7 +332,10 @@
 
     /**
      * Destroys the player.
+     *
      * Remove all events listeners.
+     *
+     * @method destroy
      */
     YoutubePlayer.prototype.destroy = function() {
       angular.element($window).off('message', this.handlePlayerEventsFn);

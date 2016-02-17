@@ -3,16 +3,20 @@
 (function(angular, app) {
 
   /**
-   * Creates a Vimeo player which observes OvPlayer interface.
+   * Creates a Vimeo player factory which observes OvPlayer interface.
    * More information on Vimeo player can be found
    * at https://developer.vimeo.com/player.
    * The Vimeo embeded player exposes a JavaSript API to interact with
    * (https://developer.vimeo.com/player/js-api).
+   *
+   * @module ov.player
+   * @class OvVimeoPlayer
    */
   function OvVimeoPlayer(OvPlayer, $window, $document, $sce) {
 
     /**
      * Sends a post message to the player with the action and the value.
+     *
      * @param String action The action to perform (see
      * https://developer.vimeo.com/player/js-api)
      * @param String The value associated to the action
@@ -53,8 +57,9 @@
 
     /**
      * Handles all player post messages.
-     * @param MessageEvent/Event event The post message
-     * @param Object data If post messages are not implemented, a simple
+     *
+     * @param {MessageEvent|Event} event The post message
+     * @param {Object} data If post messages are not implemented, a simple
      * event can by used with data as second parameter instead of data
      * inside the MessageEvent object (event.data)
      */
@@ -138,6 +143,7 @@
 
     /**
      * Inititializes the player.
+     *
      * Vimeo player uses postMessage API to be able to communicate with
      * the player.
      * Before doing anything on the Vimeo player the ready event
@@ -153,9 +159,12 @@
 
     /**
      * Creates a new VimeoPlayer.
-     * @param Object jPlayerElement The JQLite HTML element corresponding
+     *
+     * @constructor
+     * @extends Player
+     * @param {Object} jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param Object media Details of the media
+     * @param {Object} media Details of the media
      *   {
      *     mediaId : "136081112" // The id of the media
      *   }
@@ -170,7 +179,10 @@
 
     /**
      * Gets media url.
-     * @return String The media url
+     *
+     * @method getMediaUrl
+     * @param {Object} definition Media definition object
+     * @return {String} The media url
      */
     VimeoPlayer.prototype.getMediaUrl = function(definition) {
       if (definition && definition.link)
@@ -182,9 +194,11 @@
 
     /**
      * Gets media thumbnail.
+     *
      * No need to manage the thumbnail it is already done by the Vimeo player.
      *
-     * @return null
+     * @method getMediaThumbnail
+     * @return {Null} null
      */
     VimeoPlayer.prototype.getMediaThumbnail = function() {
       return null;
@@ -192,13 +206,18 @@
 
     /**
      * Intitializes the player.
+     *
      * Nothing to do, the player is already initialized.
+     *
+     * @method initialize
      */
     VimeoPlayer.prototype.initialize = function() {
     };
 
     /**
      * Plays or pauses the media depending on media actual state.
+     *
+     * @method playPause
      */
     VimeoPlayer.prototype.playPause = function() {
       postActionToPlayer.call(this, this.playing ? 'pause' : 'play');
@@ -206,7 +225,9 @@
 
     /**
      * Sets volume.
-     * @param Number volume The new volume from 0 to 100.
+     *
+     * @method setVolume
+     * @param {Number} volume The new volume from 0 to 100.
      */
     VimeoPlayer.prototype.setVolume = function(volume) {
       postActionToPlayer.call(this, 'setVolume', volume / 100);
@@ -214,7 +235,9 @@
 
     /**
      * Sets time.
-     * @param Number time The time to seek to in milliseconds
+     *
+     * @method setTime
+     * @param {Number} time The time to seek to in milliseconds
      */
     VimeoPlayer.prototype.setTime = function(time) {
       time = parseInt(time) || 0;
@@ -232,7 +255,9 @@
 
     /**
      * Gets player type.
-     * @return String "vimeo"
+     *
+     * @method getPlayerType
+     * @return {String} "vimeo"
      */
     VimeoPlayer.prototype.getPlayerType = function() {
       return 'vimeo';
@@ -240,8 +265,11 @@
 
     /**
      * Gets media definitions.
+     *
      * No definitions available for vimeo player, adaptive streaming is managed by vimeo player.
-     * @return Null null
+     *
+     * @method getAvailableDefinitions
+     * @return {Null} null
      */
     VimeoPlayer.prototype.getAvailableDefinitions = function() {
       return null;
@@ -249,7 +277,10 @@
 
     /**
      * Destroys the player.
+     *
      * Remove all events listeners.
+     *
+     * @method destroy
      */
     VimeoPlayer.prototype.destroy = function() {
       angular.element($window).off('message', this.handlePlayerEventsFn);

@@ -4,8 +4,9 @@
 
   /**
    * Creates the ov.player module.
+   *
    * ov.player offers a directive to easily create a player with
-   * associated presentation images. All you have to do is use the
+   * associated presentation images and chapters. All you have to do is use the
    * directive ovPlayer.
    *
    * The ov-player HTML element needs partials. To be able to locate the
@@ -106,6 +107,7 @@
    *    If no player type is provided, ov-player will figure out which player
    *    to use depending on the media type.
    *  - Boolean ov-auto-play true to start playing when media is ready
+   *  - Boolean ov-remember-position true to start the media at the position the user was
    *
    * e.g.
    *
@@ -136,6 +138,7 @@
    *   ov-language="en"
    *   ov-player-type="html"
    *   ov-auto-play="true"
+   *   ov-remember-position="true"
    * ></ov-player>
    *
    * // The whole object can also be changed dynamically
@@ -178,6 +181,7 @@
    *  - loadProgress Got buffering information
    *  - playProgress Media playback position has changed
    *  - end Media playback has reached the end
+   *  - error Player has encountered an error
    *
    * e.g.
    * <ov-player ... id="myPlayer"></ov-player>
@@ -223,6 +227,11 @@
    *   console.log('end');
    * });
    *
+   * angular.element(test).on('error', function(event, error){
+   *   console.log(error.message);
+   *   console.log(error.code);
+   * });
+   *
    * Controlling the player :
    * You can control the player with some basic actions
    * - selectMode To select the display mode (can be 'media', 'both',
@@ -230,6 +239,7 @@
    * - playPause To start / stop the media
    * - setVolume To change player's volume
    * - setTime To seek media to a specific time
+   * - setDefinition Sets player definition
    *
    * e.g.
    * <ov-player ... id="myPlayer"></ov-player>
@@ -253,6 +263,7 @@
    *
    * });
    *
+   * @main ov.player
    */
   var app = angular.module('ov.player', ['ngCookies']);
 

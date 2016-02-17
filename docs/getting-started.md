@@ -14,6 +14,7 @@ OpenVeo Player defines an AngularJS directive **ov-player** :
   ov-language="en"
   ov-player-type="html"
   ov-auto-play="true"
+  ov-remember-position="true"
 ></ov-player>
 ```
 

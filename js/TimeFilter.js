@@ -9,6 +9,9 @@
    * e.g.
    * {{60000 | millisecondsToTime}} // 01:00
    * {{3600000 | millisecondsToTime}} // 01:00:00
+   *
+   * @module ov.player
+   * @class millisecondsToTime
    */
   function MillisecondsToTime() {
     return function(time) {

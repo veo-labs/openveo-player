@@ -3,14 +3,16 @@
 (function(app) {
 
   /**
-   * Creates a new HTML element ov-index to create an openVeo player
-   * index, with a list of presentation slides.
-   * It requires ovPlayerDirectory global variable to be defined and have
-   * a value corresponding to the path of the openVeo Player
-   * root directory.
+   * Creates a new Angular directive as an HTML element ov-chapters to create a list of chapters with title and
+   * description.
+   * It requires ovPlayerDirectory global variable to be defined and have a value corresponding to the path of
+   * the openVeo Player root directory.
    *
    * e.g.
-   * <ov-index></ov-index>
+   * <ov-chapters></ov-chapters>
+   *
+   * @module ov.player
+   * @class ovChapters
    */
   function ovChapters(ovChaptersLink) {
     return {
@@ -27,7 +29,8 @@
 
       /**
        * Seeks media to the given timecode.
-       * @param Number timecode The timecode to seek to
+       *
+       * @param {Number} time The timecode to seek to
        */
       scope.goToTimecode = function(time) {
         var playerCtrl = controllers[0],

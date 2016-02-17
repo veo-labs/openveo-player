@@ -230,3 +230,16 @@ angular.element(myPlayer).on('end', function(event, duration){
   console.log('end');
 });
 ```
+
+## error
+
+Player has encountered an error.
+
+```javascript
+var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('error', function(event, error){
+  console.log(error.message);
+  console.log(error.code);
+});
+```

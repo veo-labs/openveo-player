@@ -3,7 +3,7 @@
 (function(app) {
 
   /**
-   * Creates a new HTML element ov-view to be able to group HTML elements
+   * Creates a new Angular directive as HTML element ov-view to be able to group HTML elements
    * which will be added to an ov-tabs element.
    * It requires ovPlayerDirectory global variable to be defined and have
    * a value corresponding to the path of the openVeo Player
@@ -24,6 +24,9 @@
    *    Content of the second view
    *  </ov-view>
    * </ov-tabs>
+   *
+   * @module ov.player
+   * @class ovView
    */
   function ovView(ovViewLink) {
     return {

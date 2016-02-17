@@ -12,12 +12,16 @@
   var modes = ['media', 'both', 'both-presentation', 'presentation'];
 
   /**
-   * Creates a new HTML element ov-player to create an openVeo player.
+   * Creates a new Angular directive as HTML element ov-player to create an openVeo player.
+   *
    * It requires ovPlayerDirectory global variable to be defined and have
    * a value corresponding to the path of the openVeo Player
    * root directory.
    * For more information on the ov-player element, have a look at the
    * PlayerApp.js file.
+   *
+   * @module ov.player
+   * @class ovPlayer
    */
   function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService, i18nPlayerService, $cookies,
                      ovPlayerErrors) {
@@ -67,7 +71,8 @@
 
         /**
          * Tests if browser implements the fullscreen API or not.
-         * @return true if fullscreen API is implemented, false otherwise
+         *
+         * @return {Boolean} true if fullscreen API is implemented, false otherwise
          */
         function implementFullScreenAPI() {
           return (rootElement.requestFullScreen ||
@@ -78,8 +83,8 @@
 
         /**
          * Tests if device is a touch device.
-         * @return Boolean true if the device is a touch one, false
-         * otherwise
+         *
+         * @return {Boolean} true if the device is a touch one, false otherwise
          */
         function isTouchDevice() {
           return true == ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch);
@@ -88,7 +93,7 @@
         /**
          * Executes, safely, the given function in AngularJS process.
          *
-         * @param Function functionToExecute The function to execute as part of
+         * @param {Function} functionToExecute The function to execute as part of
          * the angular digest process.
          */
         function safeApply(functionToExecute) {
@@ -111,8 +116,9 @@
         /**
          * Gets closest timecode, from the list of timecodes, to
          * the given time.
-         * @param Number time The time to look for in milliseconds
-         * @return Number The actual timecode for the given time
+         *
+         * @param {Number} time The time to look for in milliseconds
+         * @return {Number} The actual timecode for the given time
          */
         function findTimecode(time) {
 
@@ -136,7 +142,8 @@
         /**
          * Handles mouse move events on volume bar area to update the
          * volume preview accordingly.
-         * @param MouseEvent event The dispatched event
+         *
+         * @param {MouseEvent} event The dispatched event
          */
         function volumeMouseMove(event) {
           safeApply(function() {
@@ -160,7 +167,8 @@
         /**
          * Handles mouse move events on time bar area to update the
          * time / presentation preview accordingly.
-         * @param MouseEvent event The dispatched event
+         *
+         * @param {MouseEvent} event The dispatched event
          */
         function timeMouseMove(event) {
           var timecode = findTimecode(
@@ -192,6 +200,7 @@
 
         /**
          * Hides timecodes.
+         *
          * Hide the index tab, the display mode selector and set display mode to
          * "media" (only player is visible).
          */
@@ -203,6 +212,7 @@
 
         /**
          * Displays timecodes.
+         *
          * Display the index tab, the display mode selector and set display mode
          * to "both" (both player and presentation)
          */
@@ -214,6 +224,7 @@
 
         /**
          * Hides chapters.
+         *
          * Hide the chapters tab.
          */
         function hideChapters() {
@@ -222,6 +233,7 @@
 
         /**
          * Displays chapters.
+         *
          * Display the chapters tab.
          */
         function displayChapters() {
@@ -230,6 +242,7 @@
 
         /**
          * Initializes the list of chapters.
+         *
          * Display the chapters tab only if there is at least one chapter.
          */
         function initChapters() {
@@ -245,6 +258,7 @@
 
         /**
          * Initializes the list of timecodes.
+         *
          * Display the index tab only if there is at least one timecode.
          * Also prepare a copy of the list of timecodes ordered by time to avoid
          * parsing it systematically.
@@ -301,6 +315,7 @@
 
         /**
          * Initializes player attributes.
+         *
          * Some attributes may change regarding on player data.
          */
         function initAttributes() {
@@ -418,6 +433,7 @@
 
         /**
          * Toggles display mode selection list.
+         *
          * If the list of display modes is opened, close it, open it
          * otherwise. Close volume if opened.
          * Automatically close display modes after 3 seconds.
@@ -431,6 +447,7 @@
 
         /**
          * Toggles the volume.
+         *
          * If the volume selector is opened, close it, open it
          * otherwise. Close display modes if opened.
          * Automatically close volume after 3 seconds.
@@ -444,6 +461,7 @@
 
         /**
          * Toggles definition selector.
+         *
          * If definition selector is already opened, close it, open it otherwise.
          * Close both volume and modes if opened.
          * Automatically close definition selector after 3 seconds.
@@ -457,6 +475,7 @@
 
         /**
          * Toggles player full screen.
+         *
          * If player is in full screen, reduce player to frame,
          * otherwise, display player in full screen.
          */
@@ -543,9 +562,11 @@
 
         /**
          * Sets the player volume.
+         *
          * Volume is retrieved from the position of the cursor on the
          * volume selector area.
-         * @param MouseEvent event The dispatched event when cliking
+         *
+         * @param {MouseEvent} event The dispatched event when cliking
          * on the volume selector.
          */
         $scope.setVolume = function(event) {
@@ -555,9 +576,11 @@
 
         /**
          * Sets the player time.
+         *
          * Time is retrieved from the position of the cursor on the
          * time bar area.
-         * @param MouseEvent event The dispatched event when cliking
+         *
+         * @param {MouseEvent} event The dispatched event when cliking
          * on the volume selector.
          */
         $scope.setTime = function(event) {
@@ -568,7 +591,9 @@
 
         /**
          * Sets the display mode.
-         * @param String mode The display mode to activate, available
+         *
+         * @method selectMode
+         * @param {String} mode The display mode to activate, available
          * display modes are set just before ovPlayer definition
          */
         this.selectMode = $scope.selectMode = function(mode) {
@@ -577,6 +602,8 @@
 
         /**
          * Starts / Pauses the player.
+         *
+         * @method playPause
          */
         this.playPause = $scope.playPause = function() {
           if (!$scope.loading && !$scope.error)
@@ -585,7 +612,9 @@
 
         /**
          * Sets the player volume.
-         * @param Number volume The volume to set from 0 to 100
+         *
+         * @method setVolume
+         * @param {Number} volume The volume to set from 0 to 100
          */
         this.setVolume = function(volume) {
           $scope.volume = volume;
@@ -594,7 +623,9 @@
 
         /**
          * Sets the player time.
-         * @param Number time The time to set in milliseconds
+         *
+         * @method setTime
+         * @param {Number} time The time to set in milliseconds
          */
         this.setTime = function(time) {
           $scope.player.setTime(playerService.getRealTime(time));
@@ -602,7 +633,9 @@
 
         /**
          * Sets the media definition.
-         * @param Object definition The new definition
+         *
+         * @method setDefinition
+         * @param {Object} definition The new definition
          */
         this.setDefinition = $scope.setDefinition = function(definition) {
           if (definition && (
@@ -624,7 +657,8 @@
         /**
          * Handles mouse over events on volume bar area to be able to
          * display a preview of the future volume level.
-         * @param MouseEvent event The dispatched event
+         *
+         * @param {MouseEvent} event The dispatched event
          */
         angular.element(volumeBar).on('mouseover', function() {
           volumeBarRect = volumeBar.getBoundingClientRect();
@@ -636,7 +670,8 @@
         /**
          * Handles mouse over events on time bar area to be able to
          * display a time /presentation preview.
-         * @param MouseEvent event The dispatched event
+         *
+         * @param {MouseEvent} event The dispatched event
          */
         angular.element(timeBar).on('mouseover', function(event) {
           timeBarRect = timeBar.getBoundingClientRect();

@@ -3,13 +3,17 @@
 (function(app) {
 
   /**
-   * Defines a player service to manipulate a media in a playing context.
+   * Defines a player service factory to manipulate a media in a playing context.
+   *
    * Media is not only a media file but also timecodes (slides), chapters and
    * eventually a virtual cut with a start and end edge to display present only
    * small part of the video.
    * PlayerService helps dealing with cut edges, its helps synchronize information
    * returned from the player to apply it to the cut range.
    * Term "real" is relative to the full video (wihtout cut edges).
+   *
+   * @module ov.player
+   * @class PlayerService
    */
   function PlayerService() {
     var media = null;
@@ -20,9 +24,12 @@
 
     /**
      * Gets cut start edge in milliseconds.
+     *
      * The beginning of the media can be virtually cut, thus the start time may be
      * not 0 but a virtual start.
-     * @return Number The start time in milliseconds according to the cut
+     *
+     * @method getRealCutStart
+     * @return {Number} The start time in milliseconds according to the cut
      */
     function getRealCutStart() {
       if (realMediaDuration)
@@ -33,9 +40,12 @@
 
     /**
      * Gets cut end edge in milliseconds.
+     *
      * The media can be virtually cut, thus the end time may not be the media
      * duration but a virtual end time.
-     * @return Number The end time in milliseconds according to the cut
+     *
+     * @method getRealCutEnd
+     * @return {Number} The end time in milliseconds according to the cut
      */
     function getRealCutEnd() {
       if (realMediaDuration)
@@ -46,8 +56,10 @@
 
     /**
      * Gets the real time based on the time relative to the cut media.
-     * @param Number time Time in milliseconds relative to the cut media
-     * @return Number time Time in milliseconds relative to the full media
+     *
+     * @method getRealTime
+     * @param {Number} time Time in milliseconds relative to the cut media
+     * @return {Number} time Time in milliseconds relative to the full media
      */
     function getRealTime(time) {
       return time + getRealCutStart();
@@ -55,8 +67,10 @@
 
     /**
      * Gets the cut time based on the real time (relative to the full media).
-     * @param Number time Time in milliseconds relative to the full media
-     * @return Number Time in milliseconds relative to the cut media
+     *
+     * @method getCutTime
+     * @param {Number} time Time in milliseconds relative to the full media
+     * @return {Number} Time in milliseconds relative to the cut media
      */
     function getCutTime(time) {
       return Math.max(time - getRealCutStart(), 0);
@@ -64,7 +78,9 @@
 
     /**
      * Sets player media.
-     * @param Object newMedia The media object
+     *
+     * @method setMedia
+     * @param {Object} newMedia The media object
      */
     function setMedia(newMedia) {
       media = newMedia;
@@ -96,8 +112,11 @@
 
     /**
      * Gets media timecodes.
+     *
      * Only timecodes within the cut range are returned.
-     * @return Array The list of media timecodes
+     *
+     * @method getMediaTimecodes
+     * @return {Array} The list of media timecodes
      */
     function getMediaTimecodes() {
 
@@ -124,8 +143,11 @@
 
     /**
      * Gets media timecodes ordered by time.
+     *
      * Index timecodes by time to avoid parsing the whole array several times.
-     * @return Object The list of media timecodes ordered by time
+     *
+     * @method getMediaTimecodesByTime
+     * @return {Object} The list of media timecodes ordered by time
      */
     function getMediaTimecodesByTime() {
       var timecodesByTime = {};
@@ -148,8 +170,11 @@
 
     /**
      * Gets the list of chapters.
+     *
      * Only chapters within the cut range are returned.
-     * @return Object The media chapter
+     *
+     * @method getMediaChapters
+     * @return {Object} The media chapter
      */
     function getMediaChapters() {
 
@@ -176,10 +201,13 @@
 
     /**
      * Gets media virtual duration according to cut.
+     *
      * The beginning and the end of the media can be virtually cut, thus
      * the duration is not systematically the real duration of the media but
      * can be a virtual duration.
-     * @return Number The duration in milliseconds according to the cut
+     *
+     * @method getCutDuration
+     * @return {Number} The duration in milliseconds according to the cut
      */
     function getCutDuration() {
       if (realMediaDuration) {
@@ -193,10 +221,12 @@
     /**
      * Converts a percentage relative to the full media into a percentage relative
      * to the cut media.
-     * @param Number percent The percentage of the video corresponding to
-     * beginning of the loaded data (from 0 to 100).
-     * @return Number The percentage of the video corresponding to
-     * beginning of the loaded data (from 0 to 100).
+     *
+     * @method getCutPercent
+     * @param {Number} percent The percentage of the video corresponding to
+     * beginning of the loaded data (from 0 to 100)
+     * @return {Number} The percentage of the video corresponding to
+     * beginning of the loaded data (from 0 to 100)
      */
     function getCutPercent(percent) {
       if (realMediaDuration) {
@@ -208,7 +238,9 @@
 
     /**
      * Sets real media duration.
-     * @param Number duration Real media duration in milliseconds
+     *
+     * @method setRealMediaDuration
+     * @param {Number} duration Real media duration in milliseconds
      */
     function setRealMediaDuration(duration) {
       realMediaDuration = duration;

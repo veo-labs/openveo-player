@@ -10,4 +10,4 @@ OpenVeo Player defines several directives :
 
 # Players
 
-Each player (HTML and Vimeo) as its own implementation and associated template.
+Each player (HTML, Youtube, Vimeo) as its own implementation and associated template.
