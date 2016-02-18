@@ -26,7 +26,7 @@
       switch (data.event) {
         case 'infoDelivery':
 
-          if (data.info.currentTime && this.duration)
+          if (data.info.currentTime !== undefined && this.duration)
             this.jPlayerElement.triggerHandler('ovPlayProgress', {
               time: data.info.currentTime * 1000,
               percent: data.info.currentTime / this.duration * 100
