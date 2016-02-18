@@ -742,7 +742,7 @@
             if ($scope.isCut) {
               initTimecodes();
               initChapters();
-              self.setTime(0);
+              self.setTime(lastTime);
             }
 
             // Change value of chapter to get timestamp once video duration is known
