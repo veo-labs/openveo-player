@@ -189,7 +189,7 @@
         for (var i = 0; i < media.chapters.length; i++) {
           var timecode = realMediaDuration * media.chapters[i].value;
 
-          if (timecode >= realCutStart && timecode <= realCutEnd)
+          if (timecode > realCutStart && timecode < realCutEnd)
             filteredChapters.push(media.chapters[i]);
         }
         return filteredChapters;
