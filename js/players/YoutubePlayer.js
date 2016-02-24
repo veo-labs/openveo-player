@@ -189,16 +189,16 @@
     YoutubePlayer.prototype.constructor = YoutubePlayer;
 
     /**
-     * Gets media url.
+     * Gets media sources.
      *
-     * Youtube player manages media urls itself, only the definition is exposed. This will set the new player
+     * Youtube player manages media sources itself, only the definition is exposed. This will set the new player
      * definition.
      *
-     * @method getMediaUrl
+     * @method getMediaSources
      * @param {Object} definition Media definition object
      * @return {Null} null
      */
-    YoutubePlayer.prototype.getMediaUrl = function(definition) {
+    YoutubePlayer.prototype.getMediaSources = function(definition) {
       if (this.player) {
         this.player.setPlaybackQuality(definition);
         this.jPlayerElement.triggerHandler('ovReady');

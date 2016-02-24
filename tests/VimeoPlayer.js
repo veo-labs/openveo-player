@@ -52,7 +52,7 @@ describe('VimeoPlayer', function() {
   });
 
   it('Should be able to build Vimeo player url', function() {
-    assert.equal(player.getMediaUrl(), '//player.vimeo.com/video/1?api=1&player_id=player_1');
+    assert.equal(player.getMediaSources(), '//player.vimeo.com/video/1?api=1&player_id=player_1');
   });
 
   it('Should register to Vimeo player events', function(done) {

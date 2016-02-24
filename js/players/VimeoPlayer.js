@@ -180,11 +180,11 @@
     /**
      * Gets media url.
      *
-     * @method getMediaUrl
+     * @method getMediaSources
      * @param {Object} definition Media definition object
-     * @return {String} The media url
+     * @return {String} The media sources
      */
-    VimeoPlayer.prototype.getMediaUrl = function(definition) {
+    VimeoPlayer.prototype.getMediaSources = function(definition) {
       if (definition && definition.link)
         return $sce.trustAsResourceUrl(definition.link);
       else

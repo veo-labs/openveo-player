@@ -26,7 +26,7 @@
         case 'progress':
 
           // Got buffering information
-          // Caution, the progress event maybe dispatched even if buffer
+          // Caution, the progress event maybe dispatched event if buffer
           // is empty
           var buffer = this.player.buffered();
           if (buffer.length >= 1) {
@@ -36,12 +36,10 @@
               loadedPercent: this.player.bufferedPercent() * 100
             });
           }
-
           break;
 
         // The duration attribute has just been updated
         case 'durationchange':
-//        case 'loadedmetadata':
           var duration = this.player.duration() || this.media.metadata && this.media.metadata.duration;
           this.jPlayerElement.triggerHandler('ovDurationChange', duration * 1000);
           break;
@@ -91,7 +89,7 @@
 
         // Media error
         case 'error':
-          if (this.player.networkState == this.player.NETWORK_NO_SOURCE) {
+          if (this.player.networkState() == this.player.NETWORK_NO_SOURCE) {
             event.target.error = {code: 'NO_SOURCE', MEDIA_NO_SOURCE: 'NO_SOURCE'};
           }
           this.jPlayerElement.triggerHandler('error', event.target.error.code);
@@ -127,19 +125,32 @@
      * @param Object media Details about the media
      *   {
      *     mediaId : "136081112", // The id of the media
-     *     files : [ // The list of media files (required for "html" player)
-     *       {
-     *         width : 640, // Media width for this file
-     *         height : 360, // Media height for this file
-     *         link : "https://player.vimeo.com/external/136081112.sd.mp4" // Media url
-     *       },
-     *       {
-     *         width : 1280, // Media width for this file
-     *         height : 720, // Media height for this file
-     *         link : "https://player.vimeo.com/external/136081112.hd.mp4" // Media url
-     *       },
-     *       ...
-     *     ],
+     *     sources : {
+     *       adaptive : [
+     *         {
+     *          link : 'http://streaming/platform/mp4:video.mp4/manifest.mpd'
+     *          mimeType : 'application/dash+xml'
+     *         },
+     *         {
+     *          link : 'http://streaming/platform/mp4:video.mp4/playlist.m3u8'
+     *          mimeType : 'application/x-mpegURL'
+     *         },
+     *         ...
+     *       ],
+     *       files : [ // The list of media files (required for "html" player)
+     *         {
+     *           width : 640, // Media width for this file
+     *           height : 360, // Media height for this file
+     *           link : "https://player.vimeo.com/external/136081112.sd.mp4" // Media url
+     *         },
+     *         {
+     *           width : 1280, // Media width for this file
+     *           height : 720, // Media height for this file
+     *           link : "https://player.vimeo.com/external/136081112.hd.mp4" // Media url
+     *         },
+     *         ...
+     *       ]
+     *     },
      *     thumbnail : "/1439286245225/thumbnail.jpg" // The media thumbnail (only for "html" player)
      *   }
      */
@@ -147,7 +158,7 @@
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
 
       // Order media definitions from better quality to lower quality
-      this.media.files.sort(function(def1, def2) {
+      this.media.sources.files.sort(function(def1, def2) {
         if (def1.height < def2.height)
           return 1;
 
@@ -159,19 +170,28 @@
     HTMLPlayer.prototype.constructor = HTMLPlayer;
 
     /**
-     * Gets media url.
+     * Gets media sources.
      *
-     * @method getMediaUrl
+     * If definitions are not available, so video sources are adaptive
+     *
+     * @method getMediaSources
      * @param {Object} definition Media definition object
-     * @return String The media url
+     * @return String The media sources
      */
-    HTMLPlayer.prototype.getMediaUrl = function(definition) {
-      return $sce.trustAsResourceUrl(definition.link);
-    };
+    HTMLPlayer.prototype.getMediaSources = function(definition) {
 
-    HTMLPlayer.prototype.getMediaMIME = function(definition) {
-      return definition.type? definition.type : 'video/mp4';
-    }
+      if (!definition)
+        return this.media.sources.adaptive.map(
+                function(obj) {
+                  var rObj = {};
+                  rObj['link'] = $sce.trustAsResourceUrl(obj.link);
+                  rObj['mimeType'] = obj.mimeType;
+                  return rObj;
+                }
+        );
+
+      return [{link: $sce.trustAsResourceUrl(definition.link), mimeType: 'video/mp4'}];
+    };
 
     /**
      * Gets media thumbnail.
@@ -196,18 +216,25 @@
       var self = this;
       this.loaded = false;
 
-      this.player = videojs(this.playerId, {"techOrder": ["html5", "flash"]}, function(){
-        self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
-        var jPlayer = angular.element(self.player)[0];
+      this.player = videojs(this.playerId,
+        {
+          techOrder: ['html5', 'flash'],
+          autoplay: false,
+          preload: 'auto'
+        },
+        function() {
+          self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
+          var jPlayer = angular.element(self.player)[0];
 
-        // Set media events listeners
-        for (var i = 0; i < events.length; i++)
-          jPlayer.on(events[i], self.handlePlayerEventsFn);
+          // Set media events listeners
+          for (var i = 0; i < events.length; i++)
+            jPlayer.on(events[i], self.handlePlayerEventsFn);
 
-        // Start loading media
-        if(!this.error_)
-          self.load();
-      });
+          // Start loading media
+          if (!this.error_)
+            self.load();
+        }
+       );
     };
 
     /**
@@ -275,11 +302,13 @@
     /**
      * Gets media definitions.
      *
+     * Files definition array is send if there is no adaptive sources
+     *
      * @method getAvailableDefinitions
      * @return {Array} The list of available media definitions
      */
     HTMLPlayer.prototype.getAvailableDefinitions = function() {
-      return this.media.files;
+      return !this.media.sources.adaptive || this.media.sources.adaptive.length == 0 ? this.media.sources.files : null;
     };
 
     /**
@@ -297,6 +326,7 @@
         jPlayer.off(events[i], this.handlePlayerEventsFn);
 
       this.loaded = false;
+      this.player.dispose();
       this.player = null;
     };
 

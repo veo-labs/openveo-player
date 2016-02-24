@@ -32,18 +32,20 @@ describe('HTMLPlayer', function() {
 
     var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
     player = new OvHTMLPlayer(angular.element(playerElement), {
-      type: 'vimeo',
+      type: 'html',
       mediaId: '1',
       timecodes: {},
-      files: [{
-        width: 640,
-        height: 360,
-        link: 'http://video.mp4'
-      }, {
-        width: 1280,
-        height: 720,
-        link: 'http://video.mp4'
-      }],
+      sources: {
+        files: [{
+          width: 640,
+          height: 360,
+          link: 'http://video.mp4'
+        }, {
+          width: 1280,
+          height: 720,
+          link: 'http://video.mp4'
+        }]
+      },
       thumbnail: '/1439286245225/thumbnail.jpg'
     });
     player.initialize();
@@ -51,9 +53,8 @@ describe('HTMLPlayer', function() {
 
   // Destroy player after each test
   afterEach(function() {
-    $document[0].body.removeChild(videoElement);
-    videoElement = null;
     player.destroy();
+    videoElement = null;
   });
 
   it('Should be able to get media thumbnail', function() {
@@ -61,9 +62,11 @@ describe('HTMLPlayer', function() {
   });
 
   it('Should be able to play the media if paused', function(done) {
-    player.player.paused = true;
+    player.player.paused = function() {
+      return true;
+    };
 
-    videoElement.play = function() {
+    player.player.play = function() {
       done();
     };
 
@@ -71,10 +74,14 @@ describe('HTMLPlayer', function() {
   });
 
   it('Should be able to play the media if ended', function(done) {
-    player.player.paused = false;
-    player.player.ended = true;
+    player.player.paused = function() {
+      return false;
+    };
+    player.player.ended = function() {
+      return true;
+    };
 
-    videoElement.play = function() {
+    player.player.play = function() {
       done();
     };
 
@@ -82,9 +89,11 @@ describe('HTMLPlayer', function() {
   });
 
   it('Should be able to pause the media if playing', function(done) {
-    player.player.paused = false;
+    player.player.paused = function() {
+      return false;
+    };
 
-    videoElement.pause = function() {
+    player.player.pause = function() {
       done();
     };
 
@@ -92,15 +101,23 @@ describe('HTMLPlayer', function() {
   });
 
   it('Should be able to set player\'s volume in percent', function() {
-    player.player.volume = 0;
+    player.player.volume = function(volume) {
+      if (volume) this.var = volume;
+      else return this.var;
+    };
+    player.player.volume(0);
     player.setVolume(90);
-    assert.equal(player.player.volume, 0.9);
+    assert.equal(player.player.volume(), 0.9);
   });
 
   it('Should be able to set player\'s current time in milliseconds', function() {
-    player.player.currentTime = 0;
+    player.player.currentTime = function(currentTime) {
+      if (currentTime) this.var = currentTime;
+      else return this.var;
+    };
+    player.player.currentTime(0);
     player.setTime(1000);
-    assert.equal(player.player.currentTime, 1);
+    assert.equal(player.player.currentTime(), 1);
   });
 
   it('Should order the list of media definitions', function() {
@@ -108,6 +125,21 @@ describe('HTMLPlayer', function() {
     assert.isDefined(definitions);
     assert.equal(definitions[0].width, 1280);
     assert.equal(definitions[1].width, 640);
+  });
+
+  it('Should order the list of media sources if adaptivz sources are defined', function() {
+    player.media.sources.adaptive = [
+      {
+        link: 'http://manifest.mpd',
+        mimeType: 'application/dash+xml'
+      },
+      {
+        link: 'http://playlist.m3u8',
+        mimeType: 'application/x-mpegURL'
+      }
+    ];
+    var definitions = player.getAvailableDefinitions();
+    assert.isNull(definitions);
   });
 
 });

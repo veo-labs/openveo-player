@@ -8,8 +8,7 @@ describe('PlayerDirective', function() {
     $rootScope,
     $injector,
     scope,
-    $timeout,
-    $sce;
+    $timeout;
 
   // Load modules player and templates (to mock templates)
   beforeEach(function() {
@@ -18,12 +17,11 @@ describe('PlayerDirective', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$injector_, _$timeout_, _$sce_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$injector_, _$timeout_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $injector = _$injector_;
     $timeout = _$timeout_;
-    $sce = _$sce_;
   }));
 
   // Initializes tests
@@ -32,7 +30,7 @@ describe('PlayerDirective', function() {
   });
 
   it('Should define attributes ov-fullscreen-icon, ov-time, ov-volume-icon, ov-mode-icon, ' +
-     'ov-full-viewport, ov-data, ov-player-type, ov-settings-icon, ov-language, ov-auto-play',
+     'ov-full-viewport, ov-data, ov-player-type, ov-settings-icon, ov-language, ov-auto-play, ov-remember-position',
   function() {
     $rootScope.fullViewport = false;
     $rootScope.displayTime = true;
@@ -51,22 +49,24 @@ describe('PlayerDirective', function() {
           }
         }
       ],
-      files: [{
-        width: 640,
-        height: 360,
-        link: 'http://video.mp4'
-      }, {
-        width: 1280,
-        height: 720,
-        link: 'http://video.mp4'
-      }]
+      sources: {
+        files: [{
+          width: 640,
+          height: 360,
+          link: 'http://video.mp4'
+        }, {
+          width: 1280,
+          height: 720,
+          link: 'http://video.mp4'
+        }]
+      }
     };
 
     var element = angular.element(
       '<ov-player ov-fullscreen-icon="true" ov-full-viewport="fullViewport" ov-time="displayTime" ' +
       'ov-volume-icon="displayVolumeIcon" ov-mode-icon="displayModeIcon" ov-data="data" ' +
       'ov-player-type="html" ov-settings-icon="displaySettingsIcon" ov-language="en" ' +
-      'ov-auto-play="true"></ov-player>');
+      'ov-auto-play="true" ov-remember-position="true"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -82,6 +82,7 @@ describe('PlayerDirective', function() {
     assert.isDefined(isolateScope.ovPlayerType);
     assert.isDefined(isolateScope.ovLanguage);
     assert.isDefined(isolateScope.ovAutoPlay);
+    assert.isDefined(isolateScope.ovRememberPosition);
   });
 
   it('Should display all icons and time if not specified', function() {
@@ -97,15 +98,17 @@ describe('PlayerDirective', function() {
           }
         }
       ],
-      files: [{
-        width: 640,
-        height: 360,
-        link: 'http://video.mp4'
-      }, {
-        width: 1280,
-        height: 720,
-        link: 'http://video.mp4'
-      }]
+      sources: {
+        files: [{
+          width: 640,
+          height: 360,
+          link: 'http://video.mp4'
+        }, {
+          width: 1280,
+          height: 720,
+          link: 'http://video.mp4'
+        }]
+      }
     };
     var element = angular.element('<ov-player ov-data="data"></ov-player>');
     element = $compile(element)(scope);
@@ -171,7 +174,9 @@ describe('PlayerDirective', function() {
   it('Should create an HTML player if player type is html', function() {
     $rootScope.data = {
       mediaId: '1',
-      files: [{}]
+      sources: {
+        files: [{}]
+      }
     };
     $rootScope.playerType = 'html';
     var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
@@ -187,7 +192,9 @@ describe('PlayerDirective', function() {
   it('Should create an HTML player if no media type is specified', function() {
     $rootScope.data = {
       mediaId: '1',
-      files: [{}]
+      sources: {
+        files: [{}]
+      }
     };
     var element = angular.element('<ov-player ov-data="data"></ov-player>');
     element = $compile(element)(scope);
@@ -338,15 +345,17 @@ describe('PlayerDirective', function() {
       type: 'html',
       mediaId: '1',
       timecodes: {},
-      files: [{
-        width: 640,
-        height: 360,
-        link: 'http://video.mp4'
-      }, {
-        width: 1280,
-        height: 720,
-        link: 'http://videoHD.mp4'
-      }],
+      sources: {
+        files: [{
+          width: 640,
+          height: 360,
+          link: 'http://video.mp4'
+        }, {
+          width: 1280,
+          height: 720,
+          link: 'http://videoHD.mp4'
+        }]
+      },
       thumbnail: '/1439286245225/thumbnail.jpg'
     };
 
@@ -359,7 +368,8 @@ describe('PlayerDirective', function() {
     isolateScope.player = {
       load: function() {
         assert.notOk(isolateScope.autoPlay, false);
-        assert.equal(isolateScope.mediaUrl, 'http://videoHD.mp4');
+        assert.equal(isolateScope.mediaSources.link, 'http://videoHD.mp4');
+        assert.equal(isolateScope.mediaSources.mimeType, 'video/mp4');
         assert.ok(isolateScope.loading);
         assert.ok(isolateScope.initializing);
         done();
@@ -369,8 +379,8 @@ describe('PlayerDirective', function() {
       },
       initialize: function() {
       },
-      getMediaUrl: function(def) {
-        return $sce.trustAsResourceUrl(def.link);
+      getMediaSources: function(def) {
+        return {link: def.link, mimeType: 'video/mp4'};
       }
     };
 

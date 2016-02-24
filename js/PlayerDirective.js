@@ -392,11 +392,15 @@
           $scope.displayIndexTab = true;
           $scope.displayChapterTab = true;
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
+
+          // Get available definition : if null, definitions are managed in the player
           $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
           $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
-          $scope.mediaUrl = $scope.player.getMediaUrl($scope.selectedDefinition);
-          $scope.mediaMIME = $scope.player.getMediaMIME($scope.selectedDefinition);
+
+          // Get sources for a definition: if definition is not selected sources should be always the same
+          // and definition will be managed in the player (ex adatptive streaming, youtube player...)
+          $scope.mediaSources = $scope.player.getMediaSources($scope.selectedDefinition);
           $scope.loading = true;
           $scope.initializing = true;
           $scope.error = null;
@@ -646,8 +650,7 @@
             lastTime = $scope.time;
             autoPlay = !$scope.player.isPaused();
             $scope.selectedDefinition = definition;
-            $scope.mediaUrl = $scope.player.getMediaUrl($scope.selectedDefinition);
-            $scope.mediaMIME = $scope.player.getMediaMIME($scope.selectedDefinition);
+            $scope.mediaSources = $scope.player.getMediaSources($scope.selectedDefinition);
             $scope.loading = true;
             $scope.initializing = true;
             safeApply(function() {

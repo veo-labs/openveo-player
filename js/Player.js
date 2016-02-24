@@ -97,12 +97,23 @@
     /**
      * Gets media url.
      *
+     * @method getMediaSources
+     * @param {Object} definition Media definition object
+     * @return {String} The media sources
+     */
+    Player.prototype.getMediaSources = function(definition) {
+      throw new Error('getMediaUrl method not implemented for this player');
+    };
+
+    /**
+     * Gets media MIME Type.
+     *
      * @method getMediaUrl
      * @param {Object} definition Media definition object
      * @return {String} The media url
      */
-    Player.prototype.getMediaUrl = function(definition) {
-      throw new Error('getMediaUrl method not implemented for this player');
+    Player.prototype.getMediaMIME = function(definition) {
+      return definition && definition.mimeType ? definition.mimeType : 'video/mp4';
     };
 
     /**

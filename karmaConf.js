@@ -16,6 +16,7 @@ module.exports = function(config) {
 
     // List of files / patterns to load in the browser
     files: [
+      'lib/video.js/dist/video.min.js',
       'lib/angular/angular.js',
       'lib/angular-animate/angular-animate.js',
       'lib/angular-cookies/angular-cookies.js',
