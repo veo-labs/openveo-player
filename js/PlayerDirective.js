@@ -793,7 +793,7 @@
 
           safeApply(function() {
             $scope.loadedStart = playerService.getCutPercent(data.loadedStart);
-            $scope.loadedPercent = playerService.getCutPercent(data.loadedPercent);
+            $scope.loadedPercent = playerService.getCutDurationPercent(data.loadedPercent);
             $element.triggerHandler('loadProgress', {
               loadedStart: $scope.loadedStart,
               loadedPercent: $scope.loadedPercent

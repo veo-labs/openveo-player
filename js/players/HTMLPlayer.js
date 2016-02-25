@@ -224,11 +224,10 @@
         },
         function() {
           self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
-          var jPlayer = angular.element(self.player)[0];
 
           // Set media events listeners
           for (var i = 0; i < events.length; i++)
-            jPlayer.on(events[i], self.handlePlayerEventsFn);
+            this.on(events[i], self.handlePlayerEventsFn);
 
           // Start loading media
           if (!this.error_)

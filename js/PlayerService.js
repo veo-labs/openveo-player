@@ -228,7 +228,7 @@
     }
 
     /**
-     * Converts a percentage relative to the full media into a percentage relative
+     * Converts a time percentage relative to the full media into a percentage relative
      * to the cut media.
      *
      * @method getCutPercent
@@ -241,6 +241,22 @@
       if (realMediaDuration) {
         var time = realMediaDuration * (percent / 100);
         return Math.min(Math.max(((time - getRealCutStart()) / getCutDuration()) * 100, 0), 100);
+      }
+      return percent;
+    }
+
+    /**
+     * Converts a duration percentage relative to the full media into a percentage relative
+     * to the cut media.
+     *
+     * @method getCutDurationPercent
+     * @param {Number} percent The duration percentage of the video (from 0 to 100)
+     * @return {Number} The duration percentage of the video (from 0 to 100)
+     */
+    function getCutDurationPercent(percent) {
+      if (realMediaDuration) {
+        var time = realMediaDuration * (percent / 100);
+        return Math.min(Math.max((time / getCutDuration()) * 100, 0), 100);
       }
       return percent;
     }
@@ -262,6 +278,7 @@
       getMediaTimecodesByTime: getMediaTimecodesByTime,
       getMediaChapters: getMediaChapters,
       getCutDuration: getCutDuration,
+      getCutDurationPercent: getCutDurationPercent,
       getRealTime: getRealTime,
       getRealCutStart: getRealCutStart,
       getRealCutEnd: getRealCutEnd,
