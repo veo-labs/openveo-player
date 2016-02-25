@@ -158,12 +158,13 @@
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
 
       // Order media definitions from better quality to lower quality
-      this.media.sources.files.sort(function(def1, def2) {
-        if (def1.height < def2.height)
-          return 1;
+      if (this.media.sources.files)
+        this.media.sources.files.sort(function(def1, def2) {
+          if (def1.height < def2.height)
+            return 1;
 
-        return -1;
-      });
+          return -1;
+        });
     }
 
     HTMLPlayer.prototype = new OvPlayer();

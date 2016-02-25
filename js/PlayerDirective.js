@@ -538,6 +538,11 @@
           }, 1);
         });
 
+        // listen to player destroy event
+        $scope.$on('$destroy', function() {
+          $scope.player.destroy();
+        });
+
         // Watch for ov-data attribute changes
         $scope.$watch('ovData', function() {
           $scope.data = angular.copy($scope.ovData) || {};
