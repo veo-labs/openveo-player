@@ -62,7 +62,7 @@
   },
   "version": "1.2.0",
   "dependencies": {
-    "video.js": "~5.2.1",
+    "video.js": "~5.8.0",
     "dash.js": "git@github.com:Dash-Industry-Forum/dash.js.git#v1.6.0",
     "videojs-contrib-dash": "git@github.com:videojs/videojs-contrib-dash.git#v2.0.0",
     "videojs-contrib-hls": "https://github.com/videojs/videojs-contrib-hls/releases/tag/v1.3.7"
