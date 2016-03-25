@@ -249,11 +249,12 @@
           $scope.chapters = playerService.getMediaChapters() || [];
           if ($scope.chapters.length) {
             displayChapters();
-          }
+          } else {
 
-          // No chapters
-          else
+            // No chapters
             hideChapters();
+
+          }
         }
 
         /**
@@ -276,11 +277,12 @@
             $scope.presentation = timecode !== null ? $scope.timecodesByTime[timecode].image.large : null;
 
             displayTimecodes();
-          }
+          } else {
 
-          // No timecodes
-          else
+            // No timecodes
             hideTimecodes();
+
+          }
         }
 
         /**
@@ -844,8 +846,7 @@
               $cookies.remove('videoStopped_' + $scope.data.mediaId);
             lastTime = 0;
             $scope.player.playPause();
-          }
-          else
+          } else
             safeApply(updateTime);
 
           return false;

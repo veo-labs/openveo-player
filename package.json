@@ -30,7 +30,7 @@
     "grunt-contrib-compass": ">=1.0.3",
     "grunt-contrib-concat": ">=0.5.1",
     "grunt-contrib-uglify": ">=0.9.1",
-    "grunt-eslint": ">=17.2.0",
+    "grunt-eslint": ">=18.0.0",
     "grunt-extend-config": ">=0.9.2",
     "grunt-gh-pages": ">=0.10.0",
     "grunt-init": ">=0.3.2",
