@@ -23,7 +23,7 @@
    * @module ov.player
    * @class ovPlayer
    */
-  function ovPlayer($injector, $document, $sce, $filter, $timeout, playerService, i18nPlayerService, $cookies,
+  function ovPlayer($injector, $document, $sce, $filter, $timeout, PlayerService, i18nPlayerService, $cookies,
                      ovPlayerErrors) {
     return {
       restrict: 'E',
@@ -55,6 +55,7 @@
         var volumeBarHeight = volumeBarRect.bottom - volumeBarRect.top;
         var timeBarRect = timeBar.getBoundingClientRect();
         var timeBarWidth = timeBarRect.right - timeBarRect.left;
+        var playerService = new PlayerService();
         $scope.player = null;
 
         // Set default value for attributes
@@ -920,7 +921,7 @@
     '$sce',
     '$filter',
     '$timeout',
-    'playerService',
+    'PlayerService',
     'i18nPlayerService',
     '$cookies',
     'ovPlayerErrors'
