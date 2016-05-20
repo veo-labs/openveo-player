@@ -46,8 +46,8 @@ OpenVeo player needs to be aware of its root path to load AngularJS partials.
 # Include scripts
 
 ```html
-<link rel="stylesheet" type="text/css" href="lib/angular/angular.min.js">
-<link rel="stylesheet" type="text/css" href="lib/openveo-player/dist/openveo-player.min.js">
+<script type="text/javascript" src="lib/angular/angular.min.js"></script>
+<script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
 ```
 
 # Attributes
