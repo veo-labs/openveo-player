@@ -47,8 +47,11 @@ OpenVeo player needs to be aware of its root path to load AngularJS partials.
 
 ```html
 <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+<script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
 <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
 ```
+
+**Nb :** **Video.js** library must be included before including the OpenVeo Player script.
 
 # Attributes
 
@@ -62,13 +65,15 @@ Sets player data, synchronize images, chapters and cut.
 $scope.data = {
   mediaId : '34532ezr54sdf87', // The id of the video
   timecodes : { // Timecodes
-    0 : { // Timecode in milliseconds (0 ms)
+    { 
+      'timecode': 0, // Timecode in milliseconds (0 ms)
       'image' : { // Image to display at 0 ms
         'small' : 'slide_00000.jpeg', // Small version of the image
         'large' : 'slide_00000_large.jpeg' // Large version of the image
       }
     },
-    1200 : { // Timecode in milliseconds (1200 ms)
+    {
+      'timecode': 1200, // Timecode in milliseconds (1200 ms)
       'image' : { // Image to display at 1200 ms
         'small' : 'slide_00001.jpeg', // Small version of the image
         'large' : 'slide_00001_large.jpeg' // Large version of the image
@@ -76,18 +81,20 @@ $scope.data = {
     }
     ...
   },
-  files : [ // The list of video files (only for "html" player)
-    {
-      width : 640, // Video width for this file
-      height : 360, // Video height for this file
-      link : 'http://pathToSmallMP4.mp4' // Video url
-    },
-    {
-      width : 1280, // Video width for this file
-      height : 720, // Video height for this file
-      link : 'http://pathToHDMP4.mp4' // Video url
-    },
-    ...
+  sources: [
+    files : [ // The list of different resolutions sources for this video (only for "html" player)
+      {
+        width : 640, // Video width for this file
+        height : 360, // Video height for this file
+        link : 'http://pathToSmallMP4.mp4' // Video url
+      },
+      {
+        width : 1280, // Video width for this file
+        height : 720, // Video height for this file
+        link : 'http://pathToHDMP4.mp4' // Video url
+      },
+      ...
+    ]
   ],
   thumbnail : '/1439286245225/thumbnail.jpg', // The media thumbnail (only for "html" player)
   chapters : [ // Chapters

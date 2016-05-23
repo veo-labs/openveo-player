@@ -58,58 +58,62 @@
       {
         mediaId : '136081112', // The id of the video
         timecodes : { // Timecodes
-          0 : { // Timecode in milliseconds (0 ms)
+          { 
+            timecode : 0 // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
               small : 'slide_00000.jpe', // Small version of the image
               large : 'slide_00000_large.jpeg'// Large version of the image
             }
           },
-          1200 : { // Timecode in milliseconds (1200 ms)
+          { 
+            timecode : 1200 // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
               large : 'slide_00001_large.jpeg' // Large version of the image
             }
          }
          ...
-       },
-       files : [ // The list of video files (only for "html" player)
-         {
-           width : 640, // Video width for this file
-           height : 360, // Video height for this file
-           link : 'http://pathToSDMP4.mp4' // Video url
-         },
-         {
-           width : 1280, // Video width for this file
-           height : 720, // Video height for this file
-           link : 'http://pathToHDMP4.mp4' // Video url
-         }
-         ...
-       ],
-       thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
-       chapters : [ // Chapters
-         {
-           name : 'Chapter 1', // Chapter name
-           description : 'Chapter 1 description', // Chapter description
-           value : 0.04 // Chapter timecode in percent (percentage of the video)
-         },
-         {
-           name : 'Chapter 2', // Chapter name
-           description : 'Chapter 2 description', // Chapter description
-           value : 0.3 // Chapter timecode in percent (percentage of the video)
-         }
-         ...
-       ],
-       cut : [ // Cut information (begin and end)
-         {
-           type : 'begin', // Cut type
-           value : 0 // Begin timecode (percentage of the media)
-         },
-         {
-           type : 'end', // Cut type
-           value : 0.9 // End timecode (percentage of the media)
-         }
-       ]
-     };
+        },
+        sources : [
+          files : [ // The list of video files (only for "html" player)
+            {
+              width : 640, // Video width for this file
+              height : 360, // Video height for this file
+              link : 'http://pathToSDMP4.mp4' // Video url
+            },
+            {
+              width : 1280, // Video width for this file
+              height : 720, // Video height for this file
+              link : 'http://pathToHDMP4.mp4' // Video url
+            }
+            ...
+          ]
+        ], 
+        thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
+        chapters : [ // Chapters
+          {
+            name : 'Chapter 1', // Chapter name
+            description : 'Chapter 1 description', // Chapter description
+            value : 0.04 // Chapter timecode in percent (percentage of the video)
+          },
+          {
+            name : 'Chapter 2', // Chapter name
+            description : 'Chapter 2 description', // Chapter description
+            value : 0.3 // Chapter timecode in percent (percentage of the video)
+          }
+          ...
+        ],
+        cut : [ // Cut information (begin and end)
+          {
+            type : 'begin', // Cut type
+            value : 0 // Begin timecode (percentage of the media)
+          },
+          {
+            type : 'end', // Cut type
+            value : 0.9 // End timecode (percentage of the media)
+          }
+        ]
+      };
   }
 
 })(angular);
@@ -175,21 +179,23 @@
       {
         mediaId : '136081112', // The id of the video on vimeo platform
         timecodes : { // Timecodes
-          0 : { // Timecode in milliseconds (0 ms)
+          { 
+            timecode : 0 // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpeg', // Small version of the image
-              large : 'slide_00000_large.jpeg' // Large version of the image
+              small : 'slide_00000.jpe', // Small version of the image
+              large : 'slide_00000_large.jpeg'// Large version of the image
             }
           },
-          1200 : { // Timecode in milliseconds (1200 ms)
+          { 
+            timecode : 1200 // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
               large : 'slide_00001_large.jpeg' // Large version of the image
             }
          }
          ...
-       },
-       chapters : [ // Chapters
+        },
+        chapters : [ // Chapters
          {
            name : 'Chapter 1', // Chapter name
            description : 'Chapter 1 description', // Chapter description
