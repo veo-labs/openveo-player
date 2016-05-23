@@ -12,8 +12,8 @@ describe('PlayerService', function() {
   beforeEach(module('ov.player'));
 
   // Dependencies injections
-  beforeEach(inject(function(_playerService_) {
-    playerService = _playerService_;
+  beforeEach(inject(function(_PlayerService_) {
+    playerService = new _PlayerService_();
   }));
 
   // Prepare tests
