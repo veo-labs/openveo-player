@@ -30,6 +30,10 @@
     @include transition(border-top 0.4s);
     border-top: 0px solid;
   }
+  
+  li:focus{
+    outline:none;
+  }
 
   li:hover{
     border-top: 5px solid $light-gray;
