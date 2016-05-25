@@ -17,7 +17,7 @@ Install videojs-contrib-dash plugin:
 
 Install videojs-contrib-hls plugin:
 
-    bower install https://github.com/videojs/videojs-contrib-hls/releases/tag/v1.3.11
+    bower install https://github.com/videojs/videojs-contrib-hls/releases/download/v1.3.11/videojs.hls.min.js
 
 And import dependencies to use adaptive sources:
 ```html
