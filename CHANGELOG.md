@@ -1,3 +1,9 @@
+# 2.0.0 / 2016-05-30
+
+- Add Video.js dependencies to implement HTML5 video player and flash fallback
+- Add Dash sources compatibility
+- Add HLS sources compatibility
+
 # 1.2.0 / 2016-02-19
 
 - Add a feature to remember the last position of a media after a page reload, this is available through the attribute **ov-remember-position**
