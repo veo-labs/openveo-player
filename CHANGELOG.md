@@ -1,3 +1,7 @@
+# 2.0.1 / 2016-07-19
+
+- Debug dash videos player by updating videojs dependencies
+
 # 2.0.0 / 2016-05-30
 
 - Add Video.js dependencies to implement HTML5 video player and flash fallback
