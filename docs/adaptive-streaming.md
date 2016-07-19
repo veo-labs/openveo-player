@@ -9,11 +9,11 @@ As OpenVeo Player embed video.js to display HTML player, in order to support DAS
 
 Install Dash.js:
 
-    bower install git@github.com:Dash-Industry-Forum/dash.js.git#v1.6.0,
+    bower install https://github.com/Dash-Industry-Forum/dash.js.git#v2.1.1,
 
 Install videojs-contrib-dash plugin:
 
-    bower install git@github.com:videojs/videojs-contrib-dash.git#v2.0.0
+    bower install https://github.com/videojs/videojs-contrib-dash/releases/download/v2.4.0/videojs-dash.min.js
 
 Install videojs-contrib-hls plugin:
 
@@ -22,7 +22,7 @@ Install videojs-contrib-hls plugin:
 And import dependencies to use adaptive sources:
 ```html
     <script type="text/javascript" src="lib/dash.js/dist/dash.all.js"></script>
-    <script type="text/javascript" src="lib/videojs-contrib-dash/src/js/videojs-dash.js"></script>
+    <script type="text/javascript" src="lib/videojs-contrib-dash/index.js"></script>
     <script type="text/javascript" src="lib/videojs-contrib-hls/index.js"></script>
 ```
 

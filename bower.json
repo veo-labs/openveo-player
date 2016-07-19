@@ -59,7 +59,7 @@
     "angular-route": "1.4.1",
     "angular-mocks": "1.4.1",
     "angular-cookies": "1.4.1",
-    "video.js": "5.8.0"
+    "video.js": "5.9.2"
   },
   "version": "2.0.0"
 }
