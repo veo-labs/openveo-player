@@ -42,7 +42,7 @@
      * iframe corresponding to the player.
      */
     function handleReady() {
-      this.postMessageTargetOrigin = 'https://player.vimeo.com/video/' + this.media.mediaId;
+      this.postMessageTargetOrigin = 'https://player.vimeo.com/video/' + this.media.mediaId[this.selectedMediaIndex];
       this.player = $document[0].getElementById(this.playerId);
       this.loaded = true;
       this.playing = 0;
@@ -188,8 +188,8 @@
       if (definition && definition.link)
         return $sce.trustAsResourceUrl(definition.link);
       else
-        return $sce.trustAsResourceUrl('//player.vimeo.com/video/' + this.media.mediaId + '?api=1&player_id=' +
-                                       this.playerId);
+        return $sce.trustAsResourceUrl('//player.vimeo.com/video/' +
+          this.media.mediaId[this.selectedMediaIndex] + '?api=1&player_id=' + this.playerId);
     };
 
     /**
@@ -212,6 +212,26 @@
      * @method initialize
      */
     VimeoPlayer.prototype.initialize = function() {
+    };
+
+    /**
+     * Loads player on selected source
+     *
+     * Nothing to do, the player reload itself on source change.
+     *
+     * @method load
+     */
+    VimeoPlayer.prototype.load = function() {
+    };
+
+    /**
+     * Tests if player actual state is pause.
+     *
+     * @method isPaused
+     * @return {Boolean} true if paused, false otherwise
+     */
+    VimeoPlayer.prototype.isPaused = function() {
+      return !this.playing;
     };
 
     /**

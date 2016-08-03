@@ -46,6 +46,8 @@
 
             if (data.info == YT.PlayerState.ENDED) {
               this.jPlayerElement.triggerHandler('ovEnd');
+            } else if (data.info == -1) {
+              this.jPlayerElement.triggerHandler('ovReady');
             }
           } else {
             this.playing = 1;
@@ -143,7 +145,7 @@
               }
             }
           },
-          videoId: this.media.mediaId
+          videoId: this.media.mediaId[this.selectedMediaIndex]
         });
       }
     }
@@ -305,13 +307,12 @@
     };
 
     /**
-     * Loads player.
-     *
-     * Nothing to do, load is made by getMediaUrl method...
+     * Loads player on selected source
      *
      * @method load
      */
     YoutubePlayer.prototype.load = function() {
+      this.player.loadVideoById(this.media.mediaId[this.selectedMediaIndex]);
     };
 
     /**

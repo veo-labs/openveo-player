@@ -45,7 +45,7 @@
      * the player
      * @param {Object} media Details of the Media
      *   {
-     *     mediaId : "136081112", // The id of the media
+     *     mediaId : ["136081112", "136081113"], // The array ids of the media sources
      *     timecodes : [ // Timecodes
      *       {
      *         timecode : 0, // Timecode in milliseconds (0 ms)
@@ -65,13 +65,34 @@
      *     ]
      *   }
      */
-    Player.prototype.init = function(jPlayerElement, media) {
+    Player.prototype.init = function(jPlayerElement, media, selectedMediaIndex) {
       if (!jPlayerElement || !media)
         throw new Error('A player JQLite Element and a media object are expected as Player arguments');
 
       this.jPlayerElement = jPlayerElement;
       this.media = media;
-      this.playerId = 'player_' + this.media.mediaId;
+      this.selectedMediaIndex = selectedMediaIndex || 0;
+      this.playerId = 'player_' + this.media.mediaId[this.selectedMediaIndex];
+    };
+
+    /**
+     * Set index of selected media
+     *
+     * @method setSelectedMediaIndex
+     * @param {Number} index of selected media in media Array
+     */
+    Player.prototype.setSelectedMediaIndex = function(index) {
+      this.selectedMediaIndex = index;
+    };
+
+    /**
+     * Get index of selected media
+     *
+     * @method getSelectedMediaIndex
+     * @return {Number} index of selected media in media Array
+     */
+    Player.prototype.getSelectedMediaIndex = function() {
+      return this.selectedMediaIndex;
     };
 
     /**

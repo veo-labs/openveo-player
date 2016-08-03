@@ -158,13 +158,15 @@
       OvPlayer.prototype.init.call(this, jPlayerElement, media);
 
       // Order media definitions from better quality to lower quality
-      if (this.media.sources.files)
-        this.media.sources.files.sort(function(def1, def2) {
-          if (def1.height < def2.height)
-            return 1;
+      for (var i = 0; i < this.media.sources.length; i++) {
+        if (this.media.sources[i].files)
+          this.media.sources[i].files.sort(function(def1, def2) {
+            if (def1.height < def2.height)
+              return 1;
 
-          return -1;
-        });
+            return -1;
+          });
+      }
     }
 
     HTMLPlayer.prototype = new OvPlayer();
@@ -182,7 +184,7 @@
     HTMLPlayer.prototype.getMediaSources = function(definition) {
 
       if (!definition)
-        return this.media.sources.adaptive.map(
+        return this.media.sources[this.selectedMediaIndex].adaptive.map(
                 function(obj) {
                   var rObj = {};
                   rObj['link'] = $sce.trustAsResourceUrl(obj.link);
@@ -308,7 +310,8 @@
      * @return {Array} The list of available media definitions
      */
     HTMLPlayer.prototype.getAvailableDefinitions = function() {
-      return !this.media.sources.adaptive || this.media.sources.adaptive.length == 0 ? this.media.sources.files : null;
+      var media = this.media.sources[this.selectedMediaIndex];
+      return !media.adaptive || media.adaptive.length == 0 ? media.files : null;
     };
 
     /**

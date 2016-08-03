@@ -5,7 +5,6 @@ window.assert = chai.assert;
 // HTMLPlayer.js
 describe('HTMLPlayer', function() {
   var player,
-    playerElement,
     videoElement,
     $document,
     $injector;
@@ -21,7 +20,6 @@ describe('HTMLPlayer', function() {
 
   // Initializes tests
   beforeEach(function() {
-    playerElement = $document[0].createElement('div');
     videoElement = $document[0].createElement('video');
     videoElement.setAttribute('id', 'player_1');
     videoElement.load = function() {
@@ -31,11 +29,11 @@ describe('HTMLPlayer', function() {
     $document[0].body.appendChild(videoElement);
 
     var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
-    player = new OvHTMLPlayer(angular.element(playerElement), {
+    player = new OvHTMLPlayer(angular.element(videoElement), {
       type: 'html',
-      mediaId: '1',
+      mediaId: ['1'],
       timecodes: {},
-      sources: {
+      sources: [{
         files: [{
           width: 640,
           height: 360,
@@ -45,7 +43,7 @@ describe('HTMLPlayer', function() {
           height: 720,
           link: 'http://video.mp4'
         }]
-      },
+      }],
       thumbnail: '/1439286245225/thumbnail.jpg'
     });
     player.initialize();
@@ -127,8 +125,8 @@ describe('HTMLPlayer', function() {
     assert.equal(definitions[1].width, 640);
   });
 
-  it('Should order the list of media sources if adaptivz sources are defined', function() {
-    player.media.sources.adaptive = [
+  it('Should order the list of media sources if adaptive sources are defined', function() {
+    player.media.sources[player.getSelectedMediaIndex()].adaptive = [
       {
         link: 'http://manifest.mpd',
         mimeType: 'application/dash+xml'

@@ -34,6 +34,7 @@
         ovVolumeIcon: '=?',
         ovModeIcon: '=?',
         ovSettingsIcon: '=?',
+        ovMediaSourcesIcon: '=?',
         ovTime: '=?',
         ovFullViewport: '=?',
         ovLanguage: '@?',
@@ -77,6 +78,8 @@
 
         $scope.ovVolumeIcon = (typeof $scope.ovVolumeIcon === 'undefined') ? true : $scope.ovVolumeIcon;
         $scope.ovModeIcon = (typeof $scope.ovModeIcon === 'undefined') ? true : $scope.ovModeIcon;
+        $scope.ovMediaSourcesIcon = (typeof $scope.ovMediaSourcesIcon === 'undefined') ?
+          false : $scope.ovMediaSourcesIcon;
         $scope.ovSettingsIcon = (typeof $scope.ovSettingsIcon === 'undefined') ? true : $scope.ovSettingsIcon;
         $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
         $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
@@ -245,6 +248,21 @@
         }
 
         /**
+         * Map ovData single Media to multi media format
+         *
+         * Change ovData old API to new API
+         */
+        function mapSingleMedia() {
+
+          // if mediaId or sources are not Array, there is only one media
+          // This is needed to be compliant with single source media parameters type
+          if ($scope.ovData.mediaId && !Array.isArray($scope.ovData.mediaId))
+            $scope.ovData.mediaId = [$scope.ovData.mediaId];
+          if ($scope.ovData.sources && !Array.isArray($scope.ovData.sources))
+            $scope.ovData.sources = [$scope.ovData.sources];
+        }
+
+        /**
          * Initializes the list of chapters.
          *
          * Display the chapters tab only if there is at least one chapter.
@@ -294,7 +312,7 @@
          */
         function initPlayer() {
 
-          if ($scope.data.mediaId) {
+          if ($scope.data.mediaId && $scope.data.mediaId.length) {
             var playerType = $scope.ovPlayerType || $scope.data.type || 'html';
             $scope.mediaTemplate = ovPlayerDirectory + 'templates/' + playerType + '.html';
             $scope.data.language = $scope.ovLanguage;
@@ -352,6 +370,7 @@
          * Initializes isolated scope properties and player.
          */
         function init() {
+          mapSingleMedia();
 
           // Set scope default values
           $scope.data = angular.copy($scope.ovData) || {};
@@ -382,6 +401,8 @@
           $scope.volumeOpened = false;
           $scope.modesOpened = false;
           $scope.definitionOpened = false;
+          $scope.selectMediaOpened = false;
+
           $scope.modes = angular.copy(modes);
           $scope.selectedMode = modes[1];
           $scope.playPauseButton = 'play';
@@ -399,7 +420,11 @@
           $scope.displayChapterTab = true;
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
 
-          // Get available definition : if null, definitions are managed in the player
+          // Get available media sources
+          $scope.mediaSourcesLength = $scope.data.mediaId.length;
+          $scope.player.setSelectedMediaIndex(0);
+
+          // Get available definition for selected sources: if null, definitions are managed in the player
           $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
           $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
@@ -436,9 +461,9 @@
           if (hideSettingsTimeoutPromise)
             $timeout.cancel(hideSettingsTimeoutPromise);
 
-          if ($scope.modesOpened || $scope.definitionOpened || $scope.volumeOpened)
+          if ($scope.modesOpened || $scope.definitionOpened || $scope.volumeOpened || $scope.selectMediaOpened)
             hideSettingsTimeoutPromise = $timeout(function() {
-              $scope.modesOpened = $scope.definitionOpened = $scope.volumeOpened = false;
+              $scope.modesOpened = $scope.definitionOpened = $scope.volumeOpened = $scope.selectMediaOpened = false;
             }, 3000);
         }
 
@@ -446,12 +471,13 @@
          * Toggles display mode selection list.
          *
          * If the list of display modes is opened, close it, open it
-         * otherwise. Close volume if opened.
+         * otherwise. Close volume, definition and media sourcesif opened.
          * Automatically close display modes after 3 seconds.
          */
         $scope.toggleModes = function() {
           $scope.volumeOpened = false;
           $scope.definitionOpened = false;
+          $scope.selectMediaOpened = false;
           $scope.modesOpened = !$scope.modesOpened;
           hideSettingsWithTimeout();
         };
@@ -460,12 +486,13 @@
          * Toggles the volume.
          *
          * If the volume selector is opened, close it, open it
-         * otherwise. Close display modes if opened.
+         * otherwise. Close definition, media sources and display modes if opened.
          * Automatically close volume after 3 seconds.
          */
         $scope.toggleVolume = function() {
           $scope.modesOpened = false;
           $scope.definitionOpened = false;
+          $scope.selectMediaOpened = false;
           $scope.volumeOpened = !$scope.volumeOpened;
           hideSettingsWithTimeout();
         };
@@ -474,13 +501,29 @@
          * Toggles definition selector.
          *
          * If definition selector is already opened, close it, open it otherwise.
-         * Close both volume and modes if opened.
+         * Close media sources, volume and modes if opened.
          * Automatically close definition selector after 3 seconds.
          */
         $scope.toggleDefinition = function() {
           $scope.volumeOpened = false;
           $scope.modesOpened = false;
+          $scope.selectMediaOpened = false;
           $scope.definitionOpened = !$scope.definitionOpened;
+          hideSettingsWithTimeout();
+        };
+
+        /**
+         * Toggles media selector.
+         *
+         * If media sources selector is already opened, close it, open it otherwise.
+         * Close definition, volume and modes if opened.
+         * Automatically close definition selector after 3 seconds.
+         */
+        $scope.toggleMedia = function() {
+          $scope.volumeOpened = false;
+          $scope.modesOpened = false;
+          $scope.definitionOpened = false;
+          $scope.selectMediaOpened = !$scope.selectMediaOpened;
           hideSettingsWithTimeout();
         };
 
@@ -551,10 +594,22 @@
 
         // Watch for ov-data attribute changes
         $scope.$watch('ovData', function() {
+
+          mapSingleMedia();
+
+          // Compare new data with old
+          var mediaIdHasChange = false;
+          if ($scope.player) {
+            var oldMediaId = $scope.player.getMediaId();
+            for (var i = 0; i < $scope.ovData.mediaId.length && !mediaIdHasChange; i++) {
+              mediaIdHasChange = $scope.ovData.mediaId[i] != oldMediaId[i];
+            }
+          }
+
           $scope.data = angular.copy($scope.ovData) || {};
 
           // Media id has changed
-          if ($scope.data.mediaId && (!$scope.player || $scope.data.mediaId != $scope.player.getMediaId())) {
+          if ($scope.data.mediaId && (!$scope.player || mediaIdHasChange)) {
 
             if ($scope.player) {
 
@@ -573,6 +628,7 @@
         // Watch for icons attributes changes
         $scope.$watch('ovModeIcon', initAttributes);
         $scope.$watch('ovVolumeIcon', initAttributes);
+        $scope.$watch('ovMediaSourcesIcon', initAttributes);
         $scope.$watch('ovSettingsIcon', initAttributes);
         $scope.$watch('ovFullViewport', initAttributes);
 
@@ -661,6 +717,29 @@
             lastTime = $scope.time;
             autoPlay = !$scope.player.isPaused();
             $scope.selectedDefinition = definition;
+            $scope.mediaSources = $scope.player.getMediaSources($scope.selectedDefinition);
+            $scope.loading = true;
+            $scope.initializing = true;
+            safeApply(function() {
+              $scope.player.load();
+            });
+          }
+        };
+
+        /**
+         * Seelect the media source.
+         *
+         * @method selectMediaSource
+         * @param {Number} selectedMediaIndex index of media source
+         */
+        this.selectMediaSource = $scope.selectMediaSource = function(selectedMediaIndex) {
+          if (selectedMediaIndex != $scope.player.getSelectedMediaIndex()) {
+            lastTime = $scope.time;
+            autoPlay = !$scope.player.isPaused();
+            $scope.player.setSelectedMediaIndex(selectedMediaIndex);
+            $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
+            $scope.selectedDefinition = $scope.mediaDefinitions &&
+            $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
             $scope.mediaSources = $scope.player.getMediaSources($scope.selectedDefinition);
             $scope.loading = true;
             $scope.initializing = true;
