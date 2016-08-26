@@ -187,13 +187,12 @@
         return this.media.sources[this.selectedMediaIndex].adaptive.map(
                 function(obj) {
                   var rObj = {};
-                  rObj['link'] = $sce.trustAsResourceUrl(obj.link);
-                  rObj['mimeType'] = obj.mimeType;
+                  rObj['src'] = obj.link;
+                  rObj['type'] = obj.mimeType;
                   return rObj;
-                }
-        );
+                });
 
-      return [{link: $sce.trustAsResourceUrl(definition.link), mimeType: 'video/mp4'}];
+      return [{src: definition.link, type: 'video/mp4'}];
     };
 
     /**
@@ -245,6 +244,10 @@
      * @method load
      */
     HTMLPlayer.prototype.load = function() {
+      var ad = this.getAvailableDefinitions();
+      var sd = ad && ad[ad.length - 1] || null;
+      var ms = this.getMediaSources(sd);
+      this.player.src(ms);
       this.player.load();
     };
 

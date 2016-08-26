@@ -58,7 +58,7 @@
               <div class="ov-volume-ghost ov-ghost"></div>
             </div>
           </div>
-          <div class="ov-button ov-icon-settings" ng-show="ovMediaSourcesIcon && mediaSourcesLength>1" ng-click="toggleMedia()">
+          <div class="ov-button ov-icon-settings" ng-show="ovMediaSourcesIcon && data.mediaId.length>1" ng-click="toggleMedia()">
             <ul ng-show="selectMediaOpened" ng-click="">
               <li ng-repeat="source in data.mediaId " ng-click="selectMediaSource($index)"
               ng-bind-template="{{'Src-' + $index}}" ng-class="{'ov-selected' : $index==player.getSelectedMediaIndex()}"></li>

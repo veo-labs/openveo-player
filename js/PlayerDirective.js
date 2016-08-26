@@ -420,11 +420,7 @@
           $scope.displayChapterTab = true;
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
 
-          // Get available media sources
-          $scope.mediaSourcesLength = $scope.data.mediaId.length;
-          $scope.player.setSelectedMediaIndex(0);
-
-          // Get available definition for selected sources: if null, definitions are managed in the player
+          // Get available definition for default selected sources: if null, definitions are managed by the player
           $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
           $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
@@ -597,7 +593,7 @@
 
           mapSingleMedia();
 
-          // Compare new data with old
+          // Compare new data with old to not destroy player if mediaId has not change
           var mediaIdHasChange = false;
           if ($scope.player) {
             var oldMediaId = $scope.player.getMediaId();
