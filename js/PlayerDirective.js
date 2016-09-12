@@ -58,18 +58,6 @@
         var playerService = new PlayerService();
         $scope.player = null;
 
-        // Set default value for attributes
-        $scope.ovFullscreenIcon = (typeof $scope.ovFullscreenIcon === 'undefined') ? true : $scope.ovFullscreenIcon;
-        $scope.ovVolumeIcon = (typeof $scope.ovVolumeIcon === 'undefined') ? true : $scope.ovVolumeIcon;
-        $scope.ovModeIcon = (typeof $scope.ovModeIcon === 'undefined') ? true : $scope.ovModeIcon;
-        $scope.ovSettingsIcon = (typeof $scope.ovSettingsIcon === 'undefined') ? true : $scope.ovSettingsIcon;
-        $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
-        $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
-        var rememberPosition =
-                (typeof $scope.ovRememberPosition === 'undefined') ? false : JSON.parse($scope.ovRememberPosition);
-        $scope.ovLanguage = (typeof $scope.ovLanguage === 'undefined') ? 'en' : $scope.ovLanguage;
-        var autoPlay = (typeof $scope.ovAutoPlay === 'undefined') ? false : JSON.parse($scope.ovAutoPlay);
-
         /**
          * Tests if browser implements the fullscreen API or not.
          *
@@ -81,6 +69,21 @@
                   rootElement.webkitRequestFullScreen ||
                   rootElement.msRequestFullscreen);
         }
+
+        // Set default value for attributes
+        var apiEnable = implementFullScreenAPI();
+        $scope.ovFullscreenIcon = (typeof $scope.ovFullscreenIcon === 'undefined') ? true : $scope.ovFullscreenIcon;
+        $scope.fullscreenIcon = apiEnable && $scope.ovFullscreenIcon;
+
+        $scope.ovVolumeIcon = (typeof $scope.ovVolumeIcon === 'undefined') ? true : $scope.ovVolumeIcon;
+        $scope.ovModeIcon = (typeof $scope.ovModeIcon === 'undefined') ? true : $scope.ovModeIcon;
+        $scope.ovSettingsIcon = (typeof $scope.ovSettingsIcon === 'undefined') ? true : $scope.ovSettingsIcon;
+        $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
+        $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
+        var rememberPosition =
+                (typeof $scope.ovRememberPosition === 'undefined') ? false : JSON.parse($scope.ovRememberPosition);
+        $scope.ovLanguage = (typeof $scope.ovLanguage === 'undefined') ? 'en' : $scope.ovLanguage;
+        var autoPlay = (typeof $scope.ovAutoPlay === 'undefined') ? false : JSON.parse($scope.ovAutoPlay);
 
         /**
          * Tests if device is a touch device.
