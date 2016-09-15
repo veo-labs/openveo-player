@@ -1,3 +1,7 @@
+# 2.0.2 / 2016-09-15
+
+- Disable fullscreen icon if Javascript Fullscreen API is not supported on device.
+
 # 2.0.1 / 2016-07-19
 
 - Debug dash videos player by updating videojs dependencies

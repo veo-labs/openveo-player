@@ -163,6 +163,7 @@ $scope.isTimeDisplayed = true;
 ## ov-fullscreen-icon (optional)
 
 Indicates if fullscreen icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
+Note that even is this option is set to true, this icon can be hidden on device/browser that not support Javascript Fullscreen API.
 
 ```javascript
 $scope.isFullscreenIconDisplayed = true;
