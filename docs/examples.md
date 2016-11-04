@@ -30,6 +30,7 @@
     ></ov-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+    <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
   </body>
@@ -151,6 +152,7 @@
     ></ov-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+    <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
   </body>
@@ -257,6 +259,7 @@
     ></ov-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+    <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
   </body>
@@ -361,6 +364,7 @@
     ></ov-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+    <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
   </body>
