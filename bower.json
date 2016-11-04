@@ -31,7 +31,7 @@
     "/css",
     "/js",
     "/.sass-cache",
-    "/Gruntfile.js",
+    "/GruntFile.js",
     "/tasks",
     "/.gitignore",
     "/.npmignore",
@@ -41,7 +41,8 @@
     "/site",
     "/karmaConf.js",
     "/mkdocs.yml",
-    "/.eslint.rc",
+    "/.eslintrc",
+    "/.bowerrc",
     "/package.json"
   ],
   "license": "AGPL-3.0",
