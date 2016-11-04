@@ -51,7 +51,6 @@
   },
   "scripts": {
     "prepublish": "grunt dist",
-    "postinstall": "bower install",
     "eslint": "grunt eslint",
     "karma": "grunt karma"
   },
