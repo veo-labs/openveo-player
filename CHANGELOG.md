@@ -1,3 +1,8 @@
+# 2.0.3 / 2016-11-04
+
+- Correct issue when installing the openveo-player using NPM
+- Update documentation to add angular-cookies as a prerequisite
+
 # 2.0.2 / 2016-09-15
 
 - Disable fullscreen icon if Javascript Fullscreen API is not supported on device.
