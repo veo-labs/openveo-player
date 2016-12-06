@@ -11,6 +11,7 @@ OpenVeo Player defines an AngularJS directive **ov-player** :
   ov-volume-icon="isVolumeIconDisplayed"
   ov-mode-icon="isModeIconDisplayed"
   ov-settings-icon="isSettingsIconDisplayed"
+  ov-media-sources-icon="isMediaSourcesIconDisplayed"
   ov-language="en"
   ov-player-type="html"
   ov-auto-play="true"
@@ -64,7 +65,7 @@ Sets player data, synchronize images, chapters and cut.
 
 ```javascript
 $scope.data = {
-  mediaId : '34532ezr54sdf87', // The id of the video
+  mediaId : ['34532ezr54sdf87', 'dzzfeg4547841'], // The id(s) of the video(s)
   timecodes : { // Timecodes
     { 
       'timecode': 0, // Timecode in milliseconds (0 ms)
@@ -204,6 +205,21 @@ $scope.isModeIconDisplayed = true;
 <ov-player
   ...
   ov-mode-icon="isModeIconDisplayed"
+></ov-player>
+```
+
+## ov-media-sources-icon (optional)
+
+Indicates if multi-sources video icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to false)
+
+```javascript
+$scope.isMediaSourcesIconDisplayed = false;
+```
+
+```html
+<ov-player
+  ...
+  ov-media-sources-icon="isMediaSourcesIconDisplayed"
 ></ov-player>
 ```
 
