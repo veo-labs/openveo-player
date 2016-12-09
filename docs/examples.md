@@ -59,14 +59,14 @@
       {
         mediaId : '136081112', // The id of the video
         timecodes : { // Timecodes
-          { 
+          {
             timecode : 0 // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
               small : 'slide_00000.jpe', // Small version of the image
               large : 'slide_00000_large.jpeg'// Large version of the image
             }
           },
-          { 
+          {
             timecode : 1200 // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
@@ -89,7 +89,7 @@
             }
             ...
           ]
-        ], 
+        ],
         thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
         chapters : [ // Chapters
           {
@@ -181,14 +181,14 @@
       {
         mediaId : ['136081112', '136081113'], // The id of the video
         timecodes : { // Timecodes
-          { 
+          {
             timecode : 0 // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
               small : 'slide_00000.jpe', // Small version of the image
               large : 'slide_00000_large.jpeg'// Large version of the image
             }
           },
-          { 
+          {
             timecode : 1200 // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
@@ -224,7 +224,7 @@
             }
             ...
           ],
-        ], 
+        ],
         thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
         chapters : [ // Chapters
           {
@@ -316,14 +316,14 @@
       {
         mediaId : '136081112', // The id of the video on vimeo platform
         timecodes : { // Timecodes
-          { 
+          {
             timecode : 0 // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
               small : 'slide_00000.jpe', // Small version of the image
               large : 'slide_00000_large.jpeg'// Large version of the image
             }
           },
-          { 
+          {
             timecode : 1200 // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
@@ -466,7 +466,7 @@
 })(angular);
 ```
 
-# [Player API](api) example
+# [Player API](api.md) example
 
 ## index.html
 
