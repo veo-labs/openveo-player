@@ -784,7 +784,7 @@
           event.stopImmediatePropagation();
 
           safeApply(function() {
-            $scope.player.setVolume(100);
+            $scope.player.setVolume($scope.volume);
             $scope.error = null;
             $scope.loading = false;
             $scope.initializing = false;
