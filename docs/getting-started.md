@@ -27,6 +27,10 @@ This directive creates a video player with images synchronization and chapters.
 
 ```html
 <link rel="stylesheet" type="text/css" href="lib/openveo-player/dist/openveo-player.css">
+
+<!-- Only for HTML type-->
+<link rel="stylesheet" type="text/css" href="lib/video.js/dist/video-js.min.css">
+
 ```
 
 # Set player root
@@ -49,7 +53,13 @@ OpenVeo player needs to be aware of its root path to load AngularJS partials.
 ```html
 <script type="text/javascript" src="lib/angular/angular.min.js"></script>
 <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
+
+<!-- Only for HTML type -->
 <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
+<script>
+  videojs.options.flash.swf = "lib/video.js/dist/video-js.swf";
+</script>
+
 <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
 ```
 
@@ -67,7 +77,7 @@ Sets player data, synchronize images, chapters and cut.
 $scope.data = {
   mediaId : ['34532ezr54sdf87', 'dzzfeg4547841'], // The id(s) of the video(s)
   timecodes : { // Timecodes
-    { 
+    {
       'timecode': 0, // Timecode in milliseconds (0 ms)
       'image' : { // Image to display at 0 ms
         'small' : 'slide_00000.jpeg', // Small version of the image

@@ -7,6 +7,7 @@
 <html ng-app="test.player" ng-controller="TestController" ng-strict-di>
   <head>
     <link rel="stylesheet" type="text/css" href="lib/openveo-player/dist/openveo-player.css">
+    <link rel="stylesheet" type="text/css" href="lib/video.js/dist/video-js.min.css">
 
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
@@ -31,8 +32,16 @@
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
+
+    <script>
+
+      // Set flash fallback for video.js
+      videojs.options.flash.swf = "lib/video.js/dist/video-js.swf";
+
+    </script>
   </body>
 
 </html>
@@ -60,22 +69,21 @@
         mediaId : '136081112', // The id of the video
         timecodes : { // Timecodes
           {
-            timecode : 0 // Timecode in milliseconds (0 ms)
+            timecode : 0, // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpe', // Small version of the image
+              small : 'slide_00000.jpeg', // Small version of the image
               large : 'slide_00000_large.jpeg'// Large version of the image
             }
           },
           {
-            timecode : 1200 // Timecode in milliseconds (1200 ms)
+            timecode : 1200, // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
               large : 'slide_00001_large.jpeg' // Large version of the image
             }
-         }
-         ...
+          }
         },
-        sources : [
+        sources : {
           files : [ // The list of video files (only for "html" player)
             {
               width : 640, // Video width for this file
@@ -87,9 +95,8 @@
               height : 720, // Video height for this file
               link : 'http://pathToHDMP4.mp4' // Video url
             }
-            ...
           ]
-        ],
+        },
         thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
         chapters : [ // Chapters
           {
@@ -102,7 +109,6 @@
             description : 'Chapter 2 description', // Chapter description
             value : 0.3 // Chapter timecode in percent (percentage of the video)
           }
-          ...
         ],
         cut : [ // Cut information (begin and end)
           {
@@ -129,6 +135,7 @@
 <html ng-app="test.player" ng-controller="TestController" ng-strict-di>
   <head>
     <link rel="stylesheet" type="text/css" href="lib/openveo-player/dist/openveo-player.css">
+    <link rel="stylesheet" type="text/css" href="lib/video.js/dist/video-js.min.css">
 
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
@@ -153,8 +160,17 @@
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
+
+    <script>
+
+      // Set flash fallback for video.js
+      videojs.options.flash.swf = "lib/video.js/dist/video-js.swf";
+
+    </script>
+
   </body>
 
 </html>
@@ -182,48 +198,49 @@
         mediaId : ['136081112', '136081113'], // The id of the video
         timecodes : { // Timecodes
           {
-            timecode : 0 // Timecode in milliseconds (0 ms)
+            timecode : 0, // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpe', // Small version of the image
-              large : 'slide_00000_large.jpeg'// Large version of the image
+              small : 'slide_00000.jpeg', // Small version of the image
+              large : 'slide_00000_large.jpeg' // Large version of the image
             }
           },
           {
-            timecode : 1200 // Timecode in milliseconds (1200 ms)
+            timecode : 1200, // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
               large : 'slide_00001_large.jpeg' // Large version of the image
             }
          }
-         ...
         },
         sources : [
-          files : [ // The list of video files for 136081112 media ID
-            {
-              width : 640, // Video width for this file
-              height : 360, // Video height for this file
-              link : 'http://136081112/pathToSDMP4.mp4' // Video url
-            },
-            {
-              width : 1280, // Video width for this file
-              height : 720, // Video height for this file
-              link : 'http://136081112/pathToHDMP4.mp4' // Video url
-            }
-            ...
-          ],
-          files : [ // The list of video files for 136081113 media ID
-            {
-              width : 640, // Video width for this file
-              height : 360, // Video height for this file
-              link : 'http://136081113/pathToSDMP4.mp4' // Video url
-            },
-            {
-              width : 1280, // Video width for this file
-              height : 720, // Video height for this file
-              link : 'http://136081113/pathToHDMP4.mp4' // Video url
-            }
-            ...
-          ],
+          {
+            files : [ // The list of video files for 136081112 media ID
+              {
+                width : 640, // Video width for this file
+                height : 360, // Video height for this file
+                link : 'http://136081112/pathToSDMP4.mp4' // Video url
+              },
+              {
+                width : 1280, // Video width for this file
+                height : 720, // Video height for this file
+                link : 'http://136081112/pathToHDMP4.mp4' // Video url
+              }
+            ]
+          },
+          {
+            files : [ // The list of video files for 136081113 media ID
+              {
+                width : 640, // Video width for this file
+                height : 360, // Video height for this file
+                link : 'http://136081113/pathToSDMP4.mp4' // Video url
+              },
+              {
+                width : 1280, // Video width for this file
+                height : 720, // Video height for this file
+                link : 'http://136081113/pathToHDMP4.mp4' // Video url
+              }
+            ]
+          }
         ],
         thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
         chapters : [ // Chapters
@@ -237,7 +254,6 @@
             description : 'Chapter 2 description', // Chapter description
             value : 0.3 // Chapter timecode in percent (percentage of the video)
           }
-          ...
         ],
         cut : [ // Cut information (begin and end)
           {
@@ -317,20 +333,19 @@
         mediaId : '136081112', // The id of the video on vimeo platform
         timecodes : { // Timecodes
           {
-            timecode : 0 // Timecode in milliseconds (0 ms)
+            timecode : 0, // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
               small : 'slide_00000.jpe', // Small version of the image
               large : 'slide_00000_large.jpeg'// Large version of the image
             }
           },
           {
-            timecode : 1200 // Timecode in milliseconds (1200 ms)
+            timecode : 1200, // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
               small : 'slide_00001.jpeg', // Small version of the image
               large : 'slide_00001_large.jpeg' // Large version of the image
             }
          }
-         ...
         },
         chapters : [ // Chapters
          {
@@ -343,7 +358,6 @@
            description : 'Chapter 2 description', // Chapter description
            value : 0.3 // Chapter timecode in percent (percentage of the video)
          }
-         ...
        ],
        cut : [ // Cut information (begin and end)
          {
@@ -435,7 +449,6 @@
               large : 'slide_00001_large.jpeg' // Large version of the image
             }
          }
-         ...
        },
        chapters : [ // Chapters
          {
@@ -448,7 +461,6 @@
            description : 'Chapter 2 description', // Chapter description
            value : 0.3 // Chapter timecode in percent (percentage of the video)
          }
-         ...
        ],
        cut : [ // Cut information (begin and end)
          {
@@ -475,6 +487,7 @@
 <html ng-app="test.player" ng-controller="TestController" ng-strict-di>
   <head>
     <link rel="stylesheet" type="text/css" href="lib/openveo-player/dist/openveo-player.css">
+    <link rel="stylesheet" type="text/css" href="lib/video.js/dist/video-js.min.css">
 
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
@@ -500,6 +513,15 @@
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
+
+    <script>
+
+      // Set flash fallback for video.js
+      videojs.options.flash.swf = "lib/video.js/dist/video-js.swf";
+
+    </script>
+
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
   </body>
@@ -526,7 +548,7 @@
     $scope.ready = true;
     $scope.data =
       {
-        mediaId : ['136081112'], // The id(s) of the video(s) on vimeo platform
+        mediaId : '136081112', // The id(s) of the video(s) on vimeo platform
         timecodes : { // Timecodes
           0 : { // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
@@ -541,19 +563,20 @@
             }
          }
        },
-       files : [ // The list of video files (only for "html" player)
-         {
-           width : 640, // Video width for this file
-           height : 360, // Video height for this file
-           link : 'http://pathToSDMP4.mp4' // Video url
-         },
-         {
-           width : 1280, // Video width for this file
-           height : 720, // Video height for this file
-           link : 'http://pathToHDMP4.mp4' // Video url
-         }
-         ...
-       ]
+       sources: {
+         files : [ // The list of video files (only for "html" player)
+           {
+             width : 640, // Video width for this file
+             height : 360, // Video height for this file
+             link : 'http://pathToSDMP4.mp4' // Video url
+           },
+           {
+             width : 1280, // Video width for this file
+             height : 720, // Video height for this file
+             link : 'http://pathToHDMP4.mp4' // Video url
+           }
+         ]
+       }
      };
 
      var myPlayer = document.getElementById('myPlayer');
