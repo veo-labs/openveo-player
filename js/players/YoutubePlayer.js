@@ -311,8 +311,9 @@
      *
      * @method load
      */
-    YoutubePlayer.prototype.load = function() {
-      this.player.loadVideoById(this.media.mediaId[this.selectedMediaIndex]);
+    YoutubePlayer.prototype.load = function(definition) {
+      if (!definition)
+        this.player.loadVideoById(this.media.mediaId[this.selectedMediaIndex]);
     };
 
     /**

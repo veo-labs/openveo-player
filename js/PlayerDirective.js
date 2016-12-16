@@ -717,7 +717,7 @@
             $scope.loading = true;
             $scope.initializing = true;
             safeApply(function() {
-              $scope.player.load();
+              $scope.player.load($scope.selectedDefinition);
             });
           }
         };
