@@ -182,7 +182,6 @@
      * @return String The media sources
      */
     HTMLPlayer.prototype.getMediaSources = function(definition) {
-
       if (!definition)
         return this.media.sources[this.selectedMediaIndex].adaptive.map(
                 function(obj) {
@@ -223,7 +222,9 @@
           techOrder: ['html5', 'flash'],
           autoplay: false,
           preload: 'auto'
-        },
+        });
+
+      this.player.ready(
         function() {
           self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
 

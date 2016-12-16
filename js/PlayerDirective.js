@@ -585,12 +585,12 @@
 
         // listen to player destroy event
         $scope.$on('$destroy', function() {
-          $scope.player.destroy();
+          if ($scope.player)
+            $scope.player.destroy();
         });
 
         // Watch for ov-data attribute changes
         $scope.$watch('ovData', function() {
-
           mapSingleMedia();
 
           // Compare new data with old to not destroy player if mediaId has not change
@@ -611,7 +611,6 @@
 
               // Destroy previous player
               $scope.player.destroy();
-
             }
 
             // Reset all
@@ -831,14 +830,15 @@
 
             // Media is cut and was waiting for the real media duration
             if ($scope.isCut) {
-              initTimecodes();
-              initChapters();
+              if (!$scope.chapters.length || !$scope.displayChapterTab) {
+                initTimecodes();
+                initChapters();
+
+                // Change value of chapter to get timestamp once video duration is known
+                playerService.processChaptersTime($scope.chapters);
+              }
               self.setTime(lastTime);
             }
-
-            // Change value of chapter to get timestamp once video duration is known
-            playerService.processChaptersTime($scope.chapters);
-
             $element.triggerHandler('durationChange', $scope.duration);
           });
           return false;
