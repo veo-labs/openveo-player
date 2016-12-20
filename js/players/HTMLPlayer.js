@@ -47,6 +47,7 @@
         // Ready to render the media data at the current playback position
         // for the first time
         case 'loadeddata':
+        case 'loadedmetadata':
           this.loaded = true;
           this.jPlayerElement.triggerHandler('ovReady');
           break;
