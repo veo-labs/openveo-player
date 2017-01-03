@@ -1,3 +1,7 @@
+# 2.1.0 / 2017-01-03
+
+- Add Multi-sources video synchronization feature
+
 # 2.0.3 / 2016-11-04
 
 - Correct issue when installing the openveo-player using NPM

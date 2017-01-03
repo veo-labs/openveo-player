@@ -83,20 +83,22 @@
             }
           }
         },
-        sources : {
-          files : [ // The list of video files (only for "html" player)
-            {
-              width : 640, // Video width for this file
-              height : 360, // Video height for this file
-              link : 'http://pathToSDMP4.mp4' // Video url
-            },
-            {
-              width : 1280, // Video width for this file
-              height : 720, // Video height for this file
-              link : 'http://pathToHDMP4.mp4' // Video url
-            }
-          ]
-        },
+        sources : [
+          {
+            files : [ // The list of video files (only for "html" player)
+              {
+                width : 640, // Video width for this file
+                height : 360, // Video height for this file
+                link : 'http://pathToSDMP4.mp4' // Video url
+              },
+              {
+                width : 1280, // Video width for this file
+                height : 720, // Video height for this file
+                link : 'http://pathToHDMP4.mp4' // Video url
+              }
+            ]
+          }
+        ],
         thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
         chapters : [ // Chapters
           {
@@ -330,7 +332,7 @@
     $scope.ready = true;
     $scope.data =
       {
-        mediaId : '136081112', // The id of the video on vimeo platform
+        mediaId : ['136081112'], // The id of the video on vimeo platform
         timecodes : { // Timecodes
           {
             timecode : 0, // Timecode in milliseconds (0 ms)
@@ -548,7 +550,7 @@
     $scope.ready = true;
     $scope.data =
       {
-        mediaId : '136081112', // The id(s) of the video(s) on vimeo platform
+        mediaId : ['136081112'], // The id(s) of the video(s) on vimeo platform
         timecodes : { // Timecodes
           0 : { // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
@@ -563,8 +565,9 @@
             }
          }
        },
-       sources: {
-         files : [ // The list of video files (only for "html" player)
+       sources: [
+         {
+           files : [ // The list of video files (only for "html" player)
            {
              width : 640, // Video width for this file
              height : 360, // Video height for this file
@@ -575,8 +578,9 @@
              height : 720, // Video height for this file
              link : 'http://pathToHDMP4.mp4' // Video url
            }
-         ]
-       }
+           ]
+         }
+       ]
      };
 
      var myPlayer = document.getElementById('myPlayer');

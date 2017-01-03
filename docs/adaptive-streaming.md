@@ -30,6 +30,7 @@ And import dependencies to use adaptive sources:
 You need to define your adaptive sources by setting their mimetype and their link. 
 ```javascript
 $scope.data.sources = [
+  {
     adaptive: [ // The list of video adaptive sources (only for "html" player)
           { // RTMP source 
             "mimeType": 'rtmp/mp4',
@@ -64,7 +65,8 @@ $scope.data.sources = [
       },
       ...
     ]
-  ]
+  }
+]
 ```
 
 And set you player type to 'html':

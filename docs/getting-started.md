@@ -94,7 +94,8 @@ $scope.data = {
     ...
   },
   sources: [
-    files : [ // The list of different resolutions sources for this video (only for "html" player)
+    {
+      files : [ // The list of different resolutions sources for this video (only for "html" player)
       {
         width : 640, // Video width for this file
         height : 360, // Video height for this file
@@ -106,7 +107,10 @@ $scope.data = {
         link : 'http://pathToHDMP4.mp4' // Video url
       },
       ...
-    ]
+      ]
+    },{
+    ...
+    }
   ],
   thumbnail : '/1439286245225/thumbnail.jpg', // The media thumbnail (only for "html" player)
   chapters : [ // Chapters
@@ -220,7 +224,7 @@ $scope.isModeIconDisplayed = true;
 
 ## ov-media-sources-icon (optional)
 
-Indicates if multi-sources video icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to false)
+Indicates if multi-sources video icon must be displayed or not. (Default to false)
 
 ```javascript
 $scope.isMediaSourcesIconDisplayed = false;
