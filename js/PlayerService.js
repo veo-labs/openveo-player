@@ -193,9 +193,9 @@
         if (timecode > realCutStart && timecode < realCutEnd)
           filteredChapters.push(this.media.chapters[i]);
       }
-      return filteredChapters;
+      return angular.copy(filteredChapters);
     }
-    return this.media.chapters;
+    return angular.copy(this.media.chapters);
   };
 
   /**

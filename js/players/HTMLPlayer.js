@@ -93,7 +93,7 @@
           if (this.player.networkState() == this.player.NETWORK_NO_SOURCE) {
             event.target.error = {code: 'NO_SOURCE', MEDIA_NO_SOURCE: 'NO_SOURCE'};
           }
-          this.jPlayerElement.triggerHandler('error', event.target.error.code);
+          this.jPlayerElement.triggerHandler('error', event.target.error && event.target.error.code);
           break;
 
         default:

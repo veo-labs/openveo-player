@@ -269,14 +269,6 @@
          */
         function initChapters() {
           $scope.chapters = playerService.getMediaChapters() || [];
-          if ($scope.chapters.length) {
-            displayChapters();
-          } else {
-
-            // No chapters
-            hideChapters();
-
-          }
         }
 
         /**
@@ -416,8 +408,8 @@
 
           $scope.duration = 0;
           $scope.timePreviewPosition = 0;
-          $scope.displayIndexTab = true;
-          $scope.displayChapterTab = true;
+          $scope.displayIndexTab = false;
+          $scope.displayChapterTab = false;
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
 
           // Get available definition for default selected sources: if null, definitions are managed by the player
@@ -432,19 +424,11 @@
           $scope.initializing = true;
           $scope.error = null;
 
-          // Video is cut
+
           // Real media duration is required to be able to display either the
           // list of chapters or the list of timecodes
-          if ($scope.isCut) {
-            hideTimecodes();
-            hideChapters();
-          } else {
-            // Video is not cut
-            // Timecodes and chapters can be immediately displayed
-            initTimecodes();
-            initChapters();
-          }
-
+          hideTimecodes();
+          hideChapters();
           initAttributes();
         }
 
@@ -577,6 +561,7 @@
         // Listen to player template loaded event
         $scope.$on('$includeContentLoaded', function() {
           $timeout(function() {
+
             // Initialize player
             $scope.player.initialize();
 
@@ -822,23 +807,26 @@
         // Listen to player durationChange event
         $element.on('ovDurationChange', function(event, duration) {
           event.stopImmediatePropagation();
-
           safeApply(function() {
             playerService.setRealMediaDuration(duration);
             $scope.startCutTime = playerService.getRealCutStart();
             $scope.duration = playerService.getCutDuration();
 
-            // Media is cut and was waiting for the real media duration
-            if ($scope.isCut) {
-              if (!$scope.chapters.length || !$scope.displayChapterTab) {
-                initTimecodes();
-                initChapters();
+            // Init Timecode and chapters with the real duration
+            initTimecodes();
+            initChapters();
+            self.setTime(lastTime);
 
-                // Change value of chapter to get timestamp once video duration is known
-                playerService.processChaptersTime($scope.chapters);
-              }
-              self.setTime(lastTime);
+            // Change value of chapter to get timestamp once video duration is known
+            playerService.processChaptersTime($scope.chapters);
+            if ($scope.chapters.length) {
+              displayChapters();
+            } else {
+
+              // No chapters
+              hideChapters();
             }
+
             $element.triggerHandler('durationChange', $scope.duration);
           });
           return false;
