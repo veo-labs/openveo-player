@@ -15,11 +15,6 @@
   &.ng-hide{
     opacity: 0;
   }
-
-  &.ng-hide-add.ng-hide-add-active,
-  &.ng-hide-remove.ng-hide-remove-active{
-    @include fade-out-transition(0.5s);
-  }
 }
 
 /* Media part of the media view */

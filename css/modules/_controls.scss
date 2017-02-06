@@ -212,11 +212,6 @@
   .ov-modes-animate{
     opacity: 1;
 
-    &.ng-hide-add.ng-hide-add-active,
-    &.ng-hide-remove.ng-hide-remove-active{
-      @include fade-out-transition(0.5s);
-    }
-
     &.ng-hide{ opacity: 0; }
   }
 }
@@ -255,11 +250,6 @@
 
   .ov-volume-animate{
     opacity: 1;
-
-    &.ng-hide-add.ng-hide-add-active,
-    &.ng-hide-remove.ng-hide-remove-active{
-      @include fade-out-transition(0.5s);
-    }
 
     &.ng-hide{
       opacity: 0;
@@ -337,11 +327,6 @@
 
   .ov-definitions-animate{
     opacity: 1;
-
-    &.ng-hide-add.ng-hide-add-active,
-    &.ng-hide-remove.ng-hide-remove-active{
-      @include fade-out-transition(0.5s);
-    }
 
     &.ng-hide{ opacity: 0; }
   }

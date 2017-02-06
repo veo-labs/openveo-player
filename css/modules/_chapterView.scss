@@ -16,7 +16,6 @@
     position: absolute; 
     top: 0; 
     left: 0; 
-    @include fade-out-transition(0.5s);
   }
   
   &.ng-hide{ 
@@ -43,7 +42,6 @@
     color: $neutral-color; 
     min-height: 34px;
     line-height: 34px;
-    transition: all 0.35s ease;
     width: 100%;
     float: left;
     box-sizing: border-box;
@@ -53,35 +51,13 @@
       float: left;
       text-indent: 20px;
     }
-    .ov-icon-play{
-      transition: all 0.35s ease;
-      width: 20%;
-      line-height: 34px;
-      float: left;
-      color: $neutral-color; 
-      text-align: center;
-    }
   }
   
   li:hover{ 
     cursor: pointer; 
     color: $highlight-color; 
     background-color: #fff; 
-    .ov-icon-play{
-      color: $highlight-color; 
-    }
   }
-/*  li.open{
-    color: #fff; 
-    background-color: $highlight-color; 
-    .ov-icon-play{
-      color: #fff; 
-      &:hover {
-        color: lighten($highlight-color, 30%); 
-      }
-    }
-    
-  }*/
   
   img{ 
     width: 100%; 
@@ -119,31 +95,3 @@
     display:block;
   }
 }
-
-/*.ov-past-timecode{ 
-  opacity: 0.5; 
-}*/
-
-/*
- * Focused slide part of the index view.
- * Half right part of the view is not displayed on small devices. 
- */
-/*.ov-focused-slide{ 
-  display: none; 
-  height: 100%; 
-}*/
-
-/*@media(min-width: $media-min-width){
-  .ov-slides, .ov-focused-slide{ 
-    display: block; 
-    float: left; 
-    width: 50%; 
-  }
-  .ov-focused-slide > div{ 
-    width: 100%; 
-    height: 100%; 
-    background-position: center; 
-    background-repeat: no-repeat; 
-    background-size: contain; 
-  }
-}*/
