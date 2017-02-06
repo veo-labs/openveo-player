@@ -1,3 +1,10 @@
+# 2.1.2 / 2017-02-06
+
+## BUG FIXES
+
+- Fix regression on chapters time appeared in version 2.1.0
+- Delete transitions to resolve flickering issues
+
 # 2.1.1 / 2017-02-06
 
 ## BUG FIXES
