@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Adaptive streaming - Openveo Player</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Adaptive streaming";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Openveo Player</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">INTRODUCTION</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>USERS</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../prerequisites/">Prerequisites</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../getting-started/">Getting started</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Adaptive streaming</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#introduction">Introduction</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#prerequisites">Prerequisites</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#how-to-play-adaptive-sources">How to play adaptive sources</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../animations/">Animations</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../api/">API</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../examples/">Examples</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>DEVELOPERS</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/basics/">The basics</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/prerequisites/">Prerequisites</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/installation/">Installation</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/compilation/">CSS / SASS / JS compilation</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/i18n/">I18N and I10N</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/coding-standards/">Coding standards</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/unit-tests/">Unit tests</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Openveo Player</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>USERS &raquo;</li>
+        
+      
+    
+    <li>Adaptive streaming</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/veo-labs/openveo-player" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="introduction">Introduction</h1>
+<p>OpenVeo Player support Adaptive Streaming DASH and HLS. It will automaticaly switch between protocols according browser capabilities. 
+A Flash video player is used as a fallback player if none of sources protocol is supported by browser.</p>
+<h1 id="prerequisites">Prerequisites</h1>
+<p>As OpenVeo Player embed video.js to display HTML player, in order to support DASH and HLS, you have to install and import dependencies:</p>
+<p>Install Dash.js:</p>
+<pre><code>bower install dashjs#2.1.1
+</code></pre>
+<p>Install videojs-contrib-dash plugin:</p>
+<pre><code>bower install https://github.com/videojs/videojs-contrib-dash/releases/download/v2.4.0/videojs-dash.min.js
+</code></pre>
+<p>Install videojs-contrib-hls plugin:</p>
+<pre><code>bower install https://github.com/videojs/videojs-contrib-hls/releases/download/v1.3.11/videojs.hls.min.js
+</code></pre>
+<p>And import dependencies to use adaptive sources:</p>
+<pre><code class="html">    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/dashjs/dist/dash.all.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/videojs-contrib-dash/index.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/videojs-contrib-hls/index.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<h1 id="how-to-play-adaptive-sources">How to play adaptive sources</h1>
+<p>You need to define your adaptive sources by setting their mimetype and their link. </p>
+<pre><code class="javascript">$scope.data.sources = [
+  {
+    adaptive: [ // The list of video adaptive sources (only for &quot;html&quot; player)
+          { // RTMP source 
+            &quot;mimeType&quot;: 'rtmp/mp4',
+            &quot;link&quot;: 'rtmp://192.168.1.204/openveo/&amp;mp4:bunny.mp4'
+          },
+          { // Flash source for sources that do not support natively adaptive streaming
+           &quot;height&quot;: 720,
+           &quot;mimeType&quot;: 'application/f4m+xml',
+           &quot;link&quot;: &quot;https://192.168.1.204/openveo/mp4:bunny.mp4/manifest.f4m&quot;
+          },
+          { // Dash source
+           &quot;height&quot;: 720,
+           &quot;mimeType&quot;: 'application/dash+xml', 
+           &quot;link&quot;: &quot;https://192.168.1.204/openveo/mp4:bunny.mp4/manifest.mpd&quot;
+          },
+          { //HLS Source
+           &quot;height&quot;: 720,
+           &quot;mimeType&quot;: 'application/vnd.apple.mpegurl',
+           &quot;link&quot;: &quot;https://192.168.1.204/openveo/mp4:bunny.mp4/manifest.m3u8&quot;
+        }
+    ],
+    files : [ // The list of different resolutions sources for this video (only for &quot;html&quot; player)
+      {
+        width : 640, // Video width for this file
+        height : 360, // Video height for this file
+        link : 'http://pathToSmallMP4.mp4' // Video url
+      },
+      {
+        width : 1280, // Video width for this file
+        height : 720, // Video height for this file
+        link : 'http://pathToHDMP4.mp4' // Video url
+      },
+      ...
+    ]
+  }
+]
+</code></pre>
+
+<p>And set you player type to 'html':</p>
+<pre><code class="html">&lt;ov-player
+  ...
+  ov-data=&quot;data&quot;
+  ov-player-type=&quot;html&quot;
+&gt;&lt;/ov-player&gt;
+</code></pre>
+
+<p><strong>NB</strong> : 'Adaptive' sources are always prioritized. 'files' sources will be ignored if 'adaptive' property is defined.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../animations/" class="btn btn-neutral float-right" title="Animations"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../getting-started/" class="btn btn-neutral" title="Getting started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../getting-started/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../animations/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>
