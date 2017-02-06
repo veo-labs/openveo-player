@@ -1,3 +1,9 @@
+# 2.1.3 / 2017-02-06
+
+## BUG FIXES
+
+- Delete forgotten logs in chapters tab
+
 # 2.1.2 / 2017-02-06
 
 ## BUG FIXES
