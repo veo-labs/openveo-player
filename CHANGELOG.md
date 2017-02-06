@@ -1,3 +1,9 @@
+# 2.1.1 / 2017-02-06
+
+## BUG FIXES
+
+- Fix chapters time
+
 # 2.1.0 / 2017-01-03
 
 - Add Multi-sources video synchronization feature
