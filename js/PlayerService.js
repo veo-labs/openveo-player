@@ -170,32 +170,33 @@
   };
 
   /**
-   * Gets the list of chapters.
+   * Gets the list of POI selected by property.
    *
-   * Only chapters within the cut range are returned.
+   * Only POI within the cut range are returned.
    *
-   * @method getMediaChapters
-   * @return {Object} The media chapter
+   * @method getMediaPOI
+   * @param {String} The property to retreive and filter
+   * @return {Object} The media POI
    */
-  PlayerService.prototype.getMediaChapters = function() {
+  PlayerService.prototype.getMediaPOI = function(property) {
 
     // Media is cut
-    if (this.isCut && this.realMediaDuration && this.media.chapters) {
+    if (this.isCut && this.realMediaDuration && this.media[property]) {
       var filteredChapters = [];
       var realCutStart = this.getRealCutStart();
       var realCutEnd = this.getRealCutEnd();
 
-      // Filter chapters depending on cut edges
-      // Chapters not in the range [startCut - endCut] must be removed
-      for (var i = 0; i < this.media.chapters.length; i++) {
-        var timecode = this.realMediaDuration * this.media.chapters[i].value;
+      // Filter POI depending on cut edges
+      // POI not in the range [startCut - endCut] must be removed
+      for (var i = 0; i < this.media[property].length; i++) {
+        var timecode = this.realMediaDuration * this.media[property][i].value;
 
         if (timecode > realCutStart && timecode < realCutEnd)
-          filteredChapters.push(this.media.chapters[i]);
+          filteredChapters.push(this.media[property][i]);
       }
       return angular.copy(filteredChapters);
     }
-    return angular.copy(this.media.chapters);
+    return angular.copy(this.media[property]);
   };
 
   /**
@@ -203,7 +204,7 @@
    * @param {Array} chapters chapters array to modify from percent to timestamp
    * @param {int} mediaDuration media original duration in ms
    */
-  PlayerService.prototype.processChaptersTime = function(chapters) {
+  PlayerService.prototype.processPOITime = function(chapters) {
     for (var i = 0; i < chapters.length; i++) {
       chapters[i].value = (chapters[i].value * this.realMediaDuration) -
                           Math.floor(this.cutStart * this.realMediaDuration);

@@ -248,6 +248,24 @@
         }
 
         /**
+         * Hides chapters.
+         *
+         * Hide the chapters tab.
+         */
+        function hideTags() {
+          $scope.displayTagsTab = false;
+        }
+
+        /**
+         * Displays chapters.
+         *
+         * Display the chapters tab.
+         */
+        function displayTags() {
+          $scope.displayTagsTab = true;
+        }
+
+        /**
          * Map ovData single Media to multi media format
          *
          * Change ovData old API to new API
@@ -267,8 +285,9 @@
          *
          * Display the chapters tab only if there is at least one chapter.
          */
-        function initChapters() {
-          $scope.chapters = playerService.getMediaChapters() || [];
+        function initPOI() {
+          $scope.chapters = playerService.getMediaPOI('chapters') || [];
+          $scope.tags = playerService.getMediaPOI('tags') || [];
         }
 
         /**
@@ -410,6 +429,7 @@
           $scope.timePreviewPosition = 0;
           $scope.displayIndexTab = false;
           $scope.displayChapterTab = false;
+          $scope.displayTagsTab = false;
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
 
           // Get available definition for default selected sources: if null, definitions are managed by the player
@@ -429,6 +449,7 @@
           // list of chapters or the list of timecodes
           hideTimecodes();
           hideChapters();
+          hideTags();
           initAttributes();
         }
 
@@ -812,19 +833,28 @@
             $scope.startCutTime = playerService.getRealCutStart();
             $scope.duration = playerService.getCutDuration();
 
-            // Init Timecode and chapters with the real duration
+            // Init Timecode and POI with the real duration
             initTimecodes();
-            initChapters();
+            initPOI();
             self.setTime(lastTime);
 
             // Change value of chapter to get timestamp once video duration is known
-            playerService.processChaptersTime($scope.chapters);
+            playerService.processPOITime($scope.chapters);
+            playerService.processPOITime($scope.tags);
             if ($scope.chapters.length) {
               displayChapters();
             } else {
 
               // No chapters
               hideChapters();
+            }
+
+            if ($scope.tags.length) {
+              displayTags();
+            } else {
+
+              // No Tags
+              hideTags();
             }
 
             $element.triggerHandler('durationChange', $scope.duration);

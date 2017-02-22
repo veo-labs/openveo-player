@@ -1,0 +1,29 @@
+.ov-tags, .ov-focused-tag{
+    float: left;
+    width: 50%;
+    display: block;
+}
+
+.ov-focused-tag{
+  height: 410px;
+  overflow: auto;
+
+  img{
+    max-width:100%;
+    width: auto;
+    margin: auto;
+    display: block;
+    max-height: 300px;
+  }
+
+  video {
+    background-color: #000;
+    max-width:100%;
+    width: 100%;
+    max-height: 300px;
+  }
+
+  p{
+    transition: none;
+  }
+}

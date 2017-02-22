@@ -1,0 +1,20 @@
+<div class="poi ov-tags">
+  <ul>
+    <li ng-repeat="tag in tags | orderBy:'+value'" class="open" ng-click="setTagSrc(tag)">
+      <div class="title" >
+        <span class="time" ng-click="goToTimecode(tag.value)">{{tag.value | date:'H:mm:ss':'+0000'}}</span>
+        <span> - </span>
+        <span ng-class="{active:selectedTag==tag}" class="text" ng-click="setTagSrc(tag)">{{tag.name}}</span>
+      </div>
+    </li>  
+  </ul>
+</div>
+
+<div class="ov-focused-tag poi" ng-if="selectedTag">
+  <img ng-if="selectedTag.file.mimetype.substr(0, 'image'.length) === 'image'" ng-src="{{selectedTagSrc}}">
+  <video controls ng-if="selectedTag.file.mimetype.substr(0, 'video'.length) === 'video'"
+    ng-src="{{selectedTagSrc}}">>
+  </video>
+  <audio ng-if="selectedTag.file.mimetype.substr(0, 'audio'.length) === 'audio'" ng-src="{{selectedTagSrc}}" audioplayer controls></audio>
+  <p ng-if="selectedTag.description && selectedTag.description!=''">{{selectedTag.description}}</p>
+</div>

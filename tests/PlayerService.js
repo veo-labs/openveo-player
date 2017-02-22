@@ -58,6 +58,20 @@ describe('PlayerService', function() {
           value: 0.9
         }
       ],
+      tags: [
+        {
+          value: 0.04
+        },
+        {
+          value: 0.31
+        },
+        {
+          value: 0.35
+        },
+        {
+          value: 0.9
+        }
+      ],
       cut: [
         {
           type: 'begin',
@@ -114,7 +128,7 @@ describe('PlayerService', function() {
     media.cut[0].value = 0;
     media.cut[1].value = 1;
     playerService.setMedia(media);
-    var chapters = playerService.getMediaChapters();
+    var chapters = playerService.getMediaPOI('chapters');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
 
@@ -122,14 +136,40 @@ describe('PlayerService', function() {
     media.cut[0].value = 0.5;
     media.cut[1].value = 1;
     playerService.setMedia(media);
-    chapters = playerService.getMediaChapters();
+    chapters = playerService.getMediaPOI('chapters');
     assert.isArray(chapters);
     assert.equal(chapters.length, 1);
 
     // No cut
     media.cut = null;
     playerService.setMedia(media);
-    chapters = playerService.getMediaChapters();
+    chapters = playerService.getMediaPOI('chapters');
+    assert.isArray(chapters);
+    assert.equal(chapters.length, 4);
+  });
+
+  it('Should be able to get only tags according to the cut edges', function() {
+
+    // Cut 0 - 1
+    media.cut[0].value = 0;
+    media.cut[1].value = 1;
+    playerService.setMedia(media);
+    var chapters = playerService.getMediaPOI('tags');
+    assert.isArray(chapters);
+    assert.equal(chapters.length, 4);
+
+    // Cut 0.5 - 1
+    media.cut[0].value = 0.5;
+    media.cut[1].value = 1;
+    playerService.setMedia(media);
+    chapters = playerService.getMediaPOI('tags');
+    assert.isArray(chapters);
+    assert.equal(chapters.length, 1);
+
+    // No cut
+    media.cut = null;
+    playerService.setMedia(media);
+    chapters = playerService.getMediaPOI('tags');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
   });

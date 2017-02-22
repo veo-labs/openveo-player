@@ -21,6 +21,10 @@
         <ov-view title="{{'CHAPTERS_TAB_TITLE' | ovTranslate}}" ng-if="displayChapterTab" view="ov-chapters-view" class="ov-mode-{{selectedMode}}" view-id="chapter">
           <ov-chapters></ov-chapters>
         </ov-view>
+
+        <ov-view title="{{'TAGS_TAB_TITLE' | ovTranslate}}" ng-if="displayTagsTab" view="ov-tags-view" class="ov-mode-{{selectedMode}}" view-id="tags">
+          <ov-tags></ov-tags>
+        </ov-view>
       </div>
 
     </ov-tabs>

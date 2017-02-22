@@ -25,10 +25,12 @@
   li{
     display: table-cell;
     padding: 0 40px;
-    line-height: 35px;
+    line-height: 42px;
     background-color: $neutral-color;
-    @include transition(border-top 0.4s);
-    border-top: 0px solid;
+    background-size: 100% 200%;
+    background-image: linear-gradient(to bottom, $neutral-color 50%, $light-gray 50%);
+    @include transition(background-position-y 0.2s);
+
   }
   
   li:focus{
@@ -36,11 +38,13 @@
   }
 
   li:hover{
-    border-top: 5px solid $light-gray;
+    background-image: linear-gradient(to bottom, $neutral-color 50%, $light-gray 50%);
     cursor: pointer;
+    background-position-y: -12%;
   }
 
   li.ov-selected{
-    border-top: 5px solid $highlight-color;
+  background-image: linear-gradient(to bottom, $neutral-color 50%, $highlight-color 50%);
+  background-position-y: -12%;
   }
 }
