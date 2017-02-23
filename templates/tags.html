@@ -11,10 +11,17 @@
 </div>
 
 <div class="ov-focused-tag poi" ng-if="selectedTag">
-  <img ng-if="selectedTag.file.mimetype.substr(0, 'image'.length) === 'image'" ng-src="{{selectedTagSrc}}">
-  <video controls ng-if="selectedTag.file.mimetype.substr(0, 'video'.length) === 'video'"
-    ng-src="{{selectedTagSrc}}">>
-  </video>
-  <audio ng-if="selectedTag.file.mimetype.substr(0, 'audio'.length) === 'audio'" ng-src="{{selectedTagSrc}}" audioplayer controls></audio>
+  <img ng-if="simpleMimeType == 'image'" ng-src="{{selectedTagSrc}}">
+  <video controls ng-if="simpleMimeType == 'video'" ng-src="{{selectedTagSrc}}"> </video>
+  <audio ng-if="simpleMimeType == 'audio'" ng-src="{{selectedTagSrc}}" audioplayer controls></audio>
+  <div ng-if="simpleMimeType && ['image','video','audio'].indexOf(simpleMimeType) == -1" class="download-container">
+    <div> {{selectedTag.file.originalname}} </div>
+    <a href="{{selectedTagSrc}}"
+    class="download" role="button"
+    download="{{selectedTag.file.originalname}}"
+    ><span>{{ 'FILE_DOWNLOAD' | ovTranslate}}</span>
+    </a>
+  </div>
+
   <p ng-if="selectedTag.description && selectedTag.description!=''">{{selectedTag.description}}</p>
 </div>

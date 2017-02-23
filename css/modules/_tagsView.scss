@@ -23,6 +23,27 @@
     max-height: 300px;
   }
 
+  .download-container {
+    font-size: 16px;
+    padding: 10px 30px;
+    line-height: 20px;
+  }
+  .download{
+    background-color: $foreground-color;
+    color: $neutral-color;
+    padding: 5px;
+    text-decoration: none;
+    display: inline-block;
+
+    &:hover{
+      background-color: $light-gray;
+    }
+    &:active{
+      background-color: $highlight-color;
+      color: #fff;
+    }
+  }
+
   p{
     transition: none;
   }

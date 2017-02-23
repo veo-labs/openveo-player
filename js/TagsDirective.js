@@ -43,8 +43,18 @@
 
       scope.setTagSrc = function(tag) {
         scope.selectedTag = tag;
+        scope.simpleMimeType = scope.getFileMimeType();
         if (scope.selectedTag.file)
           scope.selectedTagSrc = '/publish/' + scope.data.id + '/uploads/' + scope.selectedTag.file.filename;
+      };
+
+      // Get simple mimetype
+      scope.getFileMimeType = function() {
+        if (!scope.selectedTag || !scope.selectedTag.file) return null;
+        if (scope.selectedTag.file.mimetype.substr(0, 'image'.length) == 'image') return 'image';
+        if (scope.selectedTag.file.mimetype.substr(0, 'video'.length) == 'video') return 'video';
+        if (scope.selectedTag.file.mimetype.substr(0, 'audio'.length) == 'audio') return 'audio';
+        return scope.selectedTag.file.mimetype;
       };
     };
   });

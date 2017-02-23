@@ -278,6 +278,7 @@
       CHAPTERS_TAB_TITLE: 'Chapters',
       TAGS_TAB_TITLE: 'Tags',
       LOADING: 'Loading...',
+      FILE_DOWNLOAD: 'Download',
       MEDIA_ERR_NO_SOURCE: 'A network error caused the video download to fail part-way.',
       MEDIA_ERR_NETWORK: 'A network error caused the video download to fail part-way.',
       MEDIA_ERR_DECODE: 'The video playback was aborted due to a corruption problem ' +
@@ -293,6 +294,7 @@
       CHAPTERS_TAB_TITLE: 'Chapitres',
       TAGS_TAB_TITLE: 'Tags',
       LOADING: 'Chargement...',
+      FILE_DOWNLOAD: 'Télécharger',
       MEDIA_ERR_NO_SOURCE: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
       MEDIA_ERR_NETWORK: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
       MEDIA_ERR_DECODE: 'La lecture de la vidéo a été abandonnée en raison d\' un problème de corruption ' +
