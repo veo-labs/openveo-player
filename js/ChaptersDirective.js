@@ -24,7 +24,7 @@
     };
   }
 
-  app.factory('ovChaptersLink', function() {
+  app.factory('ovChaptersLink', ['$sce', function($sce) {
     return function(scope, element, attrs, controllers) {
 
       /**
@@ -40,8 +40,11 @@
         tabsCtrl.selectTabs('media');
       };
 
+      scope.trustedHTML = function(string) {
+        return $sce.trustAsHtml(string);
+      };
     };
-  });
+  }]);
 
   app.directive('ovChapters', ovChapters);
   ovChapters.$inject = ['ovChaptersLink'];

@@ -24,7 +24,7 @@
     };
   }
 
-  app.factory('ovTagsLink', function() {
+  app.factory('ovTagsLink', ['$sce', function($sce) {
     return function(scope, element, attrs, controllers) {
       scope.controller = controllers[0];
 
@@ -56,8 +56,12 @@
         if (scope.selectedTag.file.mimetype.substr(0, 'audio'.length) == 'audio') return 'audio';
         return scope.selectedTag.file.mimetype;
       };
+
+      scope.trustedHTML = function(string) {
+        return $sce.trustAsHtml(string);
+      };
     };
-  });
+  }]);
 
   app.directive('ovTags', ovTags);
   ovTags.$inject = ['ovTagsLink'];

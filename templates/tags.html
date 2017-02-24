@@ -23,5 +23,5 @@
     </a>
   </div>
 
-  <p ng-if="selectedTag.description && selectedTag.description!=''">{{selectedTag.description}}</p>
+  <div class="description" ng-if="selectedTag.description && selectedTag.description!=''" ng-bind-html="trustedHTML(selectedTag.description)"></div>
 </div>

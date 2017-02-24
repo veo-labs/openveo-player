@@ -9,7 +9,7 @@
   ul{
      width: 100%;
   }
-  
+
   li {
     cursor: auto;
     background-color: #fff; 
@@ -21,11 +21,11 @@
     width: 100%;
     float: left;
     box-sizing: border-box;
-    
+
     .title{
-      width: 80%;
+      width: 100%;
       float: left;
-      text-indent: 20px;
+      text-indent: 10px;
     }
 
     span.text, span.time{
@@ -48,33 +48,14 @@
   
   p{ 
     box-sizing: border-box;
-    @include transition(border 0.35s ease);
     background-color: #fff; 
-    /*display:none;*/
-    /*height:0;*/
-    /*max-height:0px;*/
-    padding:0 20px;
-    /*border-left: 0px solid transparent;*/
+    padding:5px 20px;
     overflow: hidden;
-    border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd; 
-    border-left: 5px solid #ddd;
-    border-right: 5px solid #ddd;
     font-size: 16px;
     line-height: 20px;
-    &:hover{
-      border-left: 5px solid $highlight-color;
-      border-right: 5px solid $highlight-color;
-    }
   }
-  li:hover + p{
-    border-left: 5px solid $highlight-color;
-    border-right: 5px solid $highlight-color;
-  }
-  li.open + p{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    max-height: 800px;
-    display:block;
+
+  .description{
+    background-color: $foreground-color;
   }
 }
