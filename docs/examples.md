@@ -112,6 +112,18 @@
             value : 0.3 // Chapter timecode in percent (percentage of the video)
           }
         ],
+        tags : [ // Tags
+          {
+            name : 'Tag 1', // Tag name
+            description : 'Tag 1 description', // Tag description
+            value : 0.04 // Tag timecode in percent (percentage of the video)
+          },
+          {
+            name : 'Tag 2', // Tag name
+            description : 'Tag 2 description', // Tag description
+            value : 0.3 // Tag timecode in percent (percentage of the video)
+          }
+        ],
         cut : [ // Cut information (begin and end)
           {
             type : 'begin', // Cut type
@@ -245,18 +257,7 @@
           }
         ],
         thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
-        chapters : [ // Chapters
-          {
-            name : 'Chapter 1', // Chapter name
-            description : 'Chapter 1 description', // Chapter description
-            value : 0.04 // Chapter timecode in percent (percentage of the video)
-          },
-          {
-            name : 'Chapter 2', // Chapter name
-            description : 'Chapter 2 description', // Chapter description
-            value : 0.3 // Chapter timecode in percent (percentage of the video)
-          }
-        ],
+
         cut : [ // Cut information (begin and end)
           {
             type : 'begin', // Cut type
@@ -349,19 +350,19 @@
             }
          }
         },
-        chapters : [ // Chapters
-         {
-           name : 'Chapter 1', // Chapter name
-           description : 'Chapter 1 description', // Chapter description
-           value : 0.04 // Chapter timecode in percent (percentage of the video)
-         },
-         {
-           name : 'Chapter 2', // Chapter name
-           description : 'Chapter 2 description', // Chapter description
-           value : 0.3 // Chapter timecode in percent (percentage of the video)
-         }
-       ],
-       cut : [ // Cut information (begin and end)
+        tags : [ // tags
+          {
+            name : 'Tag 1', // Tag name
+            description : 'Tag 1 description', // Tag description
+            value : 0.04 // Tag timecode in percent (percentage of the video)
+          },
+          {
+            name : 'Tag 2', // Tag name
+            description : 'Tag 2 description', // Tag description
+            value : 0.3 // Tag timecode in percent (percentage of the video)
+          }
+        ],
+        cut : [ // Cut information (begin and end)
          {
            type : 'begin', // Cut type
            value : 0 // Begin timecode (percentage of the media)

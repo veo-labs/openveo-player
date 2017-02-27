@@ -7,6 +7,7 @@ OpenVeo Player defines several directives :
 - **ov-view** : A directive to create a view controlled by a tab (using ov-tabs)
 - **ov-index** : A directive to display and control the index view
 - **ov-chapters** : A directive to display and control the chapters view
+- **ov-tags** : A directive to display and control the tags view
 
 # Players
 
