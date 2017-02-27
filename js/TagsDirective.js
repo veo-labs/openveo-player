@@ -44,8 +44,7 @@
       scope.setTagSrc = function(tag) {
         scope.selectedTag = tag;
         scope.simpleMimeType = scope.getFileMimeType();
-        if (scope.selectedTag.file)
-          scope.selectedTagSrc = '/publish/' + scope.data.id + '/uploads/' + scope.selectedTag.file.filename;
+        scope.selectedTagSrc = scope.simpleMimeType ? scope.selectedTag.file.basePath : null;
       };
 
       // Get simple mimetype

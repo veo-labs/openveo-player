@@ -136,6 +136,11 @@ $scope.data = {
       name : 'Tag 2', // Tag name
       description : 'Tag 2 description', // Tag description
       value : 0.3 // Tag timecode in percent (percentage of the video)
+      file : {
+        mimetype: 'video/mp4'
+        basePath: '/path/to/ressource/video.mp4',
+        originalname: 'name_when_download'
+      }
     },
     ...
   ],
