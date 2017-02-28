@@ -8,6 +8,24 @@
 Image are displayed, audio and video are rendered in HTML5 player. Other files can be downloaded by user.
 - Add html support on description metadata
 
+## DEPENDENCIES
+
+- **chai** has been updated from 1.10.0 to **3.5.0**
+- **grunt** has been updated from 0.4.5 to **1.0.1**
+- **grunt-contrib-compass** has been updated from 1.0.3 to **1.1.1**
+- **grunt-contrib-concat** has been updated from 0.5.1 to **1.0.1**
+- **grunt-contrib-uglify** has been updated from 0.9.1 to **2.0.0**
+- **grunt-eslint** has been updated from 18.0.0 to **19.0.0**
+- **grunt-gh-pages** has been updated from 0.10.0 to **2.0.0**
+- **grunt-karma** has been updated from 0.11.2 to **2.0.0**
+- **grunt-mkdocs** has been updated from 0.1.0 to **0.2.0**
+- **karma-ng-html2js-preprocessor** has been updated from 0.1.2 to **1.0.0**
+- **glob** has been removed
+- **grunt-remove** has been removed
+- **grunt-rename** has been removed
+- **grunt-extend-config** has been removed
+- **grunt-init** has been removed
+
 # 2.1.3 / 2017-02-06
 
 ## BUG FIXES
