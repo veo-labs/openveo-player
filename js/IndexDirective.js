@@ -17,7 +17,7 @@
    */
   function ovIndex(ovIndexLink) {
     return {
-      require: ['^ovPlayer', '^ovTabs'],
+      require: ['^ovPlayer', '^ovPlayerTabs'],
       restrict: 'E',
       templateUrl: ovPlayerDirectory + 'templates/index.html',
       scope: true,
@@ -56,7 +56,7 @@
     };
   });
 
-  app.directive('ovIndex', ovIndex);
+  app.directive('ovPlayerIndex', ovIndex);
   ovIndex.$inject = ['ovIndexLink'];
 
 })(angular.module('ov.player'));

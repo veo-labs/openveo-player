@@ -312,7 +312,7 @@
     return VimeoPlayer;
   }
 
-  app.factory('OvVimeoPlayer', OvVimeoPlayer);
+  app.factory('OvPlayerVimeo', OvVimeoPlayer);
   OvVimeoPlayer.$inject = ['OvPlayer', '$window', '$document', '$sce'];
 
 })(angular, angular.module('ov.player'));

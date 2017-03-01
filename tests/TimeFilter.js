@@ -17,7 +17,7 @@ describe('TimeFilter', function() {
 
   // Initializes tests
   beforeEach(function() {
-    millisecondsToTimeFilter = $filter('millisecondsToTime');
+    millisecondsToTimeFilter = $filter('ovPlayerMillisecondsToTime');
   });
 
   it('Should return an empty String if time < 0', function() {

@@ -1,33 +1,33 @@
 <div ng-class="{'ov-fullscreen' : ovFullViewport}">
   <div class="ov-player">
 
-    <ov-tabs>
+    <ov-player-tabs>
 
       <div class="ov-views">
-        <ov-view title="{{'VIDEO_TAB_TITLE' | ovTranslate}}" view="ov-media-view" class="ov-mode-{{selectedMode}}" view-id="media">
+        <ov-player-view title="{{'VIDEO_TAB_TITLE' | ovPlayerTranslate}}" view="ov-media-view" class="ov-mode-{{selectedMode}}" view-id="media">
           <div class="ov-media">
-            <div class="ov-loader" ng-show="loading" ng-bind="'LOADING' | ovTranslate"></div>
+            <div class="ov-loader" ng-show="loading" ng-bind="'LOADING' | ovPlayerTranslate"></div>
             <ng-include src="mediaTemplate"></ng-include>
           </div>
           <div class="ov-presentation">
             <div ng-style="{'background-image': presentation ? 'url(' + presentation + ')' : 'none'}"></div>
           </div>
-        </ov-view>
+        </ov-player-view>
 
-        <ov-view title="{{'INDEX_TAB_TITLE' | ovTranslate}}" ng-if="displayIndexTab" view="ov-index-view" view-id="index">
-          <ov-index></ov-index>
-        </ov-view>
+        <ov-player-view title="{{'INDEX_TAB_TITLE' | ovPlayerTranslate}}" ng-if="displayIndexTab" view="ov-index-view" view-id="index">
+          <ov-player-index></ov-player-index>
+        </ov-player-view>
 
-        <ov-view title="{{'CHAPTERS_TAB_TITLE' | ovTranslate}}" ng-if="displayChapterTab" view="ov-chapters-view" class="ov-mode-{{selectedMode}}" view-id="chapter">
-          <ov-chapters></ov-chapters>
-        </ov-view>
+        <ov-player-view title="{{'CHAPTERS_TAB_TITLE' | ovPlayerTranslate}}" ng-if="displayChapterTab" view="ov-chapters-view" class="ov-mode-{{selectedMode}}" view-id="chapter">
+          <ov-player-chapters></ov-player-chapters>
+        </ov-player-view>
 
-        <ov-view title="{{'TAGS_TAB_TITLE' | ovTranslate}}" ng-if="displayTagsTab" view="ov-tags-view" class="ov-mode-{{selectedMode}}" view-id="tags">
-          <ov-tags></ov-tags>
-        </ov-view>
+        <ov-player-view title="{{'TAGS_TAB_TITLE' | ovPlayerTranslate}}" ng-if="displayTagsTab" view="ov-tags-view" class="ov-mode-{{selectedMode}}" view-id="tags">
+          <ov-player-tags></ov-player-tags>
+        </ov-player-view>
       </div>
 
-    </ov-tabs>
+    </ov-player-tabs>
 
     <div class="ov-controls">
 
@@ -49,7 +49,7 @@
           <span class="ov-icon-{{playPauseButton}} ov-button" ng-click="playPause()"></span>
         </div>
         <div class="ov-right">
-          <p class="ov-time" ng-show="ovTime">{{time | millisecondsToTime}} - <span>{{duration | millisecondsToTime}}</span></p>
+          <p class="ov-time" ng-show="ovTime">{{time | ovPlayerMillisecondsToTime}} - <span>{{duration | ovPlayerMillisecondsToTime}}</span></p>
           <div class="ov-icon-{{selectedMode}} ov-button ov-mode" ng-show="ovModeIcon" ng-click="toggleModes()">
             <ul ng-show="modesOpened" class="ov-modes-animate">
               <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="ov-button ov-icon-{{mode}}" ng-class="{'ov-selected' : mode === selectedMode}"></li>

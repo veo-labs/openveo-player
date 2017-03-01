@@ -35,7 +35,7 @@ describe('VimeoPlayer', function() {
       }
     };
 
-    var OvVimeoPlayer = $injector.get('OvVimeoPlayer');
+    var OvVimeoPlayer = $injector.get('OvPlayerVimeo');
     player = new OvVimeoPlayer(angular.element(playerElement), {
       type: 'vimeo',
       mediaId: ['1'],

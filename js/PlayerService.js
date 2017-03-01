@@ -274,6 +274,6 @@
     this.realMediaDuration = duration;
   };
 
-  app.value('PlayerService', PlayerService);
+  app.value('ovPlayerService', PlayerService);
 
 })(angular.module('ov.player'));

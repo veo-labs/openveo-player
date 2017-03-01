@@ -331,15 +331,15 @@
             // Get an instance of a player depending on player's type
             switch (playerType.toLowerCase()) {
               case 'youtube':
-                var OvYoutubePlayer = $injector.get('OvYoutubePlayer');
+                var OvYoutubePlayer = $injector.get('OvPlayerYoutube');
                 $scope.player = new OvYoutubePlayer($element, $scope.data);
                 break;
               case 'vimeo':
-                var OvVimeoPlayer = $injector.get('OvVimeoPlayer');
+                var OvVimeoPlayer = $injector.get('OvPlayerVimeo');
                 $scope.player = new OvVimeoPlayer($element, $scope.data);
                 break;
               case 'html':
-                var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
+                var OvHTMLPlayer = $injector.get('OvPlayerHTML');
                 $scope.player = new OvHTMLPlayer($element, $scope.data);
                 break;
               default:
@@ -984,22 +984,22 @@
 
             switch (code) {
               case ovPlayerErrors.MEDIA_ERR_NO_SOURCE:
-                $scope.error = $filter('ovTranslate')('MEDIA_NO_SOURCE');
+                $scope.error = $filter('ovPlayerTranslate')('MEDIA_NO_SOURCE');
                 break;
               case ovPlayerErrors.MEDIA_ERR_NETWORK:
-                $scope.error = $filter('ovTranslate')('MEDIA_ERR_NETWORK');
+                $scope.error = $filter('ovPlayerTranslate')('MEDIA_ERR_NETWORK');
                 break;
               case ovPlayerErrors.MEDIA_ERR_DECODE:
-                $scope.error = $filter('ovTranslate')('MEDIA_ERR_DECODE');
+                $scope.error = $filter('ovPlayerTranslate')('MEDIA_ERR_DECODE');
                 break;
               case ovPlayerErrors.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                $scope.error = $filter('ovTranslate')('MEDIA_ERR_SRC_NOT_SUPPORTED');
+                $scope.error = $filter('ovPlayerTranslate')('MEDIA_ERR_SRC_NOT_SUPPORTED');
                 break;
               case ovPlayerErrors.MEDIA_ERR_PERMISSION:
-                $scope.error = $filter('ovTranslate')('MEDIA_ERR_PERMISSION');
+                $scope.error = $filter('ovPlayerTranslate')('MEDIA_ERR_PERMISSION');
                 break;
               default:
-                $scope.error = $filter('ovTranslate')('MEDIA_ERR_DEFAULT');
+                $scope.error = $filter('ovPlayerTranslate')('MEDIA_ERR_DEFAULT');
                 break;
             }
 
@@ -1017,8 +1017,8 @@
     '$sce',
     '$filter',
     '$timeout',
-    'PlayerService',
-    'i18nPlayerService',
+    'ovPlayerService',
+    'ovPlayerI18nService',
     '$cookies',
     'ovPlayerErrors'
   ];

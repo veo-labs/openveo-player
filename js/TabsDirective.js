@@ -76,6 +76,6 @@
     };
   }
 
-  app.directive('ovTabs', ovTabs);
+  app.directive('ovPlayerTabs', ovTabs);
 
 })(angular.module('ov.player'));

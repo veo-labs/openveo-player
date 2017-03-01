@@ -24,7 +24,7 @@
 
   }
 
-  app.filter('ovTranslate', TranslateFilter);
-  TranslateFilter.$inject = ['i18nPlayerService'];
+  app.filter('ovPlayerTranslate', TranslateFilter);
+  TranslateFilter.$inject = ['ovPlayerI18nService'];
 
 })(angular.module('ov.player'));

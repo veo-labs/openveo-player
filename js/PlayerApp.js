@@ -271,7 +271,7 @@
     throw new Error('ovPlayerDirectory global variable must be defined and set to the root path of the openVeo player');
 
   // Player translations
-  app.constant('i18nTranslations', {
+  app.constant('ovPlayerI18nTranslations', {
     en: {
       VIDEO_TAB_TITLE: 'Video',
       INDEX_TAB_TITLE: 'Index',

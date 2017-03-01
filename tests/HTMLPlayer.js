@@ -28,7 +28,7 @@ describe('HTMLPlayer', function() {
     };
     $document[0].body.appendChild(videoElement);
 
-    var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
+    var OvHTMLPlayer = $injector.get('OvPlayerHTML');
     player = new OvHTMLPlayer(angular.element(videoElement), {
       type: 'html',
       mediaId: ['1'],

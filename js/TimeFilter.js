@@ -7,8 +7,8 @@
    * an hours:minutes:seconds format.
    *
    * e.g.
-   * {{60000 | millisecondsToTime}} // 01:00
-   * {{3600000 | millisecondsToTime}} // 01:00:00
+   * {{60000 | ovPlayerMillisecondsToTime}} // 01:00
+   * {{3600000 | ovPlayerMillisecondsToTime}} // 01:00:00
    *
    * @module ov.player
    * @class millisecondsToTime
@@ -32,6 +32,6 @@
     };
   }
 
-  app.filter('millisecondsToTime', MillisecondsToTime);
+  app.filter('ovPlayerMillisecondsToTime', MillisecondsToTime);
 
 })(angular.module('ov.player'));

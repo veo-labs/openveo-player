@@ -16,7 +16,7 @@
    */
   function ovTags(ovTagsLink) {
     return {
-      require: ['^ovPlayer', '^ovTabs'],
+      require: ['^ovPlayer', '^ovPlayerTabs'],
       restrict: 'E',
       templateUrl: ovPlayerDirectory + 'templates/tags.html',
       scope: true,
@@ -62,7 +62,7 @@
     };
   }]);
 
-  app.directive('ovTags', ovTags);
+  app.directive('ovPlayerTags', ovTags);
   ovTags.$inject = ['ovTagsLink'];
 
 })(angular.module('ov.player'));

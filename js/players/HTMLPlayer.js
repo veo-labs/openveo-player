@@ -341,7 +341,7 @@
     return HTMLPlayer;
   }
 
-  app.factory('OvHTMLPlayer', OvHTMLPlayer);
+  app.factory('OvPlayerHTML', OvHTMLPlayer);
   OvHTMLPlayer.$inject = ['OvPlayer', '$window', '$document', '$sce'];
 
 })(angular, angular.module('ov.player'));

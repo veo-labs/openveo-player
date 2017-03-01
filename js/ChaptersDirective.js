@@ -16,7 +16,7 @@
    */
   function ovChapters(ovChaptersLink) {
     return {
-      require: ['^ovPlayer', '^ovTabs'],
+      require: ['^ovPlayer', '^ovPlayerTabs'],
       restrict: 'E',
       templateUrl: ovPlayerDirectory + 'templates/chapters.html',
       scope: true,
@@ -46,7 +46,7 @@
     };
   }]);
 
-  app.directive('ovChapters', ovChapters);
+  app.directive('ovPlayerChapters', ovChapters);
   ovChapters.$inject = ['ovChaptersLink'];
 
 })(angular.module('ov.player'));

@@ -23,7 +23,7 @@ describe('TabsDirective', function() {
   // Initializes tests
   beforeEach(function() {
     var scope = $rootScope.$new();
-    element = angular.element('<ov-tabs></ov-tabs>');
+    element = angular.element('<ov-player-tabs></ov-player-tabs>');
     element = $compile(element)(scope);
     scope.$digest();
   });
@@ -50,7 +50,7 @@ describe('TabsDirective', function() {
   });
 
   it('Should be able to add a view', function() {
-    var ovTabsController = element.controller('ovTabs');
+    var ovTabsController = element.controller('ovPlayerTabs');
     var isolateScope = element.isolateScope();
     isolateScope.views = [];
     ovTabsController.addView({

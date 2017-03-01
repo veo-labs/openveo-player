@@ -188,7 +188,7 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    var OvVimeoPlayer = $injector.get('OvVimeoPlayer');
+    var OvVimeoPlayer = $injector.get('OvPlayerVimeo');
     assert.isNotNull(isolateScope.player);
     assert.ok(isolateScope.player instanceof OvVimeoPlayer);
   });
@@ -206,7 +206,7 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
+    var OvHTMLPlayer = $injector.get('OvPlayerHTML');
     assert.isNotNull(isolateScope.player);
     assert.ok(isolateScope.player instanceof OvHTMLPlayer);
   });
@@ -222,7 +222,7 @@ describe('PlayerDirective', function() {
     element = $compile(element)(scope);
     scope.$digest();
 
-    var OvHTMLPlayer = $injector.get('OvHTMLPlayer');
+    var OvHTMLPlayer = $injector.get('OvPlayerHTML');
     var isolateScope = element.isolateScope();
     assert.ok(isolateScope.player instanceof OvHTMLPlayer);
   });

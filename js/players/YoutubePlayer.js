@@ -350,7 +350,7 @@
     return YoutubePlayer;
   }
 
-  app.factory('OvYoutubePlayer', OvYoutubePlayer);
+  app.factory('OvPlayerYoutube', OvYoutubePlayer);
   OvYoutubePlayer.$inject = ['OvPlayer', '$window', 'ovPlayerErrors'];
 
 })(angular, angular.module('ov.player'));

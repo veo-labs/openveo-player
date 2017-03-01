@@ -2,7 +2,7 @@
   <ul>
     <li ng-repeat="timecodeObj in timecodes" ng-mouseenter="setImagePreview(timecodeObj.timecode)" ng-click="goToTimecode(timecodeObj.timecode - startCutTime)" ng-class="{'ov-past-timecode' : timecodeObj.timecode - startCutTime < time}">
       <img ng-src="{{timecodeObj.image.small}}"/>
-      <p>{{timecodeObj.timecode - startCutTime | millisecondsToTime}}</p>
+      <p>{{timecodeObj.timecode - startCutTime | ovPlayerMillisecondsToTime}}</p>
     </li>
   </ul>
 </div>

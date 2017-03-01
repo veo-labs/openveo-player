@@ -31,7 +31,7 @@
   function ovView(ovViewLink) {
     return {
       restrict: 'E',
-      require: '^ovTabs',
+      require: '^ovPlayerTabs',
       transclude: true,
       templateUrl: ovPlayerDirectory + 'templates/view.html',
       scope: {
@@ -49,7 +49,7 @@
     };
   });
 
-  app.directive('ovView', ovView);
+  app.directive('ovPlayerView', ovView);
   ovView.$inject = ['ovViewLink'];
 
 })(angular.module('ov.player'));

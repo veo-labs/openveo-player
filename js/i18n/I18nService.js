@@ -72,7 +72,7 @@
 
   }
 
-  app.service('i18nPlayerService', I18nService);
-  I18nService.$inject = ['i18nTranslations'];
+  app.service('ovPlayerI18nService', I18nService);
+  I18nService.$inject = ['ovPlayerI18nTranslations'];
 
 })(angular, angular.module('ov.player'));
