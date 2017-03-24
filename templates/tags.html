@@ -16,7 +16,7 @@
   <audio ng-if="simpleMimeType == 'audio'" ng-src="{{selectedTagSrc}}" audioplayer controls></audio>
   <div ng-if="simpleMimeType && ['image','video','audio'].indexOf(simpleMimeType) == -1" class="download-container">
     <div> {{selectedTag.file.originalname}} </div>
-    <a href="{{selectedTagSrc}}"
+    <a href="{{selectedTagSrc}}?filename={{selectedTag.file.originalname}}"
     class="download" role="button"
     download="{{selectedTag.file.originalname}}"
     ><span>{{ 'FILE_DOWNLOAD' | ovPlayerTranslate}}</span>
