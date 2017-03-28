@@ -261,7 +261,7 @@
      */
     VimeoPlayer.prototype.setTime = function(time) {
       time = parseInt(time) || 0;
-      postActionToPlayer.call(this, 'seekTo', time / 1000);
+      postActionToPlayer.call(this, 'seekTo', String(time / 1000));
 
       // Send a playProgress event because the Vimeo flash player (old
       // browsers) does not trigger the playProgress event while in pause

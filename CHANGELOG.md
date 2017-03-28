@@ -1,9 +1,12 @@
 # 2.2.0
 
 ## BUG FIXES
-- Title tab flickering  is resolved.
+
+- Title tab flickering is resolved.
+- Fix seek to 0 on Vimeo player
 
 ## NEW FEATURES
+
 - Add a tag view to highlight important information and navigate in video to this moment. Tag Description can be HTML and can be associated with a file.
 Image are displayed, audio and video are rendered in HTML5 player. Other files can be downloaded by user.
 - Add html support on description metadata
