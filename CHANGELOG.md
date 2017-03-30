@@ -1,15 +1,15 @@
-# 2.2.0
-
-## BUG FIXES
-
-- Title tab flickering is resolved.
-- Fix seek to 0 on Vimeo player
+# 2.2.0 / 
 
 ## NEW FEATURES
 
 - Add a tag view to highlight important information and navigate in video to this moment. Tag Description can be HTML and can be associated with a file.
 Image are displayed, audio and video are rendered in HTML5 player. Other files can be downloaded by user.
 - Add html support on description metadata
+
+## BUG FIXES
+
+- Title tab flickering is resolved.
+- Fix seek to 0 on Vimeo player
 
 ## DEPENDENCIES
 
@@ -22,7 +22,15 @@ Image are displayed, audio and video are rendered in HTML5 player. Other files c
 - **grunt-gh-pages** has been updated from 0.10.0 to **2.0.0**
 - **grunt-karma** has been updated from 0.11.2 to **2.0.0**
 - **grunt-mkdocs** has been updated from 0.1.0 to **0.2.0**
+- **karma** has been updated from 0.12.31 to **1.3.0**
+- **karma-chrome-launcher** has been updated from 0.1.7 to **2.0.0**
+- **karma-firefox-launcher** has been updated from 0.1.4 to **1.0.0**
+- **karma-ie-launcher** has been updated from 0.1.5 to **1.0.0**
+- **karma-mocha** has been updated from 0.1.10 to **1.3.0**
+- **karma-phantomjs-launcher** has been updated from 0.1.4 to **1.0.2**
 - **karma-ng-html2js-preprocessor** has been updated from 0.1.2 to **1.0.0**
+- **mocha** has been updated from 2.1.0 to **3.2.0**
+- **pre-commit** has been updated from 1.1.1 to **1.2.2**
 - **glob** has been removed
 - **grunt-remove** has been removed
 - **grunt-rename** has been removed
