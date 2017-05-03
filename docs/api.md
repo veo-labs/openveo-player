@@ -8,7 +8,7 @@ Player can be controlled by methods and emits catchable events on the player HTM
 
 Sets the display mode.
 
-Usage :
+Usage:
 
 ```javascript
 var myPlayer = document.getElementById('myPlayer');
@@ -21,7 +21,7 @@ angular.element(myPlayer).on('ready', function(event){
 });
 ```
 
-Arguments :
+Arguments:
 
 Param | Type | Details
 ----- | ---- | ----
@@ -31,7 +31,7 @@ mode  | String  | Display mode (can be either **media**, **both**, **both-presen
 
 Starts / Pauses the player.
 
-Usage :
+Usage:
 
 ```javascript
 var myPlayer = document.getElementById('myPlayer');
@@ -48,7 +48,7 @@ angular.element(myPlayer).on('ready', function(event){
 
 Sets the player volume.
 
-Usage :
+Usage:
 
 ```javascript
 var myPlayer = document.getElementById('myPlayer');
@@ -61,7 +61,7 @@ angular.element(myPlayer).on('ready', function(event){
 });
 ```
 
-Arguments :
+Arguments:
 
 Param | Type | Details
 ----- | ---- | ----
@@ -71,7 +71,7 @@ volume  | Number  | The volume to set from 0 to 100
 
 Sets the player time.
 
-Usage :
+Usage:
 
 ```javascript
 var myPlayer = document.getElementById('myPlayer');
@@ -84,7 +84,7 @@ angular.element(myPlayer).on('ready', function(event){
 });
 ```
 
-Arguments :
+Arguments:
 
 Param | Type | Details
 ----- | ---- | ----
@@ -94,7 +94,7 @@ time  | Number  | The time to set (in milliseconds)
 
 Sets actual media definition.
 
-Usage :
+Usage:
 
 ```javascript
 var myPlayer = document.getElementById('myPlayer');
@@ -106,12 +106,12 @@ angular.element(myPlayer).on('ready', function(event){
   playerController.setDefinition({
     width: 1280,
     height: 720,
-    link: 'http(s)://linkToTheHDFile'
+    link: 'http(s)://mydomainname.local/linkToTheHDFile'
   });
 });
 ```
 
-Arguments :
+Arguments:
 
 Param | Type | Details
 ----- | ---- | ----

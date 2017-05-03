@@ -1,6 +1,6 @@
 # Introduction
 
-OpenVeo Player support Adaptive Streaming DASH and HLS. It will automaticaly switch between protocols according browser capabilities. 
+OpenVeo Player support Adaptive Streaming DASH and HLS. It will automaticaly switch between protocols according browser capabilities.
 A Flash video player is used as a fallback player if none of sources protocol is supported by browser.
 
 # Prerequisites
@@ -27,41 +27,41 @@ And import dependencies to use adaptive sources:
 ```
 
 # How to play adaptive sources
-You need to define your adaptive sources by setting their mimetype and their link. 
+You need to define your adaptive sources by setting their mimetype and their link.
 ```javascript
 $scope.data.sources = [
   {
     adaptive: [ // The list of video adaptive sources (only for "html" player)
-          { // RTMP source 
-            "mimeType": 'rtmp/mp4',
-            "link": 'rtmp://192.168.1.204/openveo/&mp4:bunny.mp4'
+          { // RTMP source
+            mimeType: 'rtmp/mp4',
+            link: 'rtmp://mydomainname.local/openveo/&mp4:bunny.mp4'
           },
           { // Flash source for sources that do not support natively adaptive streaming
-           "height": 720,
-           "mimeType": 'application/f4m+xml',
-           "link": "https://192.168.1.204/openveo/mp4:bunny.mp4/manifest.f4m"
+           height: 720,
+           mimeType: 'application/f4m+xml',
+           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.f4m'
           },
           { // Dash source
-           "height": 720,
-           "mimeType": 'application/dash+xml', 
-           "link": "https://192.168.1.204/openveo/mp4:bunny.mp4/manifest.mpd"
+           height: 720,
+           mimeType: 'application/dash+xml',
+           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.mpd'
           },
           { //HLS Source
-           "height": 720,
-           "mimeType": 'application/vnd.apple.mpegurl',
-           "link": "https://192.168.1.204/openveo/mp4:bunny.mp4/manifest.m3u8"
+           height: 720,
+           mimeType: 'application/vnd.apple.mpegurl',
+           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.m3u8'
         }
     ],
     files : [ // The list of different resolutions sources for this video (only for "html" player)
       {
         width : 640, // Video width for this file
         height : 360, // Video height for this file
-        link : 'http://pathToSmallMP4.mp4' // Video url
+        link : 'http://mydomainname.local/pathToSmallMP4.mp4' // Video url
       },
       {
         width : 1280, // Video width for this file
         height : 720, // Video height for this file
-        link : 'http://pathToHDMP4.mp4' // Video url
+        link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
       },
       ...
     ]
@@ -78,4 +78,4 @@ And set you player type to 'html':
 ></ov-player>
 ```
 
-**NB** : 'Adaptive' sources are always prioritized. 'files' sources will be ignored if 'adaptive' property is defined.
+**NB**: 'Adaptive' sources are always prioritized. 'files' sources will be ignored if 'adaptive' property is defined.

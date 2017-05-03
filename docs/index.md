@@ -1,10 +1,10 @@
-# What's OpenVeo Player ?
+# What's OpenVeo Player?
 
 OpenVeo Player is an [AngularJS](https://angularjs.org/) directive to wrap an HTML5, Youtube or Vimeo player aiming to offer images synchronization and chapters.
 
 ## Compatibility
 
-OpenVeo Player has been tested on the following browsers :
+OpenVeo Player has been tested on the following browsers:
 
 - Google Chrome 54
 - Mozilla Firefox 47

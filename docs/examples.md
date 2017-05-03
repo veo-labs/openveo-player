@@ -71,15 +71,15 @@
           {
             timecode : 0, // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpeg', // Small version of the image
-              large : 'slide_00000_large.jpeg'// Large version of the image
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg'// Large version of the image
             }
           },
           {
             timecode : 1200, // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
-              small : 'slide_00001.jpeg', // Small version of the image
-              large : 'slide_00001_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
             }
           }
         },
@@ -89,12 +89,12 @@
               {
                 width : 640, // Video width for this file
                 height : 360, // Video height for this file
-                link : 'http://pathToSDMP4.mp4' // Video url
+                link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
               },
               {
                 width : 1280, // Video width for this file
                 height : 720, // Video height for this file
-                link : 'http://pathToHDMP4.mp4' // Video url
+                link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
               }
             ]
           }
@@ -214,15 +214,15 @@
           {
             timecode : 0, // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpeg', // Small version of the image
-              large : 'slide_00000_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg' // Large version of the image
             }
           },
           {
             timecode : 1200, // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
-              small : 'slide_00001.jpeg', // Small version of the image
-              large : 'slide_00001_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
             }
          }
         },
@@ -232,12 +232,12 @@
               {
                 width : 640, // Video width for this file
                 height : 360, // Video height for this file
-                link : 'http://136081112/pathToSDMP4.mp4' // Video url
+                link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
               },
               {
                 width : 1280, // Video width for this file
                 height : 720, // Video height for this file
-                link : 'http://136081112/pathToHDMP4.mp4' // Video url
+                link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
               }
             ]
           },
@@ -246,17 +246,17 @@
               {
                 width : 640, // Video width for this file
                 height : 360, // Video height for this file
-                link : 'http://136081113/pathToSDMP4.mp4' // Video url
+                link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
               },
               {
                 width : 1280, // Video width for this file
                 height : 720, // Video height for this file
-                link : 'http://136081113/pathToHDMP4.mp4' // Video url
+                link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
               }
             ]
           }
         ],
-        thumbnail : "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
+        thumbnail : "http://mydomainname.local/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
 
         cut : [ // Cut information (begin and end)
           {
@@ -338,15 +338,15 @@
           {
             timecode : 0, // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpe', // Small version of the image
-              large : 'slide_00000_large.jpeg'// Large version of the image
+              small : 'http://mydomainname.local/slide_00000.jpe', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg'// Large version of the image
             }
           },
           {
             timecode : 1200, // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
-              small : 'slide_00001.jpeg', // Small version of the image
-              large : 'slide_00001_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
             }
          }
         },
@@ -442,14 +442,14 @@
         timecodes : { // Timecodes
           0 : { // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpeg', // Small version of the image
-              large : 'slide_00000_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg' // Large version of the image
             }
           },
           1200 : { // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
-              small : 'slide_00001.jpeg', // Small version of the image
-              large : 'slide_00001_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
             }
          }
        },
@@ -555,16 +555,17 @@
         timecodes : { // Timecodes
           0 : { // Timecode in milliseconds (0 ms)
             image : { // Image to display at 0 ms
-              small : 'slide_00000.jpeg', // Small version of the image
-              large : 'slide_00000_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg' // Large version of the image
             }
           },
           1200 : { // Timecode in milliseconds (1200 ms)
             image : { // Image to display at 1200 ms
-              small : 'slide_00001.jpeg', // Small version of the image
-              large : 'slide_00001_large.jpeg' // Large version of the image
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
             }
-         }
+          }
+        }
        },
        sources: [
          {
@@ -572,14 +573,13 @@
            {
              width : 640, // Video width for this file
              height : 360, // Video height for this file
-             link : 'http://pathToSDMP4.mp4' // Video url
+             link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
            },
            {
              width : 1280, // Video width for this file
              height : 720, // Video height for this file
-             link : 'http://pathToHDMP4.mp4' // Video url
+             link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
            }
-           ]
          }
        ]
      };

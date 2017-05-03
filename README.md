@@ -8,7 +8,7 @@ Documentation is available on [Github pages](http://veo-labs.github.io/openveo-p
 
 # Contributors
 
-Maintainer : [Veo-Labs](http://www.veo-labs.com/)
+Maintainer: [Veo-Labs](http://www.veo-labs.com/)
 
 # License
 

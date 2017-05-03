@@ -1,6 +1,6 @@
 # Introduction
 
-OpenVeo Player defines an AngularJS directive **ov-player** :
+OpenVeo Player defines an AngularJS directive **ov-player**:
 
 ```html
 <ov-player
@@ -99,12 +99,12 @@ $scope.data = {
       {
         width : 640, // Video width for this file
         height : 360, // Video height for this file
-        link : 'http://pathToSmallMP4.mp4' // Video url
+        link : 'http://mydomainname.local/pathToSmallMP4.mp4' // Video url
       },
       {
         width : 1280, // Video width for this file
         height : 720, // Video height for this file
-        link : 'http://pathToHDMP4.mp4' // Video url
+        link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
       },
       ...
       ]
@@ -112,7 +112,7 @@ $scope.data = {
     ...
     }
   ],
-  thumbnail : '/1439286245225/thumbnail.jpg', // The media thumbnail (only for "html" player)
+  thumbnail : 'http://mydomainname.local/1439286245225/thumbnail.jpg', // The media thumbnail (only for "html" player)
   chapters : [ // Chapters
     {
       name : 'Chapter 1', // Chapter name
@@ -138,8 +138,8 @@ $scope.data = {
       value : 0.3 // Tag timecode in percent (percentage of the video)
       file : {
         mimetype: 'video/mp4'
-        basePath: '/path/to/ressource/video.mp4',
-        originalname: 'name_when_download'
+        basePath: 'http://mydomainname.local/path/to/ressource/video.mp4',
+        originalname: 'original-name.mp4'
       }
     },
     ...
@@ -197,7 +197,7 @@ $scope.isTimeDisplayed = true;
 ## ov-fullscreen-icon (optional)
 
 Indicates if fullscreen icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
-Note that even is this option is set to true, this icon can be hidden on device/browser that not support Javascript Fullscreen API.
+Note that even if this option is set to true, this icon can be hidden on devices/browsers without support for Javascript Fullscreen API.
 
 ```javascript
 $scope.isFullscreenIconDisplayed = true;
@@ -274,7 +274,7 @@ $scope.isSettingsIconDisplayed = true;
 
 Indicates player language. (Default to **en**)
 
-Supported values are :
+Supported values are:
 
 - fr
 - en
@@ -290,7 +290,7 @@ Supported values are :
 
 Indicates player type. (Default to **html**)
 
-Supported values are :
+Supported values are:
 
 - vimeo
 - youtube
