@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>Examples - Openveo Player</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Examples";
+    var mkdocs_page_input_path = "examples.md";
+    var mkdocs_page_url = "/examples/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Openveo Player</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">INTRODUCTION</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>USERS</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../prerequisites/">Prerequisites</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../getting-started/">Getting started</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../adaptive-streaming/">Adaptive streaming</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../animations/">Animations</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../api/">API</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Examples</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#player-html-example">Player HTML example</a></li>
+                
+                    <li><a class="toctree-l4" href="#indexhtml">index.html</a></li>
+                
+                    <li><a class="toctree-l4" href="#appjs">app.js</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#player-html-multi-sources-example">Player HTML Multi-sources example</a></li>
+                
+                    <li><a class="toctree-l4" href="#indexhtml_1">index.html</a></li>
+                
+                    <li><a class="toctree-l4" href="#appjs_1">app.js</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#player-vimeo-example">Player Vimeo example</a></li>
+                
+                    <li><a class="toctree-l4" href="#indexhtml_2">index.html</a></li>
+                
+                    <li><a class="toctree-l4" href="#appjs_2">app.js</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#player-youtube-example">Player Youtube example</a></li>
+                
+                    <li><a class="toctree-l4" href="#indexhtml_3">index.html</a></li>
+                
+                    <li><a class="toctree-l4" href="#appjs_3">app.js</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#player-api-example">Player API example</a></li>
+                
+                    <li><a class="toctree-l4" href="#indexhtml_4">index.html</a></li>
+                
+                    <li><a class="toctree-l4" href="#appjs_4">app.js</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>DEVELOPERS</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/basics/">The basics</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/prerequisites/">Prerequisites</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/installation/">Installation</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/compilation/">CSS / SASS / JS compilation</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/i18n/">I18N and I10N</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/coding-standards/">Coding standards</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../developers/unit-tests/">Unit tests</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Openveo Player</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>USERS &raquo;</li>
+        
+      
+    
+    <li>Examples</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/veo-labs/openveo-player" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="player-html-example">Player HTML example</h1>
+<h2 id="indexhtml">index.html</h2>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html ng-app=&quot;test.player&quot; ng-controller=&quot;TestController&quot; ng-strict-di&gt;
+  &lt;head&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/openveo-player/dist/openveo-player.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/video.js/dist/video-js.min.css&quot;&gt;
+
+    &lt;!--[if lt IE 9]&gt;
+      &lt;script src=&quot;lib/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+    &lt;script&gt;
+
+      // Set ovPlayerDirectory to openveo-player root path
+      // This is used by openveo-player to get partials
+      // Do not forget the trailing slash !
+      var ovPlayerDirectory = 'lib/openveo-player/';
+    &lt;/script&gt;
+
+  &lt;/head&gt;
+
+  &lt;body&gt;
+
+    &lt;ov-player
+      ov-player-type=&quot;html&quot;
+      ov-data=&quot;data&quot;
+      ng-show=&quot;ready&quot;
+    &gt;&lt;/ov-player&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular/angular.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular-cookies/angular-cookies.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/video.js/dist/video.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/openveo-player/dist/openveo-player.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+
+    &lt;script&gt;
+
+      // Set flash fallback for video.js
+      videojs.options.flash.swf = &quot;lib/video.js/dist/video-js.swf&quot;;
+
+    &lt;/script&gt;
+  &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="appjs">app.js</h2>
+<pre><code class="javascript">(function(angular){
+
+  'use strict';
+
+  var app = angular.module('test.player', ['ov.player']);
+
+  app.controller('TestController', TestController);
+  TestController.$inject = ['$scope', '$window', '$location'];
+
+  /**
+   * Defines the test controller.
+   */
+  function TestController($scope, $window, $location){
+    $scope.ready = true;
+    $scope.data =
+      {
+        mediaId : '136081112', // The id of the video
+        timecodes : { // Timecodes
+          {
+            timecode : 0, // Timecode in milliseconds (0 ms)
+            image : { // Image to display at 0 ms
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg'// Large version of the image
+            }
+          },
+          {
+            timecode : 1200, // Timecode in milliseconds (1200 ms)
+            image : { // Image to display at 1200 ms
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
+            }
+          }
+        },
+        sources : [
+          {
+            files : [ // The list of video files (only for &quot;html&quot; player)
+              {
+                width : 640, // Video width for this file
+                height : 360, // Video height for this file
+                link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+              },
+              {
+                width : 1280, // Video width for this file
+                height : 720, // Video height for this file
+                link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+              }
+            ]
+          }
+        ],
+        thumbnail : &quot;/1439286245225/thumbnail.jpg&quot;, // The media thumbnail (only for &quot;html&quot; player)
+        chapters : [ // Chapters
+          {
+            name : 'Chapter 1', // Chapter name
+            description : 'Chapter 1 description', // Chapter description
+            value : 0.04 // Chapter timecode in percent (percentage of the video)
+          },
+          {
+            name : 'Chapter 2', // Chapter name
+            description : 'Chapter 2 description', // Chapter description
+            value : 0.3 // Chapter timecode in percent (percentage of the video)
+          }
+        ],
+        tags : [ // Tags
+          {
+            name : 'Tag 1', // Tag name
+            description : 'Tag 1 description', // Tag description
+            value : 0.04 // Tag timecode in percent (percentage of the video)
+          },
+          {
+            name : 'Tag 2', // Tag name
+            description : 'Tag 2 description', // Tag description
+            value : 0.3 // Tag timecode in percent (percentage of the video)
+          }
+        ],
+        cut : [ // Cut information (begin and end)
+          {
+            type : 'begin', // Cut type
+            value : 0 // Begin timecode (percentage of the media)
+          },
+          {
+            type : 'end', // Cut type
+            value : 0.9 // End timecode (percentage of the media)
+          }
+        ]
+      };
+  }
+
+})(angular);
+</code></pre>
+
+<h1 id="player-html-multi-sources-example">Player HTML Multi-sources example</h1>
+<h2 id="indexhtml_1">index.html</h2>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html ng-app=&quot;test.player&quot; ng-controller=&quot;TestController&quot; ng-strict-di&gt;
+  &lt;head&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/openveo-player/dist/openveo-player.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/video.js/dist/video-js.min.css&quot;&gt;
+
+    &lt;!--[if lt IE 9]&gt;
+      &lt;script src=&quot;lib/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+    &lt;script&gt;
+
+      // Set ovPlayerDirectory to openveo-player root path
+      // This is used by openveo-player to get partials
+      // Do not forget the trailing slash !
+      var ovPlayerDirectory = 'lib/openveo-player/';
+    &lt;/script&gt;
+
+  &lt;/head&gt;
+
+  &lt;body&gt;
+
+    &lt;ov-player
+      ov-player-type=&quot;html&quot;
+      ov-data=&quot;data&quot;
+      ng-show=&quot;ready&quot;
+    &gt;&lt;/ov-player&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular/angular.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular-cookies/angular-cookies.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/video.js/dist/video.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/openveo-player/dist/openveo-player.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+
+    &lt;script&gt;
+
+      // Set flash fallback for video.js
+      videojs.options.flash.swf = &quot;lib/video.js/dist/video-js.swf&quot;;
+
+    &lt;/script&gt;
+
+  &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="appjs_1">app.js</h2>
+<pre><code class="javascript">(function(angular){
+
+  'use strict';
+
+  var app = angular.module('test.player', ['ov.player']);
+
+  app.controller('TestController', TestController);
+  TestController.$inject = ['$scope', '$window', '$location'];
+
+  /**
+   * Defines the test controller.
+   */
+  function TestController($scope, $window, $location){
+    $scope.ready = true;
+    $scope.data =
+      {
+        mediaId : ['136081112', '136081113'], // The id of the video
+        timecodes : { // Timecodes
+          {
+            timecode : 0, // Timecode in milliseconds (0 ms)
+            image : { // Image to display at 0 ms
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg' // Large version of the image
+            }
+          },
+          {
+            timecode : 1200, // Timecode in milliseconds (1200 ms)
+            image : { // Image to display at 1200 ms
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
+            }
+         }
+        },
+        sources : [
+          {
+            files : [ // The list of video files for 136081112 media ID
+              {
+                width : 640, // Video width for this file
+                height : 360, // Video height for this file
+                link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+              },
+              {
+                width : 1280, // Video width for this file
+                height : 720, // Video height for this file
+                link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+              }
+            ]
+          },
+          {
+            files : [ // The list of video files for 136081113 media ID
+              {
+                width : 640, // Video width for this file
+                height : 360, // Video height for this file
+                link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+              },
+              {
+                width : 1280, // Video width for this file
+                height : 720, // Video height for this file
+                link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+              }
+            ]
+          }
+        ],
+        thumbnail : &quot;http://mydomainname.local/1439286245225/thumbnail.jpg&quot;, // The media thumbnail (only for &quot;html&quot; player)
+
+        cut : [ // Cut information (begin and end)
+          {
+            type : 'begin', // Cut type
+            value : 0 // Begin timecode (percentage of the media)
+          },
+          {
+            type : 'end', // Cut type
+            value : 0.9 // End timecode (percentage of the media)
+          }
+        ]
+      };
+  }
+
+})(angular);
+</code></pre>
+
+<h1 id="player-vimeo-example">Player Vimeo example</h1>
+<h2 id="indexhtml_2">index.html</h2>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html ng-app=&quot;test.player&quot; ng-controller=&quot;TestController&quot; ng-strict-di&gt;
+  &lt;head&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/openveo-player/dist/openveo-player.css&quot;&gt;
+
+    &lt;!--[if lt IE 9]&gt;
+      &lt;script src=&quot;lib/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+    &lt;script&gt;
+
+      // Set ovPlayerDirectory to openveo-player root path
+      // This is used by openveo-player to get partials
+      // Do not forget the trailing slash !
+      var ovPlayerDirectory = &quot;lib/openveo-player/&quot;;
+    &lt;/script&gt;
+
+  &lt;/head&gt;
+
+  &lt;body&gt;
+
+    &lt;ov-player
+      ov-player-type=&quot;vimeo&quot;
+      ov-data=&quot;data&quot;
+      ng-show=&quot;ready&quot;
+    &gt;&lt;/ov-player&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular/angular.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular-cookies/angular-cookies.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/openveo-player/dist/openveo-player.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="appjs_2">app.js</h2>
+<pre><code class="javascript">(function(angular){
+
+  'use strict';
+
+  var app = angular.module('test.player', ['ov.player']);
+
+  app.controller('TestController', TestController);
+  TestController.$inject = ['$scope', '$window', '$location'];
+
+  /**
+   * Defines the test controller.
+   */
+  function TestController($scope, $window, $location){
+    $scope.ready = true;
+    $scope.data =
+      {
+        mediaId : ['136081112'], // The id of the video on vimeo platform
+        timecodes : { // Timecodes
+          {
+            timecode : 0, // Timecode in milliseconds (0 ms)
+            image : { // Image to display at 0 ms
+              small : 'http://mydomainname.local/slide_00000.jpe', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg'// Large version of the image
+            }
+          },
+          {
+            timecode : 1200, // Timecode in milliseconds (1200 ms)
+            image : { // Image to display at 1200 ms
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
+            }
+         }
+        },
+        tags : [ // tags
+          {
+            name : 'Tag 1', // Tag name
+            description : 'Tag 1 description', // Tag description
+            value : 0.04 // Tag timecode in percent (percentage of the video)
+          },
+          {
+            name : 'Tag 2', // Tag name
+            description : 'Tag 2 description', // Tag description
+            value : 0.3 // Tag timecode in percent (percentage of the video)
+          }
+        ],
+        cut : [ // Cut information (begin and end)
+         {
+           type : 'begin', // Cut type
+           value : 0 // Begin timecode (percentage of the media)
+         },
+         {
+           type : 'end', // Cut type
+           value : 0.9 // End timecode (percentage of the media)
+         }
+       ]
+     };
+  }
+
+})(angular);
+</code></pre>
+
+<h1 id="player-youtube-example">Player Youtube example</h1>
+<h2 id="indexhtml_3">index.html</h2>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html ng-app=&quot;test.player&quot; ng-controller=&quot;TestController&quot; ng-strict-di&gt;
+  &lt;head&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/openveo-player/dist/openveo-player.css&quot;&gt;
+
+    &lt;!--[if lt IE 9]&gt;
+      &lt;script src=&quot;lib/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+    &lt;script&gt;
+
+      // Set ovPlayerDirectory to openveo-player root path
+      // This is used by openveo-player to get partials
+      // Do not forget the trailing slash !
+      var ovPlayerDirectory = &quot;lib/openveo-player/&quot;;
+    &lt;/script&gt;
+
+  &lt;/head&gt;
+
+  &lt;body&gt;
+
+    &lt;ov-player
+      ov-player-type=&quot;youtube&quot;
+      ov-data=&quot;data&quot;
+      ng-show=&quot;ready&quot;
+    &gt;&lt;/ov-player&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular/angular.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular-cookies/angular-cookies.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/openveo-player/dist/openveo-player.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="appjs_3">app.js</h2>
+<pre><code class="javascript">(function(angular){
+
+  'use strict';
+
+  var app = angular.module('test.player', ['ov.player']);
+
+  app.controller('TestController', TestController);
+  TestController.$inject = ['$scope', '$window', '$location'];
+
+  /**
+   * Defines the test controller.
+   */
+  function TestController($scope, $window, $location){
+    $scope.ready = true;
+    $scope.data =
+      {
+        mediaId : ['136081112'], // The id(s) of the video(s) on youtube platform
+        timecodes : { // Timecodes
+          0 : { // Timecode in milliseconds (0 ms)
+            image : { // Image to display at 0 ms
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg' // Large version of the image
+            }
+          },
+          1200 : { // Timecode in milliseconds (1200 ms)
+            image : { // Image to display at 1200 ms
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
+            }
+         }
+       },
+       chapters : [ // Chapters
+         {
+           name : 'Chapter 1', // Chapter name
+           description : 'Chapter 1 description', // Chapter description
+           value : 0.04 // Chapter timecode in percent (percentage of the video)
+         },
+         {
+           name : 'Chapter 2', // Chapter name
+           description : 'Chapter 2 description', // Chapter description
+           value : 0.3 // Chapter timecode in percent (percentage of the video)
+         }
+       ],
+       cut : [ // Cut information (begin and end)
+         {
+           type : 'begin', // Cut type
+           value : 0 // Begin timecode (percentage of the media)
+         },
+         {
+           type : 'end', // Cut type
+           value : 0.9 // End timecode (percentage of the media)
+         }
+       ]
+     };
+  }
+
+})(angular);
+</code></pre>
+
+<h1 id="player-api-example"><a href="../api/">Player API</a> example</h1>
+<h2 id="indexhtml_4">index.html</h2>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html ng-app=&quot;test.player&quot; ng-controller=&quot;TestController&quot; ng-strict-di&gt;
+  &lt;head&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/openveo-player/dist/openveo-player.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/video.js/dist/video-js.min.css&quot;&gt;
+
+    &lt;!--[if lt IE 9]&gt;
+      &lt;script src=&quot;lib/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+    &lt;script&gt;
+
+      // Set ovPlayerDirectory to openveo-player root path
+      // This is used by openveo-player to get partials
+      // Do not forget the trailing slash !
+      var ovPlayerDirectory = &quot;lib/openveo-player/&quot;;
+    &lt;/script&gt;
+
+  &lt;/head&gt;
+
+  &lt;body&gt;
+
+    &lt;ov-player
+      ov-player-type=&quot;html&quot;
+      ov-data=&quot;data&quot;
+      ng-show=&quot;ready&quot;
+      id=&quot;myPlayer&quot;
+    &gt;&lt;/ov-player&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular/angular.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/angular-cookies/angular-cookies.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/video.js/dist/video.min.js&quot;&gt;&lt;/script&gt;
+
+    &lt;script&gt;
+
+      // Set flash fallback for video.js
+      videojs.options.flash.swf = &quot;lib/video.js/dist/video-js.swf&quot;;
+
+    &lt;/script&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;lib/openveo-player/dist/openveo-player.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="appjs_4">app.js</h2>
+<pre><code class="javascript">(function(angular){
+
+  'use strict';
+
+  var app = angular.module('test.player', ['ov.player']);
+
+  app.controller('TestController', TestController);
+  TestController.$inject = ['$scope', '$window', '$location'];
+
+  /**
+   * Defines the test controller.
+   */
+  function TestController($scope, $window, $location){
+    $scope.ready = true;
+    $scope.data =
+      {
+        mediaId : ['136081112'], // The id(s) of the video(s) on vimeo platform
+        timecodes : { // Timecodes
+          0 : { // Timecode in milliseconds (0 ms)
+            image : { // Image to display at 0 ms
+              small : 'http://mydomainname.local/slide_00000.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00000_large.jpeg' // Large version of the image
+            }
+          },
+          1200 : { // Timecode in milliseconds (1200 ms)
+            image : { // Image to display at 1200 ms
+              small : 'http://mydomainname.local/slide_00001.jpeg', // Small version of the image
+              large : 'http://mydomainname.local/slide_00001_large.jpeg' // Large version of the image
+            }
+          }
+        }
+       },
+       sources: [
+         {
+           files : [ // The list of video files (only for &quot;html&quot; player)
+           {
+             width : 640, // Video width for this file
+             height : 360, // Video height for this file
+             link : 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+           },
+           {
+             width : 1280, // Video width for this file
+             height : 720, // Video height for this file
+             link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+           }
+         }
+       ]
+     };
+
+     var myPlayer = document.getElementById('myPlayer');
+
+     // Listen to ready event
+     angular.element(myPlayer).on('ready', function(event){
+       console.log('ready');
+
+       var playerController = angular.element(myPlayer).controller('ovPlayer');
+
+       // Selects a new display mode ('media')
+       playerController.selectMode('media');
+
+       // Starts / Pauses the player
+       playerController.playPause();
+
+       // Sets volume to 10%
+       playerController.setVolume(10);
+
+       // Seeks media to time 20s
+       playerController.setTime(20000);
+
+     });
+
+     angular.element(myPlayer).on('waiting', function(event){
+       console.log('waiting');
+     });
+
+     angular.element(myPlayer).on('playing', function(event){
+       console.log('playing');
+     });
+
+     angular.element(myPlayer).on('durationChange', function(event, duration){
+       console.log('durationChange with new duration = ' + duration + 'ms');
+     });
+
+     angular.element(myPlayer).on('play', function(event){
+       console.log('play');
+     });
+
+     angular.element(myPlayer).on('pause', function(event){
+       console.log('pause');
+     });
+
+     angular.element(myPlayer).on('loadProgress', function(event, percents){
+       console.log('loadProgress');
+       console.log('Buffering start = ' + percents.loadedStart);
+       console.log('Buffering end = ' + percents.loadedPercent);
+     });
+
+     angular.element(myPlayer).on('playProgress', function(event, data){
+       console.log('playProgress');
+       console.log('Current time = ' + data.time + 'ms');
+       console.log('Played percent = ' + data.percent);
+     });
+
+     angular.element(myPlayer).on('end', function(event){
+       console.log('end');
+     });
+
+     angular.element(myPlayer).on('error', function(event, error){
+       console.log(error.message);
+       console.log(error.code);
+     });
+
+  }
+
+})(angular);
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../developers/basics/" class="btn btn-neutral float-right" title="The basics">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../api/" class="btn btn-neutral" title="API"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/veo-labs/openveo-player" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../api/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../developers/basics/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>
