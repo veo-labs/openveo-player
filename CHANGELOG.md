@@ -1,3 +1,9 @@
+# 2.2.1
+
+## BUG FIXES
+
+- Authorize future minor versions of @openveo/api
+
 # 2.2.0 / 2017-05-04
 
 ## NEW FEATURES
