@@ -1,3 +1,9 @@
+# 2.2.2 /
+
+## BUG FIXES
+
+- Fix the background color of chapters and tags to make it white no matter what. Chapters background was grey and tabs background was black in fullscreen.
+
 # 2.2.1 / 2017-05-04
 
 ## BUG FIXES

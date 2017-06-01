@@ -7,22 +7,18 @@
 /* Index view with half the list of slides and half the focused slide */
 .ov-chapters-view{
   opacity: 1;
-  width: 100%; 
-  height: 100%; 
-  background-color: #000; 
-  
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+
   &.ng-hide-add.ng-hide-add-active,
   &.ng-hide-remove.ng-hide-remove-active{
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-  }
-  
-  &.ng-hide{ 
-    opacity: 0; 
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
-  .ov-chapters{
-    background-color: #eee; 
+  &.ng-hide{
+    opacity: 0;
   }
 }
