@@ -6,4 +6,4 @@ OpenVeo Player requires and has been tested with:
 
 To play video with HTML5 player, OpenVeo requires:
 
-- [Video.js](http://videojs.com/) (**=5.9.2**)
+- [Video.js](http://videojs.com/) (**=5.19.2**)
