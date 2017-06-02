@@ -3,6 +3,7 @@
 ## BUG FIXES
 
 - Fix the background color of chapters and tags to make it white no matter what. Chapters background was grey and tabs background was black in fullscreen.
+- Fix the spinner of the HTML player. VideoJS spinner was not perfectly circle.
 
 # 2.2.1 / 2017-05-04
 
