@@ -30,7 +30,7 @@
           // is empty
           var buffer = this.player.buffered();
           if (buffer.length >= 1) {
-            var loadedStart = (this.player.currentTime() / this.player.duration());
+            var loadedStart = (this.player.currentTime() / this.player.duration()) || 0;
             this.jPlayerElement.triggerHandler('ovLoadProgress', {
               loadedStart: Math.max(0, Math.min(loadedStart, 1)) * 100,
               loadedPercent: this.player.bufferedPercent() * 100
@@ -44,9 +44,7 @@
           this.jPlayerElement.triggerHandler('ovDurationChange', duration * 1000);
           break;
 
-        // Ready to render the media data at the current playback position
-        // for the first time
-        case 'loadeddata':
+        // Ready to render the media data at the current playback position for the first time
         case 'loadedmetadata':
           this.loaded = true;
           this.jPlayerElement.triggerHandler('ovReady');
@@ -80,10 +78,10 @@
 
         // Media playback position has changed
         case 'timeupdate':
-          var current_time = this.player.currentTime();
-          var playedPercent = (current_time / this.player.duration()) * 100;
+          var currentTime = this.player.currentTime();
+          var playedPercent = (currentTime / this.player.duration()) * 100;
           this.jPlayerElement.triggerHandler('ovPlayProgress', {
-            time: current_time * 1000,
+            time: currentTime * 1000,
             percent: playedPercent
           });
           break;
@@ -99,6 +97,39 @@
         default:
           break;
       }
+    }
+
+    /**
+     * Loads current source with the given definition.
+     *
+     * @param {Object} definition The definition from the list of available definitions
+     */
+    function load(definition) {
+      var mediaSource;
+      var availableDefinitions = this.getAvailableDefinitions();
+      var sourceDefinition = definition ||
+          availableDefinitions && availableDefinitions[availableDefinitions.length - 1] ||
+          null;
+
+      if (!sourceDefinition) {
+
+        // Adaptive streaming
+        mediaSource = this.media.sources[this.selectedSourceIndex].adaptive.map(function(obj) {
+          var source = {};
+          source['src'] = obj.link;
+          source['type'] = obj.mimeType;
+          return source;
+        });
+
+      } else {
+
+        // Files
+        mediaSource = [{src: sourceDefinition.link, type: 'video/mp4'}];
+
+      }
+
+      this.player.src(mediaSource);
+      this.player.load();
     }
 
     // All HTML player events
@@ -121,79 +152,19 @@
      *
      * @constructor
      * @extends Player
-     * @param Object jPlayerElement The JQLite HTML element corresponding
+     * @param {Object} jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param Object media Details about the media
-     *   {
-     *     mediaId : "136081112", // The id of the media
-     *     sources : {
-     *       adaptive : [
-     *         {
-     *          link : 'http://streaming/platform/mp4:video.mp4/manifest.mpd'
-     *          mimeType : 'application/dash+xml'
-     *         },
-     *         {
-     *          link : 'http://streaming/platform/mp4:video.mp4/playlist.m3u8'
-     *          mimeType : 'application/x-mpegURL'
-     *         },
-     *         ...
-     *       ],
-     *       files : [ // The list of media files (required for "html" player)
-     *         {
-     *           width : 640, // Media width for this file
-     *           height : 360, // Media height for this file
-     *           link : "https://player.vimeo.com/external/136081112.sd.mp4" // Media url
-     *         },
-     *         {
-     *           width : 1280, // Media width for this file
-     *           height : 720, // Media height for this file
-     *           link : "https://player.vimeo.com/external/136081112.hd.mp4" // Media url
-     *         },
-     *         ...
-     *       ]
-     *     },
-     *     thumbnail : "/1439286245225/thumbnail.jpg" // The media thumbnail (only for "html" player)
-     *   }
+     * @param {Object} media Media to load
+     * @param {Array} media.sources Media sources with files or adaptive streaming information
+     * @param {String} id The player id to use as the "id" attribute
      */
-    function HTMLPlayer(jPlayerElement, media) {
-      OvPlayer.prototype.init.call(this, jPlayerElement, media);
-
-      // Order media definitions from better quality to lower quality
-      for (var i = 0; i < this.media.sources.length; i++) {
-        if (this.media.sources[i].files)
-          this.media.sources[i].files.sort(function(def1, def2) {
-            if (def1.height < def2.height)
-              return 1;
-
-            return -1;
-          });
-      }
+    function HTMLPlayer(jPlayerElement, media, id) {
+      OvPlayer.prototype.init.call(this, jPlayerElement, id);
+      this.setMedia(media);
     }
 
     HTMLPlayer.prototype = new OvPlayer();
     HTMLPlayer.prototype.constructor = HTMLPlayer;
-
-    /**
-     * Gets media sources.
-     *
-     * If definitions are not available, so video sources are adaptive
-     *
-     * @method getMediaSources
-     * @param {Object} definition Media definition object
-     * @return String The media sources
-     */
-    HTMLPlayer.prototype.getMediaSources = function(definition) {
-      if (!definition)
-        return this.media.sources[this.selectedMediaIndex].adaptive.map(
-                function(obj) {
-                  var rObj = {};
-                  rObj['src'] = obj.link;
-                  rObj['type'] = obj.mimeType;
-                  return rObj;
-                });
-
-      return [{src: definition.link, type: 'video/mp4'}];
-    };
 
     /**
      * Gets media thumbnail.
@@ -207,7 +178,7 @@
     };
 
     /**
-     * Inititializes the player when DOM is loaded.
+     * Initializes the player when DOM is loaded.
      *
      * Retrieves player HTML element and attach listeners to it to be able
      * to receive media events.
@@ -225,32 +196,39 @@
           preload: 'auto'
         });
 
+      this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
+
+      // Set media events listeners
+      for (var i = 0; i < events.length; i++)
+        this.player.on(events[i], this.handlePlayerEventsFn);
+
       this.player.ready(
         function() {
-          self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
-
-          // Set media events listeners
-          for (var i = 0; i < events.length; i++)
-            this.on(events[i], self.handlePlayerEventsFn);
 
           // Start loading media
           if (!this.error_)
             self.load();
         }
-       );
+      );
     };
 
     /**
-     * Starts loading current media.
+     * Loads current source.
      *
      * @method load
      */
-    HTMLPlayer.prototype.load = function(definition) {
-      var ad = this.getAvailableDefinitions();
-      var sd = definition || ad && ad[ad.length - 1] || null;
-      var ms = this.getMediaSources(sd);
-      this.player.src(ms);
-      this.player.load();
+    HTMLPlayer.prototype.load = function() {
+      load.call(this);
+    };
+
+    /**
+     * Changes definition of the current source.
+     *
+     * @method setDefinition
+     * @param {Object} definition Definition from the list of available definitions
+     */
+    HTMLPlayer.prototype.setDefinition = function(definition) {
+      load.call(this, definition);
     };
 
     /**
@@ -261,6 +239,16 @@
      */
     HTMLPlayer.prototype.isPaused = function() {
       return this.player.paused();
+    };
+
+    /**
+     * Tests if player actual state is playing.
+     *
+     * @method isPlaying
+     * @return {Boolean} true if playing, false otherwise
+     */
+    HTMLPlayer.prototype.isPlaying = function() {
+      return !this.isPaused();
     };
 
     /**
@@ -279,7 +267,7 @@
      * Sets volume.
      *
      * @method setVolume
-     * @param Number volume The new volume from 0 to 100.
+     * @param {Number} volume The new volume from 0 to 100.
      */
     HTMLPlayer.prototype.setVolume = function(volume) {
       this.player.volume(volume / 100);
@@ -289,11 +277,36 @@
      * Sets time.
      *
      * @method setTime
-     * @param Number time The time to seek to in milliseconds
+     * @param {Number} time The time to seek to in milliseconds
      */
     HTMLPlayer.prototype.setTime = function(time) {
       time = parseInt(time) || 0.1;
       this.player.currentTime(time / 1000);
+    };
+
+    /**
+     * Sets current media.
+     *
+     * Also order media definitions from better quality to lower quality.
+     *
+     * @method setMedia
+     * @param {Objet} media New media
+     * @param {Array} media.sources Media sources with files or adaptive streaming information
+     * @param {String} media.thumbnail Media thumbnail url
+     */
+    HTMLPlayer.prototype.setMedia = function(media) {
+      OvPlayer.prototype.setMedia.call(this, media);
+
+      // Order media definitions from better quality to lower quality
+      for (var i = 0; i < this.media.sources.length; i++) {
+        if (this.media.sources[i].files)
+          this.media.sources[i].files.sort(function(def1, def2) {
+            if (def1.height < def2.height)
+              return 1;
+
+            return -1;
+          });
+      }
     };
 
     /**
@@ -309,14 +322,14 @@
     /**
      * Gets media definitions.
      *
-     * Files definition array is send if there is no adaptive sources
+     * Files definition array is returned if there is no adaptive sources.
      *
      * @method getAvailableDefinitions
-     * @return {Array} The list of available media definitions
+     * @return {Array|Null} The list of available media definitions
      */
     HTMLPlayer.prototype.getAvailableDefinitions = function() {
-      var media = this.media.sources[this.selectedMediaIndex];
-      return !media.adaptive || media.adaptive.length == 0 ? media.files : null;
+      var media = this.media.sources[this.selectedSourceIndex];
+      return (!media.adaptive || media.adaptive.length == 0) ? media.files : null;
     };
 
     /**

@@ -128,7 +128,7 @@ describe('PlayerService', function() {
     media.cut[0].value = 0;
     media.cut[1].value = 1;
     playerService.setMedia(media);
-    var chapters = playerService.getMediaPOI('chapters');
+    var chapters = playerService.getMediaPointsOfInterest('chapters');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
 
@@ -136,14 +136,14 @@ describe('PlayerService', function() {
     media.cut[0].value = 0.5;
     media.cut[1].value = 1;
     playerService.setMedia(media);
-    chapters = playerService.getMediaPOI('chapters');
+    chapters = playerService.getMediaPointsOfInterest('chapters');
     assert.isArray(chapters);
     assert.equal(chapters.length, 1);
 
     // No cut
     media.cut = null;
     playerService.setMedia(media);
-    chapters = playerService.getMediaPOI('chapters');
+    chapters = playerService.getMediaPointsOfInterest('chapters');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
   });
@@ -154,7 +154,7 @@ describe('PlayerService', function() {
     media.cut[0].value = 0;
     media.cut[1].value = 1;
     playerService.setMedia(media);
-    var chapters = playerService.getMediaPOI('tags');
+    var chapters = playerService.getMediaPointsOfInterest('tags');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
 
@@ -162,14 +162,14 @@ describe('PlayerService', function() {
     media.cut[0].value = 0.5;
     media.cut[1].value = 1;
     playerService.setMedia(media);
-    chapters = playerService.getMediaPOI('tags');
+    chapters = playerService.getMediaPointsOfInterest('tags');
     assert.isArray(chapters);
     assert.equal(chapters.length, 1);
 
     // No cut
     media.cut = null;
     playerService.setMedia(media);
-    chapters = playerService.getMediaPOI('tags');
+    chapters = playerService.getMediaPointsOfInterest('tags');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
   });

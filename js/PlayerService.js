@@ -174,11 +174,11 @@
    *
    * Only POI within the cut range are returned.
    *
-   * @method getMediaPOI
+   * @method getMediaPointsOfInterest
    * @param {String} The property to retreive and filter
    * @return {Object} The media POI
    */
-  PlayerService.prototype.getMediaPOI = function(property) {
+  PlayerService.prototype.getMediaPointsOfInterest = function(property) {
 
     // Media is cut
     if (this.isCut && this.realMediaDuration && this.media[property]) {
@@ -204,7 +204,7 @@
    * @param {Array} chapters chapters array to modify from percent to timestamp
    * @param {int} mediaDuration media original duration in ms
    */
-  PlayerService.prototype.processPOITime = function(chapters) {
+  PlayerService.prototype.processPointsOfInterestTime = function(chapters) {
     for (var i = 0; i < chapters.length; i++) {
       chapters[i].value = (chapters[i].value * this.realMediaDuration) -
                           Math.floor(this.cutStart * this.realMediaDuration);

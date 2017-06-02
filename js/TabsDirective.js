@@ -60,7 +60,7 @@
         };
 
         /**
-         * Add the scope of an ovView directive to the list of tabs.
+         * Adds the scope of an ovView directive to the list of tabs.
          *
          * @method addView
          * @param {Object} view The ovView to add to tabs
@@ -70,6 +70,19 @@
             $scope.select(view);
 
           $scope.views.push(view);
+        };
+
+        /**
+         * Removes an ovView directive from the list of tabs.
+         *
+         * @method removeView
+         * @param {Object} view The ovView to remove from tabs
+         */
+        this.removeView = function(view) {
+          var index = $scope.views.indexOf(view);
+
+          if (index !== -1)
+            $scope.views.splice(index, 1);
         };
 
       }]

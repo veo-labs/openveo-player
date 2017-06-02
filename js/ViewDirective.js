@@ -46,6 +46,12 @@
   app.factory('ovViewLink', function() {
     return function(scope, element, attrs, tabsController) {
       tabsController.addView(scope);
+
+      // Detach view from tabs when view is destroyed
+      scope.$on('$destroy', function() {
+        tabsController.removeView(scope);
+      });
+
     };
   });
 

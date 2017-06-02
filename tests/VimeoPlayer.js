@@ -10,7 +10,9 @@ describe('VimeoPlayer', function() {
     $document,
     $injector,
     jWindowElement,
-    $window;
+    $window,
+    mediaId,
+    playerId;
 
   // Load module player
   beforeEach(module('ov.player'));
@@ -24,10 +26,12 @@ describe('VimeoPlayer', function() {
 
   // Initializes tests
   beforeEach(function() {
+    mediaId = '42';
+    playerId = 'player_id_42';
     jWindowElement = angular.element($window);
     playerElement = $document[0].createElement('div');
     videoElement = $document[0].createElement('div');
-    videoElement.setAttribute('id', 'player_1');
+    videoElement.setAttribute('id', playerId);
     $document[0].body.appendChild(videoElement);
 
     videoElement.contentWindow = {
@@ -38,9 +42,9 @@ describe('VimeoPlayer', function() {
     var OvVimeoPlayer = $injector.get('OvPlayerVimeo');
     player = new OvVimeoPlayer(angular.element(playerElement), {
       type: 'vimeo',
-      mediaId: ['1'],
+      mediaId: [mediaId],
       timecodes: {}
-    });
+    }, playerId);
     player.initialize();
   });
 
@@ -52,7 +56,8 @@ describe('VimeoPlayer', function() {
   });
 
   it('Should be able to build Vimeo player url', function() {
-    assert.equal(player.getMediaSources(), '//player.vimeo.com/video/1?api=1&player_id=player_1');
+    assert.equal(player.getSourceUrl().valueOf(),
+                 '//player.vimeo.com/video/' + mediaId + '?api=1&player_id=' + playerId);
   });
 
   it('Should register to Vimeo player events', function(done) {
@@ -67,7 +72,7 @@ describe('VimeoPlayer', function() {
     };
 
     message['event'] = 'ready';
-    message['player_id'] = 'player_1';
+    message['player_id'] = playerId;
 
     jWindowElement.triggerHandler('message', message);
   });
@@ -87,13 +92,13 @@ describe('VimeoPlayer', function() {
 
       if (data.value === 'play') {
         message['event'] = 'play';
-        message['player_id'] = 'player_1';
+        message['player_id'] = playerId;
         jWindowElement.triggerHandler('message', message);
       }
     };
 
     message['event'] = 'ready';
-    message['player_id'] = 'player_1';
+    message['player_id'] = playerId;
     jWindowElement.triggerHandler('message', message);
     player.playPause();
   });
@@ -113,13 +118,13 @@ describe('VimeoPlayer', function() {
 
       if (data.value === 'pause') {
         message['event'] = 'pause';
-        message['player_id'] = 'player_1';
+        message['player_id'] = playerId;
         jWindowElement.triggerHandler('message', message);
       }
     };
 
     message['event'] = 'ready';
-    message['player_id'] = 'player_1';
+    message['player_id'] = playerId;
     jWindowElement.triggerHandler('message', message);
     player.playPause();
   });
@@ -138,7 +143,7 @@ describe('VimeoPlayer', function() {
     };
 
     message['event'] = 'ready';
-    message['player_id'] = 'player_1';
+    message['player_id'] = playerId;
     jWindowElement.triggerHandler('message', message);
     player.setVolume(50);
   });
@@ -156,7 +161,7 @@ describe('VimeoPlayer', function() {
     };
 
     message['event'] = 'ready';
-    message['player_id'] = 'player_1';
+    message['player_id'] = playerId;
     jWindowElement.triggerHandler('message', message);
     player.setTime(50000);
   });

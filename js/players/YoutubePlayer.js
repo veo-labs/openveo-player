@@ -25,7 +25,6 @@
       // Events
       switch (data.event) {
         case 'infoDelivery':
-
           if (data.info.currentTime !== undefined && this.duration)
             this.jPlayerElement.triggerHandler('ovPlayProgress', {
               time: data.info.currentTime * 1000,
@@ -89,7 +88,7 @@
     ];
 
     /**
-     * Inititializes the player.
+     * Initializes the player.
      *
      * Youtube player uses postMessage API to be able to communicate with
      * the player.
@@ -118,7 +117,6 @@
           },
           events: {
             onReady: function() { // Youtube API is ready to be called
-              self.jPlayerElement.triggerHandler('ovReady');
 
               // Handle post messages
               self.handlePlayerEventsFn = angular.bind(self, handlePlayerEvents);
@@ -131,6 +129,8 @@
 
               self.loaded = true;
               self.playing = 0;
+
+              self.load();
             },
             onError: function(error) {
               switch (error.data) {
@@ -145,7 +145,7 @@
               }
             }
           },
-          videoId: this.media.mediaId[this.selectedMediaIndex]
+          videoId: this.media.mediaId[this.selectedSourceIndex]
         });
       }
     }
@@ -157,15 +157,16 @@
      * @extends Player
      * @param {Object} jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param {Object} media Details of the media
-     *   {
-     *     mediaId : "136081112" // The id of the media
-     *   }
+     * @param {Object} media Media to load
+     * @param {Array} media.mediaId The list of media sources ids (for different viewpoint)
+     * @param {String} media.language The language code for the Youtube player
+     * @param {String} id The player id to use as the "id" attribute
      */
-    function YoutubePlayer(jPlayerElement, media) {
+    function YoutubePlayer(jPlayerElement, media, id) {
       var self = this;
       var youtubeApiScriptId = 'youtube-iframe-api';
-      OvPlayer.prototype.init.call(this, jPlayerElement, media);
+      OvPlayer.prototype.init.call(this, jPlayerElement, id);
+      this.setMedia(media);
       this.requestPause = false;
 
       var tag = document.createElement('script');
@@ -189,24 +190,6 @@
 
     YoutubePlayer.prototype = new OvPlayer();
     YoutubePlayer.prototype.constructor = YoutubePlayer;
-
-    /**
-     * Gets media sources.
-     *
-     * Youtube player manages media sources itself, only the definition is exposed. This will set the new player
-     * definition.
-     *
-     * @method getMediaSources
-     * @param {Object} definition Media definition object
-     * @return {Null} null
-     */
-    YoutubePlayer.prototype.getMediaSources = function(definition) {
-      if (this.player) {
-        this.player.setPlaybackQuality(definition);
-        this.jPlayerElement.triggerHandler('ovReady');
-      }
-      return null;
-    };
 
     /**
      * Gets media thumbnail.
@@ -238,7 +221,7 @@
      * @method playPause
      */
     YoutubePlayer.prototype.playPause = function() {
-      if (this.playing)
+      if (this.player.getPlayerState() === YT.PlayerState.PLAYING)
         this.player.pauseVideo();
       else {
         this.requestPause = false;
@@ -303,33 +286,69 @@
      * @return {Boolean} true if paused, false otherwise
      */
     YoutubePlayer.prototype.isPaused = function() {
-      return this.player.getPlayerState() != YT.PlayerState.PAUSED;
+      return this.player.getPlayerState() === YT.PlayerState.PAUSED;
     };
 
     /**
-     * Loads player on selected source
+     * Tests if player actual state is playing.
+     *
+     * @method isPlaying
+     * @return {Boolean} true if playing, false otherwise
+     */
+    YoutubePlayer.prototype.isPlaying = function() {
+      return this.player.getPlayerState() === YT.PlayerState.PLAYING;
+    };
+
+    /**
+     * Loads player with selected source.
      *
      * @method load
      */
-    YoutubePlayer.prototype.load = function(definition) {
-      if (!definition)
-        this.player.loadVideoById(this.media.mediaId[this.selectedMediaIndex]);
+    YoutubePlayer.prototype.load = function() {
+      this.player.cueVideoById(this.media.mediaId[this.selectedSourceIndex]);
     };
 
     /**
      * Gets media definitions.
      *
-     * No definitions available for youtube player, adaptive streaming is managed by youtube player.
-     *
      * @method getAvailableDefinitions
      * @return {Array} The list of available definitions
      */
     YoutubePlayer.prototype.getAvailableDefinitions = function() {
-      var definitions;
-      if (this.player) {
+      var definitions = [];
+
+      if (this.player)
         definitions = this.player.getAvailableQualityLevels();
-      }
-      return definitions;
+
+      return definitions || [];
+    };
+
+    /**
+     * Sets current media.
+     *
+     * Also reset duration.
+     *
+     * @method setMedia
+     * @param {Objet} media New media
+     * @param {Array} media.mediaId The list of media sources ids (for different viewpoint)
+     * @param {String} media.language The language code for the Youtube player
+     */
+    YoutubePlayer.prototype.setMedia = function(media) {
+      OvPlayer.prototype.setMedia.call(this, media);
+
+      // New media, duration has to be retrieved again
+      this.duration = null;
+    };
+
+    /**
+     * Changes definition of the current source.
+     *
+     * @method setDefinition
+     * @param {String} definition Definition from the list of available definitions
+     */
+    YoutubePlayer.prototype.setDefinition = function(definition) {
+      this.player.setPlaybackQuality(definition);
+      this.jPlayerElement.triggerHandler('ovReady');
     };
 
     /**
@@ -345,6 +364,7 @@
       this.loaded = false;
       this.playing = 0;
       this.player = null;
+      this.duration = null;
     };
 
     return YoutubePlayer;

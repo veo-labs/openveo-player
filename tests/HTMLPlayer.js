@@ -20,8 +20,9 @@ describe('HTMLPlayer', function() {
 
   // Initializes tests
   beforeEach(function() {
+    var playerId = 'player_42';
     videoElement = $document[0].createElement('video');
-    videoElement.setAttribute('id', 'player_1');
+    videoElement.setAttribute('id', playerId);
     videoElement.load = function() {
     };
     videoElement.play = function() {
@@ -45,7 +46,7 @@ describe('HTMLPlayer', function() {
         }]
       }],
       thumbnail: '/1439286245225/thumbnail.jpg'
-    });
+    }, playerId);
     player.initialize();
   });
 
@@ -126,7 +127,7 @@ describe('HTMLPlayer', function() {
   });
 
   it('Should order the list of media sources if adaptive sources are defined', function() {
-    player.media.sources[player.getSelectedMediaIndex()].adaptive = [
+    player.media.sources[player.getSourceIndex()].adaptive = [
       {
         link: 'http://manifest.mpd',
         mimeType: 'application/dash+xml'

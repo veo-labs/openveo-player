@@ -57,6 +57,7 @@
         var timeBarRect = timeBar.getBoundingClientRect();
         var timeBarWidth = timeBarRect.right - timeBarRect.left;
         var playerService = new PlayerService();
+        var playRequested = false;
         $scope.player = null;
 
         /**
@@ -71,22 +72,7 @@
                   rootElement.msRequestFullscreen);
         }
 
-        // Set default value for attributes
         var apiEnable = implementFullScreenAPI();
-        $scope.ovFullscreenIcon = (typeof $scope.ovFullscreenIcon === 'undefined') ? true : $scope.ovFullscreenIcon;
-        $scope.fullscreenIcon = apiEnable && $scope.ovFullscreenIcon;
-
-        $scope.ovVolumeIcon = (typeof $scope.ovVolumeIcon === 'undefined') ? true : $scope.ovVolumeIcon;
-        $scope.ovModeIcon = (typeof $scope.ovModeIcon === 'undefined') ? true : $scope.ovModeIcon;
-        $scope.ovMediaSourcesIcon = (typeof $scope.ovMediaSourcesIcon === 'undefined') ?
-          false : $scope.ovMediaSourcesIcon;
-        $scope.ovSettingsIcon = (typeof $scope.ovSettingsIcon === 'undefined') ? true : $scope.ovSettingsIcon;
-        $scope.ovTime = (typeof $scope.ovTime === 'undefined') ? true : $scope.ovTime;
-        $scope.ovFullViewport = (typeof $scope.ovFullViewport === 'undefined') ? false : $scope.ovFullViewport;
-        var rememberPosition =
-                (typeof $scope.ovRememberPosition === 'undefined') ? false : JSON.parse($scope.ovRememberPosition);
-        $scope.ovLanguage = (typeof $scope.ovLanguage === 'undefined') ? 'en' : $scope.ovLanguage;
-        var autoPlay = (typeof $scope.ovAutoPlay === 'undefined') ? false : JSON.parse($scope.ovAutoPlay);
 
         /**
          * Tests if device is a touch device.
@@ -213,7 +199,6 @@
          */
         function hideTimecodes() {
           $scope.displayIndexTab = false;
-          $scope.ovModeIcon = false;
           $scope.selectedMode = modes[0];
         }
 
@@ -225,7 +210,6 @@
          */
         function displayTimecodes() {
           $scope.displayIndexTab = true;
-          $scope.ovModeIcon = true;
           $scope.selectedMode = modes[1];
         }
 
@@ -266,28 +250,30 @@
         }
 
         /**
-         * Map ovData single Media to multi media format
+         * Prepares data.
          *
-         * Change ovData old API to new API
+         * Some validations and corrections have to be performed on the datas before giving it to the player.
+         * Old versions of the player were using "mediaId" property as a String, to be compliant with thoses versions
+         * the "mediaId" property is transformed into an Array of Strings as now the player can handle multi sources.
+         *
+         * @param {Object} data OpenVeo Player data
+         * @param {String|Array} [data.mediaId] The media sources
+         * @param {Object|Array} [data.sources] The media sources definitions
          */
-        function mapSingleMedia() {
+        function prepareData(data) {
+          if (!data) return;
 
-          // if mediaId or sources are not Array, there is only one media
-          // This is needed to be compliant with single source media parameters type
-          if ($scope.ovData.mediaId && !Array.isArray($scope.ovData.mediaId))
-            $scope.ovData.mediaId = [$scope.ovData.mediaId];
-          if ($scope.ovData.sources && !Array.isArray($scope.ovData.sources))
-            $scope.ovData.sources = [$scope.ovData.sources];
+          // Makes sure "mediaId" and "sources" properties are arrays
+          if (data.mediaId && !Array.isArray(data.mediaId)) data.mediaId = [data.mediaId];
+          if (data.sources && !Array.isArray(data.sources)) data.sources = [data.sources];
         }
 
         /**
-         * Initializes the list of chapters.
-         *
-         * Display the chapters tab only if there is at least one chapter.
+         * Initializes the points of interest (e.g. chapters, tags).
          */
-        function initPOI() {
-          $scope.chapters = playerService.getMediaPOI('chapters') || [];
-          $scope.tags = playerService.getMediaPOI('tags') || [];
+        function initPointsOfInterest() {
+          $scope.chapters = playerService.getMediaPointsOfInterest('chapters') || [];
+          $scope.tags = playerService.getMediaPointsOfInterest('tags') || [];
         }
 
         /**
@@ -324,7 +310,8 @@
         function initPlayer() {
 
           if ($scope.data.mediaId && $scope.data.mediaId.length) {
-            var playerType = $scope.ovPlayerType || $scope.data.type || 'html';
+            var playerType = $scope.ovPlayerType || 'html';
+            var playerId = 'player_' + new Date().getUTCMilliseconds();
             $scope.mediaTemplate = ovPlayerDirectory + 'templates/' + playerType + '.html';
             $scope.data.language = $scope.ovLanguage;
 
@@ -332,15 +319,15 @@
             switch (playerType.toLowerCase()) {
               case 'youtube':
                 var OvYoutubePlayer = $injector.get('OvPlayerYoutube');
-                $scope.player = new OvYoutubePlayer($element, $scope.data);
+                $scope.player = new OvYoutubePlayer($element, $scope.data, playerId);
                 break;
               case 'vimeo':
                 var OvVimeoPlayer = $injector.get('OvPlayerVimeo');
-                $scope.player = new OvVimeoPlayer($element, $scope.data);
+                $scope.player = new OvVimeoPlayer($element, $scope.data, playerId);
                 break;
               case 'html':
                 var OvHTMLPlayer = $injector.get('OvPlayerHTML');
-                $scope.player = new OvHTMLPlayer($element, $scope.data);
+                $scope.player = new OvHTMLPlayer($element, $scope.data, playerId);
                 break;
               default:
                 throw new Error('Player ' + playerType + ' is not supported');
@@ -349,29 +336,38 @@
         }
 
         /**
-         * Initializes player attributes.
+         * Updates player attributes.
          *
-         * Some attributes may change regarding on player data.
+         * Some attributes may change regarding on actual player data.
          */
-        function initAttributes() {
-
+        function updateAttributes() {
           if (!$scope.player)
             return;
 
-          // Icon to change player definition is only available for the html player with, at least, one definition
-          if ($scope.player.getPlayerType() == 'vimeo' || !$scope.player.getAvailableDefinitions())
-            $scope.ovSettingsIcon = false;
+          // Icon to change player definition
+          // If no definitions available, the icon is not displayed
+          $scope.settingsIcon = ($scope.player.getAvailableDefinitions()) ? $scope.ovSettingsIcon : false;
 
           // Media volume can't be changed on touch devices
+          // Hide volume icon
           if (isTouchDevice())
             $scope.ovVolumeIcon = false;
 
           // Full viewport and no FullScreen API available
           // Consider the player as in fullscreen
-          if ($scope.ovFullViewport && !implementFullScreenAPI()) {
+          if ($scope.fullViewport && !implementFullScreenAPI()) {
             $scope.fullscreenButton = 'reduce';
             fullscreen = true;
           }
+
+          // Full viewport is requested and no fullscreen API is available
+          // It should not be possible to reduce / enlarge player
+          // Hide fullscreen icon
+          if ($scope.ovFullViewport && !implementFullScreenAPI())
+            $scope.fullscreenIcon = false;
+
+          // Mode icon is available only if there are timecodes
+          $scope.modeIcon = $scope.displayIndexTab && $scope.ovModeIcon;
 
           // Set player language
           i18nPlayerService.setLanguage($scope.ovLanguage);
@@ -379,16 +375,16 @@
 
         /**
          * Initializes isolated scope properties and player.
+         *
+         * @param {Boolean} isNew true if this is the first player initialization, false otherwise
          */
-        function init() {
-          mapSingleMedia();
-
-          // Set scope default values
+        function init(isNew) {
           $scope.data = angular.copy($scope.ovData) || {};
+          prepareData($scope.data);
           playerService.setMedia($scope.data);
 
           // Retrieve last stopped time
-          if (rememberPosition) {
+          if ($scope.ovRememberPosition) {
             var cookie = $cookies.getObject('videoStopped_' + $scope.data.mediaId);
             if (cookie) {
               $scope.seenPercent = cookie.percent;
@@ -397,7 +393,19 @@
             }
           }
 
-          initPlayer();
+          if (isNew) {
+
+            // Player has never been initialized yet
+            // Create it
+            initPlayer();
+
+          } else if ($scope.player) {
+
+            // Player is already initialized
+            // Just update its data
+            $scope.player.setMedia($scope.data);
+
+          }
 
           if (!$scope.player)
             return;
@@ -432,28 +440,35 @@
           $scope.displayTagsTab = false;
           $scope.mediaThumbnail = $scope.player.getMediaThumbnail();
 
-          // Get available definition for default selected sources: if null, definitions are managed by the player
+          // Get available definitions for selected source: if null, definitions are managed by the player or
+          // player does not support definitions
           $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
           $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
 
-          // Get sources for a definition: if definition is not selected sources should be always the same
-          // and definition will be managed in the player (ex adatptive streaming, youtube player...)
-          $scope.mediaSources = $scope.player.getMediaSources($scope.selectedDefinition);
+          // Get source url (only Vimeo player uses this)
+          $scope.sourceUrl = $scope.player.getSourceUrl();
           $scope.loading = true;
           $scope.initializing = true;
           $scope.error = null;
 
-
           // Real media duration is required to be able to display either the
           // list of chapters or the list of timecodes
+          // Thus we wait for the duration to handle timecodes, chapters and tags
           hideTimecodes();
           hideChapters();
           hideTags();
-          initAttributes();
-        }
+          updateAttributes();
 
-        init();
+          if (!isNew) {
+
+            // Player existed before init
+            // Load the new media with the new selected source
+            lastTime = 0;
+            $scope.player.load();
+
+          }
+        }
 
         /**
          * Hides all opened settings menu with a timeout.
@@ -573,7 +588,7 @@
 
             // Fullscreen API not available
             // Use viewport fullscreen instead
-            fullscreen = $scope.ovFullViewport = !fullscreen;
+            fullscreen = $scope.fullViewport = !fullscreen;
             $scope.fullscreenButton = fullscreen ? 'reduce' : 'enlarge';
 
           }
@@ -596,42 +611,65 @@
         });
 
         // Watch for ov-data attribute changes
-        $scope.$watch('ovData', function() {
-          mapSingleMedia();
-
-          // Compare new data with old to not destroy player if mediaId has not change
-          var mediaIdHasChange = false;
-          if ($scope.player) {
-            var oldMediaId = $scope.player.getMediaId();
-            for (var i = 0; i < $scope.ovData.mediaId.length && !mediaIdHasChange; i++) {
-              mediaIdHasChange = $scope.ovData.mediaId[i] != oldMediaId[i];
-            }
-          }
-
-          $scope.data = angular.copy($scope.ovData) || {};
-
-          // Media id has changed
-          if ($scope.data.mediaId && (!$scope.player || mediaIdHasChange)) {
-
-            if ($scope.player) {
-
-              // Destroy previous player
-              $scope.player.destroy();
-            }
-
-            // Reset all
-            init();
-
-          }
-
+        $scope.$watch('ovData', function(newData, oldData) {
+          if (newData) init(!oldData || newData === oldData);
         });
 
-        // Watch for icons attributes changes
-        $scope.$watch('ovModeIcon', initAttributes);
-        $scope.$watch('ovVolumeIcon', initAttributes);
-        $scope.$watch('ovMediaSourcesIcon', initAttributes);
-        $scope.$watch('ovSettingsIcon', initAttributes);
-        $scope.$watch('ovFullViewport', initAttributes);
+        // Watch for ov-fullscreen-icon attribute changes
+        $scope.$watch('ovFullscreenIcon', function(newValue, oldValue) {
+          $scope.ovFullscreenIcon = $scope.fullscreenIcon = apiEnable &&
+            ((typeof newValue === 'undefined') ? true : newValue);
+          updateAttributes();
+        });
+
+        // Watch for ov-volume-icon attribute changes
+        $scope.$watch('ovVolumeIcon', function(newValue, oldValue) {
+          $scope.ovVolumeIcon = (typeof newValue === 'undefined') ? true : newValue;
+          updateAttributes();
+        });
+
+        // Watch for ov-mode-icon attribute changes
+        $scope.$watch('ovModeIcon', function(newValue, oldValue) {
+          $scope.ovModeIcon = $scope.modeIcon = (typeof newValue === 'undefined') ? true : newValue;
+          updateAttributes();
+        });
+
+        // Watch for ov-settings-icon attribute changes
+        $scope.$watch('ovSettingsIcon', function(newValue, oldValue) {
+          $scope.ovSettingsIcon = $scope.settingsIcon = (typeof newValue === 'undefined') ? true : newValue;
+          updateAttributes();
+        });
+
+        // Watch for ov-full-viewport attribute changes
+        $scope.$watch('ovFullViewport', function(newValue, oldValue) {
+          $scope.ovFullViewport = $scope.fullViewport = (typeof newValue === 'undefined') ? false : newValue;
+          updateAttributes();
+        });
+
+        // Watch for ov-time attribute changes
+        $scope.$watch('ovTime', function(newValue, oldValue) {
+          $scope.ovTime = (typeof newValue === 'undefined') ? true : newValue;
+        });
+
+        // Watch for ov-media-sources-icon attribute changes
+        $scope.$watch('ovMediaSourcesIcon', function(newValue, oldValue) {
+          $scope.ovMediaSourcesIcon = (typeof newValue === 'undefined') ? false : newValue;
+        });
+
+        // Watch for ov-remember-position attribute changes
+        $scope.$watch('ovRememberPosition', function(newValue, oldValue) {
+          $scope.ovRememberPosition = (typeof newValue === 'undefined') ? false : JSON.parse(newValue);
+        });
+
+        // Watch for ov-language attribute changes
+        $scope.$watch('ovLanguage', function(newValue, oldValue) {
+          $scope.ovLanguage = (typeof newValue === 'undefined') ? 'en' : newValue;
+        });
+
+        // Watch for ov-auto-play attribute changes
+        $scope.$watch('ovAutoPlay', function(newValue, oldValue) {
+          $scope.ovAutoPlay = (typeof newValue === 'undefined') ? false : JSON.parse(newValue);
+        });
 
         /**
          * Sets the player volume.
@@ -705,46 +743,42 @@
         };
 
         /**
-         * Sets the media definition.
+         * Changes the source definition.
          *
          * @method setDefinition
-         * @param {Object} definition The new definition
+         * @param {Object} definition The new definition from the list of available definitions
          */
         this.setDefinition = $scope.setDefinition = function(definition) {
-          if (definition && (
-                    definition.link !== $scope.selectedDefinition.link ||
-                    ($scope.player.getPlayerType() == 'youtube' && definition !== $scope.selectedDefinition))
-              ) {
+          if (definition && definition !== $scope.selectedDefinition) {
             lastTime = $scope.time;
-            autoPlay = !$scope.player.isPaused();
+            playRequested = !$scope.player.isPaused();
             $scope.selectedDefinition = definition;
-            $scope.mediaSources = $scope.player.getMediaSources($scope.selectedDefinition);
             $scope.loading = true;
             $scope.initializing = true;
             safeApply(function() {
-              $scope.player.load($scope.selectedDefinition);
+              $scope.player.setDefinition($scope.selectedDefinition);
             });
           }
         };
 
         /**
-         * Seelect the media source.
+         * Selects the media source.
          *
-         * @method selectMediaSource
-         * @param {Number} selectedMediaIndex index of media source
+         * @method setSource
+         * @param {Number} sourceIndex index of the media source in the list of sources
          */
-        this.selectMediaSource = $scope.selectMediaSource = function(selectedMediaIndex) {
-          if (selectedMediaIndex != $scope.player.getSelectedMediaIndex()) {
+        this.setSource = $scope.setSource = function(sourceIndex) {
+          if (sourceIndex != $scope.player.getSourceIndex()) {
             lastTime = $scope.time;
-            autoPlay = !$scope.player.isPaused();
-            $scope.player.setSelectedMediaIndex(selectedMediaIndex);
+            playRequested = !$scope.player.isPaused();
+            $scope.player.setMediaSource(sourceIndex);
             $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
             $scope.selectedDefinition = $scope.mediaDefinitions &&
             $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
-            $scope.mediaSources = $scope.player.getMediaSources($scope.selectedDefinition);
             $scope.loading = true;
             $scope.initializing = true;
             safeApply(function() {
+              $scope.sourceUrl = $scope.player.getSourceUrl();
               $scope.player.load();
             });
           }
@@ -796,8 +830,10 @@
             self.setTime(lastTime);
             $element.triggerHandler('ready');
 
-            if (autoPlay)
+            if (($scope.ovAutoPlay || playRequested) && !$scope.player.isPlaying()) {
+              playRequested = false;
               self.playPause();
+            }
           });
           return false;
         });
@@ -835,27 +871,23 @@
 
             // Init Timecode and POI with the real duration
             initTimecodes();
-            initPOI();
+            initPointsOfInterest();
             self.setTime(lastTime);
 
             // Change value of chapter to get timestamp once video duration is known
-            playerService.processPOITime($scope.chapters);
-            playerService.processPOITime($scope.tags);
-            if ($scope.chapters.length) {
+            playerService.processPointsOfInterestTime($scope.chapters);
+            playerService.processPointsOfInterestTime($scope.tags);
+            if ($scope.chapters.length)
               displayChapters();
-            } else {
-
-              // No chapters
+            else
               hideChapters();
-            }
 
-            if ($scope.tags.length) {
+            if ($scope.tags.length)
               displayTags();
-            } else {
-
-              // No Tags
+            else
               hideTags();
-            }
+
+            updateAttributes();
 
             $element.triggerHandler('durationChange', $scope.duration);
           });
@@ -867,12 +899,11 @@
           event.stopImmediatePropagation();
 
           safeApply(function() {
-            $scope.mediaDefinitions = $scope.mediaDefinitions || $scope.player.getAvailableDefinitions();
+            $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
             $scope.selectedDefinition = $scope.selectedDefinition ||
                     ($scope.mediaDefinitions && $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1]) ||
                     null;
-            $scope.ovSettingsIcon = true;
-            initAttributes();
+            updateAttributes();
             $scope.loading = false;
             $scope.playPauseButton = 'pause';
             $element.triggerHandler('play');
@@ -932,14 +963,14 @@
             var expireDate = new Date();
             expireDate.setDate(expireDate.getDate() + 1);
 
-            if (rememberPosition)
+            if ($scope.ovRememberPosition)
               $cookies.putObject('videoStopped_' + $scope.data.mediaId, timeObject, {expires: expireDate});
           };
 
           // Media virtual end reached
           if ($scope.duration && playerService.getCutTime(data.time) > playerService.getCutDuration()) {
             $scope.player.setTime(playerService.getRealTime(0));
-            if (rememberPosition)
+            if ($scope.ovRememberPosition)
               $cookies.remove('videoStopped_' + $scope.data.mediaId);
             lastTime = 0;
             $scope.player.playPause();
@@ -954,7 +985,7 @@
           event.stopImmediatePropagation();
 
           safeApply(function() {
-            if (rememberPosition)
+            if ($scope.ovRememberPosition)
               $cookies.remove('videoStopped_' + $scope.data.mediaId);
             $scope.time = $scope.seenPercent = 0;
             lastTime = 0;

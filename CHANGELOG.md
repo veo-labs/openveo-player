@@ -1,9 +1,15 @@
-# 2.3.2 /
+# 3.0.0 /
+
+## BREAKING CHANGES
+
+- It is no longer possible to specify the type of the player using property **type** of the ov-data object. Use the **ov-player-type** attribute instead.
+- Function "selectMediaSource", which was used to set the source to play, has been renamed into "setSource".
 
 ## BUG FIXES
 
 - Fix the background color of chapters and tags to make it white no matter what. Chapters background was grey and tabs background was black in fullscreen.
 - Fix the spinner of the HTML player. VideoJS spinner was not perfectly circle.
+- Fix dynamic attributes update. Changing ov-player attributes values wasn't working very well. It is now possible to dynamically change the media loaded inside the player and / or other assignable attributes.
 
 ## DEPENDENCIES
 

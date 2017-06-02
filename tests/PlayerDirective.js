@@ -75,12 +75,12 @@ describe('PlayerDirective', function() {
     var isolateScope = element.isolateScope();
     assert.isDefined(isolateScope.data.timecodes);
     assert.isArray(isolateScope.data.timecodes);
-    assert.isDefined(isolateScope.ovFullscreenIcon);
+    assert.isDefined(isolateScope.fullscreenIcon);
     assert.isDefined(isolateScope.ovVolumeIcon);
-    assert.isDefined(isolateScope.ovModeIcon);
-    assert.isDefined(isolateScope.ovSettingsIcon);
+    assert.isDefined(isolateScope.modeIcon);
+    assert.isDefined(isolateScope.settingsIcon);
     assert.isDefined(isolateScope.ovTime);
-    assert.isDefined(isolateScope.ovFullViewport);
+    assert.isDefined(isolateScope.fullViewport);
     assert.isDefined(isolateScope.ovPlayerType);
     assert.isDefined(isolateScope.ovLanguage);
     assert.isDefined(isolateScope.ovAutoPlay);
@@ -89,7 +89,6 @@ describe('PlayerDirective', function() {
 
   it('Should display all icons and time if not specified', function() {
     $rootScope.data = {
-      type: 'html',
       mediaId: ['1', '2'],
       timecodes: [
         {
@@ -131,12 +130,12 @@ describe('PlayerDirective', function() {
     scope.$digest();
 
     var isolateScope = element.isolateScope();
-    assert.ok(isolateScope.ovSettingsIcon, 'ovSettingsIcon');
+    assert.ok(isolateScope.settingsIcon, 'settingsIcon');
     assert.ok(isolateScope.ovTime, 'ovTime');
 
     element.triggerHandler('ovDurationChange', 10000);
     $timeout.flush();
-    assert.ok(isolateScope.ovModeIcon, 'ovModeIcon');
+    assert.ok(isolateScope.modeIcon, 'modeIcon');
 
     $document[0].body.removeChild(element[0]);
   });
@@ -164,9 +163,9 @@ describe('PlayerDirective', function() {
 
   it('Should select the media display mode if no timecodes', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
-      timecodes: []
+      timecodes: [],
+      sources: [{}]
     };
     var element = angular.element('<ov-player ov-data="data"></ov-player>');
     element = $compile(element)(scope);
@@ -180,10 +179,10 @@ describe('PlayerDirective', function() {
   it('Should create a Vimeo player if player type is vimeo', function() {
     $rootScope.data = {
       mediaId: ['1'],
-      type: 'vimeo'
+      sources: [{}]
     };
     $rootScope.playerType = 'vimeo';
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -228,9 +227,7 @@ describe('PlayerDirective', function() {
   });
 
   it('Should not create a player if no media id', function() {
-    $rootScope.data = {
-      type: 'vimeo'
-    };
+    $rootScope.data = {};
     var element = angular.element('<ov-player ov-data="data"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
@@ -241,7 +238,6 @@ describe('PlayerDirective', function() {
 
   it('Should set time preview image and default presentation image', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: [
         {
@@ -253,7 +249,8 @@ describe('PlayerDirective', function() {
         }
       ]
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -267,7 +264,6 @@ describe('PlayerDirective', function() {
 
   it('Should not set time preview image and default presentation image if first timecode > time', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: [
         {
@@ -279,7 +275,8 @@ describe('PlayerDirective', function() {
         }
       ]
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -366,8 +363,12 @@ describe('PlayerDirective', function() {
   });
 
   it('Should be able to change media definition', function(done) {
+    var expectedDefinition = {
+      width: 1280,
+      height: 720,
+      link: 'http://videoHD.mp4'
+    };
     $rootScope.data = {
-      type: 'html',
       mediaId: ['1'],
       timecodes: {},
       sources: {
@@ -375,11 +376,7 @@ describe('PlayerDirective', function() {
           width: 640,
           height: 360,
           link: 'http://video.mp4'
-        }, {
-          width: 1280,
-          height: 720,
-          link: 'http://videoHD.mp4'
-        }]
+        }, expectedDefinition]
       },
       thumbnail: '/1439286245225/thumbnail.jpg'
     };
@@ -391,10 +388,9 @@ describe('PlayerDirective', function() {
     var isolateScope = element.isolateScope();
 
     isolateScope.player = {
-      load: function() {
-        assert.notOk(isolateScope.autoPlay, false);
-        assert.equal(isolateScope.mediaSources.link, 'http://videoHD.mp4');
-        assert.equal(isolateScope.mediaSources.mimeType, 'video/mp4');
+      setDefinition: function(definition) {
+        assert.strictEqual(definition, expectedDefinition);
+        assert.notOk(isolateScope.ovAutoPlay, false);
         assert.ok(isolateScope.loading);
         assert.ok(isolateScope.initializing);
         done();
@@ -404,27 +400,20 @@ describe('PlayerDirective', function() {
       },
       initialize: function() {
       },
-      getMediaSources: function(def) {
-        return {link: def.link, mimeType: 'video/mp4'};
-      }
     };
 
-    isolateScope.setDefinition({
-      width: 1280,
-      height: 720,
-      link: 'http://videoHD.mp4'
-    });
-
+    isolateScope.setDefinition(expectedDefinition);
     $timeout.flush();
   });
 
   it('Should handle player waiting event and set player as "loading"', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: []
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -438,11 +427,12 @@ describe('PlayerDirective', function() {
 
   it('Should handle player playing event and set player as "not loading" and pause button', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: []
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -457,11 +447,12 @@ describe('PlayerDirective', function() {
 
   it('Should handle player durationChange event and set media duration', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: []
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -474,11 +465,12 @@ describe('PlayerDirective', function() {
 
   it('Should handle player play event and set play/pause button to pause', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: []
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -491,11 +483,12 @@ describe('PlayerDirective', function() {
 
   it('Should handle player pause event and set play/pause button to play', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: []
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -508,11 +501,12 @@ describe('PlayerDirective', function() {
 
   it('Should handle player loadProgress event and set loading percentage', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: []
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -531,7 +525,6 @@ describe('PlayerDirective', function() {
      'corresponding the presentation image',
   function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: [
         {
@@ -557,7 +550,9 @@ describe('PlayerDirective', function() {
         }
       ]
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 
@@ -578,11 +573,12 @@ describe('PlayerDirective', function() {
 
   it('Should handle player end event and reset time', function() {
     $rootScope.data = {
-      type: 'vimeo',
       mediaId: ['1'],
       timecodes: []
     };
-    var element = angular.element('<ov-player ov-data="data"></ov-player>');
+
+    $rootScope.playerType = 'vimeo';
+    var element = angular.element('<ov-player ov-data="data" ov-player-type="{{playerType}}"></ov-player>');
     element = $compile(element)(scope);
     scope.$digest();
 

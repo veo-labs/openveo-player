@@ -1,4 +1,4 @@
-<div ng-class="{'ov-fullscreen' : ovFullViewport}">
+<div ng-class="{'ov-fullscreen' : fullViewport}">
   <div class="ov-player">
 
     <ov-player-tabs>
@@ -50,7 +50,7 @@
         </div>
         <div class="ov-right">
           <p class="ov-time" ng-show="ovTime">{{time | ovPlayerMillisecondsToTime}} - <span>{{duration | ovPlayerMillisecondsToTime}}</span></p>
-          <div class="ov-icon-{{selectedMode}} ov-button ov-mode" ng-show="ovModeIcon" ng-click="toggleModes()">
+          <div class="ov-icon-{{selectedMode}} ov-button ov-mode" ng-show="modeIcon" ng-click="toggleModes()">
             <ul ng-show="modesOpened" class="ov-modes-animate">
               <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="ov-button ov-icon-{{mode}}" ng-class="{'ov-selected' : mode === selectedMode}"></li>
             </ul>
@@ -62,13 +62,13 @@
               <div class="ov-volume-ghost ov-ghost"></div>
             </div>
           </div>
-          <div class="ov-button ov-icon-sources ov-icon-settings" ng-show="ovMediaSourcesIcon && data.mediaId.length>1" ng-click="toggleMedia()">
+          <div class="ov-button ov-icon-sources ov-icon-settings" ng-show="ovMediaSourcesIcon && data.mediaId.length > 1" ng-click="toggleMedia()">
             <ul ng-show="selectMediaOpened" ng-click="">
-              <li ng-repeat="source in data.mediaId " ng-click="selectMediaSource($index)"
-              ng-bind-template="{{'Src-' + $index}}" ng-class="{'ov-selected' : $index==player.getSelectedMediaIndex()}"></li>
+              <li ng-repeat="source in data.mediaId " ng-click="setSource($index)"
+              ng-bind-template="{{'Src-' + $index}}" ng-class="{'ov-selected' : $index==player.getSourceIndex()}"></li>
             </ul>
           </div>
-          <div class="ov-button ov-icon-resolution ov-icon-settings" ng-show="ovSettingsIcon" ng-click="toggleDefinition()">
+          <div class="ov-button ov-icon-resolution ov-icon-settings" ng-show="settingsIcon" ng-click="toggleDefinition()">
             <div ng-show="selectedDefinition.height >= 720">HD</div>
             <ul ng-show="definitionOpened" class="ov-definitions-animate" ng-click="">
               <li ng-repeat="definition in mediaDefinitions" ng-click="setDefinition(definition)" ng-bind-template="{{definition.height?definition.height+'p':definition}}" ng-class="{'ov-selected' : selectedDefinition.height?selectedDefinition.height === definition.height:selectedDefinition === definition, 'ov-hd' : definition.height >= 720}"></li>

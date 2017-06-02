@@ -42,7 +42,7 @@
      * iframe corresponding to the player.
      */
     function handleReady() {
-      this.postMessageTargetOrigin = 'https://player.vimeo.com/video/' + this.media.mediaId[this.selectedMediaIndex];
+      this.postMessageTargetOrigin = 'https://player.vimeo.com/video/' + this.media.mediaId[this.selectedSourceIndex];
       this.player = $document[0].getElementById(this.playerId);
       this.loaded = true;
       this.playing = 0;
@@ -142,7 +142,7 @@
     }
 
     /**
-     * Inititializes the player.
+     * Initializes the player.
      *
      * Vimeo player uses postMessage API to be able to communicate with
      * the player.
@@ -164,32 +164,27 @@
      * @extends Player
      * @param {Object} jPlayerElement The JQLite HTML element corresponding
      * to the element which will receive events dispatched by the player
-     * @param {Object} media Details of the media
-     *   {
-     *     mediaId : "136081112" // The id of the media
-     *   }
+     * @param {Object} media Media to load
+     * @param {Array} media.mediaId The list of media sources ids (for different viewpoint)
+     * @param {String} id The player id to use as the "id" attribute
      */
-    function VimeoPlayer(jPlayerElement, media) {
-      OvPlayer.prototype.init.call(this, jPlayerElement, media);
-      initialize.call(this);
+    function VimeoPlayer(jPlayerElement, media, id) {
+      OvPlayer.prototype.init.call(this, jPlayerElement, id);
+      this.setMedia(media);
     }
 
     VimeoPlayer.prototype = new OvPlayer();
     VimeoPlayer.prototype.constructor = VimeoPlayer;
 
     /**
-     * Gets media url.
+     * Gets the playable url of the selected source.
      *
-     * @method getMediaSources
-     * @param {Object} definition Media definition object
-     * @return {String} The media sources
+     * @method getSourceUrl
+     * @return {String} The url of the source
      */
-    VimeoPlayer.prototype.getMediaSources = function(definition) {
-      if (definition && definition.link)
-        return $sce.trustAsResourceUrl(definition.link);
-      else
-        return $sce.trustAsResourceUrl('//player.vimeo.com/video/' +
-          this.media.mediaId[this.selectedMediaIndex] + '?api=1&player_id=' + this.playerId);
+    VimeoPlayer.prototype.getSourceUrl = function() {
+      return $sce.trustAsResourceUrl('//player.vimeo.com/video/' +
+          this.media.mediaId[this.selectedSourceIndex] + '?api=1&player_id=' + this.playerId);
     };
 
     /**
@@ -207,15 +202,14 @@
     /**
      * Intitializes the player.
      *
-     * Nothing to do, the player is already initialized.
-     *
      * @method initialize
      */
     VimeoPlayer.prototype.initialize = function() {
+      initialize.call(this);
     };
 
     /**
-     * Loads player on selected source
+     * Loads player on selected source.
      *
      * Nothing to do, the player reload itself on source change.
      *
@@ -232,6 +226,16 @@
      */
     VimeoPlayer.prototype.isPaused = function() {
       return !this.playing;
+    };
+
+    /**
+     * Tests if player actual state is playing.
+     *
+     * @method isPlaying
+     * @return {Boolean} true if playing, false otherwise
+     */
+    VimeoPlayer.prototype.isPlaying = function() {
+      return this.playing;
     };
 
     /**
@@ -293,6 +297,17 @@
      */
     VimeoPlayer.prototype.getAvailableDefinitions = function() {
       return null;
+    };
+
+    /**
+     * Changes definition of the current source.
+     *
+     * Nothing to do, adaptive streaming is managed by vimeo player.
+     *
+     * @method setDefinition
+     * @param {Object} definition Definition from the list of available definitions
+     */
+    VimeoPlayer.prototype.setDefinition = function(definition) {
     };
 
     /**

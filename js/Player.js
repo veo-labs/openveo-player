@@ -43,65 +43,44 @@
      * @param {Object} jPlayerElement The JQLite HTML element corresponding
      * to the HTML element which will receive events dispatched by
      * the player
-     * @param {Object} media Details of the Media
-     *   {
-     *     mediaId : ["136081112", "136081113"], // The array ids of the media sources
-     *     timecodes : [ // Timecodes
-     *       {
-     *         timecode : 0, // Timecode in milliseconds (0 ms)
-     *         image : { // Image to display at 0 ms
-     *           small : "slide_00000.jpeg", // Small version of the image
-     *           large : "slide_00000_large.jpeg" // Large version of the image
-     *         }
-     *       },
-     *       {
-     *         timecode : 1200, // Timecode in milliseconds (1200 ms)
-     *         image : { // Image to display at 1200 ms
-     *           small : "slide_00001.jpeg", // Small version of the image
-     *           large : "slide_00001_large.jpeg" // Large version of the image
-     *         }
-     *       }
-     *       ...
-     *     ]
-     *   }
+     * @param {String} id The player id to use as the "id" attribute
      */
-    Player.prototype.init = function(jPlayerElement, media, selectedMediaIndex) {
-      if (!jPlayerElement || !media)
-        throw new Error('A player JQLite Element and a media object are expected as Player arguments');
+    Player.prototype.init = function(jPlayerElement, id) {
+      if (!jPlayerElement)
+        throw new Error('A player JQLite Element is expected as Player argument');
 
       this.jPlayerElement = jPlayerElement;
-      this.media = media;
-      this.selectedMediaIndex = selectedMediaIndex || 0;
-      this.playerId = 'player_' + this.media.mediaId[this.selectedMediaIndex];
+      this.selectedSourceIndex = 0;
+      this.playerId = id;
     };
 
     /**
-     * Set index of selected media
+     * Sets the source.
      *
-     * @method setSelectedMediaIndex
-     * @param {Number} index of selected media in media Array
+     * @method setMediaSource
+     * @param {Number} index of the source in the list of media sources
      */
-    Player.prototype.setSelectedMediaIndex = function(index) {
-      this.selectedMediaIndex = index;
+    Player.prototype.setMediaSource = function(index) {
+      this.selectedSourceIndex = index;
     };
 
     /**
-     * Get index of selected media
+     * Gets index of the selected media source.
      *
-     * @method getSelectedMediaIndex
-     * @return {Number} index of selected media in media Array
+     * @method getSourceIndex
+     * @return {Number} index of the selected media source in the list of sources
      */
-    Player.prototype.getSelectedMediaIndex = function() {
-      return this.selectedMediaIndex;
+    Player.prototype.getSourceIndex = function() {
+      return this.selectedSourceIndex;
     };
 
     /**
-     * Gets media id.
+     * Gets media ids.
      *
-     * @method getMediaId
-     * @return {String} The media id
+     * @method getMediaIds
+     * @return {Array} The list of media ids
      */
-    Player.prototype.getMediaId = function() {
+    Player.prototype.getMediaIds = function() {
       return this.media.mediaId;
     };
 
@@ -116,14 +95,26 @@
     };
 
     /**
-     * Gets media url.
+     * Sets current media.
      *
-     * @method getMediaSources
-     * @param {Object} definition Media definition object
-     * @return {String} The media sources
+     * @method setMedia
+     * @param {Objet} media New media
      */
-    Player.prototype.getMediaSources = function(definition) {
-      throw new Error('getMediaUrl method not implemented for this player');
+    Player.prototype.setMedia = function(media) {
+      if (!media)
+        throw new Error('Player needs a valid media');
+
+      this.media = media;
+    };
+
+    /**
+     * Gets the url of the selected source.
+     *
+     * @method getSourceUrl
+     * @return {String|Null} The url of the source
+     */
+    Player.prototype.getSourceUrl = function() {
+      return null;
     };
 
     /**
@@ -186,6 +177,16 @@
     };
 
     /**
+     * Tests if player actual state is playing.
+     *
+     * @method isPlaying
+     * @return {Boolean} true if playing, false otherwise
+     */
+    Player.prototype.isPlaying = function() {
+      throw new Error('isPlaying method not implemented for this player');
+    };
+
+    /**
      * Plays or pauses the media depending on media actual state.
      *
      * @method playPause
@@ -231,6 +232,16 @@
      */
     Player.prototype.destroy = function() {
       throw new Error('destroy method not implemented for this player');
+    };
+
+    /**
+     * Changes definition of the current source.
+     *
+     * @method setDefinition
+     * @param {Object} definition Definition from the list of available definitions
+     */
+    Player.prototype.setDefinition = function(definition) {
+      throw new Error('setDefinition method not implemented for this player');
     };
 
     return Player;
