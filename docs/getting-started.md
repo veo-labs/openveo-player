@@ -75,83 +75,123 @@ Sets player data, synchronize images, chapters and cut.
 
 ```javascript
 $scope.data = {
-  mediaId : ['34532ezr54sdf87', 'dzzfeg4547841'], // The id(s) of the video(s)
-  timecodes : { // Timecodes
+  mediaId: ['34532ezr54sdf87', 'dzzfeg4547841'], // The id(s) of the video(s) sources
+  timecodes: [ // Timecodes
     {
-      'timecode': 0, // Timecode in milliseconds (0 ms)
-      'image' : { // Image to display at 0 ms
-        'small' : 'slide_00000.jpeg', // Small version of the image
-        'large' : 'slide_00000_large.jpeg' // Large version of the image
+      timecode: 0, // Timecode in milliseconds (0 ms)
+      image: { // Image to display at 0 ms
+        small: 'http://mydomainname.local/image1-small.jpeg', // Small version of the image
+        large: 'http://mydomainname.local/image1-large.jpeg' // Large version of the image
       }
     },
     {
-      'timecode': 1200, // Timecode in milliseconds (1200 ms)
-      'image' : { // Image to display at 1200 ms
-        'small' : 'slide_00001.jpeg', // Small version of the image
-        'large' : 'slide_00001_large.jpeg' // Large version of the image
+      timecode: 1200, // Timecode in milliseconds (1200 ms)
+      image: { // Image to display at 1200 ms
+        small: 'http://mydomainname.local/image2-small.jpeg', // Small version of the image
+        large: 'http://mydomainname.local/image2-large.jpeg' // Large version of the image
       }
     }
     ...
-  },
-  sources: [
+  ],
+  sources: [ // Only for "html" player
     {
-      files : [ // The list of different resolutions sources for this video (only for "html" player)
-      {
-        width : 640, // Video width for this file
-        height : 360, // Video height for this file
-        link : 'http://mydomainname.local/pathToSmallMP4.mp4' // Video url
-      },
-      {
-        width : 1280, // Video width for this file
-        height : 720, // Video height for this file
-        link : 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
-      },
-      ...
+      files: [ // The list of resolutions for the source "34532ezr54sdf87"
+        {
+          width: 640, // Video width for this resolution
+          height: 360, // Video height for this resolution
+          link: 'http://mydomainname.local/pathToSmallMP4.mp4' // Video url
+        },
+        {
+          width: 1280, // Video width for this resolution
+          height: 720, // Video height for this resolution
+          link: 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+        },
+        ...
       ]
-    },{
-    ...
+    },
+    {
+      files: [ // The list of resolutions for the source "dzzfeg4547841"
+        {
+          width: 640, // Video width for this resolution
+          height: 360, // Video height for this resolution
+          link: 'http://mydomainname.local/pathToSmallMP4.mp4' // Video url
+        },
+        {
+          width: 1280, // Video width for this resolution
+          height: 720, // Video height for this resolution
+          link: 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+        },
+        ...
+      ]
     }
   ],
-  thumbnail : 'http://mydomainname.local/1439286245225/thumbnail.jpg', // The media thumbnail (only for "html" player)
-  chapters : [ // Chapters
+  thumbnail: 'http://mydomainname.local/thumbnail.jpg', // The media thumbnail url (only for "html" player)
+  chapters: [ // Chapters
     {
-      name : 'Chapter 1', // Chapter name
-      description : 'Chapter 1 description', // Chapter description
-      value : 0.04 // Chapter timecode in percent (percentage of the video)
+      name: 'Chapter 1', // Chapter name
+      description: 'Chapter 1 description', // Chapter description
+      value: 0.1 // Chapter timecode in percent (percentage of the video)
     },
     {
-      name : 'Chapter 2', // Chapter name
-      description : 'Chapter 2 description', // Chapter description
-      value : 0.3 // Chapter timecode in percent (percentage of the video)
+      name: 'Chapter 2', // Chapter name
+      description: 'Chapter 2 description', // Chapter description
+      value: 0.2 // Chapter timecode in percent (percentage of the video)
     }
     ...
   ],
   tags : [ // tags
     {
-      name : 'Tag 1', // Tag name
-      description : 'Tag 1 description', // Tag description
-      value : 0.04 // Tag timecode in percent (percentage of the video)
+      name: 'Simple tag', // Tag name
+      description: 'Simple tag description', // Tag description (can contain HTML)
+      value: 0.1 // Tag timecode in percent (percentage of the video)
     },
     {
-      name : 'Tag 2', // Tag name
-      description : 'Tag 2 description', // Tag description
-      value : 0.3 // Tag timecode in percent (percentage of the video)
-      file : {
-        mimetype: 'video/mp4'
-        basePath: 'http://mydomainname.local/path/to/ressource/video.mp4',
-        originalname: 'original-name.mp4'
+      name: 'Video tag', // Tag name
+      description: 'Video tag description', // Tag description (can contain HTML)
+      value: 0.2, // Tag timecode in percent (percentage of the video)
+      file: { // Video associated to the tag
+        mimetype: 'video/mp4', // Video mime type
+        basePath: 'http://mydomainname.local/video.mp4' // Url of the video
       }
     },
-    ...
-  ],
-  cut : [ // Cut information (begin and end)
     {
-      type : 'begin', // Cut type
-      value : 0 // Begin timecode (percentage of the media)
+      name: 'PDF tag', // Tag name
+      description: 'PDF tag description', // Tag description (can contain HTML)
+      value: 0.3, // Tag timecode in percent (percentage of the video)
+      file: { // PDF associated to the tag
+        mimetype: 'application/pdf', // PDF mime type
+        basePath: 'http://mydomainname.local/pdf.pdf', // Url of the PDF
+        originalname: 'pdf-name-without-extension' // PDF file name when downloading
+      }
     },
     {
-      type : 'end', // Cut type
-      value : 0.9 // End timecode (percentage of the media)
+      name: 'Image tag', // Tag name
+      description: 'Image tag description', // Tag description (can contain HTML)
+      value: 0.4, // Tag timecode in percent (percentage of the video)
+      file: { // Image associated to the tag
+        mimetype: 'image/jpeg', // Image mime type
+        basePath: 'http://mydomainname.local/image.jpeg' // Url of the image
+      }
+    },
+    {
+      name: 'Audio tag', // Tag name
+      description: 'Audio tag description', // Tag description (can contain HTML)
+      value: 0.5, // Tag timecode in percent (percentage of the video)
+      file: { // Audio associated to the tag
+        mimetype: 'audio/mp3', // Audio mime type
+        basePath: 'http://mydomainname.local/audio.mp3' // Url of the audio file
+      }
+    }
+    ...
+  ],
+  cut: [ // Cut information (begin and end)
+    {
+      type: 'begin', // Cut type (either "begin" or "end")
+      value: 0 // Begin timecode (percentage of the media)
+    },
+    {
+      type: 'end', // Cut type (either "begin" or "end")
+      value: 0.9 // End timecode (percentage of the media)
     }
   ]
 }
