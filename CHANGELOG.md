@@ -10,6 +10,7 @@
 - Fix the background color of chapters and tags to make it white no matter what. Chapters background was grey and tabs background was black in fullscreen.
 - Fix the spinner of the HTML player. VideoJS spinner was not perfectly circle.
 - Fix dynamic attributes update. Changing ov-player attributes values wasn't working very well. It is now possible to dynamically change the media loaded inside the player and / or other assignable attributes.
+- Remove focus outline appearing on the HTML player when clicking on the video to start / stop.
 
 ## DEPENDENCIES
 
