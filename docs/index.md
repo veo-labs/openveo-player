@@ -6,14 +6,16 @@ OpenVeo Player is an [AngularJS](https://angularjs.org/) directive to wrap an HT
 
 OpenVeo Player has been tested on the following browsers:
 
-- Google Chrome 54
-- Mozilla Firefox 47
-- Opera 42
-- Internet Explorer Edge
+- Google Chrome 58
+- Mozilla Firefox 52
+- Opera 45
+- Edge
+- Internet Explorer 11
 
 ![Firefox](images/browsers/firefox.gif)
 ![Google Chrome](images/browsers/chrome.gif)
 ![Opera](images/browsers/opera.gif)
+![Internet Explorer](images/browsers/edge.gif)
 ![Internet Explorer](images/browsers/ie.gif)
 
 ## Screenshots
