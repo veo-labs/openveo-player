@@ -2,6 +2,10 @@
 
 - Execute unit tests on Travis
 
+## DEPENDENCIES
+
+- **karma-phantomjs-launcher** has been removed
+
 # 3.0.0 / 2017-06-06
 
 ## BREAKING CHANGES
