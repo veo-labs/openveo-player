@@ -1,3 +1,7 @@
+# 3.1.0 /
+
+- Execute unit tests on Travis
+
 # 3.0.0 / 2017-06-06
 
 ## BREAKING CHANGES
