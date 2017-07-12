@@ -5,6 +5,7 @@
 ## DEPENDENCIES
 
 - **karma-phantomjs-launcher** has been removed
+- **chai** has been upgraded from 3.5.0 to **4.0.2**
 
 # 3.0.0 / 2017-06-06
 
