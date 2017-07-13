@@ -1,6 +1,9 @@
 # 3.1.0 /
 
+## NEW FEATURES
+
 - Execute unit tests on Travis
+- The highest definition is now selected by default instead of the lowest one for the HTML player
 
 ## DEPENDENCIES
 

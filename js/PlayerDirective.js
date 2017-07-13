@@ -444,7 +444,7 @@
           // player does not support definitions
           $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
           $scope.selectedDefinition = $scope.mediaDefinitions &&
-            $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
+            $scope.mediaDefinitions[0] || null;
 
           // Get source url (only Vimeo player uses this)
           $scope.sourceUrl = $scope.player.getSourceUrl();
@@ -774,7 +774,7 @@
             $scope.player.setMediaSource(sourceIndex);
             $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
             $scope.selectedDefinition = $scope.mediaDefinitions &&
-            $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1] || null;
+            $scope.mediaDefinitions[0] || null;
             $scope.loading = true;
             $scope.initializing = true;
             safeApply(function() {
@@ -901,7 +901,7 @@
           safeApply(function() {
             $scope.mediaDefinitions = $scope.player.getAvailableDefinitions();
             $scope.selectedDefinition = $scope.selectedDefinition ||
-                    ($scope.mediaDefinitions && $scope.mediaDefinitions[$scope.mediaDefinitions.length - 1]) ||
+                    ($scope.mediaDefinitions && $scope.mediaDefinitions[0]) ||
                     null;
             updateAttributes();
             $scope.loading = false;

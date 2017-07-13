@@ -108,7 +108,7 @@
       var mediaSource;
       var availableDefinitions = this.getAvailableDefinitions();
       var sourceDefinition = definition ||
-          availableDefinitions && availableDefinitions[availableDefinitions.length - 1] ||
+          availableDefinitions && availableDefinitions[0] ||
           null;
 
       if (!sourceDefinition) {
