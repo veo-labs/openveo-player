@@ -7,7 +7,7 @@ module.exports = function(config) {
 
     // Base path that will be used to resolve all patterns
     // (eg. files, exclude)
-    basePath: '',
+    basePath: '..',
 
     // Templates mock
     preprocessors: {
@@ -23,10 +23,10 @@ module.exports = function(config) {
       'lib/angular-mocks/angular-mocks.js',
       'lib/video.js/dist/video.min.js',
       'templates/*.html',
-      'tests/init.js',
+      'tests/unitTests/init.js',
       'js/PlayerApp.js',
       'js/**/*.js',
-      'tests/*.js'
+      'tests/unitTests/*.js'
     ]
 
   });

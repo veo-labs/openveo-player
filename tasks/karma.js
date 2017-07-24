@@ -41,7 +41,7 @@ module.exports = {
 
   // Player unit tests
   player: {
-    configFile: 'karmaConf.js'
+    configFile: 'tests/karmaConf.js'
   }
 
 };
