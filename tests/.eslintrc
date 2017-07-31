@@ -16,9 +16,8 @@
     assert: false,
     
     // Add player's globals to environment globals
-    ovFlashPlayer: true,
-    ovPlayerDirectory: true
-    
+    ovFlashPlayer: true
+
   },
   "rules": {
     

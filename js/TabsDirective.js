@@ -6,9 +6,6 @@
    * Creates a new Angular directive as HTML element ov-tabs to be able to manage a list of
    * views (ov-view elements) and switch between them using tabs.
    * ov-tabs element does not have any attributes.
-   * It requires ovPlayerDirectory global variable to be defined and have
-   * a value corresponding to the path of the openVeo Player
-   * root directory.
    *
    * e.g.
    * <ov-tabs>
@@ -26,7 +23,7 @@
   function ovTabs() {
     return {
       restrict: 'E',
-      templateUrl: ovPlayerDirectory + 'templates/tabs.html',
+      templateUrl: 'ov-player-tabs.html',
       scope: {},
       transclude: true,
       controller: ['$scope', '$filter', function($scope, $filter) {

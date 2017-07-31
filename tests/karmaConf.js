@@ -14,6 +14,17 @@ module.exports = function(config) {
       'templates/*.html': 'ng-html2js'
     },
 
+    // Templates mock options
+    ngHtml2JsPreprocessor: {
+
+      // By default generated template path is templates/TEMPLATE_NAME.html
+      // Transform it into ov-player-TEMPLATE_NAME.html
+
+      stripPrefix: 'templates/',
+      prependPrefix: 'ov-player-'
+
+    },
+
     // List of files / patterns to load in the browser
     files: [
       'lib/angular/angular.js',
@@ -23,7 +34,6 @@ module.exports = function(config) {
       'lib/angular-mocks/angular-mocks.js',
       'lib/video.js/dist/video.min.js',
       'templates/*.html',
-      'tests/unitTests/init.js',
       'js/PlayerApp.js',
       'js/**/*.js',
       'tests/unitTests/*.js'

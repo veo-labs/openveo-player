@@ -4,6 +4,7 @@
 
 - Execute unit tests on Travis
 - The highest definition is now selected by default instead of the lowest one for the HTML player
+- ovPlayerDirectory global variable is no longer required, you can simply remove it from your code
 
 ## DEPENDENCIES
 

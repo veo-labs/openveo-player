@@ -5,8 +5,6 @@
   /**
    * Creates a new Angular directive as an HTML element ov-chapters to create a list of chapters with title and
    * description.
-   * It requires ovPlayerDirectory global variable to be defined and have a value corresponding to the path of
-   * the openVeo Player root directory.
    *
    * e.g.
    * <ov-chapters></ov-chapters>
@@ -18,7 +16,7 @@
     return {
       require: ['^ovPlayer', '^ovPlayerTabs'],
       restrict: 'E',
-      templateUrl: ovPlayerDirectory + 'templates/chapters.html',
+      templateUrl: 'ov-player-chapters.html',
       scope: true,
       link: ovChaptersLink
     };

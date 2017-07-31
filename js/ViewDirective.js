@@ -5,9 +5,6 @@
   /**
    * Creates a new Angular directive as HTML element ov-view to be able to group HTML elements
    * which will be added to an ov-tabs element.
-   * It requires ovPlayerDirectory global variable to be defined and have
-   * a value corresponding to the path of the openVeo Player
-   * root directory.
    *
    * Available attributes are :
    *  - String title The title that will be display in the tab
@@ -33,7 +30,7 @@
       restrict: 'E',
       require: '^ovPlayerTabs',
       transclude: true,
-      templateUrl: ovPlayerDirectory + 'templates/view.html',
+      templateUrl: 'ov-player-view.html',
       scope: {
         title: '@',
         view: '@',

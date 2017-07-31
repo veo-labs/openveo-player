@@ -16,13 +16,6 @@ The HTML player expects one media Id and one url by source.
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
     <![endif]-->
-    <script>
-
-      // Set ovPlayerDirectory to openveo-player root path
-      // This is used by openveo-player to get partials
-      // Do not forget the trailing slash !
-      var ovPlayerDirectory = 'lib/openveo-player/';
-    </script>
 
   </head>
 
@@ -192,13 +185,6 @@ The HTML player with several sources expects one media Id and one url by source.
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
     <![endif]-->
-    <script>
-
-      // Set ovPlayerDirectory to openveo-player root path
-      // This is used by openveo-player to get partials
-      // Do not forget the trailing slash !
-      var ovPlayerDirectory = 'lib/openveo-player/';
-    </script>
 
   </head>
 
@@ -300,13 +286,6 @@ The Vimeo player expects the id of the media hosted on Vimeo. You can specify se
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
     <![endif]-->
-    <script>
-
-      // Set ovPlayerDirectory to openveo-player root path
-      // This is used by openveo-player to get partials
-      // Do not forget the trailing slash !
-      var ovPlayerDirectory = "lib/openveo-player/";
-    </script>
 
   </head>
 
@@ -370,13 +349,6 @@ The Youtube player expects the id of the media hosted on Youtube. You can specif
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
     <![endif]-->
-    <script>
-
-      // Set ovPlayerDirectory to openveo-player root path
-      // This is used by openveo-player to get partials
-      // Do not forget the trailing slash !
-      var ovPlayerDirectory = "lib/openveo-player/";
-    </script>
 
   </head>
 
@@ -438,13 +410,6 @@ You can interact with the player using the API.
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
     <![endif]-->
-    <script>
-
-      // Set ovPlayerDirectory to openveo-player root path
-      // This is used by openveo-player to get partials
-      // Do not forget the trailing slash !
-      var ovPlayerDirectory = "lib/openveo-player/";
-    </script>
 
   </head>
 
