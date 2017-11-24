@@ -182,7 +182,7 @@
 
     // Media is cut
     if (this.isCut && this.realMediaDuration && this.media[property]) {
-      var filteredChapters = [];
+      var filteredPointsOfInterest = [];
       var realCutStart = this.getRealCutStart();
       var realCutEnd = this.getRealCutEnd();
 
@@ -192,20 +192,20 @@
         var timecode = this.realMediaDuration * this.media[property][i].value;
 
         if (timecode > realCutStart && timecode < realCutEnd)
-          filteredChapters.push(this.media[property][i]);
+          filteredPointsOfInterest.push(this.media[property][i]);
       }
-      return angular.copy(filteredChapters);
+      return angular.copy(filteredPointsOfInterest);
     }
     return angular.copy(this.media[property]);
   };
 
   /**
-   * Change a list of chapters which value is a percent in a timestamp value according to media duration
-   * @param {Array} chapters chapters array to modify from percent to timestamp
+   * Change a list of points of interest which value is a percent in a timestamp value according to media duration
+   * @param {Array} pointsOfInterest The points of interest array to modify from percent to timestamp
    */
-  PlayerService.prototype.processPointsOfInterestTime = function(chapters) {
-    for (var i = 0; i < chapters.length; i++) {
-      chapters[i].value = (chapters[i].value * this.realMediaDuration) -
+  PlayerService.prototype.processPointsOfInterestTime = function(pointsOfInterest) {
+    for (var i = 0; i < pointsOfInterest.length; i++) {
+      pointsOfInterest[i].value = (pointsOfInterest[i].value * this.realMediaDuration) -
                           Math.floor(this.cutStart * this.realMediaDuration);
     }
   };
