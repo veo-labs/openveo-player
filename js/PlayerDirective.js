@@ -40,7 +40,10 @@
         ovLanguage: '@?',
         ovPlayerType: '@?',
         ovAutoPlay: '@?',
-        ovRememberPosition: '@?'
+        ovRememberPosition: '@?',
+        ovHideChaptersTab: '=?',
+        ovHideTagsTab: '=?',
+        ovDisableCut: '=?'
       },
       controller: ['$scope', '$element', function($scope, $element) {
         var self = this;
@@ -228,6 +231,7 @@
          * Display the chapters tab.
          */
         function displayChapters() {
+          if ($scope.ovHideChaptersTab === true) return;
           $scope.displayChapterTab = true;
         }
 
@@ -246,6 +250,7 @@
          * Display the chapters tab.
          */
         function displayTags() {
+          if ($scope.ovHideTagsTab === true) return;
           $scope.displayTagsTab = true;
         }
 
@@ -271,9 +276,14 @@
         /**
          * Initializes the points of interest (e.g. chapters, tags).
          */
-        function initPointsOfInterest() {
-          $scope.chapters = playerService.getMediaPointsOfInterest('chapters') || [];
-          $scope.tags = playerService.getMediaPointsOfInterest('tags') || [];
+        function initPointsOfInterest(disableCut) {
+          if (disableCut === true) {
+            $scope.chapters = $scope.data.chapters;
+            $scope.tags = $scope.data.tags;
+          } else {
+            $scope.chapters = playerService.getMediaPointsOfInterest('chapters') || [];
+            $scope.tags = playerService.getMediaPointsOfInterest('tags') || [];
+          }
         }
 
         /**
@@ -283,15 +293,26 @@
          * Also prepare a copy of the list of timecodes ordered by time to avoid
          * parsing it systematically.
          */
-        function initTimecodes() {
-          $scope.timecodes = playerService.getMediaTimecodes() || [];
-          $scope.timecodesByTime = playerService.getMediaTimecodesByTime() || {};
+        function initTimecodes(disableCut) {
+          var timecode;
+
+          if (disableCut === true) {
+            $scope.timecodes = $scope.data.timecodes;
+            $scope.timecodesByTime = {};
+            for (var i = 0; i < $scope.timecodes.length; i++) {
+              timecode = $scope.timecodes[i];
+              $scope.timecodesByTime[timecode.timecode] = {image: timecode.image};
+            }
+          } else {
+            $scope.timecodes = playerService.getMediaTimecodes() || [];
+            $scope.timecodesByTime = playerService.getMediaTimecodesByTime() || {};
+          }
 
           // Got timecodes associated to the media
           if ($scope.timecodes.length) {
             // Use the first image of the first timecode as
             // the current presentation image
-            var timecode = findTimecode($scope.time);
+            timecode = findTimecode($scope.time);
             $scope.timePreview = timecode !== null ? $scope.timecodesByTime[timecode].image.large : null;
             $scope.presentation = timecode !== null ? $scope.timecodesByTime[timecode].image.large : null;
 
@@ -739,7 +760,11 @@
          * @param {Number} time The time to set in milliseconds
          */
         this.setTime = function(time) {
-          $scope.player.setTime(playerService.getRealTime(time));
+          if ($scope.ovDisableCut !== true) {
+            time = playerService.getRealTime(time);
+          }
+
+          $scope.player.setTime(time);
         };
 
         /**
@@ -865,18 +890,35 @@
         $element.on('ovDurationChange', function(event, duration) {
           event.stopImmediatePropagation();
           safeApply(function() {
+            var disableCut = $scope.ovDisableCut === true;
+
             playerService.setRealMediaDuration(duration);
-            $scope.startCutTime = playerService.getRealCutStart();
-            $scope.duration = playerService.getCutDuration();
+            $scope.startCutTime = disableCut ? 0 : playerService.getRealCutStart();
+            $scope.duration = disableCut ? duration : playerService.getCutDuration();
 
             // Init Timecode and POI with the real duration
-            initTimecodes();
-            initPointsOfInterest();
+            initTimecodes(disableCut);
+            initPointsOfInterest(disableCut);
             self.setTime(lastTime);
 
             // Change value of chapter to get timestamp once video duration is known
-            playerService.processPointsOfInterestTime($scope.chapters);
-            playerService.processPointsOfInterestTime($scope.tags);
+            if (disableCut) {
+              var convertPercentToMs = function(poi) {
+                poi.value = poi.value * duration;
+              };
+
+              if (Array.isArray($scope.chapters))
+                $scope.chapters.forEach(convertPercentToMs);
+              else
+                $scope.chapters = [];
+              if (Array.isArray($scope.tags))
+                $scope.tags.forEach(convertPercentToMs);
+              else
+                $scope.tags = [];
+            } else {
+              playerService.processPointsOfInterestTime($scope.chapters);
+              playerService.processPointsOfInterestTime($scope.tags);
+            }
             if ($scope.chapters.length)
               displayChapters();
             else
@@ -949,8 +991,8 @@
           var timecode = findTimecode(data.time);
 
           var updateTime = function() {
-            $scope.time = playerService.getCutTime(data.time);
-            $scope.seenPercent = playerService.getCutPercent(data.percent);
+            $scope.time = ($scope.ovDisableCut === true) ? data.time : playerService.getCutTime(data.time);
+            $scope.seenPercent = ($scope.ovDisableCut === true) ? $scope.time / $scope.duration * 100 : playerService.getCutPercent(data.percent);
 
             $scope.presentation = timecode !== null &&
                     $scope.timecodesByTime[timecode] ? $scope.timecodesByTime[timecode].image.large : null;
@@ -968,7 +1010,7 @@
           };
 
           // Media virtual end reached
-          if ($scope.duration && playerService.getCutTime(data.time) > playerService.getCutDuration()) {
+          if ($scope.ovDisableCut !== true && $scope.duration && playerService.getCutTime(data.time) > playerService.getCutDuration()) {
             $scope.player.setTime(playerService.getRealTime(0));
             if ($scope.ovRememberPosition)
               $cookies.remove('videoStopped_' + $scope.data.mediaId);
