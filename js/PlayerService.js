@@ -34,7 +34,7 @@
    */
   PlayerService.prototype.getRealCutStart = function() {
     if (this.realMediaDuration)
-      return (this.cutStart) ? this.realMediaDuration * this.cutStart : 0;
+      return (this.cutStart) ? this.cutStart : 0;
 
     return 0;
   };
@@ -50,7 +50,7 @@
    */
   PlayerService.prototype.getRealCutEnd = function() {
     if (this.realMediaDuration)
-      return (this.cutEnd) ? this.realMediaDuration * this.cutEnd : this.realMediaDuration;
+      return (this.cutEnd) ? this.cutEnd : this.realMediaDuration;
 
     return 0;
   };
@@ -93,9 +93,9 @@
       // Retrive cut edges (start and end)
       for (var i = 0; i < this.media.cut.length; i++) {
         if (this.media.cut[i].type === 'begin')
-          this.cutStart = Math.max(this.media.cut[i].value, 0);
+          this.cutStart = this.media.cut[i].value;
         else if (this.media.cut[i].type === 'end')
-          this.cutEnd = Math.min(this.media.cut[i].value, 1);
+          this.cutEnd = this.media.cut[i].value;
       }
 
       // Media duration can't be equal to 0
@@ -189,7 +189,7 @@
       // Filter POI depending on cut edges
       // POI not in the range [startCut - endCut] must be removed
       for (var i = 0; i < this.media[property].length; i++) {
-        var timecode = this.realMediaDuration * this.media[property][i].value;
+        var timecode = this.media[property][i].value;
 
         if (timecode > realCutStart && timecode < realCutEnd)
           filteredPointsOfInterest.push(this.media[property][i]);
@@ -200,13 +200,12 @@
   };
 
   /**
-   * Change a list of points of interest which value is a percent in a timestamp value according to media duration
-   * @param {Array} pointsOfInterest The points of interest array to modify from percent to timestamp
+   * Change points of interest values depending on the start offset
+   * @param {Array} pointsOfInterest The points of interest array to modify the offset
    */
   PlayerService.prototype.processPointsOfInterestTime = function(pointsOfInterest) {
     for (var i = 0; i < pointsOfInterest.length; i++) {
-      pointsOfInterest[i].value = (pointsOfInterest[i].value * this.realMediaDuration) -
-                          Math.floor(this.cutStart * this.realMediaDuration);
+      pointsOfInterest[i].value = pointsOfInterest[i].value - this.cutStart;
     }
   };
 

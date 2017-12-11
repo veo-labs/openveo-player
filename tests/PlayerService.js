@@ -46,30 +46,30 @@ describe('PlayerService', function() {
       ],
       chapters: [
         {
-          value: 0.04
+          value: 240
         },
         {
-          value: 0.31
+          value: 1860
         },
         {
-          value: 0.35
+          value: 2100
         },
         {
-          value: 0.9
+          value: 5400
         }
       ],
       tags: [
         {
-          value: 0.04
+          value: 240
         },
         {
-          value: 0.31
+          value: 1860
         },
         {
-          value: 0.35
+          value: 2100
         },
         {
-          value: 0.9
+          value: 5400
         }
       ],
       cut: [
@@ -79,7 +79,7 @@ describe('PlayerService', function() {
         },
         {
           type: 'end',
-          value: 1
+          value: 6000
         }
       ]
     };
@@ -89,24 +89,24 @@ describe('PlayerService', function() {
 
   it('Should be able to get only timecodes according to the cut edges', function() {
 
-    // Cut 0 - 1
+    // Cut start - end
     media.cut[0].value = 0;
-    media.cut[1].value = 1;
+    media.cut[1].value = 6000;
     playerService.setMedia(media);
     var timecodes = playerService.getMediaTimecodes();
     assert.isArray(timecodes);
     assert.equal(timecodes.length, 2);
 
-    // Cut 0.5 - 1
-    media.cut[0].value = 0.5;
-    media.cut[1].value = 1;
+    // Cut half - end
+    media.cut[0].value = 3000;
+    media.cut[1].value = 6000;
     playerService.setMedia(media);
     timecodes = playerService.getMediaTimecodes();
     assert.isArray(timecodes);
     assert.equal(timecodes.length, 1);
 
     // No cut
-    media.cut = null;
+    media.cut = [];
     playerService.setMedia(media);
     timecodes = playerService.getMediaTimecodes();
     assert.isArray(timecodes);
@@ -124,24 +124,24 @@ describe('PlayerService', function() {
 
   it('Should be able to get only chapters according to the cut edges', function() {
 
-    // Cut 0 - 1
+    // Cut start - end
     media.cut[0].value = 0;
-    media.cut[1].value = 1;
+    media.cut[1].value = 6000;
     playerService.setMedia(media);
     var chapters = playerService.getMediaPointsOfInterest('chapters');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
 
-    // Cut 0.5 - 1
-    media.cut[0].value = 0.5;
-    media.cut[1].value = 1;
+    // Cut half - end
+    media.cut[0].value = 3000;
+    media.cut[1].value = 6000;
     playerService.setMedia(media);
     chapters = playerService.getMediaPointsOfInterest('chapters');
     assert.isArray(chapters);
     assert.equal(chapters.length, 1);
 
     // No cut
-    media.cut = null;
+    media.cut = [];
     playerService.setMedia(media);
     chapters = playerService.getMediaPointsOfInterest('chapters');
     assert.isArray(chapters);
@@ -150,24 +150,24 @@ describe('PlayerService', function() {
 
   it('Should be able to get only tags according to the cut edges', function() {
 
-    // Cut 0 - 1
+    // Cut start - end
     media.cut[0].value = 0;
-    media.cut[1].value = 1;
+    media.cut[1].value = 6000;
     playerService.setMedia(media);
     var chapters = playerService.getMediaPointsOfInterest('tags');
     assert.isArray(chapters);
     assert.equal(chapters.length, 4);
 
-    // Cut 0.5 - 1
-    media.cut[0].value = 0.5;
-    media.cut[1].value = 1;
+    // Cut half - end
+    media.cut[0].value = 3000;
+    media.cut[1].value = 6000;
     playerService.setMedia(media);
     chapters = playerService.getMediaPointsOfInterest('tags');
     assert.isArray(chapters);
     assert.equal(chapters.length, 1);
 
     // No cut
-    media.cut = null;
+    media.cut = [];
     playerService.setMedia(media);
     chapters = playerService.getMediaPointsOfInterest('tags');
     assert.isArray(chapters);
@@ -176,26 +176,26 @@ describe('PlayerService', function() {
 
   it('Should be able to get media duration according to cut edges', function() {
 
-    // Cut 0 - 1
+    // Cut start - end
     var duration = playerService.getCutDuration();
     assert.equal(duration, 6000);
 
-    // Cut 0.5 - 1
-    media.cut[0].value = 0.5;
-    media.cut[1].value = 1;
+    // Cut half - end
+    media.cut[0].value = 3000;
+    media.cut[1].value = 6000;
     playerService.setMedia(media);
     duration = playerService.getCutDuration();
     assert.equal(duration, 3000);
 
-    // Cut 0.2 - 0.4
-    media.cut[0].value = 0.2;
-    media.cut[1].value = 0.4;
+    // Cut 1.2s - 2.4s
+    media.cut[0].value = 1200;
+    media.cut[1].value = 2400;
     playerService.setMedia(media);
     duration = playerService.getCutDuration();
     assert.equal(duration, 1200);
 
     // No cut
-    media.cut = null;
+    media.cut = [];
     playerService.setMedia(media);
     duration = playerService.getCutDuration();
     assert.equal(duration, 6000);
@@ -205,9 +205,9 @@ describe('PlayerService', function() {
   it('Should be able to transform a percentage relative to the full media to a percentage relative to the cut media',
     function() {
 
-      // Cut 0.2 - 0.4
-      media.cut[0].value = 0.2;
-      media.cut[1].value = 0.4;
+      // Cut 1.2s - 2.4s
+      media.cut[0].value = 1200;
+      media.cut[1].value = 2400;
       playerService.setMedia(media);
 
       assert.equal(playerService.getCutPercent(50), 100);
@@ -216,23 +216,11 @@ describe('PlayerService', function() {
 
     });
 
-  it('Should be able to get the cut edges relative to the full media', function() {
-
-    // Cut 0.2 - 0.4
-    media.cut[0].value = 0.2;
-    media.cut[1].value = 0.4;
-    playerService.setMedia(media);
-
-    assert.equal(playerService.getRealCutStart(), 1200);
-    assert.equal(playerService.getRealCutEnd(), 2400);
-
-  });
-
   it('Should be able to transform a time relative to the cut media to a time relative to the full media', function() {
 
-    // Cut 0.2 - 0.4
-    media.cut[0].value = 0.2;
-    media.cut[1].value = 0.4;
+    // Cut 1.2s - 2.4s
+    media.cut[0].value = 1200;
+    media.cut[1].value = 2400;
     playerService.setMedia(media);
 
     assert.equal(playerService.getRealTime(0), 1200);
@@ -242,9 +230,9 @@ describe('PlayerService', function() {
 
   it('Should be able to transform a time relative to the full media to a time relative to the cut media', function() {
 
-    // Cut 0.2 - 0.4
-    media.cut[0].value = 0.2;
-    media.cut[1].value = 0.4;
+    // Cut 1.2s - 2.4s
+    media.cut[0].value = 1200;
+    media.cut[1].value = 2400;
     playerService.setMedia(media);
 
     assert.equal(playerService.getCutTime(1200), 0);

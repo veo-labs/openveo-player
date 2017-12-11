@@ -2,7 +2,7 @@
   <ul>
     <li ng-repeat-start="chapter in chapters | orderBy:'+value'"  ng-click="goToTimecode(chapter.value)" class="open">
       <div class="title" >
-        <span class="time">{{chapter.value | date:'H:mm:ss':'+0000'}}</span>
+        <span class="time">{{chapter.value|ovPlayerMillisecondsToTime}}</span>
         <span> - </span>
         <span class="text">{{chapter.name}}</span>
       </div>

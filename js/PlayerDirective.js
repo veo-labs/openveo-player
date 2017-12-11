@@ -23,7 +23,7 @@
    * @module ov.player
    * @class ovPlayer
    */
-  function ovPlayer($injector, $document, $sce, $filter, $timeout, PlayerService, i18nPlayerService, $cookies,
+  function ovPlayer($http, $injector, $document, $sce, $filter, $timeout, PlayerService, i18nPlayerService, $cookies,
                      ovPlayerErrors) {
     return {
       restrict: 'E',
@@ -278,8 +278,8 @@
          */
         function initPointsOfInterest(disableCut) {
           if (disableCut === true) {
-            $scope.chapters = $scope.data.chapters;
-            $scope.tags = $scope.data.tags;
+            $scope.chapters = $scope.data.chapters || [];
+            $scope.tags = $scope.data.tags || [];
           } else {
             $scope.chapters = playerService.getMediaPointsOfInterest('chapters') || [];
             $scope.tags = playerService.getMediaPointsOfInterest('tags') || [];
@@ -297,7 +297,7 @@
           var timecode;
 
           if (disableCut === true) {
-            $scope.timecodes = $scope.data.timecodes;
+            $scope.timecodes = $scope.data.timecodes || [];
             $scope.timecodesByTime = {};
             for (var i = 0; i < $scope.timecodes.length; i++) {
               timecode = $scope.timecodes[i];
@@ -886,13 +886,17 @@
           return false;
         });
 
-        // Listen to player durationChange event
-        $element.on('ovDurationChange', function(event, duration) {
-          event.stopImmediatePropagation();
+        /**
+         * Process points of interest (depending of the cut)
+         * after their values have being converted from per-
+         * cents to milliseconds
+         *
+         * @param {Number} duration The duration of video
+         */
+        function processMediaTabs(duration) {
           safeApply(function() {
             var disableCut = $scope.ovDisableCut === true;
 
-            playerService.setRealMediaDuration(duration);
             $scope.startCutTime = disableCut ? 0 : playerService.getRealCutStart();
             $scope.duration = disableCut ? duration : playerService.getCutDuration();
 
@@ -901,24 +905,12 @@
             initPointsOfInterest(disableCut);
             self.setTime(lastTime);
 
-            // Change value of chapter to get timestamp once video duration is known
-            if (disableCut) {
-              var convertPercentToMs = function(poi) {
-                poi.value = poi.value * duration;
-              };
-
-              if (Array.isArray($scope.chapters))
-                $scope.chapters.forEach(convertPercentToMs);
-              else
-                $scope.chapters = [];
-              if (Array.isArray($scope.tags))
-                $scope.tags.forEach(convertPercentToMs);
-              else
-                $scope.tags = [];
-            } else {
+            // Change value of points of interest depending on the start offset
+            if (!disableCut) {
               playerService.processPointsOfInterestTime($scope.chapters);
               playerService.processPointsOfInterestTime($scope.tags);
             }
+
             if ($scope.chapters.length)
               displayChapters();
             else
@@ -933,7 +925,30 @@
 
             $element.triggerHandler('durationChange', $scope.duration);
           });
+
           return false;
+        }
+
+        // Listen to player durationChange event
+        $element.on('ovDurationChange', function(event, duration) {
+          event.stopImmediatePropagation();
+
+          safeApply(function() {
+            playerService.setRealMediaDuration(duration);
+          });
+
+          if ($scope.data.needPointsOfInterestUnitConversion === true) {
+            $http
+              .post('/publish/video/' + $scope.data.id + '/updatePoi', {duration: duration})
+              .then(function(response) {
+                $scope.data = response.data.entity;
+                prepareData($scope.data);
+                playerService.setMedia($scope.data);
+                processMediaTabs(duration);
+              });
+          } else {
+            processMediaTabs(duration);
+          }
         });
 
         // Listen to player play event
@@ -1085,6 +1100,7 @@
 
   app.directive('ovPlayer', ovPlayer);
   ovPlayer.$inject = [
+    '$http',
     '$injector',
     '$document',
     '$sce',
