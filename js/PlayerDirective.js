@@ -713,7 +713,7 @@
          * time bar area.
          *
          * @param {MouseEvent} event The dispatched event when cliking
-         * on the volume selector.
+         * on the progress bar.
          */
         $scope.setTime = function(event) {
           timeBarRect = timeBar.getBoundingClientRect();
