@@ -23,7 +23,7 @@
    * @module ov.player
    * @class ovPlayer
    */
-  function ovPlayer($http, $injector, $document, $sce, $filter, $timeout, PlayerService, i18nPlayerService, $cookies,
+  function ovPlayer($injector, $document, $sce, $filter, $timeout, PlayerService, i18nPlayerService, $cookies,
                      ovPlayerErrors) {
     return {
       restrict: 'E',
@@ -505,6 +505,49 @@
         }
 
         /**
+         * Process points of interest (depending of the cut)
+         * after their values have being converted from per-
+         * cents to milliseconds
+         *
+         * @param {Number} duration The duration of video
+         */
+        function processMediaTabs(duration) {
+          safeApply(function() {
+            var disableCut = $scope.ovDisableCut === true;
+
+            $scope.startCutTime = disableCut ? 0 : playerService.getRealCutStart();
+            $scope.duration = disableCut ? duration : playerService.getCutDuration();
+
+            // Init Timecode and POI with the real duration
+            initTimecodes(disableCut);
+            initPointsOfInterest(disableCut);
+            self.setTime(lastTime);
+
+            // Change value of points of interest depending on the start offset
+            if (!disableCut) {
+              playerService.processPointsOfInterestTime($scope.chapters);
+              playerService.processPointsOfInterestTime($scope.tags);
+            }
+
+            if ($scope.chapters.length)
+              displayChapters();
+            else
+              hideChapters();
+
+            if ($scope.tags.length)
+              displayTags();
+            else
+              hideTags();
+
+            updateAttributes();
+
+            $element.triggerHandler('durationChange', $scope.duration);
+          });
+
+          return false;
+        }
+
+        /**
          * Toggles display mode selection list.
          *
          * If the list of display modes is opened, close it, open it
@@ -633,7 +676,16 @@
 
         // Watch for ov-data attribute changes
         $scope.$watch('ovData', function(newData, oldData) {
-          if (newData) init(!oldData || newData === oldData);
+          if (newData) {
+            init(!oldData || newData === oldData);
+
+            if (oldData && oldData.needPointsOfInterestUnitConversion === true &&
+                !newData.needPointsOfInterestUnitConversion) {
+              prepareData($scope.data);
+              playerService.setMedia($scope.data);
+              processMediaTabs($scope.duration);
+            }
+          }
         });
 
         // Watch for ov-fullscreen-icon attribute changes
@@ -886,49 +938,6 @@
           return false;
         });
 
-        /**
-         * Process points of interest (depending of the cut)
-         * after their values have being converted from per-
-         * cents to milliseconds
-         *
-         * @param {Number} duration The duration of video
-         */
-        function processMediaTabs(duration) {
-          safeApply(function() {
-            var disableCut = $scope.ovDisableCut === true;
-
-            $scope.startCutTime = disableCut ? 0 : playerService.getRealCutStart();
-            $scope.duration = disableCut ? duration : playerService.getCutDuration();
-
-            // Init Timecode and POI with the real duration
-            initTimecodes(disableCut);
-            initPointsOfInterest(disableCut);
-            self.setTime(lastTime);
-
-            // Change value of points of interest depending on the start offset
-            if (!disableCut) {
-              playerService.processPointsOfInterestTime($scope.chapters);
-              playerService.processPointsOfInterestTime($scope.tags);
-            }
-
-            if ($scope.chapters.length)
-              displayChapters();
-            else
-              hideChapters();
-
-            if ($scope.tags.length)
-              displayTags();
-            else
-              hideTags();
-
-            updateAttributes();
-
-            $element.triggerHandler('durationChange', $scope.duration);
-          });
-
-          return false;
-        }
-
         // Listen to player durationChange event
         $element.on('ovDurationChange', function(event, duration) {
           event.stopImmediatePropagation();
@@ -938,14 +947,7 @@
           });
 
           if ($scope.data.needPointsOfInterestUnitConversion === true) {
-            $http
-              .post('/publish/video/' + $scope.data.id + '/updatePoi', {duration: duration})
-              .then(function(response) {
-                $scope.data = response.data.entity;
-                prepareData($scope.data);
-                playerService.setMedia($scope.data);
-                processMediaTabs(duration);
-              });
+            $element.triggerHandler('needPoiConversion', duration);
           } else {
             processMediaTabs(duration);
           }
@@ -1007,7 +1009,9 @@
 
           var updateTime = function() {
             $scope.time = ($scope.ovDisableCut === true) ? data.time : playerService.getCutTime(data.time);
-            $scope.seenPercent = ($scope.ovDisableCut === true) ? $scope.time / $scope.duration * 100 : playerService.getCutPercent(data.percent);
+            $scope.seenPercent = ($scope.ovDisableCut === true) ?
+                                   $scope.time / $scope.duration * 100 :
+                                   playerService.getCutPercent(data.percent);
 
             $scope.presentation = timecode !== null &&
                     $scope.timecodesByTime[timecode] ? $scope.timecodesByTime[timecode].image.large : null;
@@ -1025,7 +1029,9 @@
           };
 
           // Media virtual end reached
-          if ($scope.ovDisableCut !== true && $scope.duration && playerService.getCutTime(data.time) > playerService.getCutDuration()) {
+          if ($scope.ovDisableCut !== true &&
+              $scope.duration &&
+              playerService.getCutTime(data.time) > playerService.getCutDuration()) {
             $scope.player.setTime(playerService.getRealTime(0));
             if ($scope.ovRememberPosition)
               $cookies.remove('videoStopped_' + $scope.data.mediaId);
@@ -1100,7 +1106,6 @@
 
   app.directive('ovPlayer', ovPlayer);
   ovPlayer.$inject = [
-    '$http',
     '$injector',
     '$document',
     '$sce',
