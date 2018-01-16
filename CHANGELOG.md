@@ -1,4 +1,8 @@
-# 3.1.0 /
+# 4.0.0 /
+
+## BREAKING CHANGES
+
+- The player is now expecting points of interest in milliseconds instead of percents.
 
 ## NEW FEATURES
 
