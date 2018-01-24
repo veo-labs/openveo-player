@@ -103,6 +103,23 @@ describe('PlayerService', function() {
     playerService.setMedia(media);
     timecodes = playerService.getMediaTimecodes();
     assert.isArray(timecodes);
+    assert.equal(timecodes.length, 2);
+
+
+    // Cut from the second slide to the end
+    media.cut[0].value = 5000;
+    media.cut[1].value = 6000;
+    playerService.setMedia(media);
+    timecodes = playerService.getMediaTimecodes();
+    assert.isArray(timecodes);
+    assert.equal(timecodes.length, 1);
+
+    // Cut after the second slide to the end
+    media.cut[0].value = 5500;
+    media.cut[1].value = 6000;
+    playerService.setMedia(media);
+    timecodes = playerService.getMediaTimecodes();
+    assert.isArray(timecodes);
     assert.equal(timecodes.length, 1);
 
     // No cut

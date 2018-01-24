@@ -122,18 +122,37 @@
   PlayerService.prototype.getMediaTimecodes = function() {
 
     // Media is cut
-    if (this.isCut && this.realMediaDuration && this.media.timecodes) {
+    if (this.isCut && this.realMediaDuration && Array.isArray(this.media.timecodes)) {
       var filteredTimecodes = [];
       var realCutStart = this.getRealCutStart();
       var realCutEnd = this.getRealCutEnd();
+      var sortedTimecodes = this.media.timecodes.sort(function(a, b) {
+        return a.timecode - b.timecode;
+      });
+      var firstSlide;
 
       // Filter timecodes depending on cut edges
       // Timecodes not in the range [startCut - endCut] must be removed
-      for (var i = 0; i < this.media.timecodes.length; i++) {
-        var timecode = this.media.timecodes[i].timecode;
+      for (var i = 0; i < sortedTimecodes.length; i++) {
+        var timecode = sortedTimecodes[i].timecode;
 
-        if (timecode >= realCutStart && timecode <= realCutEnd)
-          filteredTimecodes.push(this.media.timecodes[i]);
+        if (timecode < realCutStart) {
+          firstSlide = sortedTimecodes[i];
+          continue;
+        }
+
+        if (timecode > realCutEnd)
+          break;
+
+        filteredTimecodes.push(sortedTimecodes[i]);
+      }
+
+      // Add the slide before the cutted start at the beginning
+      // of the filtered slides
+      if (firstSlide !== undefined &&
+          (filteredTimecodes.length === 0 || filteredTimecodes[0].timecode != realCutStart)) {
+        firstSlide.timecode = realCutStart;
+        filteredTimecodes.unshift(firstSlide);
       }
 
       return filteredTimecodes;
