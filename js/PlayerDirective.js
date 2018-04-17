@@ -32,6 +32,7 @@
         ovData: '=',
         ovFullscreenIcon: '=?',
         ovVolumeIcon: '=?',
+        ovMode: '@?',
         ovModeIcon: '=?',
         ovSettingsIcon: '=?',
         ovMediaSourcesIcon: '=?',
@@ -213,7 +214,7 @@
          */
         function displayTimecodes() {
           $scope.displayIndexTab = true;
-          $scope.selectedMode = modes[1];
+          $scope.selectedMode = $scope.ovMode && modes.indexOf($scope.ovMode) > -1 ? $scope.ovMode : modes[1];
         }
 
         /**
