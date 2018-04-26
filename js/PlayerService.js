@@ -87,6 +87,9 @@
     this.media = newMedia;
     this.isCut = this.media.cut && this.media.cut.length;
 
+    this.cutStart = 0;
+    this.cutEnd = null;
+
     // Media is cut
     if (this.isCut) {
 
@@ -98,15 +101,15 @@
           this.cutEnd = this.media.cut[i].value;
       }
 
-      // Media duration can't be equal to 0
-      if (this.cutStart === this.cutEnd) {
+      if (this.cutStart < 0)
+        this.cutStart = 0;
+
+      // Media duration can't be equal to 0 or negative
+      if (this.cutEnd !== null && this.cutStart >= this.cutEnd) {
         this.cutStart = 0;
         this.cutEnd = null;
       }
 
-    } else {
-      this.cutStart = 0;
-      this.cutEnd = null;
     }
 
   };
@@ -288,6 +291,10 @@
    * @param {Number} duration Real media duration in milliseconds
    */
   PlayerService.prototype.setRealMediaDuration = function(duration) {
+    if (this.cutStart >= duration || this.cutEnd > duration) {
+      this.cutStart = 0;
+      this.cutEnd = null;
+    }
     this.realMediaDuration = duration;
   };
 
