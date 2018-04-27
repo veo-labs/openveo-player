@@ -12,7 +12,7 @@
    *  - "ovPause" : Player pauses
    *  - "ovLoadProgress" : Player is buffering
    *  - "ovPlayProgress" : Player is playing
-   *  - "ivReady" : Player is ready to play the media
+   *  - "ovReady" : Player is ready to play the media
    *  - "ovDurationChange" : Media duration has changed
    *  - "ovEnd" : Media has reached the end
    *  - "ovWaiting" : Media is waiting for buffering
