@@ -532,6 +532,9 @@ You can interact with the player using the API.
       // Seeks media to time 20s
       playerController.setTime(20000);
 
+      // Changes media source
+      playerController.setSource(1);
+
     });
 
     angular.element(myPlayer).on('waiting', function(event) {

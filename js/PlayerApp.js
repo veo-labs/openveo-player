@@ -98,14 +98,23 @@
    *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-time true to display the actual time and duration
    *    (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-media-sources-icon true to display the multi-sources icon
+   *    (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-hide-chapters-tab true to hide chapters tab
+   *    (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-hide-tags-tab true to hide tags tab
+   *    (CAUTION : It must be an assignable variable)
    *  - Boolean ov-full-viewport true to display the player in
    *    full viewport (CAUTION : It must be an assignable variable)
+   *  - Boolean ov-disable-cut true to disable cuts
+   *    (CAUTION : It must be an assignable variable)
    *  - String ov-language Player language code (e.g. fr)
    *  - String ov-player-type The type of player to use to play the media. It
    *    can be either :
    *      - html : To play the media using HTML player
    *    If no player type is provided, ov-player will figure out which player
    *    to use depending on the media type.
+   *  - String ov-mode The display template to use (either "both", "media", "both-presentation" or "presentation")
    *  - Boolean ov-auto-play true to start playing when media is ready
    *  - Boolean ov-remember-position true to start the media at the position the user was
    *
@@ -133,12 +142,17 @@
    *   ov-volume-icon="isVolumeIconDisplayed"
    *   ov-mode-icon="isModeIconDisplayed"
    *   ov-settings-icon="isSettingsIconDisplayed"
+   *   ov-media-sources-icon="isMediaSourcesIconDisplayed"
    *   ov-time="isTimeDisplayed"
+   *   ov-hide-chapters-tab="isChaptersTabHidden"
+   *   ov-hide-tags-tab="isTagsTabHidden"
    *   ov-full-viewport="isFullViewport"
+   *   ov-disable-cut="isCutDisabled"
    *   ov-language="en"
    *   ov-player-type="html"
    *   ov-auto-play="true"
    *   ov-remember-position="true"
+   *   ov-mode="both"
    * ></ov-player>
    *
    * // The whole object can also be changed dynamically
@@ -182,6 +196,8 @@
    *  - playProgress Media playback position has changed
    *  - end Media playback has reached the end
    *  - error Player has encountered an error
+   *  - needPoiConversion Player has detected the old format of chapters / tags / indexes.
+   *    Time of chapters / tags and indexes have to be expressed in milliseconds and not in percentage
    *
    * e.g.
    * <ov-player ... id="myPlayer"></ov-player>
@@ -232,6 +248,11 @@
    *   console.log(error.code);
    * });
    *
+   * angular.element(test).on('needPoiConversion', function(event, duration){
+   *   console.log('needPoiConversion');
+   *   console.log('Video duration = ' + duration + 'ms');
+   * });
+   *
    * Controlling the player :
    * You can control the player with some basic actions
    * - selectMode To select the display mode (can be 'media', 'both',
@@ -240,6 +261,7 @@
    * - setVolume To change player's volume
    * - setTime To seek media to a specific time
    * - setDefinition Sets player definition
+   * - setSource Sets player source if multi-sources
    *
    * e.g.
    * <ov-player ... id="myPlayer"></ov-player>
@@ -260,6 +282,9 @@
    *
    *  // Seeks media to time 20s
    *  playerController.setTime(20000);
+   *
+   *  // Changes media source
+   *  playerController.setSource(1);
    *
    * });
    *

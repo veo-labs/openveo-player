@@ -117,6 +117,29 @@ Param | Type | Details
 ----- | ---- | ----
 definition  | Object  | The definition description object
 
+## setSource
+
+Sets actual media source if multi sources.
+
+Usage:
+
+```javascript
+var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  playerController.setSource(1);
+});
+```
+
+Arguments:
+
+Param | Type | Details
+----- | ---- | ----
+source  | Number  | The index of the source to load in the list of sources
+
 # Events
 
 ## ready
@@ -241,5 +264,18 @@ var myPlayer = document.getElementById('myPlayer');
 angular.element(myPlayer).on('error', function(event, error){
   console.log(error.message);
   console.log(error.code);
+});
+```
+
+## needPoiConversion
+
+Player has detected the old format of chapters / tags / indexes. Time of chapters / tags and indexes have to be expressed in milliseconds and not in percentage.
+
+```javascript
+var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('needPoiConversion', function(event, duration){
+  console.log('needPoiConversion');
+  console.log('Video duration = ' + duration + 'ms');
 });
 ```

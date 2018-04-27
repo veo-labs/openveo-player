@@ -12,10 +12,14 @@ OpenVeo Player defines an AngularJS directive **ov-player**:
   ov-mode-icon="isModeIconDisplayed"
   ov-settings-icon="isSettingsIconDisplayed"
   ov-media-sources-icon="isMediaSourcesIconDisplayed"
+  ov-hide-chapters-tab="isChaptersTabHidden"
+  ov-hide-tags-tab="isTagsTabHidden"
+  ov-disable-cut="isCutDisabled"
   ov-language="en"
   ov-player-type="html"
   ov-auto-play="true"
   ov-remember-position="true"
+  ov-mode="both"
 ></ov-player>
 ```
 
@@ -362,5 +366,65 @@ Indicates if player must automatically start at time which video has previously 
 <ov-player
   ...
   ov-remember-position="true"
+></ov-player>
+```
+
+## ov-hide-chapters-tab (optional)
+
+Indicates if chapters tab must be hidden or not. (Default to false)
+
+```javascript
+$scope.isChaptersTabHidden = false;
+```
+
+```html
+<ov-player
+  ...
+  ov-hide-chapters-tab="isChaptersTabHidden"
+></ov-player>
+```
+
+## ov-hide-tags-tab (optional)
+
+Indicates if tags tab must be hidden or not. (Default to false)
+
+```javascript
+$scope.isTagsTabHidden = false;
+```
+
+```html
+<ov-player
+  ...
+  ov-hide-tags-tab="isTagsTabHidden"
+></ov-player>
+```
+
+## ov-disable-cut (optional)
+
+Indicates if cuts must be disabled or not. (Default to false)
+
+```javascript
+$scope.isCutDisabled = false;
+```
+
+```html
+<ov-player
+  ...
+  ov-disable-cut="isCutDisabled"
+></ov-player>
+```
+
+## ov-mode (optional)
+
+Indicates the display mode to use. Could be either "both", "media", "presentation" or "both-presentation" (Default to "both")
+
+```javascript
+$scope.displayMode = 'both';
+```
+
+```html
+<ov-player
+  ...
+  ov-mode="displayMode"
 ></ov-player>
 ```

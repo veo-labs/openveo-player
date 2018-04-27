@@ -6,10 +6,10 @@
 
 ## NEW FEATURES
 
-- Execute unit tests on Travis
 - The highest definition is now selected by default instead of the lowest one for the HTML player
 
 ## BUG FIXES
+
 - Fix the removed first slide when video's beginning is offsetted
 
 ## DEPENDENCIES
