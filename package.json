@@ -24,7 +24,7 @@
     "url": "https://github.com/veo-labs/openveo-player.git"
   },
   "devDependencies": {
-    "@openveo/api": "4.*",
+    "@openveo/api": "5.*",
     "chai": "4.0.2",
     "grunt": "1.0.1",
     "grunt-contrib-compass": "1.1.1",

@@ -16,6 +16,7 @@
 
 - **karma-phantomjs-launcher** has been removed
 - **chai** has been upgraded from 3.5.0 to **4.0.2**
+- **@openveo/api** has been upgraded from 4.\* to **5.\***
 
 # 3.0.0 / 2017-06-06
 
