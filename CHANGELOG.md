@@ -7,6 +7,7 @@
 ## NEW FEATURES
 
 - The highest definition is now selected by default instead of the lowest one for the HTML player
+- Add NPM package-lock.json file
 
 ## BUG FIXES
 
