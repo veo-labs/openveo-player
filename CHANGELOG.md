@@ -3,6 +3,7 @@
 ## BREAKING CHANGES
 
 - The player is now expecting points of interest in milliseconds instead of percents.
+- Drop support for NodeJS &lt; 8.9.4 and NPM &lt; 5.6.0
 
 ## NEW FEATURES
 
