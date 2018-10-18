@@ -47,7 +47,8 @@
   "scripts": {
     "prepack": "grunt dist",
     "eslint": "grunt eslint",
-    "karma": "grunt karma"
+    "karma": "grunt karma",
+    "postpublish": "grunt deploy-doc"
   },
   "precommit": [
     "eslint",
