@@ -1,3 +1,9 @@
+# 4.1.0 / YYYY-MM-DD
+
+## NEW FEATURES
+
+- OpenVeo Player does not use Bower anymore, it now uses NPM for its development dependencies
+
 # 4.0.0 / 2018-05-04
 
 ## BREAKING CHANGES

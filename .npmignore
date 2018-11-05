@@ -39,10 +39,6 @@ nbproject
 .gitignore
 .gitattributes
 
-# Bower
-.bowerrc
-bower.json
-
 # Unit tests
 /tests
 /karmaConf.js

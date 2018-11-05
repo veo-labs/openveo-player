@@ -16,12 +16,12 @@ module.exports = function(config) {
 
     // List of files / patterns to load in the browser
     files: [
-      'lib/angular/angular.js',
-      'lib/angular-animate/angular-animate.js',
-      'lib/angular-cookies/angular-cookies.js',
-      'lib/angular-route/angular-route.js',
-      'lib/angular-mocks/angular-mocks.js',
-      'lib/video.js/dist/video.min.js',
+      'node_modules/angular/angular.js',
+      'node_modules/angular-animate/angular-animate.js',
+      'node_modules/angular-cookies/angular-cookies.js',
+      'node_modules/angular-route/angular-route.js',
+      'node_modules/angular-mocks/angular-mocks.js',
+      'node_modules/video.js/dist/video.js',
       'templates/*.html',
       'tests/init.js',
       'js/PlayerApp.js',

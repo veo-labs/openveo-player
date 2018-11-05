@@ -21,13 +21,11 @@ notifications:
 before_install:
   - rvm install ruby-latest
   - npm install -g grunt-cli
-  - npm install -g bower
   - gem install sass
   - gem install compass
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 install:
   - npm install --ignore-scripts
-  - bower install
   - grunt dist
 before_script:
   - "export DISPLAY=:99.0"
