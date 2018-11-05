@@ -6,5 +6,6 @@ module.exports = {
   templatesPath: '<%= player.basePath %>/templates',
   jsPath: ['<%= player.basePath %>/js/'],
   distPath: ['<%= player.basePath %>/dist'],
+  docPath: ['<%= player.basePath %>/site'],
   sass: ['<%= player.basePath %>/css']
 };

@@ -5,8 +5,8 @@ module.exports = {
 
   // Rename version documentation directory to the target version
   doc: {
-    src: 'site/version',
-    dest: 'site/<%= pkg.version %>'
+    src: '<%= player.docPath %>/version',
+    dest: '<%= player.docPath %>/<%= pkg.version %>'
   }
 
 };
