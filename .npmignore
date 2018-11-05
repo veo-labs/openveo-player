@@ -27,6 +27,9 @@ nbproject
 # JavaScript files
 /js
 
+# Templates
+/templates
+
 # Sass cache files
 .sass-cache
 
@@ -50,3 +53,6 @@ nbproject
 
 # Eslint
 .eslintrc
+
+# Build
+/build

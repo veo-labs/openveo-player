@@ -37,21 +37,6 @@ This directive creates a video player with images synchronization and chapters.
 
 ```
 
-# Set player root
-
-OpenVeo player needs to be aware of its root path to load AngularJS partials.
-
-```html
-<script>
-  // Set ovPlayerDirectory to openveo-player root path
-  // This is used by openveo-player to get partials
-  // Do not forget the trailing slash !
-  var ovPlayerDirectory = "lib/openveo-player/";
-</script>
-```
-
-**Nb :** **ovPlayerDirectory** must be defined before including the OpenVeo Player script.
-
 # Include scripts
 
 ```html

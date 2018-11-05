@@ -14,9 +14,6 @@
   /**
    * Creates a new Angular directive as HTML element ov-player to create an openVeo player.
    *
-   * It requires ovPlayerDirectory global variable to be defined and have
-   * a value corresponding to the path of the openVeo Player
-   * root directory.
    * For more information on the ov-player element, have a look at the
    * PlayerApp.js file.
    *
@@ -27,7 +24,7 @@
                      ovPlayerErrors) {
     return {
       restrict: 'E',
-      templateUrl: ovPlayerDirectory + 'templates/player.html',
+      templateUrl: 'opl-player.html',
       scope: {
         ovData: '=',
         ovFullscreenIcon: '=?',
@@ -334,7 +331,7 @@
           if ($scope.data.mediaId && $scope.data.mediaId.length) {
             var playerType = $scope.ovPlayerType || 'html';
             var playerId = 'player_' + new Date().getUTCMilliseconds();
-            $scope.mediaTemplate = ovPlayerDirectory + 'templates/' + playerType + '.html';
+            $scope.mediaTemplate = 'opl-' + playerType + '.html';
             $scope.data.language = $scope.ovLanguage;
 
             // Get an instance of a player depending on player's type

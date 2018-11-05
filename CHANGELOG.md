@@ -3,6 +3,7 @@
 ## NEW FEATURES
 
 - OpenVeo Player does not use Bower anymore, it now uses NPM for its development dependencies
+- Global variable ovPlayerDirectory is not required anymore
 
 # 4.0.0 / 2018-05-04
 

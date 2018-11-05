@@ -9,12 +9,7 @@
    * associated presentation images and chapters. All you have to do is use the
    * directive ovPlayer.
    *
-   * The ov-player HTML element needs partials. To be able to locate the
-   * directory of the partials, a global variable "ovPlayerDirectory"
-   * must be set to the root directory of the player.
-   *
    * e.g.
-   * var ovPlayerDirectory = '/js/player/';
    *
    * Available attributes are :
    *  - Object ov-data A data object as :
@@ -291,9 +286,6 @@
    * @main ov.player
    */
   var app = angular.module('ov.player', ['ngCookies']);
-
-  if (typeof ovPlayerDirectory === 'undefined' || typeof ovPlayerDirectory !== 'string')
-    throw new Error('ovPlayerDirectory global variable must be defined and set to the root path of the openVeo player');
 
   // Player translations
   app.constant('ovPlayerI18nTranslations', {

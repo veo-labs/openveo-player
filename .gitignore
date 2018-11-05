@@ -19,6 +19,7 @@ ehthumbs.db
 # Build
 .sass-cache
 /dist
+/build
 
 # Development dependencies
 /lib

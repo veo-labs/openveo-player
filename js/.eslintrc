@@ -13,7 +13,6 @@
 
     // Add player's globals to environment globals but do not authorize to overwrite it
     ovFlashPlayer: false,
-    ovPlayerDirectory: false,
 
     // Firefox DocumentTouch object
     DocumentTouch: false
