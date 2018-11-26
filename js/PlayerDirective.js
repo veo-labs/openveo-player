@@ -1076,7 +1076,7 @@
 
             switch (code) {
               case ovPlayerErrors.MEDIA_ERR_NO_SOURCE:
-                $scope.error = $filter('ovPlayerTranslate')('MEDIA_NO_SOURCE');
+                $scope.error = $filter('ovPlayerTranslate')('MEDIA_ERR_NO_SOURCE');
                 break;
               case ovPlayerErrors.MEDIA_ERR_NETWORK:
                 $scope.error = $filter('ovPlayerTranslate')('MEDIA_ERR_NETWORK');

@@ -8,6 +8,7 @@
 ## BUG FIXES
 
 - Fix "grunt remove:doc" which hasn't worked since version 2.2.0
+- Fix translation of the error message when no source
 
 # 4.0.0 / 2018-05-04
 
