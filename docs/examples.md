@@ -29,15 +29,17 @@ The HTML player expects one media Id and one url by source.
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
+    <script type="text/javascript" src="lib/videojs-flash/dist/videojs-flash.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
 
     <script>
 
       // Set flash fallback for video.js
-      videojs.options.flash.swf = "lib/video.js/dist/video-js.swf";
+      videojs.options.flash.swf = "lib/videojs-flash/node_modules/videojs-swf/dist/video-js.swf";
 
     </script>
+
   </body>
 
 </html>
@@ -198,13 +200,14 @@ The HTML player with several sources expects one media Id and one url by source.
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
+    <script type="text/javascript" src="lib/videojs-flash/dist/videojs-flash.min.js"></script>
     <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
 
     <script>
 
       // Set flash fallback for video.js
-      videojs.options.flash.swf = "lib/video.js/dist/video-js.swf";
+      videojs.options.flash.swf = "lib/videojs-flash/node_modules/videojs-swf/dist/video-js.swf";
 
     </script>
 
@@ -425,11 +428,12 @@ You can interact with the player using the API.
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
+    <script type="text/javascript" src="lib/videojs-flash/dist/videojs-flash.min.js"></script>
 
     <script>
 
       // Set flash fallback for video.js
-      videojs.options.flash.swf = "lib/video.js/dist/video-js.swf";
+      videojs.options.flash.swf = "lib/videojs-flash/node_modules/videojs-swf/dist/video-js.swf";
 
     </script>
 

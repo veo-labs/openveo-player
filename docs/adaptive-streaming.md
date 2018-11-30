@@ -15,15 +15,10 @@ Install videojs-contrib-dash plugin:
 
     npm install videojs-contrib-dash@{CONTRIB_DASH_VERSION}
 
-Install videojs-contrib-hls plugin:
-
-    npm install videojs-contrib-hls@{CONTRIB_HLS_VERSION}
-
 And import dependencies to use adaptive sources:
 ```html
     <script type="text/javascript" src="lib/dashjs/dist/dash.all.min.js"></script>
     <script type="text/javascript" src="lib/videojs-contrib-dash/dist/videojs-dash.min.js"></script>
-    <script type="text/javascript" src="lib/videojs-contrib-hls/dist/videojs-contrib-hls.min.js"></script>
 ```
 
 # How to play adaptive sources
@@ -32,6 +27,16 @@ You need to define your adaptive sources by setting their mimetype and their lin
 $scope.data.sources = [
   {
     adaptive: [ // The list of video adaptive sources (only for "html" player)
+          { // Dash source
+           height: 720,
+           mimeType: 'application/dash+xml',
+           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.mpd'
+          },
+          { // HLS Source
+           height: 720,
+           mimeType: 'application/vnd.apple.mpegurl',
+           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.m3u8'
+          },
           { // RTMP source
             mimeType: 'rtmp/mp4',
             link: 'rtmp://mydomainname.local/openveo/&mp4:bunny.mp4'
@@ -40,17 +45,7 @@ $scope.data.sources = [
            height: 720,
            mimeType: 'application/f4m+xml',
            link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.f4m'
-          },
-          { // Dash source
-           height: 720,
-           mimeType: 'application/dash+xml',
-           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.mpd'
-          },
-          { //HLS Source
-           height: 720,
-           mimeType: 'application/vnd.apple.mpegurl',
-           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.m3u8'
-        }
+          }
     ],
     files : [ // The list of different resolutions sources for this video (only for "html" player)
       {

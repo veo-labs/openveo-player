@@ -10,6 +10,10 @@
 - Fix "grunt remove:doc" which hasn't worked since version 2.2.0
 - Fix translation of the error message when no source
 
+## DEPENDENCIES
+
+- **video.js** has been upgraded from 5.19.2 to **7.3.0**
+
 # 4.0.0 / 2018-05-04
 
 ## BREAKING CHANGES
