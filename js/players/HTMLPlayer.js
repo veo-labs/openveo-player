@@ -129,6 +129,7 @@
       }
 
       this.player.src(mediaSource);
+      this.player.poster(this.media.thumbnail);
       this.player.load();
     }
 
