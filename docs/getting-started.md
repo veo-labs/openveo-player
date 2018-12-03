@@ -45,11 +45,6 @@ This directive creates a video player with images synchronization and chapters.
 
 <!-- Only for HTML type -->
 <script type="text/javascript" src="lib/video.js/dist/video.min.js"></script>
-<script type="text/javascript" src="lib/videojs-flash/dist/videojs-flash.min.js"></script>
-<script>
-  videojs.options.flash.swf = "lib/videojs-flash/node_modules/videojs-swf/dist/video-js.swf";
-</script>
-
 <script type="text/javascript" src="lib/openveo-player/dist/openveo-player.min.js"></script>
 ```
 

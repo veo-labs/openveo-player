@@ -1,4 +1,8 @@
-# 4.1.0 / YYYY-MM-DD
+# 5.0.0 / YYYY-MM-DD
+
+## BREAKING CHANGES
+
+- Drop support for HTML player flash technology
 
 ## NEW FEATURES
 

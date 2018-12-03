@@ -1,7 +1,6 @@
 # Introduction
 
 OpenVeo Player support Adaptive Streaming DASH and HLS. It will automaticaly switch between protocols according browser capabilities.
-A Flash video player is used as a fallback player if none of sources protocol is supported by browser.
 
 # Prerequisites
 
@@ -40,11 +39,6 @@ $scope.data.sources = [
           { // RTMP source
             mimeType: 'rtmp/mp4',
             link: 'rtmp://mydomainname.local/openveo/&mp4:bunny.mp4'
-          },
-          { // Flash source for sources that do not support natively adaptive streaming
-           height: 720,
-           mimeType: 'application/f4m+xml',
-           link: 'https://mydomainname.local/openveo/mp4:bunny.mp4/manifest.f4m'
           }
     ],
     files : [ // The list of different resolutions sources for this video (only for "html" player)

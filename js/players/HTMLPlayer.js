@@ -192,7 +192,7 @@
 
       this.player = videojs(this.playerId,
         {
-          techOrder: ['html5', 'flash'],
+          techOrder: ['html5'],
           autoplay: false,
           preload: 'metadata',
           playsinline: true,
