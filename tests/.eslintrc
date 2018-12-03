@@ -13,10 +13,7 @@
 
     // Add chai to environment globals but do not authorize to overwrite it
     chai: false,
-    assert: false,
-
-    // Add player's globals to environment globals
-    ovFlashPlayer: true
+    assert: false
 
   },
   "rules": {

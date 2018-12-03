@@ -11,9 +11,6 @@
     // Add angular to environment globals but do not authorize to overwrite it
     angular: false,
 
-    // Add player's globals to environment globals but do not authorize to overwrite it
-    ovFlashPlayer: false,
-
     // Firefox DocumentTouch object
     DocumentTouch: false
 
