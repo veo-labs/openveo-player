@@ -5,6 +5,7 @@
 - OpenVeo Player does not use Bower anymore, it now uses NPM for its development dependencies
 - Global variable ovPlayerDirectory is not required anymore
 - Remove dashjs logs
+- Prevent HTML player from buffering until play is requested
 
 ## BUG FIXES
 

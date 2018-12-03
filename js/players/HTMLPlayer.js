@@ -194,7 +194,7 @@
         {
           techOrder: ['html5', 'flash'],
           autoplay: false,
-          preload: 'auto'
+          preload: 'metadata'
         });
 
       this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);
