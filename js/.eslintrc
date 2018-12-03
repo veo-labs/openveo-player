@@ -12,7 +12,10 @@
     angular: false,
 
     // Firefox DocumentTouch object
-    DocumentTouch: false
+    DocumentTouch: false,
+
+    // Add videojs to environment globals but do not authorize to overwrite it
+    videojs: false
 
   }
 

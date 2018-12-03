@@ -335,4 +335,17 @@
     MEDIA_ERR_UNKNOWN: 6
   });
 
+  /*
+   * Configures the ov.player application.
+   */
+  app.config(function() {
+    var deactivateDashJsLogs = function(player, mediaPlayer) {
+      if (videojs && videojs.log) {
+        mediaPlayer.getDebug().setLogToBrowserConsole(false);
+      }
+    };
+
+    if (videojs.Html5DashJS) videojs.Html5DashJS.hook('beforeinitialize', deactivateDashJsLogs);
+  });
+
 })(angular);
