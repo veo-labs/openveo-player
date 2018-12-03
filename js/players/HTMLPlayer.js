@@ -194,7 +194,13 @@
         {
           techOrder: ['html5', 'flash'],
           autoplay: false,
-          preload: 'metadata'
+          preload: 'metadata',
+          playsinline: true,
+          html5: {
+            nativeControlsForTouch: false,
+            nativeAudioTracks: false,
+            nativeVideoTracks: false
+          }
         });
 
       this.handlePlayerEventsFn = angular.bind(this, handlePlayerEvents);

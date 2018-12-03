@@ -6,6 +6,7 @@
 - Global variable ovPlayerDirectory is not required anymore
 - Remove dashjs logs
 - Prevent HTML player from buffering until play is requested
+- Force HTML player to play inline and try to avoid native player on mobile devices
 
 ## BUG FIXES
 
