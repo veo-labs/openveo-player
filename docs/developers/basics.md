@@ -2,12 +2,12 @@
 
 OpenVeo Player defines several directives:
 
-- **ov-player**: The main directive containing the whole player
-- **ov-player-tabs**: A directive to create tabs (holds one or several ov-view directives)
-- **ov-player-view**: A directive to create a view controlled by a tab (using ov-tabs)
-- **ov-player-index**: A directive to display and control the index view
-- **ov-player-chapters**: A directive to display and control the chapters view
-- **ov-player-tags**: A directive to display and control the tags view
+- **opl-player**: The main directive containing the whole player
+- **opl-tabs**: A directive to create tabs (holds one or several opl-view directives)
+- **opl-view**: A directive to create a view controlled by a tab (using opl-tabs)
+- **opl-indexes**: A directive to display and control the index view
+- **opl-chapters**: A directive to display and control the chapters view
+- **opl-tags**: A directive to display and control the tags view
 
 # Players
 

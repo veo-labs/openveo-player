@@ -1,0 +1,12 @@
+<div class="opl-poi opl-chapters">
+  <ul>
+    <li ng-repeat-start="chapter in $ctrl.oplChapters | orderBy:'+value'"  ng-click="$ctrl.goToChapter(chapter)" class="open">
+      <div class="title" >
+        <span class="time">{{chapter.value | oplMillisecondsToTime}}</span>
+        <span> - </span>
+        <span class="text">{{chapter.name}}</span>
+      </div>
+    </li>
+    <div class="description" ng-repeat-end ng-if="chapter.description && chapter.description!=''" ng-bind-html="$ctrl.trustedHTML(chapter.description)"></div>
+  </ul>
+</div>

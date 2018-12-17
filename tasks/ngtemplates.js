@@ -5,8 +5,8 @@
 // https://www.npmjs.com/package/grunt-angular-templates
 module.exports = {
 
-  // Generates AngularJS templates cache for the player
-  player: {
+  // Generates AngularJS templates cache for components
+  components: {
     options: {
       module: 'ov.player',
       url: function(url) {
@@ -22,9 +22,9 @@ module.exports = {
         removeStyleLinkTypeAttributes: true
       }
     },
-    cwd: '<%= player.templatesPath %>',
-    src: '**/*.html',
-    dest: '<%= player.buildPath %>/openveo-player.templates.js'
+    cwd: '<%= project.sourcesPath %>',
+    src: 'components/**/*.html',
+    dest: '<%= project.buildJsPath %>/openveo-player.templates.js'
   }
 
 };

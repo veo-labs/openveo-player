@@ -2,18 +2,13 @@
 
 OpenVeo player is written using AngularJS and SASS / Compass. SASS files need to be compiled to generate the CSS and JavaScript files can be minified and aggregated for better performance.
 
-# Compiling SASS files
+# Compiling the OpenVeo Player
 
-You can compile SASS files using the following command:
-
-    grunt compass:dist
-
-Or you can watch SASS files changes using the following command:
-
-    grunt
-
-# Compiling JavaScript files
-
-You'll probably want to compile AngularJS files in production, for better performance. You can do it using:
+You can compile the OpenVeo Player with source maps using the following command:
 
     grunt dist
+
+You can add the *--production* option to compile without source maps (for production):
+
+    grunt dist --production
+

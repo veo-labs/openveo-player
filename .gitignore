@@ -21,9 +21,6 @@ ehthumbs.db
 /dist
 /build
 
-# Development dependencies
-/lib
-
 # IDE
 nbproject
 

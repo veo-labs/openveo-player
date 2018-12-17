@@ -1,26 +1,26 @@
 # Introduction
 
-OpenVeo Player defines an AngularJS directive **ov-player**:
+OpenVeo Player defines an AngularJS directive **opl-player**:
 
 ```html
-<ov-player
-  ov-data="data"
-  ov-full-viewport="isFullViewport"
-  ov-time="isTimeDisplayed"
-  ov-fullscreen-icon="isFullscreenIconDisplayed"
-  ov-volume-icon="isVolumeIconDisplayed"
-  ov-mode-icon="isModeIconDisplayed"
-  ov-settings-icon="isSettingsIconDisplayed"
-  ov-media-sources-icon="isMediaSourcesIconDisplayed"
-  ov-hide-chapters-tab="isChaptersTabHidden"
-  ov-hide-tags-tab="isTagsTabHidden"
-  ov-disable-cut="isCutDisabled"
-  ov-language="en"
-  ov-player-type="html"
-  ov-auto-play="true"
-  ov-remember-position="true"
-  ov-mode="both"
-></ov-player>
+<opl-player
+  opl-data="data"
+  opl-full-viewport="{{isFullViewport}}"
+  opl-time="{{isTimeDisplayed}}"
+  opl-fullscreen-icon="{{isFullscreenIconDisplayed}}"
+  opl-volume-icon="{{isVolumeIconDisplayed}}"
+  opl-mode-icon="{{isModeIconDisplayed}}"
+  opl-settings-icon="{{isSettingsIconDisplayed}}"
+  opl-media-sources-icon="{{isMediaSourcesIconDisplayed}}"
+  opl-hide-chapters-tab="{{isChaptersTabHidden}}"
+  opl-hide-tags-tab="{{isTagsTabHidden}}"
+  opl-disable-cut="{{isCutDisabled}}"
+  opl-language="en"
+  opl-player-type="html"
+  opl-auto-play="true"
+  opl-remember-position="true"
+  opl-mode="both"
+></opl-player>
 ```
 
 This directive creates a video player with images synchronization and chapters.
@@ -52,9 +52,9 @@ This directive creates a video player with images synchronization and chapters.
 
 # Attributes
 
-**ov-player** directive attributes helps you customize the player.
+**opl-player** directive attributes helps you customize the player.
 
-## ov-data
+## opl-data
 
 Sets player data, synchronize images, chapters and cut.
 
@@ -183,119 +183,91 @@ $scope.data = {
 ```
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-data="data"
-></ov-player>
+  opl-data="data"
+></opl-player>
 ```
 
-## ov-full-viewport (optional)
+## opl-full-viewport (optional)
 
-Indicates if player must take the full viewport or not. **This must be an assignable variable evaluated as a boolean.** (Default to false)
-
-```javascript
-$scope.isFullViewport = false;
-```
+Indicates if player must take the full viewport or not (Default to false).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-full-viewport="isFullViewport"
-></ov-player>
+  opl-full-viewport="false"
+></opl-player>
 ```
 
-## ov-time (optional)
+## opl-time (optional)
 
-Indicates if video time / duration must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
-
-```javascript
-$scope.isTimeDisplayed = true;
-```
+Indicates if video time / duration must be displayed or not (Default to true).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-time="isTimeDisplayed"
-></ov-player>
+  opl-time="true"
+></opl-player>
 ```
 
-## ov-fullscreen-icon (optional)
+## opl-fullscreen-icon (optional)
 
-Indicates if fullscreen icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
+Indicates if fullscreen icon must be displayed or not (Default to true).
 Note that even if this option is set to true, this icon can be hidden on devices/browsers without support for Javascript Fullscreen API.
 
-```javascript
-$scope.isFullscreenIconDisplayed = true;
+```html
+<opl-player
+  ...
+  opl-fullscreen-icon="true"
+></opl-player>
 ```
+
+## opl-volume-icon (optional)
+
+Indicates if volume icon must be displayed or not (Default to true).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-fullscreen-icon="isFullscreenIconDisplayed"
-></ov-player>
+  opl-volume-icon="true"
+></opl-player>
 ```
 
-## ov-volume-icon (optional)
+## opl-mode-icon (optional)
 
-Indicates if volume icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
-
-```javascript
-$scope.isVolumeIconDisplayed = true;
-```
+Indicates if mode icon must be displayed or not (Default to true).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-volume-icon="isVolumeIconDisplayed"
-></ov-player>
+  opl-mode-icon="true"
+></opl-player>
 ```
 
-## ov-mode-icon (optional)
+## opl-media-sources-icon (optional)
 
-Indicates if mode icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
-
-```javascript
-$scope.isModeIconDisplayed = true;
-```
+Indicates if multi-sources video icon must be displayed or not (Default to false).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-mode-icon="isModeIconDisplayed"
-></ov-player>
+  opl-media-sources-icon="false"
+></opl-player>
 ```
 
-## ov-media-sources-icon (optional)
+## opl-settings-icon (optional)
 
-Indicates if multi-sources video icon must be displayed or not. (Default to false)
-
-```javascript
-$scope.isMediaSourcesIconDisplayed = false;
-```
+Indicates if settings icon must be displayed or not (Default to true).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-media-sources-icon="isMediaSourcesIconDisplayed"
-></ov-player>
+  opl-settings-icon="true"
+></opl-player>
 ```
 
-## ov-settings-icon (optional)
-
-Indicates if settings icon must be displayed or not. **This must be an assignable variable evaluated as a boolean.** (Default to true)
-
-```javascript
-$scope.isSettingsIconDisplayed = true;
-```
-
-```html
-<ov-player
-  ...
-  ov-settings-icon="isSettingsIconDisplayed"
-></ov-player>
-```
-
-## ov-language (optional)
+## opl-language (optional)
 
 Indicates player language. (Default to **en**)
 
@@ -305,13 +277,13 @@ Supported values are:
 - en
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-language="en"
-></ov-player>
+  opl-language="en"
+></opl-player>
 ```
 
-## ov-player-type (optional)
+## opl-player-type (optional)
 
 Indicates player type. (Default to **html**)
 
@@ -322,80 +294,68 @@ Supported values are:
 - html
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-player-type="html"
-></ov-player>
+  opl-player-type="html"
+></opl-player>
 ```
 
-## ov-auto-play (optional)
+## opl-auto-play (optional)
 
 Indicates if player must automatically start when media is ready. (Default to **false**)
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-auto-play="true"
-></ov-player>
+  opl-auto-play="true"
+></opl-player>
 ```
 
-## ov-remember-position (optional)
+## opl-remember-position (optional)
 
 Indicates if player must automatically start at time which video has previously been stopped. (Default to **false**)
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-remember-position="true"
-></ov-player>
+  opl-remember-position="true"
+></opl-player>
 ```
 
-## ov-hide-chapters-tab (optional)
+## opl-hide-chapters-tab (optional)
 
-Indicates if chapters tab must be hidden or not. (Default to false)
-
-```javascript
-$scope.isChaptersTabHidden = false;
-```
+Indicates if chapters tab must be hidden or not (Default to false).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-hide-chapters-tab="isChaptersTabHidden"
-></ov-player>
+  opl-hide-chapters-tab="false"
+></opl-player>
 ```
 
-## ov-hide-tags-tab (optional)
+## opl-hide-tags-tab (optional)
 
-Indicates if tags tab must be hidden or not. (Default to false)
-
-```javascript
-$scope.isTagsTabHidden = false;
-```
+Indicates if tags tab must be hidden or not (Default to false).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-hide-tags-tab="isTagsTabHidden"
-></ov-player>
+  opl-hide-tags-tab="false"
+></opl-player>
 ```
 
-## ov-disable-cut (optional)
+## opl-disable-cut (optional)
 
-Indicates if cuts must be disabled or not. (Default to false)
-
-```javascript
-$scope.isCutDisabled = false;
-```
+Indicates if cuts must be disabled or not (Default to false).
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-disable-cut="isCutDisabled"
-></ov-player>
+  opl-disable-cut="false"
+></opl-player>
 ```
 
-## ov-mode (optional)
+## opl-mode (optional)
 
 Indicates the display mode to use. Could be either "both", "media", "presentation" or "both-presentation" (Default to "both")
 
@@ -404,8 +364,8 @@ $scope.displayMode = 'both';
 ```
 
 ```html
-<ov-player
+<opl-player
   ...
-  ov-mode="displayMode"
-></ov-player>
+  opl-mode="displayMode"
+></opl-player>
 ```

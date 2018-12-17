@@ -1,0 +1,6 @@
+<nav>
+  <ul>
+    <li ng-repeat="view in $ctrl.views" ng-click="$ctrl.select(view)" ng-class="{'opl-selected': view.selected}">{{view.oplTitle}}</li>
+  </ul>
+</nav>
+<div ng-transclude></div>

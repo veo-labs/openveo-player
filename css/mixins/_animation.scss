@@ -1,8 +1,0 @@
-@mixin width-transition($time){
-  $property : width;
-  $form : linear;
-  transition: $property $form $time;
-  -ms-transition: $property $form $time;
-  -moz-transition: $property $form $time;
-  -webkit-transition: $property $form $time;
-}

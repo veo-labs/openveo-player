@@ -1,26 +1,23 @@
 'use strict';
 
+// Obfuscate files
+// For more information about Grunt uglify, have a look at https://www.npmjs.com/package/grunt-contrib-uglify
 module.exports = {
-  js: {
+
+  // Obfuscate components JavaScript files
+  // Use grunt uglify:components --production to skip source maps generation
+  // Not that this task should be run after concat:components
+  components: {
     options: {
-
-      // Generated file header
-      banner: '/* openveo-player v<%= pkg.version %> */\n',
-
-      // Do not make it compatible with IE8
-      screwIE8: true
-
+      sourceMap: !process.production,
+      sourceMapIn: !process.production ? '<%= project.buildJsPath %>/openveo-player.js.map' : null
     },
-    files: [
-      {
-
-        // Obfuscate openveo-player.js
-        src: ['<%= player.distPath %>/openveo-player.js'],
-
-        // Destination file
-        dest: '<%= player.distPath %>/openveo-player.min.js'
-
-      }
-    ]
+    expand: true,
+    cwd: '<%= project.buildJsPath %>/',
+    src: ['openveo-player.js'],
+    ext: '.min.js',
+    extDot: 'last',
+    dest: '<%= project.buildJsPath %>/'
   }
+
 };

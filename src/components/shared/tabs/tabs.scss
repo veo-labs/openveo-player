@@ -1,0 +1,47 @@
+@import "compass/css3/user-interface";
+@import "compass/css3/transition";
+
+opl-tabs nav {
+  display: none;
+  position: absolute;
+  top: 0;
+  color: $FOREGROUND_COLOR;
+  font-weight: bold;
+  font-size: 1.1em;
+  @include user-select(none);
+
+  @media(min-width: $MEDIA_MIN_WIDTH) {
+    display: block;
+  }
+
+  ul {
+    display: table;
+    background-color: $NEUTRAL_COLOR;
+    height: 40px;
+  }
+
+  li {
+    display: table-cell;
+    padding: 0 40px;
+    line-height: 40px;
+    background-color: $NEUTRAL_COLOR;
+    background-size: 100% 200%;
+    background-image: linear-gradient(to bottom, $NEUTRAL_COLOR 50%, $LIGHT_GRAY 50%);
+    @include transition(background-position-y 0.2s);
+  }
+
+  li:focus {
+    outline: none;
+  }
+
+  li:hover {
+    background-image: linear-gradient(to bottom, $NEUTRAL_COLOR 50%, $LIGHT_GRAY 50%);
+    cursor: pointer;
+    background-position-y: -12%;
+  }
+
+  li.opl-selected {
+    background-image: linear-gradient(to bottom, $NEUTRAL_COLOR 50%, $HIGHLIGHT_COLOR 50%);
+    background-position-y: -12%;
+  }
+}

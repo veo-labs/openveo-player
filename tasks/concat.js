@@ -1,5 +1,7 @@
 'use strict';
 
+// Concat files
+// For more information about Grunt concat, have a look at https://www.npmjs.com/package/grunt-contrib-concat
 module.exports = {
   options: {
 
@@ -7,18 +9,18 @@ module.exports = {
     banner: '/* openveo-player v<%= pkg.version %> */\n'
 
   },
-  js: {
 
-    // Match all JavaScript files to concat
-    // grunt ngtemplates:player needs to be executed before this task
-    src: [
-      '<%= player.jsPath %>/PlayerApp.js',
-      '<%= player.buildPath %>/openveo-player.templates.js',
-      '<%= player.jsPath %>/**/*.js'
-    ],
-
-    // Destination file
-    dest: '<%= player.distPath %>/openveo-player.js'
-
+  // Concatenate components JavaScript files
+  // Use grunt concat:components --production to skip source maps generation
+  // Note that src property is empty because it is filled by the components-set-concat-src task
+  // Consequently using this task directly won't have any effect
+  components: {
+    options: {
+      sourceMap: !process.production,
+      sourceMapStyle: 'link'
+    },
+    src: [],
+    dest: '<%= project.buildJsPath %>/openveo-player.js'
   }
+
 };

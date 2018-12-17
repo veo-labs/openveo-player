@@ -1,0 +1,64 @@
+@import "compass/css3/transition";
+
+/* Slides part of the index view */
+.opl-indexes {
+  height: 100%;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  font-size: 1.8em;
+
+  li {
+    display: inline-block;
+    width: 200px;
+    padding: 5px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    color: $HIGHLIGHT_COLOR;
+    @include transition(color 0.35s, background-color 0.35s);
+  }
+
+  li:hover {
+    cursor: pointer;
+    background-color: $HIGHLIGHT_COLOR;
+    color: #fff;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  p {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+}
+
+.opl-past-index {
+  opacity: 0.5;
+}
+
+/*
+ * Focused index part of the index view.
+ * Half right part of the view is not displayed on small devices.
+ */
+.opl-focused-index {
+  display: none;
+  height: 100%;
+}
+
+@media(min-width: $MEDIA_MIN_WIDTH) {
+  .opl-indexes, .opl-focused-index {
+    display: block;
+    float: left;
+    width: 50%;
+  }
+
+  .opl-focused-index > div {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}

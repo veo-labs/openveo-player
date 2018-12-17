@@ -1,0 +1,82 @@
+<div ng-class="{'opl-fullscreen' : $ctrl.fullViewportActivated}">
+  <div class="opl-player">
+
+    <opl-tabs>
+
+      <div class="opl-views">
+        <opl-view opl-title="{{'VIDEO_TAB_TITLE' | oplTranslate}}" opl-view="opl-media-view" opl-view-id="media" class="opl-mode-{{$ctrl.selectedMode}}">
+          <div class="opl-media">
+            <div class="opl-loader" ng-show="$ctrl.loading" ng-bind="'LOADING' | oplTranslate"></div>
+            <ng-include src="$ctrl.mediaTemplate"></ng-include>
+          </div>
+          <div class="opl-presentation">
+            <div ng-style="{'background-image': $ctrl.presentation ? 'url(' + $ctrl.presentation + ')' : 'none'}"></div>
+          </div>
+        </opl-view>
+
+        <opl-view ng-if="$ctrl.indexesTabDisplayed" opl-title="{{'INDEX_TAB_TITLE' | oplTranslate}}" opl-view="opl-index-view" opl-view-id="index">
+          <opl-indexes opl-indexes="$ctrl.timecodes" opl-on-seek="seekToIndex(index)"></opl-indexes>
+        </opl-view>
+
+        <opl-view ng-if="$ctrl.chaptersTabDisplayed" opl-title="{{'CHAPTERS_TAB_TITLE' | oplTranslate}}" opl-view="opl-chapters-view" opl-view-id="chapter" class="opl-mode-{{$ctrl.selectedMode}}">
+          <opl-chapters opl-chapters="$ctrl.chapters" opl-on-seek="seekToChapter(chapter)"></opl-chapters>
+        </opl-view>
+
+        <opl-view ng-if="$ctrl.tagsTabDisplayed" opl-title="{{'TAGS_TAB_TITLE' | oplTranslate}}" opl-view="opl-tags-view" opl-view-id="tags" class="opl-mode-{{$ctrl.selectedMode}}">
+          <opl-tags opl-tags="$ctrl.tags" opl-on-seek="seekToTag(tag)"></opl-tags>
+        </opl-view>
+      </div>
+
+    </opl-tabs>
+
+    <div class="opl-controls">
+
+      <div class="opl-time-bar" ng-click="setTime($event)">
+        <div>
+          <div class="opl-loaded" ng-style="{'left' : $ctrl.loadedStart + '%','width' : $ctrl.loadedPercent + '%'}"></div>
+          <div class="opl-seen" ng-style="{'width' : $ctrl.seenPercent + '%'}"></div>
+          <div class="opl-cursor" ng-style="{'left' : $ctrl.timePreviewPosition  + '%'}" ng-show="$ctrl.timePreviewOpened">
+            <div ng-if="$ctrl.timePreview">
+              <img ng-src="{{$ctrl.timePreview}}" />
+            </div>
+          </div>
+          <div class="opl-time-ghost opl-ghost"></div>
+        </div>
+      </div>
+
+      <div class="opl-buttons">
+        <div class="opl-left">
+          <span class="opl-icon-{{$ctrl.playPauseButton}} opl-button" ng-click="$ctrl.playPause()"></span>
+        </div>
+        <div class="opl-right">
+          <p class="opl-time" ng-show="$ctrl.timeDisplayed">{{$ctrl.time | oplMillisecondsToTime}} - <span>{{$ctrl.duration | oplMillisecondsToTime}}</span></p>
+          <div class="opl-icon-{{$ctrl.selectedMode}} opl-button opl-mode" ng-show="$ctrl.modeIconDisplayed" ng-click="toggleModes()">
+            <ul ng-show="$ctrl.modesOpened" class="opl-modes-animate">
+              <li ng-repeat="mode in $ctrl.modes" ng-click="$ctrl.selectMode(mode)" class="opl-button opl-icon-{{mode}}" ng-class="{'opl-selected' : mode === $ctrl.selectedMode}"></li>
+            </ul>
+          </div>
+          <div class="opl-icon-volume opl-button" ng-show="$ctrl.volumeIconDisplayed" ng-click="toggleVolume()">
+            <div ng-show="$ctrl.volumeOpened" class="opl-volume-animate" ng-click="setVolume($event)">
+              <div class="opl-volume-preview" ng-style="{'height' : $ctrl.volumePreview + '%'}"></div>
+              <div class="opl-volume" ng-style="{'height' : $ctrl.volume + '%'}"></div>
+              <div class="opl-volume-ghost opl-ghost"></div>
+            </div>
+          </div>
+          <div class="opl-button opl-icon-sources opl-icon-settings" ng-show="$ctrl.mediaSourcesIconDisplayed && $ctrl.data.mediaId.length > 1" ng-click="toggleMedia()">
+            <ul ng-show="$ctrl.selectMediaOpened" ng-click="">
+              <li ng-repeat="source in $ctrl.data.mediaId" ng-click="$ctrl.setSource($index)"
+              ng-bind-template="{{'Src-' + $index}}" ng-class="{'opl-selected' : $index == $ctrl.player.getSourceIndex()}"></li>
+            </ul>
+          </div>
+          <div class="opl-button opl-icon-resolution opl-icon-settings" ng-show="$ctrl.settingsIconDisplayed" ng-click="toggleDefinition()">
+            <div ng-show="$ctrl.selectedDefinition.height >= 720">HD</div>
+            <ul ng-show="$ctrl.definitionOpened" class="opl-definitions-animate" ng-click="">
+              <li ng-repeat="definition in $ctrl.mediaDefinitions" ng-click="$ctrl.setDefinition(definition)" ng-bind-template="{{definition.height ? definition.height + 'p' : definition}}" ng-class="{'opl-selected' : $ctrl.selectedDefinition.height ? $ctrl.selectedDefinition.height === definition.height : $ctrl.selectedDefinition === definition, 'opl-hd' : definition.height >= 720}"></li>
+            </ul>
+          </div>
+          <div class="opl-icon-{{$ctrl.fullscreenButton}} opl-button opl-icon-fullscreen" ng-show="$ctrl.fullscreenIconDisplayed" ng-click="toggleFullscreen()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

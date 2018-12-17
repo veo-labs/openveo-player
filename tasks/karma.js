@@ -11,16 +11,14 @@ module.exports = {
     // Web server port
     port: 9876,
 
-    // Enable / disable colors in the output (reporters and logs)
+    // Disable colors in the output (reporters and logs)
     colors: true,
 
-    // level of logging
-    // possible values: OFF || ERROR || WARN || INFO || DEBUG
+    // Level of logging
+    // Possible values: OFF || ERROR || WARN || INFO || DEBUG
     logLevel: 'INFO',
 
-    // Enable / disable watching file and executing tests whenever
-    // any file changes
-
+    // Disable watching files and executing tests whenever any file changes
     autoWatch: false,
 
     // List of browsers to execute tests on
@@ -30,17 +28,12 @@ module.exports = {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true,
-
-    // HTML templates mock
-    ngHtml2JsPreprocessor: {
-      moduleName: 'templates'
-    }
+    singleRun: true
 
   },
 
-  // Player unit tests
-  player: {
+  // Components unit tests
+  components: {
     configFile: 'karmaConf.js'
   }
 

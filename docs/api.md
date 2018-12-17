@@ -16,7 +16,7 @@ var myPlayer = document.getElementById('myPlayer');
 angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
-  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
   playerController.selectMode('presentation');
 });
 ```
@@ -39,7 +39,7 @@ var myPlayer = document.getElementById('myPlayer');
 angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
-  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
   playerController.playPause();
 });
 ```
@@ -56,7 +56,7 @@ var myPlayer = document.getElementById('myPlayer');
 angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
-  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
   playerController.setVolume(50);
 });
 ```
@@ -79,7 +79,7 @@ var myPlayer = document.getElementById('myPlayer');
 angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
-  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
   playerController.setTime(50000);
 });
 ```
@@ -102,7 +102,7 @@ var myPlayer = document.getElementById('myPlayer');
 angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
-  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
   playerController.setDefinition({
     width: 1280,
     height: 720,
@@ -129,7 +129,7 @@ var myPlayer = document.getElementById('myPlayer');
 angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
-  var playerController = angular.element(myPlayer).controller('ovPlayer');
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
   playerController.setSource(1);
 });
 ```

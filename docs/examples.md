@@ -21,10 +21,10 @@ The HTML player expects one media Id and one url by source.
 
   <body>
 
-    <ov-player
-      ov-player-type="html"
-      ov-data="data"
-    ></ov-player>
+    <opl-player
+      opl-player-type="html"
+      opl-data="data"
+    ></opl-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
@@ -184,10 +184,10 @@ The HTML player with several sources expects one media Id and one url by source.
 
   <body>
 
-    <ov-player
-      ov-player-type="html"
-      ov-data="data"
-    ></ov-player>
+    <opl-player
+      opl-player-type="html"
+      opl-data="data"
+    ></opl-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
@@ -278,10 +278,10 @@ The Vimeo player expects the id of the media hosted on Vimeo. You can specify se
 
   <body>
 
-    <ov-player
-      ov-player-type="vimeo"
-      ov-data="data"
-    ></ov-player>
+    <opl-player
+      opl-player-type="vimeo"
+      opl-data="data"
+    ></opl-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
@@ -341,10 +341,10 @@ The Youtube player expects the id of the media hosted on Youtube. You can specif
 
   <body>
 
-    <ov-player
-      ov-player-type="youtube"
-      ov-data="data"
-    ></ov-player>
+    <opl-player
+      opl-player-type="youtube"
+      opl-data="data"
+    ></opl-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
@@ -402,12 +402,12 @@ You can interact with the player using the API.
 
   <body>
 
-    <ov-player
-      ov-player-type="html"
-      ov-data="data"
+    <opl-player
+      opl-player-type="html"
+      opl-data="data"
       ng-show="ready"
       id="myPlayer"
-    ></ov-player>
+    ></opl-player>
 
     <script type="text/javascript" src="lib/angular/angular.min.js"></script>
     <script type="text/javascript" src="lib/angular-cookies/angular-cookies.min.js"></script>
@@ -462,7 +462,7 @@ You can interact with the player using the API.
       console.log('ready');
       $scope.ready = true;
 
-      var playerController = angular.element(myPlayer).controller('ovPlayer');
+      var playerController = angular.element(myPlayer).controller('oplPlayer');
 
       // Selects a new display mode ('media')
       playerController.selectMode('media');

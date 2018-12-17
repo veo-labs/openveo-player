@@ -1,14 +1,14 @@
 'use strict';
 
+// JavaScript linter
+// For more information about Grunt eslint, have a look at https://www.npmjs.com/package/grunt-eslint
 module.exports = {
   js: {
     src: [
       'karmaConf.js',
       'Gruntfile.js',
       'tasks/**/*.js',
-      'tests/**/*.js',
-      'js/**/*.js'
+      'src/**/*.js'
     ]
   }
-
 };

@@ -4,7 +4,7 @@ OpenVeo Player support Adaptive Streaming DASH and HLS. It will automaticaly swi
 
 # Prerequisites
 
-As OpenVeo Player embed video.js to display HTML player, in order to support DASH and HLS, you have to install and import dependencies:
+OpenVeo Player embeds Video.js to display the HTML player. Video.js natively supports HLS but in order to support DASH, you have to install and import dependencies:
 
 Install Dash.js:
 
@@ -60,11 +60,11 @@ $scope.data.sources = [
 
 And set you player type to 'html':
 ```html
-<ov-player
+<opl-player
   ...
-  ov-data="data"
-  ov-player-type="html"
-></ov-player>
+  opl-data="data"
+  opl-player-type="html"
+></opl-player>
 ```
 
 **NB**: 'Adaptive' sources are always prioritized. 'files' sources will be ignored if 'adaptive' property is defined.

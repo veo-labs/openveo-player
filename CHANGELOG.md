@@ -3,6 +3,9 @@
 ## BREAKING CHANGES
 
 - Drop support for HTML player flash technology
+- Drop support for AngularJS &lt; 1.5.11
+- Drop support for VideoJS &lt; 7.3.0
+- All player components are now prefixed by opl- instead of op-
 
 ## NEW FEATURES
 
@@ -20,6 +23,11 @@
 ## DEPENDENCIES
 
 - **video.js** has been upgraded from 5.19.2 to **7.3.0**
+- **angular** has been upgraded from 1.4.1 to **1.5.11**
+- **angular-animate** has been upgraded from 1.4.1 to **1.5.11"**
+- **angular-cookies** has been upgraded from 1.4.1 to **1.5.11"**
+- **angular-mocks** has been upgraded from 1.4.1 to **1.5.11"**
+- **angular-route** has been upgraded from 1.4.1 to **1.5.11"**
 
 # 4.0.0 / 2018-05-04
 

@@ -1,0 +1,151 @@
+@import "compass/css3/animation";
+@import "compass/css3/transition";
+@import "compass/css3/transform";
+
+/* Slider primary color */
+$OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
+
+/* Animation to emphasize an element with an inflate / deflate effect */
+@include keyframes(opl-slider-emphasize) {
+  0% {
+    @include animation-timing-function(ease-out);
+  }
+  50% {
+    @include animation-timing-function(ease-in);
+    @include scale(0.85);
+  }
+  100% {
+    @include scale(0.5);
+  }
+}
+
+.opl-slider {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+  touch-action: pan-x;
+  -webkit-tap-highlight-color: rgba($OV_PLAYER_SLIDER_PRIMARY_COLOR, 0);
+
+  .opl-slider-track-container {
+    position: absolute;
+    top: 14px;
+    width: 100%;
+    height: 4px;
+    background-color: rgba($OV_PLAYER_SLIDER_PRIMARY_COLOR, .098);
+
+    /*
+      Hack for MS Edge which has rendering issues when transitioning the track bar, making the track bar
+      appear higher while no transformation is operated on the height on the element.
+    */
+    overflow: hidden;
+  }
+
+  .opl-slider-track {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
+    @include transform-origin(left, top);
+    will-change: transform;
+  }
+
+  .opl-slider-thumb-container {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    transform: translateX(-50%);
+  }
+
+  /*
+    Thumb size is fixed by the SVG circle element.
+    Thumb resting size is half the size of the SVG circle.
+  */
+  .opl-slider-thumb {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    fill: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
+    stroke: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
+    @include scale(0.5);
+    @include transition-property(transform, fill, stroke, -webkit-transform);
+    @include transition-timing-function(ease-out, ease-out, ease-out, ease-out);
+    @include transition-duration(0.1s, 0.1s, 0.1s, 0.1s);
+  }
+
+  /*
+    Ring resting state size is the same size as the SVG circle of the thumb.
+    Ring resting state visibility is hidden.
+  */
+  .opl-slider-focus-ring {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    background-color: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
+    border-radius: 50%;
+    opacity: 0;
+    @include transition-property(transform, opacity, -webkit-transform);
+    @include transition-timing-function(ease-out, ease-out, ease-out);
+    @include transition-duration(.26667s, .26667s, .26667s);
+  }
+
+  &:focus {
+    outline: none;
+
+    /* Slider controlled by the keyboard */
+    &:not(.opl-slider-active) .opl-slider-thumb-container,
+    &:not(.opl-slider-active) .opl-slider-track {
+      @include transition-property(transform, -webkit-transform);
+      @include transition-timing-function(ease, ease);
+      @include transition-duration(80ms, 80ms, 80ms);
+    }
+
+  }
+
+  /* Slider becomes in transition while thumb container is moving */
+  &.opl-slider-in-transition {
+
+    /*.mdc-slider--in-transit .mdc-slider__thumb-container,
+    .mdc-slider--in-transit .mdc-slider__track {*/
+    & .opl-slider-thumb-container,
+    & .opl-slider-track {
+      @include transition-property(transform, -webkit-transform);
+      @include transition-timing-function(ease, ease);
+      @include transition-duration(80ms, 80ms, 80ms);
+    }
+
+    /* Delay thumb transition to make sure it does not happen when clicking on the slider but when moving the slider */
+    .opl-slider-thumb {
+      @include transition-delay(100ms);
+    }
+
+  }
+
+  /* Slider gets focused when using the keyboard */
+  &.opl-slider-focus {
+
+    /* Ring focus visibility is visible */
+    .opl-slider-focus-ring {
+      opacity: 0.36;
+      @include scale3d(1.3333, 1.3333, 1.3333);
+    }
+
+    /* Thumb gets animated on focus with an inflate / deflate effect ending to its resting state. */
+    .opl-slider-thumb {
+      @include animation(opl-slider-emphasize 0.26667s linear);
+    }
+
+  }
+
+  /* Slider becomes active when using a pointer */
+  &.opl-slider-active {
+
+    /* Thumb active size is the size of the SVG circle. */
+    .opl-slider-thumb {
+      @include scale(1);
+    }
+
+  }
+}

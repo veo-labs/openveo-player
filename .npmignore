@@ -15,20 +15,11 @@ ehthumbs.db
 # Project npm dependencies
 /node_modules
 
-# Development dependencies
-/lib
-
 # IDE
 nbproject
 
-# Sass files
-/css
-
-# JavaScript files
-/js
-
-# Templates
-/templates
+# Sources
+/src
 
 # Sass cache files
 .sass-cache
@@ -43,7 +34,6 @@ nbproject
 .gitattributes
 
 # Unit tests
-/tests
 /karmaConf.js
 
 # Documentation
@@ -56,3 +46,7 @@ nbproject
 
 # Build
 /build
+
+# Source maps
+/dist/*.map
+/dist/*.scss

@@ -1,0 +1,561 @@
+@import "compass/css3/user-interface";
+@import "compass/css3/transition";
+
+.opl-player {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+  font-family: arial, sans-serif;
+  font-size: 12px;
+
+  * {
+    box-sizing: content-box;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  img {
+    border: 0;
+  }
+
+  nav {
+    display: block;
+  }
+
+  .vjs-loading-spinner {
+    box-sizing: border-box;
+  }
+}
+
+.opl-fullscreen > .opl-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Full screen for browsers who supports the fullscreen API */
+opl-player > div:full-screen, :full-screen .opl-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $BACKGROUND_COLOR;
+}
+
+/* Full screen for Webkit based browsers */
+opl-player > div:-webkit-full-screen, :-webkit-full-screen .opl-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $BACKGROUND_COLOR;
+}
+
+/* Full screen for Microsoft browsers */
+opl-player > div:-ms-fullscreen, :-ms-fullscreen .opl-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $BACKGROUND_COLOR;
+}
+
+/* Full screen for Opera browsers */
+opl-player > div:-o-full-screen, :-o-full-screen .opl-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $BACKGROUND_COLOR;
+}
+
+/* Full screen for Mozilla browsers */
+opl-player > div:-moz-full-screen, :-moz-full-screen .opl-player {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $BACKGROUND_COLOR;
+}
+
+.opl-views {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 50px;
+
+  @media(min-width: $MEDIA_MIN_WIDTH) {
+    top: 40px;
+  }
+}
+
+.opl-media-view {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  background-color: $BACKGROUND_COLOR;
+  @include user-select(none);
+
+  &.ng-hide {
+    opacity: 0;
+  }
+}
+
+/* Media part of the media view */
+.opl-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.opl-media-player {
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+}
+
+.opl-mode-presentation .opl-media {
+  display: none;
+}
+
+/*
+ * Presentation part of the media view.
+ * Only media on small devices for modes media, both and
+ * both-presentation.
+ */
+.opl-presentation {
+  height: 100%;
+
+  & > div {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+}
+
+/* Both, both-presentation and media modes for small devices */
+.opl-mode-both .opl-presentation,
+.opl-mode-both-presentation .opl-presentation,
+.opl-mode-media .opl-presentation {
+  display: none;
+}
+
+/* Presentation mode for small devices */
+.opl-mode-presentation .opl-presentation {
+  width: 100%;
+}
+
+/* Large devices may display both presentation and media */
+@media(min-width: $MEDIA_MIN_WIDTH) {
+  .opl-media, .opl-presentation {
+    display: block;
+    float: left;
+    width: 50%;
+  }
+  .opl-mode-both .opl-presentation,
+  .opl-mode-both-presentation .opl-presentation {
+    display: block;
+  }
+
+  /* Media alone mode */
+  .opl-mode-media .opl-presentation {
+    display: none;
+  }
+  .opl-mode-media .opl-media {
+    width: 100%;
+  }
+
+  /* Small media and large presentation mode */
+  .opl-mode-both-presentation .opl-presentation {
+    width: 75%;
+  }
+  .opl-mode-both-presentation .opl-media {
+    width: 25%;
+  }
+
+  /* Presentation mode (repeat second selector to be more clear) */
+  .opl-mode-presentation .opl-media {
+    display: none;
+  }
+  .opl-mode-presentation .opl-presentation {
+    width: 100%;
+  }
+}
+
+/* Loader */
+.opl-loader {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: $FOREGROUND_COLOR;
+}
+
+.opl-index-view, .opl-chapters-view, .opl-tags-view {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  @include user-select(none);
+
+  &.ng-hide-add.ng-hide-add-active,
+  &.ng-hide-remove.ng-hide-remove-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &.ng-hide {
+    opacity: 0;
+  }
+}
+
+.opl-controls {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: $BACKGROUND_COLOR;
+  color: $FOREGROUND_COLOR;
+  @include user-select(none);
+}
+
+.opl-time-bar {
+  height: 10px;
+  padding: 3px;
+  border: 1px solid $HIGHLIGHT_COLOR;
+  box-sizing: content-box;
+
+  & > div {
+    position: relative;
+    height: 100%;
+    cursor: pointer;
+    background-color: #666;
+  }
+}
+
+.opl-seen {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  background-color: $HIGHLIGHT_COLOR;
+  @include single-transition("width", 0.2s, "linear", 0);
+}
+
+.opl-loaded {
+  position: absolute;
+  width: 70%;
+  height: 100%;
+  background-color: $NEUTRAL_COLOR;
+  @include single-transition("width", 0.2s, "linear", 0);
+}
+
+.opl-ghost {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.opl-cursor {
+  display: none;
+  position: absolute;
+  top: 0;
+  height:100%;
+  width: 2px;
+  background-color: $FOREGROUND_COLOR;
+
+  @media(min-width: $MEDIA_MIN_WIDTH) {
+    display: block;
+  }
+
+  & > div {
+    z-index: 1;
+    position: absolute;
+    top: -130px;
+    left: -65px;
+    width: 130px;
+    height: 100px;
+    padding: 5px;
+    border: 1px solid #3d3932;
+    background-color: #fff;
+  }
+
+  img {
+    width: 130px;
+    height: 100px;
+  }
+}
+
+.opl-buttons {
+  position: relative;
+  height: 32px;
+
+  /* Left buttons */
+  .opl-left {
+    display: table;
+    position: absolute;
+    left: 10px;
+    font-size: 1.5em;
+    height: 100%;
+    line-height: 36px;
+  }
+
+  /* Right buttons */
+  .opl-right {
+    position: absolute;
+    right: 10px;
+    height: 100%;
+
+    .opl-time,
+    & > div {
+      float: left;
+      font-size: 1.5em;
+      line-height: 32px;
+      padding: 0 5px;
+    }
+
+    .opl-time {
+      font-size: 1.1em;
+
+      & > span {
+        color: #aaa;
+      }
+    }
+
+  }
+}
+
+.opl-button {
+  color: $FOREGROUND_COLOR;
+
+  &:hover {
+    cursor: pointer;
+    color: $HIGHLIGHT_COLOR;
+  }
+
+  &.opl-selected {
+    color: $HIGHLIGHT_COLOR;
+  }
+}
+
+/* Play/pause button */
+.opl-icon-play {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* Overlay play/pause button */
+.opl-overlay-play-button {
+  z-index: 1;
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+
+  & > div {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .opl-button {
+    box-sizing: content-box;
+    display: block;
+    width: 20px;
+    padding: 10px 20px 10px 16px;
+    margin: 0 auto;
+    font-size: 2em;
+    background-color: $BACKGROUND_COLOR;
+    color: $FOREGROUND_COLOR;
+    @include transition(background-color 0.2s ease);
+
+    &:hover {
+      background-color: $HIGHLIGHT_COLOR;
+    }
+  }
+  .opl-error {
+    color: $FOREGROUND_COLOR;
+  }
+}
+
+/* Modes button */
+.opl-buttons .opl-right .opl-mode{
+  display: none;
+  position: relative;
+  font-size: 4em;
+  line-height: 32px;
+
+  ul {
+    z-index: 1;
+    position: absolute;
+    bottom: 32px;
+    left: -3px;
+    padding: 5px;
+    border: 1px solid $HIGHLIGHT_COLOR;
+    background-color: $BACKGROUND_COLOR;
+  }
+
+  li {
+    line-height: 30px;
+    height: 30px;
+  }
+
+  @media(min-width: $MEDIA_MIN_WIDTH) {
+    display: block;
+  }
+
+  .opl-modes-animate {
+    opacity: 1;
+
+    &.ng-hide{
+      opacity: 0;
+    }
+  }
+}
+
+/* Volume button */
+.opl-icon-volume {
+  display: none;
+  position: relative;
+
+  @media(min-width: $MEDIA_MIN_WIDTH) {
+    display: block;
+  }
+
+  & > div {
+    z-index: 1;
+    position: absolute;
+    bottom: 32px;
+    left: 5px;
+    width: 10px;
+    height: 70px;
+    padding: 5px;
+    border: 1px solid $HIGHLIGHT_COLOR;
+    background-color: $BACKGROUND_COLOR;
+  }
+
+  .opl-volume {
+    background-color: $HIGHLIGHT_COLOR;
+  }
+  .opl-volume-preview {
+    background-color: $NEUTRAL_COLOR;
+  }
+
+  .opl-volume,
+  .opl-volume-preview {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .opl-volume-animate {
+    opacity: 1;
+
+    &.ng-hide {
+      opacity: 0;
+    }
+  }
+
+}
+
+/* Definitions button */
+.opl-buttons .opl-right .opl-icon-settings {
+  display: block;
+  position: relative;
+  line-height: 32px;
+
+  ul {
+    z-index: 1;
+    position: absolute;
+    bottom: 32px;
+    left: -18px;
+    border: 1px solid $HIGHLIGHT_COLOR;
+    font-size: 0.6em;
+    background-color: $BACKGROUND_COLOR;
+    @media(min-width: $MEDIA_MIN_WIDTH) {
+      left: -10px;
+    }
+  }
+
+  li {
+    color: $FOREGROUND_COLOR;
+    line-height: 25px;
+    height: 25px;
+    padding: 0 5px;
+
+    &.opl-hd {
+      line-height: 25px;
+      height: 30px;
+    }
+
+    &:hover {
+      background-color: $HIGHLIGHT_COLOR;
+    }
+
+    &.opl-selected {
+      color: $HIGHLIGHT_COLOR;
+      font-weight: bold;
+    }
+
+    &.opl-hd:after {
+      content: 'HD';
+      font-size: 0.7em;
+      font-weight: bold;
+      vertical-align: super;
+      color: $HIGHLIGHT_COLOR;
+    }
+
+    &.opl-selected:hover, &.opl-hd:hover:after {
+      color: $FOREGROUND_COLOR;
+    }
+  }
+
+  & > div {
+    position: absolute;
+    top: 3px;
+    left: 12px;
+    height: 10px;
+    padding: 1px;
+    font-size: 0.5em;
+    line-height: 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-family: Tahoma;
+    background-color: $HIGHLIGHT_COLOR;
+    color: $BACKGROUND_COLOR;
+  }
+
+  .opl-definitions-animate {
+    opacity: 1;
+
+    &.ng-hide {
+      opacity: 0;
+    }
+  }
+}
+
+/* Fullscreen icon */
+.opl-icon-fullscreen {
+  display: none;
+
+  @media(min-width: $MEDIA_MIN_WIDTH) {
+    display: block;
+  }
+}
