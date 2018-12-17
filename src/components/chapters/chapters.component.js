@@ -5,7 +5,7 @@
  */
 
 /**
- * Creates a new Angular directive as an HTML element opl-chapters to create a list of chapters with title and
+ * Creates a new AngularJS component as an HTML element opl-chapters to create a list of chapters with title and
  * description.
  *
  * Attributes are:

@@ -72,7 +72,8 @@
       }
     };
 
-    if (videojs.Html5DashJS) videojs.Html5DashJS.hook('beforeinitialize', deactivateDashJsLogs);
+    if (typeof videojs !== 'undefined' && videojs.Html5DashJS && videojs.Html5DashJS.hook)
+      videojs.Html5DashJS.hook('beforeinitialize', deactivateDashJsLogs);
   });
 
 })(angular);

@@ -5,7 +5,7 @@
  */
 
 /**
- * Creates a new Angular directive as an HTML element opl-indexes to create an openVeo player index, with a list of
+ * Creates a new AngularJS component as an HTML element opl-indexes to create an openVeo player index, with a list of
  * presentation indexes.
  *
  * Attributes are:

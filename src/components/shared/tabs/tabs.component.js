@@ -5,7 +5,7 @@
  */
 
 /**
- * Creates a new Angular directive as HTML element opl-tabs to be able to manage a list of views (opl-view elements)
+ * Creates a new AngularJS component as HTML element opl-tabs to be able to manage a list of views (opl-view elements)
  * and switch between them using tabs.
  *
  * opl-tabs element does not have any attributes.

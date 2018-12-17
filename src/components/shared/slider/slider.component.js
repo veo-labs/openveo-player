@@ -5,7 +5,7 @@
  */
 
 /**
- * Creates a new Angular directive as an opl-slider HTML element to be able to set a value between 0% and 100%
+ * Creates a new AngularJS component as an opl-slider HTML element to be able to set a value between 0% and 100%
  * using a slider.
  *
  * opl-slider is based on the Material specification but implements it partially. Only the continuous slider is

@@ -5,7 +5,7 @@
  */
 
 /**
- * Creates a new Angular directive as HTML element opl-view to be able to group HTML elements which will be added to
+ * Creates a new AngularJS component as HTML element opl-view to be able to group HTML elements which will be added to
  * an opl-tabs element.
  *
  * Available attributes are:

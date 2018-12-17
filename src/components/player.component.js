@@ -5,7 +5,7 @@
  */
 
 /**
- * Creates a new Angular directive as an HTML element opl-player to create the player.
+ * Creates a new AngularJS component as an HTML element opl-player to create the player.
  *
  * e.g.
  *

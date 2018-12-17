@@ -5,7 +5,7 @@
  */
 
 /**
- * Creates a new Angular directive as an HTML element opl-tags to create a list of tags with title and description.
+ * Creates a new AngularJS component as an HTML element opl-tags to create a list of tags with title and description.
  *
  * Attributes are:
  * - [Array] **opl-tags**: The list of tags
