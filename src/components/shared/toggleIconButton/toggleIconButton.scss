@@ -1,0 +1,142 @@
+@import "compass/css3/user-interface";
+@import "compass/css3/box-sizing";
+@import "compass/css3/transform";
+@import "compass/css3/animation";
+@import "compass/css3/transition";
+
+$OPL_TOGGLE_ICON_BUTTON_PRIMARY_COLOR: #000000;
+
+/*
+  Animate the ripple with a growing effect from 0 to 100%
+*/
+@include keyframes(opl-toggle-icon-button-ripple-radius-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include scale(0);
+  }
+  to {
+    @include scale(1);
+  }
+}
+
+/*
+  Animate the ripple with dissolve effect from 0 to the focus percentage
+*/
+@include keyframes(opl-toggle-icon-button-ripple-opacity-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 0;
+  }
+  to {
+    opacity: 0.16;
+  }
+}
+
+/*
+  Animate the ripple with dissolve effect from focus percentage to 0
+*/
+@include keyframes(opl-toggle-icon-button-ripple-opacity-out) {
+  from {
+    @include animation-timing-function(linear);
+    opacity: 0.16;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+opl-toggle-icon-button {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  vertical-align: top;
+}
+
+.opl-toggle-icon-button {
+  --opl-toggle-icon-button-primary-color: #{$OPL_TOGGLE_ICON_BUTTON_PRIMARY_COLOR};
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  will-change: transform, opacity;
+  padding: 4px;
+  vertical-align: top;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--opl-toggle-icon-button-primary-color, $OPL_TOGGLE_ICON_BUTTON_PRIMARY_COLOR);
+  @include box-sizing(border-box);
+  @include user-select(none);
+
+  /*
+    Focus ring and ripple resting state sizes are the same as the button.
+    Focus ring and ripple resting state visibility are hidden.
+  */
+  &::before,
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    opacity: 0;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /*
+    Focus ring in resting state.
+  */
+  &::before {
+    @include transition-property(opacity);
+    @include transition-timing-function(linear);
+    @include transition-duration(15ms);
+    background-color: var(--opl-toggle-icon-button-primary-color, $OPL_TOGGLE_ICON_BUTTON_PRIMARY_COLOR);
+  }
+
+  /*
+    Ripple resting state is scaled down to 0 and has its center matching the center of the button.
+  */
+  &::after {
+    @include scale(0);
+    @include transform-origin(center, center);
+    background-color: var(--opl-toggle-icon-button-primary-color, $OPL_TOGGLE_ICON_BUTTON_PRIMARY_COLOR);
+  }
+
+  /*
+    Focus ring in button hover state.
+  */
+  &:hover::before {
+    opacity: 0.04;
+  }
+
+  /*
+    Focus ring in button focus state.
+  */
+  &.opl-focus::before {
+    @include transition-duration(75ms);
+    opacity: 0.12;
+  }
+
+  /*
+    Ripple in button activation state.
+  */
+  &.opl-activation::after {
+    @include animation-name(opl-toggle-icon-button-ripple-radius-in, opl-toggle-icon-button-ripple-opacity-in);
+    @include animation-duration(225ms, 75ms);
+    @include animation-fill-mode(forwards, forwards);
+  }
+
+  /*
+    Ripple in button deactivation state.
+  */
+  &.opl-deactivation::after {
+    @include animation-name(opl-toggle-icon-button-ripple-opacity-out);
+    @include animation-duration(150ms);
+    @include scale(1);
+  }
+
+}
