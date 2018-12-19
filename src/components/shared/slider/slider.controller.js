@@ -74,6 +74,9 @@
       if (step) value = Math.round(value / step) * step;
 
       ctrl.value = value;
+      ctrl.valueTextParameters = {
+        '%value%': ctrl.value
+      };
       updateModel();
       updateUI();
     }
@@ -256,6 +259,28 @@
       },
 
       /**
+       * The human readable text alternative of the slider value.
+       *
+       * @property valueText
+       * @type String
+       */
+      valueText: {
+        value: '',
+        writable: true
+      },
+
+      /**
+       * Parameters for the human readable text alternative of the slider value.
+       *
+       * @property valueTextParameters
+       * @type Object
+       */
+      valueTextParameters: {
+        value: null,
+        writable: true
+      },
+
+      /**
        * Initializes controller and attributes.
        *
        * @method $onInit
@@ -300,9 +325,11 @@
        * @method $onChanges
        * @param {Object} changedProperties Properties which have changed since last digest loop
        * @param {Object} [changedProperties.oplStep] oplStep old and new value
-       * @param {Boolean} [changedProperties.oplStep.currentValue] oplStep new value
+       * @param {String} [changedProperties.oplStep.currentValue] oplStep new value
        * @param {Object} [changedProperties.oplLabel] oplLabel old and new value
-       * @param {Boolean} [changedProperties.oplLabel.currentValue] oplLabel new value
+       * @param {String} [changedProperties.oplLabel.currentValue] oplLabel new value
+       * @param {Object} [changedProperties.oplValueText] oplValueText old and new value
+       * @param {String} [changedProperties.oplValueText.currentValue] oplValueText new value
        */
       $onChanges: {
         value: function(changedProperties) {
@@ -315,6 +342,11 @@
           if (changedProperties.oplLabel && changedProperties.oplLabel.currentValue) {
             newValue = changedProperties.oplLabel.currentValue;
             ctrl.label = (typeof newValue === 'undefined') ? 'Select a value' : newValue;
+          }
+
+          if (changedProperties.oplValueText && changedProperties.oplValueText.currentValue) {
+            newValue = changedProperties.oplValueText.currentValue;
+            ctrl.valueText = (typeof newValue === 'undefined') ? '' : newValue;
           }
         }
       }

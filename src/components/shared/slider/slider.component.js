@@ -23,9 +23,11 @@
  *   Default to 0 (no step) meaning that the slider can be drag & drop at any value of the slider and will move one by
  *   one when using keyboard.
  * - [String] **opl-label**: The ARIA label of the slider. Default to "Select a value".
+ * - [String] **opl-value-text**: The human readable text alternative of the slider value. Text will be processed by
+ *   oplTranslate filter and supports parameter "%value%". Empty by default.
  *
  * Requires:
- * - **$window** AngularJS $window service
+ * - **oplTranslate** OpenVeo Player i18n filter
  *
  * @example
  *     var sliderValue = 50;
@@ -34,8 +36,8 @@
  *               ng-model="sliderValue"
  *               opl-step="10"
  *               opl-label="Select a value"
- *     >
- *     </opl-slider>
+ *               opl-value-text="Slider value is: %value%"
+ *     ></opl-slider>
  *
  * @class oplSlider
  */
@@ -47,7 +49,8 @@
     require: ['?ngModel'],
     bindings: {
       oplStep: '@?',
-      oplLabel: '@?'
+      oplLabel: '@?',
+      oplValueText: '@?'
     }
   });
 

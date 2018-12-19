@@ -300,4 +300,55 @@ describe('OplSlider', function() {
     assert.notOk(sliderElement.hasClass('opl-slider-active'), 'Unexpected class "opl-slider-active"');
   });
 
+  it('should set human readable alternative text of the slider value', function() {
+    var expectedValueText = 'Slider value';
+    scope.value = 50;
+
+    var element = angular.element('<opl-slider ' +
+                                  'ng-model="value" ' +
+                                  'opl-value-text="' + expectedValueText + '" ' +
+                                  '></opl-slider>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    assert.equal(
+      angular.element(element[0].querySelector('.opl-slider')).attr('aria-valuetext'),
+      expectedValueText,
+      'Wrong human readable alternative text'
+    );
+  });
+
+  it('should replace %value% from human readable aternative text of the slider value, by the slider value', function() {
+    var expectedValueText = 'Slider value: %value%';
+    scope.value = 50;
+
+    var element = angular.element('<opl-slider ' +
+                                  'ng-model="value" ' +
+                                  'opl-value-text="' + expectedValueText + '" ' +
+                                  '></opl-slider>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    assert.equal(
+      angular.element(element[0].querySelector('.opl-slider')).attr('aria-valuetext'),
+      expectedValueText.replace('%value%', scope.value),
+      'Wrong human readable alternative text'
+    );
+  });
+
+  it('should set human readable alternative text of the slider value to empty if not defined', function() {
+    scope.value = 50;
+
+    var element = angular.element('<opl-slider ' +
+                                  'ng-model="value" ' +
+                                  '></opl-slider>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    assert.isEmpty(
+      angular.element(element[0].querySelector('.opl-slider')).attr('aria-valuetext'),
+      'Wrong human readable alternative text'
+    );
+  });
+
 });
