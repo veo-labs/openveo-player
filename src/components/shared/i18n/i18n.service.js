@@ -53,15 +53,25 @@
      *
      * @method translate
      * @param {String} id The id of the translation
+     * @param {Object} [parameters] Parameters with for each parameter the key as the placeholder to replace and the
+     * value as the placeholder substitution string
      * @return {String} The translated string
      */
-    function translate(id) {
+    function translate(id, parameters) {
       var translatedText = (oplI18nTranslations[currentLanguage] && oplI18nTranslations[currentLanguage][id]) || id;
 
       // Translation does not exist
       // Use english language as default
       if (translatedText === id)
         translatedText = oplI18nTranslations['en'][id] || id;
+
+      // Parameters
+      if (parameters) {
+        var reg = new RegExp(Object.keys(parameters).join('|'), 'gi');
+        translatedText = translatedText.replace(reg, function(matched) {
+          return parameters[matched];
+        });
+      }
 
       return translatedText;
     }
