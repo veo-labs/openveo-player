@@ -351,4 +351,32 @@ describe('OplSlider', function() {
     );
   });
 
+  it('should set the aria-valuenow attribute as the slider value changes', function() {
+    scope.value = 0;
+
+    var element = angular.element('<opl-slider ' +
+                                  'ng-model="value" ' +
+                                  '></opl-slider>');
+    element = $compile(element)(scope);
+    scope.$digest();
+    ctrl = element.controller('oplSlider');
+
+    var sliderElement = angular.element(element[0].querySelector('.opl-slider'));
+
+    assert.equal(
+      sliderElement.attr('aria-valuenow'),
+      scope.value,
+      'Wrong aria-valuenow value'
+    );
+
+    scope.value = 42;
+    scope.$digest();
+
+    assert.equal(
+      sliderElement.attr('aria-valuenow'),
+      scope.value,
+      'Wrong aria-valuenow value'
+    );
+  });
+
 });
