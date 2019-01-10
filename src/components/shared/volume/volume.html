@@ -1,0 +1,21 @@
+<div class="opl-volume">
+  <opl-toggle-icon-button
+                          opl-on="{{$ctrl.muted}}"
+                          opl-off-icon="volume_up"
+                          opl-on-icon="volume_off"
+                          opl-off-label="{{'CONTROLS_VOLUME_MUTE_ARIA_LABEL' | oplTranslate}}"
+                          opl-on-label="{{'CONTROLS_VOLUME_UNMUTE_ARIA_LABEL' | oplTranslate}}"
+                          opl-on-update="$ctrl.toggleSound(on)"
+                          opl-on-focus="handleFocus()"
+  ></opl-toggle-icon-button>
+  <div>
+    <opl-slider
+                ng-model="sliderValue"
+                ng-change="$ctrl.setLevel(sliderValue);"
+                opl-step="1"
+                opl-label="{{'CONTROLS_VOLUME_CURSOR_ARIA_LABEL' | oplTranslate}}"
+                opl-value-text="{{'CONTROLS_VOLUME_TEXT_ARIA_LABEL' | oplTranslate}}"
+                opl-on-focus="handleFocus()"
+    ></opl-slider>
+  </div>
+</div>

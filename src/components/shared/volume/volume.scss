@@ -1,0 +1,58 @@
+@import "compass/css3/transition";
+
+opl-volume {
+  display: inline-block;
+  height: 32px;
+}
+
+.opl-volume {
+  display: inline-block;
+  overflow: hidden;
+  height: 32px;
+  vertical-align: top;
+
+  /*
+    Slider.
+    The slider must have a width even if the slider wrapper is not displayed.
+    This is required by the slider to init correctly.
+  */
+  opl-slider, .opl-slider {
+    width: 62px;
+  }
+
+  /*
+    Slider wrapper.
+    The slider is not displayed in volume resting state.
+  */
+  & > div {
+    display: inline-block;
+    width: 0;
+    opacity: 0;
+    margin-left: 8px;
+    vertical-align: top;
+    will-change: opacity;
+    @include transition-property(width, opacity);
+    @include transition-timing-function(cubic-bezier(0.4, 0.0, 1, 1), cubic-bezier(0.4, 0.0, 1, 1));
+    @include transition-duration(100ms, 100ms);
+  }
+
+  /*
+    Volume in both over and focus states.
+  */
+  &.opl-over,
+  &.opl-volume-focus {
+    overflow: visible;
+  }
+
+  /*
+    Slider wrapper.
+    The slider is displayed in both volume over and focus states.
+  */
+  &.opl-over > div,
+  &.opl-volume-focus > div {
+    width: 62px;
+    opacity: 1;
+    margin: 0 12px;
+  }
+
+}

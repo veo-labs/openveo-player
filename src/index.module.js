@@ -32,7 +32,11 @@
       MEDIA_ERR_SRC_NOT_SUPPORTED: 'The video could not be loaded, either because the server or network failed ' +
       'or because the format is not supported.',
       MEDIA_ERR_PERMISSION: 'Video not available or private.',
-      MEDIA_ERR_DEFAULT: 'An unknown error occurred.'
+      MEDIA_ERR_DEFAULT: 'An unknown error occurred.',
+      CONTROLS_VOLUME_MUTE_ARIA_LABEL: 'Mute',
+      CONTROLS_VOLUME_UNMUTE_ARIA_LABEL: 'Mute',
+      CONTROLS_VOLUME_CURSOR_ARIA_LABEL: 'Change volume',
+      CONTROLS_VOLUME_TEXT_ARIA_LABEL: 'Volume %value%%'
     },
     fr: {
       VIDEO_TAB_TITLE: 'Vidéo',
@@ -48,7 +52,11 @@
       MEDIA_ERR_SRC_NOT_SUPPORTED: 'La vidéo ne peut être chargée , soit parce que le serveur ou le réseau à échoué ' +
       'ou parce que le format ne sont pas supportées.',
       MEDIA_ERR_PERMISSION: 'Vidéo indisponible ou privée.',
-      MEDIA_ERR_DEFAULT: 'Une erreur inconnue est survenue.'
+      MEDIA_ERR_DEFAULT: 'Une erreur inconnue est survenue.',
+      CONTROLS_VOLUME_MUTE_ARIA_LABEL: 'Désactiver le son',
+      CONTROLS_VOLUME_UNMUTE_ARIA_LABEL: 'Activer le son',
+      CONTROLS_VOLUME_CURSOR_ARIA_LABEL: 'Modifier le volume',
+      CONTROLS_VOLUME_TEXT_ARIA_LABEL: 'Volume à %value%%'
     }
   });
 
