@@ -1,0 +1,13 @@
+<div class="opl-template-selector" tabindex="0" aria-label="{{$ctrl.oplLabel}}" role="listbox" aria-orientation="horizontal">
+  <button
+          ng-repeat="template in templates"
+          role="option"
+          tabindex="-1"
+          data-id="{{template.id}}"
+          aria-label="{{template.label}}"
+          aria-selected="{{template.id === selectedTemplate}}"
+          aria-hidden="{{template.hidden}}"
+    >
+    <i class="opl-icon" ng-bind="template.id"></i>
+  </button>
+</div>

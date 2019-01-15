@@ -36,7 +36,14 @@
       CONTROLS_VOLUME_MUTE_ARIA_LABEL: 'Mute',
       CONTROLS_VOLUME_UNMUTE_ARIA_LABEL: 'Mute',
       CONTROLS_VOLUME_CURSOR_ARIA_LABEL: 'Change volume',
-      CONTROLS_VOLUME_TEXT_ARIA_LABEL: 'Volume %value%%'
+      CONTROLS_VOLUME_TEXT_ARIA_LABEL: 'Volume %value%%',
+      CONTROLS_TEMPLATE_SPLIT_50_50_ARIA_LABEL: 'Mode 50/50',
+      CONTROLS_TEMPLATE_FULL_1_ARIA_LABEL: 'Mode video only',
+      CONTROLS_TEMPLATE_FULL_2_ARIA_LABEL: 'Mode presentation only',
+      CONTROLS_TEMPLATE_SPLIT_25_75_ARIA_LABEL: 'Mode with priority on presentation',
+      CONTROLS_SETTINGS_ARIA_LABEL: 'Settings',
+      CONTROLS_SETTINGS_QUALITIES_TITLE: 'Quality',
+      CONTROLS_SETTINGS_SOURCES_TITLE: 'Source'
     },
     fr: {
       VIDEO_TAB_TITLE: 'Vidéo',
@@ -56,7 +63,14 @@
       CONTROLS_VOLUME_MUTE_ARIA_LABEL: 'Désactiver le son',
       CONTROLS_VOLUME_UNMUTE_ARIA_LABEL: 'Activer le son',
       CONTROLS_VOLUME_CURSOR_ARIA_LABEL: 'Modifier le volume',
-      CONTROLS_VOLUME_TEXT_ARIA_LABEL: 'Volume à %value%%'
+      CONTROLS_VOLUME_TEXT_ARIA_LABEL: 'Volume à %value%%',
+      CONTROLS_TEMPLATE_SPLIT_50_50_ARIA_LABEL: 'Mode 50/50',
+      CONTROLS_TEMPLATE_FULL_1_ARIA_LABEL: 'Mode vidéo seule',
+      CONTROLS_TEMPLATE_FULL_2_ARIA_LABEL: 'Mode présentation seule',
+      CONTROLS_TEMPLATE_SPLIT_25_75_ARIA_LABEL: 'Mode avec priorité sur la présentation',
+      CONTROLS_SETTINGS_ARIA_LABEL: 'Paramètres',
+      CONTROLS_SETTINGS_QUALITIES_TITLE: 'Qualité',
+      CONTROLS_SETTINGS_SOURCES_TITLE: 'Source'
     }
   });
 
