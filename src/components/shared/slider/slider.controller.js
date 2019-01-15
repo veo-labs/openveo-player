@@ -113,7 +113,7 @@
     }
 
     /**
-     * Handles keywdown events.
+     * Handles keydown events.
      *
      * Slider captures the following keyboard keys:
      *  - LEFT and BOTTOM keys to decrease by the step specified in the opl-step attribute
