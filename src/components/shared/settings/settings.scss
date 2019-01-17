@@ -1,0 +1,363 @@
+@import "compass/css3/user-interface";
+@import "compass/css3/transform";
+@import "compass/css3/transition";
+@import "compass/css3/animation";
+@import "compass/css3/box-shadow";
+
+$OPL_SETTINGS_PRIMARY_COLOR: #ffffff;
+$OPL_SETTINGS_BACKGROUND_COLOR: #000000;
+$OPL_SETTINGS_ACCENT_COLOR: #f63d98;
+
+/*
+  Animate the settings item ripple with a growing effect from 0 to 1100%.
+*/
+@include keyframes(opl-settings-item-ripple-radius-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include scale(0);
+  }
+  to {
+    @include scale(11);
+  }
+}
+
+/*
+  Animate the settings item ripple with a resolve effect from 0 to 0.32.
+*/
+@include keyframes(opl-settings-item-ripple-resolve) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 0;
+  }
+  to {
+    opacity: 0.32;
+  }
+}
+
+/*
+  Animate the settings item ripple with a dissolve effect from actual opacity to 0.
+*/
+@include keyframes(opl-settings-item-ripple-dissolve) {
+  from {
+    @include animation-timing-function(linear);
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/*
+  Animate the settings dialog with grow effect.
+*/
+@include keyframes(opl-settings-grow) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    width: 0;
+    height: 0;
+  }
+  100% {
+    @include transform(translateX(-194px));
+    width: 226px;
+    height: var(--opl-settings-dialog-height);
+  }
+}
+
+/*
+  Animate the settings dialog with reduce effect.
+*/
+@include keyframes(opl-settings-reduce) {
+  from {
+    @include animation-timing-function(linear);
+    @include transform(translateX(-194px));
+    width: 226px;
+    height: var(--opl-settings-dialog-height);
+  }
+  to {
+    width: 0;
+    height: 0;
+  }
+}
+
+/*
+  Animate the settings dialog with a resolve effect.
+*/
+@include keyframes(opl-settings-resolve) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+  Animate the settings dialog with a dissolve effect.
+*/
+@include keyframes(opl-settings-dissolve) {
+  from {
+    @include animation-timing-function(linear);
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+opl-settings {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  vertical-align: top;
+}
+
+.opl-settings {
+  --opl-settings-primary-color: #{$OPL_SETTINGS_PRIMARY_COLOR};
+  --opl-settings-primary-color-0: #{rgba($OPL_SETTINGS_PRIMARY_COLOR, 0.2)};
+  --opl-settings-primary-color-1: #{rgba($OPL_SETTINGS_PRIMARY_COLOR, 0.9)};
+  --opl-settings-background-color: #{$OPL_SETTINGS_BACKGROUND_COLOR};
+  --opl-settings-background-color-0: #{rgba($OPL_SETTINGS_BACKGROUND_COLOR, 0.8)};
+  --opl-settings-accent-color: #{$OPL_SETTINGS_ACCENT_COLOR};
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  vertical-align: top;
+
+  /*
+    Settings dialog in resting state.
+  */
+  .opl-dialog {
+    position: absolute;
+    bottom: 64px;
+    left: 0;
+    width: 226px;
+    background-color: var(--opl-settings-background-color-0, rgba($OPL_SETTINGS_BACKGROUND_COLOR, 0.8));
+    will-change: transform, opacity;
+    opacity: 0;
+    @include box-shadow(0px 4px 24px var(--opl-settings-background-color, $OPL_SETTINGS_BACKGROUND_COLOR));
+    @include transform-origin(bottom, left);
+  }
+
+  /*
+    Settings dialog in posting state.
+  */
+  &.opl-posting .opl-dialog {
+    @include animation-name(opl-settings-grow, opl-settings-resolve);
+    @include animation-duration(250ms, 250ms);
+    @include animation-fill-mode(forwards, forwards);
+
+    /*
+      Dialog content in posting state.
+    */
+    & > div {
+      @include animation-name(opl-settings-resolve);
+      @include animation-duration(500ms);
+      @include animation-fill-mode(forwards);
+    }
+  }
+
+  /*
+    Settings dialog in masking state.
+  */
+  &.opl-masking .opl-dialog {
+    @include animation-name(opl-settings-reduce, opl-settings-dissolve);
+    @include animation-duration(150ms, 150ms);
+    @include animation-fill-mode(forwards, forwards);
+
+    /*
+      Dialog content in masking state.
+    */
+    & > div {
+      @include animation-name(opl-settings-dissolve);
+      @include animation-duration(75ms);
+      @include animation-fill-mode(forwards);
+    }
+  }
+
+  /*
+    Settings dialog in posted state.
+  */
+  &.opl-posted .opl-dialog {
+    opacity: 1;
+    width: 226px;
+    height: var(--opl-settings-dialog-height);
+    @include transform(translateX(-194px));
+
+    /*
+      Dialog content in masking state.
+    */
+    & > div {
+      opacity: 1;
+    }
+  }
+
+  h1 {
+    font-family: 'Roboto-Medium', sans-serif;
+    background-color: var(--opl-settings-primary-color-0, rgba($OPL_SETTINGS_PRIMARY_COLOR, 0.20));
+    height: 32px;
+    margin: 0;
+    padding-left: 8px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    font-size: 14px;
+    color: var(--opl-settings-primary-color-1, rgba($OPL_SETTINGS_PRIMARY_COLOR, 0.9));
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /*
+    Item (quality / source).
+  */
+  li {
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+    position: relative;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 8px;
+    outline: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    will-change: transform, opacity;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--opl-settings-primary-color-1, rgba($OPL_SETTINGS_PRIMARY_COLOR, 0.9));
+    @include user-select(none);
+
+    span {
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    /*
+      Item label in resting state.
+    */
+    .opl-item-label {
+      padding-left: 26px;
+      letter-spacing: 0.4px;
+    }
+
+    /*
+      Selected icon in resting state.
+    */
+    .opl-check {
+      padding-top: 5px;
+      vertical-align: top;
+      font-size: 22px;
+    }
+
+    /*
+      HD icon in resting state.
+    */
+    .opl-hd {
+      font-size: 22px;
+    }
+
+    /*
+      Ripple and focus overlay in resting state.
+    */
+    &::after, &::before {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      content: '';
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /*
+      Focus overlay in resting state.
+    */
+    &::before {
+      @include transition-property(opacity);
+      @include transition-timing-function(linear);
+      @include transition-duration(15ms);
+      left: 0;
+      width: 100%;
+      background-color: var(--opl-settings-primary-color, $OPL_SETTINGS_PRIMARY_COLOR);
+    }
+
+    /*
+      Ripple in resting state.
+    */
+    &::after {
+      @include scale(0);
+      @include transform-origin(center, center);
+      left: -10%;
+      width: 20%;
+      border-radius: 50%;
+      background-color: var(--opl-settings-primary-color, $OPL_SETTINGS_PRIMARY_COLOR);
+    }
+
+    /*
+      Focus overlay in focus state.
+    */
+    &.opl-focus::before {
+      opacity: 0.24;
+    }
+
+    /*
+      Item in selected state.
+    */
+    &.opl-selected {
+
+      span {
+        color: var(--opl-settings-accent-color, $OPL_SETTINGS_ACCENT_COLOR);
+      }
+
+      /*
+        Item label in selected state.
+      */
+      .opl-item-label {
+        padding-left: 0;
+      }
+
+      /*
+        Focus overlay in both hover and selected states.
+      */
+      &::before {
+        background-color: var(--opl-settings-accent-color, $OPL_SETTINGS_ACCENT_COLOR);
+      }
+
+      /*
+        Ripple in selected state.
+      */
+      &::after {
+        background-color: var(--opl-settings-accent-color, $OPL_SETTINGS_ACCENT_COLOR);
+      }
+
+    }
+
+    /*
+      Focus overlay in hover state.
+    */
+    &:hover::before {
+      opacity: 0.078;
+    }
+
+    /*
+      Ripple in item activation state.
+    */
+    &.opl-item-activation::after {
+      @include animation-name(opl-settings-item-ripple-radius-in, opl-settings-item-ripple-resolve);
+      @include animation-duration(225ms, 75ms);
+      @include animation-fill-mode(forwards, forwards);
+    }
+
+    /*
+      Ripple in item deactivation state.
+    */
+    &.opl-item-deactivation::after {
+      @include animation-name(opl-settings-item-ripple-dissolve);
+      @include animation-duration(150ms);
+      @include scale(1);
+    }
+
+  }
+
+}

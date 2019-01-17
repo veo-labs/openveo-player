@@ -1,0 +1,45 @@
+<div class="opl-settings">
+  <opl-button
+              opl-icon="settings"
+              opl-label="{{'CONTROLS_SETTINGS_ARIA_LABEL' | oplTranslate}}"
+              opl-on-update="$ctrl.toggleSettings()"
+              opl-on-focus="handleButtonFocus()"
+  ></opl-button>
+  <div class="opl-dialog">
+    <div>
+      <h1 ng-bind="'CONTROLS_SETTINGS_QUALITIES_TITLE' | oplTranslate" ng-if="$ctrl.oplQualities.length"></h1>
+      <ul ng-if="$ctrl.oplQualities.length">
+        <li
+            ng-repeat="quality in $ctrl.oplQualities"
+            ng-class="{'opl-selected': quality.id === $ctrl.oplQuality, 'opl-hd': quality.hd}"
+            data-id="{{quality.id}}"
+            data-type="quality"
+            role="button"
+            tabindex="-1"
+            aria-label="{{quality.label}}"
+            aria-hidden="{{!$ctrl.settingsOpened}}"
+        >
+          <span ng-if="quality.id === $ctrl.oplQuality" class="opl-icon opl-check">check</span>
+          <span ng-bind="quality.label" class="opl-item-label"></span>
+          <span ng-if="quality.hd" class="opl-icon opl-hd">hd</span>
+        </li>
+      </ul>
+      <h1 ng-bind="'CONTROLS_SETTINGS_SOURCES_TITLE' | oplTranslate" ng-if="$ctrl.oplSources.length"></h1>
+      <ul ng-if="$ctrl.oplSources.length">
+        <li
+            ng-repeat="source in $ctrl.oplSources"
+            ng-class="{'opl-selected': source.id === $ctrl.oplSource}"
+            data-id="{{source.id}}"
+            data-type="source"
+            role="button"
+            tabindex="-1"
+            aria-label="{{source.label}}"
+            aria-hidden="{{!$ctrl.settingsOpened}}"
+        >
+          <span ng-if="source.id === $ctrl.oplSource" class="opl-icon opl-check">check</span>
+          <span ng-bind="source.label" class="opl-item-label"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
