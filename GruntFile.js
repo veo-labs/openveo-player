@@ -115,12 +115,17 @@ module.exports = function(grunt) {
     'ngtemplates:components',
     'components-set-src',
     'copy:components-sources',
+    'copy:roboto-scss',
+    'replace:roboto-scss-font-paths',
     'replace:inject-components-scss',
     'rename:components-scss',
     'compass:components',
+    'replace:roboto-css-font-paths',
     'concat:components',
     'uglify:components',
-    'copy:components'
+    'copy:components',
+    'copy:fonts',
+    'copy:roboto-fonts'
   ]);
 
 };

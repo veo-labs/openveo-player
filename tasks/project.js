@@ -9,5 +9,7 @@ module.exports = {
   buildJsPath: '<%= project.buildPath %>/js',
   distPath: '<%= project.rootPath %>/dist',
   docPath: '<%= project.rootPath %>/site',
-  sourcesPath: '<%= project.rootPath %>/src'
+  sourcesPath: '<%= project.rootPath %>/src',
+  fontsPath: '<%= project.rootPath %>/fonts',
+  robotoRootPath: '<%= project.rootPath %>/node_modules/roboto-fontface'
 };
