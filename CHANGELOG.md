@@ -5,7 +5,18 @@
 - Drop support for HTML player flash technology
 - Drop support for AngularJS &lt; 1.5.11
 - Drop support for VideoJS &lt; 7.3.0
+- Drop support for Internet Explorer 11
 - All player components are now prefixed by opl- instead of op-
+- Player controller property "selectedMode" has been renamed into "selectedTemplate"
+- Player controller property "playPauseButton" has been replaced by "playing"
+- Player controller property "modeIconDisplayed" has been renamed into "templateSelectorDisplayed"
+- Player controller properties "modesOpened", "modes", "volumeOpened", "volumePreview", "selectMediaOpened", "definitionOpened" have been removed
+- Player controller method "selectMode" has been renamed into "selectTemplate"
+- Player attribute "opl-mode" available values are now "split_1", "split_2", "split_50_50" and "split_25_75" instead of "media", "presentation", "both" and "both-presentation"
+- Sources have been added to the settings menu, consequently the attribute "opl-media-sources-icon" has been removed
+- Data property "file.basePath" for tags and chapters has been renamed into "file.url"
+- Data property "file.originalname" for tags and chapters has been renamed into "file.originalName"
+- Files attached to tags and chapters are no longer interpreted, a simple link is displayed to download the file
 
 ## NEW FEATURES
 
@@ -14,6 +25,9 @@
 - Remove dashjs logs
 - Prevent HTML player from buffering until play is requested
 - Force HTML player to play inline and try to avoid native player on mobile devices
+- The control bar has been completely changed to be more user friendly and is now on the video instead of below it
+- Indexes, chapters and tags are now displayed below the player and can be accessed while keeping an eye on the video
+- opl-mode attribute is now watched and can be changed dynamically
 
 ## BUG FIXES
 

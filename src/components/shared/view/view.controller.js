@@ -35,6 +35,10 @@
 
     oplTabsCtrl.addView(ctrl);
 
+    $scope.$watch('$ctrl.selected', function(newValue, oldValue) {
+      if (newValue && ctrl.oplOnSelect) ctrl.oplOnSelect({id: ctrl.oplViewId});
+    });
+
     // Detach view from tabs when view is destroyed
     $scope.$on('$destroy', function() {
       oplTabsCtrl.removeView(ctrl);

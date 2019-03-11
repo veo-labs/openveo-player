@@ -1,13 +1,15 @@
-# Directives
+# Components
 
-OpenVeo Player defines several directives:
+OpenVeo Player defines an opl-player component with several sub components:
 
-- **opl-player**: The main directive containing the whole player
-- **opl-tabs**: A directive to create tabs (holds one or several opl-view directives)
-- **opl-view**: A directive to create a view controlled by a tab (using opl-tabs)
-- **opl-indexes**: A directive to display and control the index view
-- **opl-chapters**: A directive to display and control the chapters view
-- **opl-tags**: A directive to display and control the tags view
+- **opl-preview** Used to display the index preview when cursor is over the timebar
+- **opl-slider** Used to display the timebar
+- **opl-volume** Used to display the volume controller (makes use of the opl-slider)
+- **opl-toggle-icon-button** Used for all toggle buttons
+- **opl-template-selector** Used to select a display template
+- **opl-settings** Used to set current quality and source
+- **opl-tabs** and **opl-view** Used to display points of interest as tabs
+- **opl-tiles** and **opl-tile** Used to display the list of tags, the list of chapters and the list of indexes
 
 # Players
 

@@ -7,265 +7,274 @@
 /**
  * Creates a new AngularJS component as an HTML element opl-player to create the player.
  *
- * e.g.
+ * opl-player is composed of three areas: the media, the actual index image associated to current time and a list
+ * of points of interest.
  *
- * Available attributes are:
- *  - {Object} **opl-data**: A data object as:
- *   {
- *     mediaId: '136081112', // The id of the media
- *     timecodes: [ // Timecodes
- *       {
- *         timecode: 0, // Timecode in milliseconds (0 ms)
- *         image: { // Image to display at 0 ms
- *           small: 'slide_00000.jpeg', // Small version of the image
- *           large: 'slide_00000_large.jpeg' // Large version of the image
- *         }
- *       },
- *       {
- *         timecode: 1200, // Timecode in milliseconds (1200 ms)
- *         image: { // Image to display at 1200 ms
- *           small: 'slide_00001.jpeg', // Small version of the image
- *           large: 'slide_00001_large.jpeg' // Large version of the image
- *         }
- *       }
- *       ...
- *     ],
- *     chapters: [ // Chapters
- *       {
- *         name: 'Chapter 1', // Chapter name
- *         description: 'Chapter 1', // Chapter description
- *         value: 0.04666666666666667 // Chapter timecode in percent
- *       },
- *       {
- *         name: 'Chapter 2', // Chapter name
- *         description: 'Chapter 2', // Chapter description
- *         value: 0.31666666666666665 // Chapter timecode in percent
- *       }
- *       ...
- *     ],
- *     files: [ // The list of media files (only for "html" player)
- *       {
- *         width: 640, // Media width for this file
- *         height: 360, // Media height for this file
- *         link: 'https://player.vimeo.com/external/136081112.sd.mp4' // Media url
- *       },
- *       {
- *         width: 1280, // Media width for this file
- *         height: 720, // Media height for this file
- *         link: 'https://player.vimeo.com/external/136081112.hd.mp4' // Media url
- *       },
- *       ...
- *     ],
- *     thumbnail: "/1439286245225/thumbnail.jpg", // The media thumbnail (only for "html" player)
- *     chapters: [ // Chapters
- *       {
- *         name: 'Chapter 1', // Chapter name
- *         description: 'Chapter 1', // Chapter description
- *         value: 0.04 // Chapter timecode in percent (percentage of the video)
- *       },
- *       {
- *         name: 'Chapter 2', // Chapter name
- *         description: 'Chapter 2', // Chapter description
- *         value: 0.3 // Chapter timecode in percent (percentage of the video)
- *       }
- *     ],
- *     cut: [ // Cut information (begin and end)
- *       {
- *         type: 'begin', // Cut type
- *         value: 0 // Begin timecode (percentage of the media)
- *       },
- *       {
- *         type: 'end', // Cut type
- *         value: 0.9 // End timecode (percentage of the media)
- *       }
- *     ]
- *   }
- *   nb: Note that small images must be at least 200 pixels width.
- *  - {Boolean} **opl-fullscreen-icon**: true to display the enlarge/reduce icon
- *  - {Boolean} **opl-volume-icon**: true to display the volume icon
- *  - {Boolean} **opl-mode-icon**: true to display the display mode icon
- *  - {Boolean} **opl-settings-icon**: true to display the settings icon
- *  - {Boolean} **opl-time**: true to display the actual time and duration
- *  - {Boolean} **opl-media-sources-icon**: true to display the multi-sources icon
- *  - {Boolean} **opl-hide-chapters-tab**: true to hide chapters tab
- *  - {Boolean} **opl-hide-tags-tab**: true to hide tags tab
- *  - {Boolean} **opl-full-viewport**: true to display the player in full viewport
- *  - {Boolean} **opl-disable-cut**: true to disable cuts
- *  - {String} **opl-language**: Player language code (e.g. fr)
- *  - {String} **opl-player-type**: The type of player to use to play the media. It can be either:
- *      - html: To play the media using HTML player
- *    If no player type is provided, opl-player will figure out which player to use depending on the media type.
- *  - {String} **opl-mode**: The display template to use (either "both", "media", "both-presentation" or "presentation")
- *  - {Boolean} **opl-auto-play**: true to start playing when media is ready
- *  - {Boolean} **opl-remember-position**: true to start the media at the position the user was
+ * Attributes are:
+ *  - [Object] **opl-data** An AngularJS expression evaluating to a data object
+ *    - [Array|String] **mediaId** The list of media ids, one id by source. For the "html" player, the first media id
+ *      corresponds to the first source, the second media id to the second source and so on
+ *    - [Array] **[sources]** The list of sources, one source by media id (only for the "html" player)
+ *      - [Array] **[adaptive]** A list of adaptive videos (DASH or HLS)
+ *        - [Number] **height** The video height in pixels
+ *        - [String] **mimeType** The source MIME type
+ *        - [String] **link** The URL of the source
+ *      - [Array] **[files]** A list of MP4 files (qualities)
+ *        - [Number] **width** The video width in pixels
+ *        - [Number] **height** The video height in pixels
+ *        - [String] **link** The URL of the MP4 file
+ *    - [String] **[thumbnail]** The URL of the image to display before the video starts (only for the "html" player)
+ *    - [Array] **[timecodes]** A list of indexes
+ *      - [Number] **timecode** The position of the index relative to the media duration (in milliseconds)
+ *      - [Object] **image** The small and large version of the image representing the index
+ *        - [String] **small** URL of the small image representing the index. Displayed in the list of indexes and when
+ *          pointer is over the timebar. Expected small image size is 148x80
+ *        - [String] **large** URL of the large image representing the index. Displayed in the area 2 when playing time
+ *          corresponds to the index time, and when an index of the list of indexes is enlarged
+ *    - [Array] **[chapters]** A list of chapters
+ *      - [String] **name** The chapter name displayed in the list of chapters and when a chapter is enlarged
+ *      - [String] **[description]** The chapter description. The description is displayed when chapter is enlarged.
+ *        Description may contain HTML tags
+ *      - [Number] **value** The position of the chapter relative to the media duration (in milliseconds)
+ *      - [Object] **[file]** A file attached to the chapter
+ *        - [String] **url** File URL. The displayed file name is retrieved for the URL when enlarging the chapter
+ *        - [String] **originalName** The name presented to the user when downloading the file (should not contain the
+ *          extension)
+ *    - [Array] **[tags]** A list of tags
+ *      - [String] **name** The tag name displayed in the list of tags and when a tag is enlarged
+ *      - [String] **[description]** The tag description is displayed when tag is enlarged. Description may contain
+ *        HTML tags
+ *      - [Number] **value** The position of the tag relative to the media duration (in milliseconds)
+ *      - [Object] **[file]** A file attached to the tag
+ *        - [String] **url** File URL. The displayed file name is retrieved for the URL when enlarging the tag
+ *        - [String] **originalName** The name presented to the user when downloading the file (should not contain the
+ *          extension)
+ *    - [Array] **[cut]** The list of cuts to apply to the media, for now only start and end cuts are available
+ *      - [String] **type** The cut type (either "begin" or "end")
+ *      - [Number] **value** The position of the cut relative to the media duration (in milliseconds)
+ *  - [Boolean] **opl-fullscreen-icon** true to display the enlarge/reduce icon (default to true)
+ *  - [Boolean] **opl-volume-icon** true to display the volume icon (default to true)
+ *  - [Boolean] **opl-mode-icon** true to display the template selector icon (default to true)
+ *  - [Boolean] **opl-settings-icon** true to display the settings icon (default to true)
+ *  - [Boolean] **opl-time** true to display the actual time and duration (default to true)
+ *  - [Boolean] **opl-hide-chapters-tab** true to hide chapters tab (default to false)
+ *  - [Boolean] **opl-hide-tags-tab** true to hide tags tab (default to false)
+ *  - [Boolean] **opl-full-viewport** true to display the player in full viewport (default to false)
+ *  - [Boolean] **opl-disable-cut** true to disable cuts (default to false)
+ *  - [String] **opl-language** Player language code (e.g. fr) (default to "en")
+ *  - [String] **opl-player-type** The type of player to use to play the media. It can be either "html", "youtube" or
+ *    "vimeo" (default to "html")
+ *  - [Boolean] **opl-auto-play** true to start playing when media is ready (default to false)
+ *  - [Boolean] **opl-remember-position** true to start the media at the position the user was last time (default to
+ *    false)
+ *  - [String] **opl-mode** The template to choose by default (either "split_1", "split_2", "split_50_50"
+ *    or "split_25_75") (default to "split_1")
  *
- * e.g.
- *
- * // Define the data object as input for the opl-player
- * $scope.data =
- *  {
- *    'type': 'vimeo',
- *    'mediaId': '118502922',
- *    'timecodes': [
- *      {
- *        'timecode': 50000,
- *        'image': {
- *          'small': './slides/slide_00000.jpeg',
- *          'large': './slides/slide_00000_large.jpeg'
- *        }
- *      }
- *    ]
- *  }
- *
- * <opl-player
- *   opl-data="data"
- *   opl-fullscreen-icon="true"
- *   opl-volume-icon="true"
- *   opl-mode-icon="true"
- *   opl-settings-icon="true"
- *   opl-media-sources-icon="true"
- *   opl-time="true"
- *   opl-hide-chapters-tab="true"
- *   opl-hide-tags-tab="true"
- *   opl-full-viewport="true"
- *   opl-disable-cut="true"
- *   opl-language="en"
- *   opl-player-type="html"
- *   opl-auto-play="true"
- *   opl-remember-position="true"
- *   opl-mode="both"
- * ></opl-player>
- *
- * // The whole object can also be changed dynamically
- * $scope.data =
- *  {
- *    'type': 'vimeo',
- *    'mediaId': '118502919',
- *    'timecodes': {
- *      {
- *        'timecode': 0,
- *        'image': {
- *          'small': './slides/slide_00000.jpeg',
- *          'large': './slides/slide_00000_large.jpeg'
- *        }
- *      },
- *      {
- *        'timecode': 20000,
- *        'image': {
- *          'small': './slides/slide_00001.jpeg',
- *          'large': './slides/slide_00001_large.jpeg'
- *        }
- *      }
- *    }
- *  }
- *
- * CAUTION: To update the data of the player the whole object must be changed. There aren't any two way bindings on
- * the data object properties.
- *
- * Listening to events:
- * You can listen to player events using opl-player HTMLElement.
  * Dispatched events are:
- *  - **ready**: The player is ready to receive actions
- *  - **waiting**: Media playback has stopped because the next frame is not available
- *  - **playing**: Media playback is ready to start after being paused or
+ *  - **ready** The player is ready to receive actions
+ *  - **waiting** Media playback has stopped because the next frame is not available
+ *  - **playing** Media playback is ready to start after being paused or
  *    delayed due to lack of media data
- *  - **durationChange**: The duration attribute has just been updated
- *  - **play**: Media is no longer paused
- *  - **pause**: Media has been paused
- *  - **loadProgress**: Got buffering information
- *  - **playProgress**: Media playback position has changed
- *  - **end**: Media playback has reached the end
- *  - **error**: Player has encountered an error
- *  - **needPoiConversion**: Player has detected the old format of chapters / tags / indexes.
+ *  - **durationChange** The duration attribute has just been updated
+ *  - **play** Media is no longer paused
+ *  - **pause** Media has been paused
+ *  - **loadProgress** Got buffering information
+ *  - **playProgress** Media playback position has changed
+ *  - **end** Media playback has reached the end
+ *  - **error** Player has encountered an error
+ *  - **needPoiConversion** Player has detected the old format of chapters / tags / indexes.
  *    Time of chapters / tags and indexes have to be expressed in milliseconds and not in percentage
  *
- * e.g.
- * <opl-player ... id="myPlayer"></opl-player>
+ * Player controller exposed methods are:
+ * - **selectTemplate** Select the template to choose by default (either "split_1", "split_2", "split_50_50" or
+ *   "split_25_75")
+ * - **playPause** Start / stop the media
+ * - **setVolume** Change player's volume
+ * - **setTime** Seek media to a specific time
+ * - **setDefinition** Sets player definition
+ * - **setSource** Sets player source if multi-sources
  *
- * var myPlayer = document.getElementById('myPlayer');
- * angular.element(myPlayer).on('ready', function(event){
- *   console.log('ready');
- * });
+ * @example
  *
- * angular.element(test).on('waiting', function(event){
- *   console.log('waiting');
- * });
+ *      // Define the data object as input for the opl-player
+ *      $scope.data = {
+ *        mediaId: ['136081112'],
+ *        timecodes: [
+ *          {
+ *            timecode: 0,
+ *            image: {
+ *              small: 'https://host.local/image1.jpeg',
+ *              large: 'https://host.local/image1_large.jpeg'
+ *            }
+ *          },
+ *          {
+ *            timecode: 1200,
+ *            image: {
+ *              small: 'https://host.local/image2.jpeg',
+ *              large: 'https://host.local/image2_large.jpeg'
+ *            }
+ *          }
+ *          ...
+ *        ],
+ *        chapters: [
+ *          {
+ *            name: 'Chapter 1',
+ *            description: 'Chapter 1',
+ *            value: 1000
+ *          },
+ *          {
+ *            name: 'Chapter 2',
+ *            description: 'Chapter 2',
+ *            value: 2000,
+ *            file: {
+ *              url: 'https://host/local/file.ext',
+ *              originalName: 'original-name'
+ *            }
+ *          }
+ *          ...
+ *        ],
+ *        tags: [
+ *          {
+ *            name: 'Tag 1',
+ *            description: 'Tag 1',
+ *            value: 1000
+ *          },
+ *          {
+ *            name: 'Tag 2',
+ *            description: 'Tag 2',
+ *            value: 2000,
+ *            file: {
+ *              url: 'https://host/local/file.ext',
+ *              originalName: 'original-name'
+ *            }
+ *          }
+ *          ...
+ *        ],
+ *        sources: [
+ *          {
+ *            adaptive: [
+ *              {
+ *               height: 720,
+ *               mimeType: 'application/dash+xml',
+ *               link: 'https://host.local/mp4:video.mp4/manifest.mpd'
+ *              },
+ *              {
+ *               height: 720,
+ *               mimeType: 'application/vnd.apple.mpegurl',
+ *               link: 'https://host.local/mp4:video.mp4/manifest.m3u8'
+ *              }
+ *            ],
+ *            files: [
+ *              {
+ *                width: 640,
+ *                height: 360,
+ *                link: 'http://host.local/pathToSdMp4.mp4'
+ *              },
+ *              {
+ *                width: 1280,
+ *                height: 720,
+ *                link: 'http://host.local/pathToHdMp4.mp4'
+ *              }
+ *            ]
+ *          }
+ *        ],
+ *        cut: [
+ *          {
+ *            type: 'begin',
+ *            value: 0
+ *          },
+ *          {
+ *            type: 'end',
+ *            value: 1000
+ *          }
+ *        ]
+ *      };
  *
- * angular.element(test).on('playing', function(event){
- *   console.log('playing');
- * });
+ *      var playerElement = angular.element(document.querySelector('#player-id'));
+ *      playerElement.on('ready', function(event){
+ *        console.log('ready');
+ *        var playerController = playerElement.controller('oplPlayer');
  *
- * angular.element(test).on('durationChange', function(event, duration){
- *   console.log('durationChange with new duration = ' + duration);
- * });
+ *        // Selects a new display template ('split_2')
+ *        playerController.selectTemplate('split_2');
  *
- * angular.element(test).on('play', function(event){
- *   console.log('play');
- * });
+ *        // Starts / Pauses the player
+ *        playerController.playPause();
  *
- * angular.element(test).on('pause', function(event){
- *   console.log('pause');
- * });
+ *        // Sets volume to 10%
+ *        playerController.setVolume(10);
  *
- * angular.element(test).on('loadProgress', function(event, percents){
- *   console.log('loadProgress');
- *   console.log('Buffering start = ' + percents.loadedStart);
- *   console.log('Buffering end = ' + percents.loadedPercent);
- * });
+ *        // Seeks media to time 20s
+ *        playerController.setTime(20000);
  *
- * angular.element(test).on('playProgress', function(event, data){
- *   console.log('playProgress');
- *   console.log('Current time = ' + data.time + 'ms');
- *   console.log('Played percent = ' + data.percent);
- * });
+ *        // Changes media source
+ *        playerController.setSource(1);
+ *      });
  *
- * angular.element(test).on('end', function(event){
- *   console.log('end');
- * });
+ *      playerElement.on('waiting', function(event){
+ *        console.log('waiting');
+ *      });
  *
- * angular.element(test).on('error', function(event, error){
- *   console.log(error.message);
- *   console.log(error.code);
- * });
+ *      playerElement.on('playing', function(event){
+ *        console.log('playing');
+ *      });
  *
- * angular.element(test).on('needPoiConversion', function(event, duration){
- *   console.log('needPoiConversion');
- *   console.log('Video duration = ' + duration + 'ms');
- * });
+ *      playerElement.on('durationChange', function(event, duration){
+ *        console.log('durationChange with new duration = ' + duration);
+ *      });
  *
- * Controlling the player:
- * You can control the player with some basic actions
- * - **selectMode**: Select the display mode (can be 'media', 'both', 'both-presentation' or 'presentation')
- * - **playPause**: Start / stop the media
- * - **setVolume**: Change player's volume
- * - **setTime**: Seek media to a specific time
- * - **setDefinition**: Sets player definition
- * - **setSource**: Sets player source if multi-sources
+ *      playerElement.on('play', function(event){
+ *        console.log('play');
+ *      });
  *
- * e.g.
- * <opl-player ... id="myPlayer"></opl-player>
- * var myPlayer = document.getElementById('myPlayer');
+ *      playerElement.on('pause', function(event){
+ *        console.log('pause');
+ *      });
  *
- * angular.element(myPlayer).on('ready', function(event){
- *  console.log('ready');
- *  var playerController = angular.element(myPlayer).controller('oplPlayer');
+ *      playerElement.on('loadProgress', function(event, percents){
+ *        console.log('loadProgress');
+ *        console.log('Buffering start = ' + percents.loadedStart);
+ *        console.log('Buffering end = ' + percents.loadedPercent);
+ *      });
  *
- *  // Selects a new display mode ('media')
- *  playerController.selectMode('media');
+ *      playerElement.on('playProgress', function(event, data){
+ *        console.log('playProgress');
+ *        console.log('Current time = ' + data.time + 'ms');
+ *        console.log('Played percent = ' + data.percent);
+ *      });
  *
- *  // Starts / Pauses the player
- *  playerController.playPause();
+ *      playerElement.on('end', function(event){
+ *        console.log('end');
+ *      });
  *
- *  // Sets volume to 10%
- *  playerController.setVolume(10);
+ *      playerElement.on('error', function(event, error){
+ *        console.log(error.message);
+ *        console.log(error.code);
+ *      });
  *
- *  // Seeks media to time 20s
- *  playerController.setTime(20000);
+ *      playerElement.on('needPoiConversion', function(event, duration){
+ *        console.log('needPoiConversion');
+ *        console.log('Video duration = ' + duration + 'ms');
+ *      });
  *
- *  // Changes media source
- *  playerController.setSource(1);
- *
- * });
+ *      <opl-player
+ *                  id="player-id"
+ *                  opl-data="data"
+ *                  opl-fullscreen-icon="true"
+ *                  opl-volume-icon="true"
+ *                  opl-mode="split_50_50"
+ *                  opl-mode-icon="true"
+ *                  opl-settings-icon="true"
+ *                  opl-time="true"
+ *                  opl-full-viewport="false"
+ *                  opl-language="en"
+ *                  opl-player-type="html"
+ *                  opl-auto-play="false"
+ *                  opl-remember-position="false"
+ *                  opl-hide-chapters-tab="false"
+ *                  opl-hide-tags-tab="false"
+ *                  opl-disable-cut="false"
+ *      ></opl-player>
  *
  * @class oplPlayer
  */
@@ -281,7 +290,6 @@
       oplMode: '@?',
       oplModeIcon: '@?',
       oplSettingsIcon: '@?',
-      oplMediaSourcesIcon: '@?',
       oplTime: '@?',
       oplFullViewport: '@?',
       oplLanguage: '@?',

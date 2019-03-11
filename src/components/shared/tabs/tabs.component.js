@@ -10,15 +10,23 @@
  *
  * opl-tabs element does not have any attributes.
  *
- * e.g.
- * <opl-tabs>
- *  <opl-view opl-title="Tab 1 title" opl-view="view-1" opl-view-id="view1">
- *    Content of the first view
- *  </opl-view>
- *  <opl-view opl-title="Tab 2 title" opl-view="view-2" opl-view-id="view2">
- *    Content of the second view
- *  </opl-view>
- * </opl-tabs>
+ * Attributes are:
+ * - [String] **opl-no-tabs** "true" to hide tabs (without hiding the view)
+ * - [Function] **opl-on-select** The function to call when a view is actioned
+ *
+ * @example
+ *      var handleOnSelect = function() {
+ *        console.log('Button actioned');
+ *      };
+ *
+ *      <opl-tabs opl-on-select="handleOnSelect" opl-no-tabs="false">
+ *        <opl-view opl-label="Tab 1" opl-view-id="view1">
+ *          Content of the first view
+ *        </opl-view>
+ *        <opl-view opl-label="Tab 2" opl-view-id="view2">
+ *          Content of the second view
+ *        </opl-view>
+ *      </opl-tabs>
  *
  * @class oplTabs
  */
@@ -28,7 +36,10 @@
     templateUrl: 'opl-tabs.html',
     controller: 'OplTabsController',
     transclude: true,
-    bindings: {}
+    bindings: {
+      oplNoTabs: '@?',
+      oplOnSelect: '&'
+    }
   });
 
 })(angular.module('ov.player'));

@@ -6,50 +6,55 @@
 
 (function(angular, app) {
 
-  // Available display modes
-  // Display mode tells how presentation and media are structured
-  //  - "media" mode: Only the media is displayed
-  //  - "both" mode: Both media and presentation are displayed (50/50)
-  //  - "both-presentation" mode: Both media and presentation
-  //    are displayed with more interest on the presentation (25/75)
-  //  - "presentation" mode: Only the presentation is displayed
-  var modes = ['media', 'both', 'both-presentation', 'presentation'];
-
   /**
    * Manages oplPlayer component.
    *
    * @param {Object} $injector AngularJS $injector service
    * @param {Object} $document AngularJS document JQLite element
-   * @param {Object} $sce AngularJS $sce service
    * @param {Object} $filter AngularJS $filter service
    * @param {Object} $timeout AngularJS $timeout service
    * @param {Object} $cookies AngularJS $cookies service
    * @param {Object} $scope The component isolated scope
    * @param {Object} $element The HTML element holding the component
+   * @param {Object} $q The AngularJS $q service
    * @param {Function} OplPlayerService The PlayerService constructor to manage a media in a playing context
    * @param {Object} oplI18nService The service to manage languages
    * @param {Object} oplPlayerErrors The player errors
    * @class OplPlayerController
    * @constructor
    */
-  function OplPlayerController($injector, $document, $sce, $filter, $timeout, $cookies, $scope, $element,
+  function OplPlayerController($injector, $document, $filter, $timeout, $cookies, $scope, $element, $q,
                                 OplPlayerService, oplI18nService, oplPlayerErrors) {
     var ctrl = this;
     var document = $document[0];
-    var element = $element[0];
     var rootElement = $element.children()[0];
+    var autoPlayActivated = false;
+    var positionRemembered = false;
+    var mediaData = null;
+    var mediaWrapperElement;
+    var lightControlsElement;
+    var previewElement;
     var lastTime;
-    var fullscreen;
-    var hideSettingsTimeoutPromise;
-    var timeBar;
-    var volumeBar;
-    var volumeBarRect;
-    var volumeBarHeight;
-    var timeBarRect;
-    var timeBarWidth;
+    var playerAnimationTimer;
+    var lightControlsAnimationTimer;
+    var fullscreenEnabled;
     var playerService;
     var playRequested;
-    var oplTabsController;
+    var timeBarController;
+    var lightTimeBarController;
+    var tabsController;
+    var TEMPLATES;
+
+    $scope.volumeIconDisplayed = true;
+    $scope.timeDisplayed = true;
+    $scope.indexesTabDisplayed = false;
+    $scope.chaptersTabDisplayed = false;
+    $scope.tagsTabDisplayed = false;
+    $scope.mediaTemplate = null;
+    $scope.settingsIconDisplayed = true;
+    $scope.fullViewportActivated = false;
+    $scope.templateSelectorDisplayed = true;
+    $scope.fullscreenIconDisplayed = true;
 
     /**
      * Tests if browser implements the fullscreen API or not.
@@ -70,6 +75,20 @@
      */
     function isTouchDevice() {
       return true == ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch);
+    }
+
+    /**
+     * Tests if a component attribute is true.
+     *
+     * Some attributes are strings and must be interpreted as booleans.
+     *
+     * @param {String} attribute The name of the attribute to test
+     * @param {Boolean} defaultValue Attribute default value if undefined (true or false)
+     * @return {Boolean} true if attribute is true, false otherwise
+     */
+    function isAttributeTrue(attribute, defaultValue) {
+      if (typeof ctrl[attribute] === 'undefined') return defaultValue;
+      return JSON.parse(ctrl[attribute]);
     }
 
     /**
@@ -95,101 +114,226 @@
     }
 
     /**
-     * Gets closest timecode, from the list of timecodes, to the given time.
+     * Gets oplTiles component controller corresponding to the given view.
      *
-     * @param {Number} time The time to look for in milliseconds
-     * @return {Number} The actual timecode for the given time
+     * @param {String} viewId The id of the view containing the oplTiles component
+     * @return {Object} The oplTiles component controller
      */
-    function findTimecode(time) {
-      if (ctrl.timecodes.length) {
-        if (time < ctrl.timecodes[0].timecode) return null;
+    function getTilesController(viewId) {
+      var oplTilesElement;
 
-        for (var i = 0; i < ctrl.timecodes.length; i++) {
-          if (time >= ctrl.timecodes[i].timecode &&
-              (ctrl.timecodes[i + 1] &&
-               time < ctrl.timecodes[i + 1].timecode))
-            return ctrl.timecodes[i].timecode;
-        }
+      if (viewId === 'chapters')
+        oplTilesElement = $element[0].querySelector('.opl-chapters-view opl-tiles');
+      else if (viewId === 'timecodes')
+        oplTilesElement = $element[0].querySelector('.opl-timecodes-view opl-tiles');
+      else if (viewId === 'tags')
+        oplTilesElement = $element[0].querySelector('.opl-tags-view opl-tiles');
 
-        return ctrl.timecodes[ctrl.timecodes.length - 1].timecode;
-      }
-
-      return 0;
+      return angular.element(oplTilesElement).controller('oplTiles');
     }
 
     /**
-     * Handles mouse move events on volume bar area to update the volume preview accordingly.
+     * Animates the masking of the player.
      *
-     * @param {MouseEvent} event The dispatched event
+     * @return {Promise} Promise resolving when animation is finished
      */
-    function volumeMouseMove(event) {
-      safeApply(function() {
-        ctrl.volumePreview = Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100);
+    function animatePlayerMasking() {
+      if (playerAnimationTimer) return $q.when();
+      var deferred = $q.defer();
+
+      mediaWrapperElement.addClass('opl-masking');
+
+      // An animation is associated to the "opl-masking" class, wait for it to finish
+      // Delay corresponds to the animation duration
+      playerAnimationTimer = $timeout(function() {
+        playerAnimationTimer = null;
+        mediaWrapperElement.addClass('opl-masked');
+        mediaWrapperElement.removeClass('opl-masking');
+        deferred.resolve();
+      }, 225);
+
+      return deferred.promise;
+    }
+
+    /**
+     * Animates the posting of the player.
+     *
+     * @return {Promise} Promise resolving when animation is finished
+     */
+    function animatePlayerPosting() {
+      if (playerAnimationTimer) return $q.when();
+      var deferred = $q.defer();
+
+      mediaWrapperElement.removeClass('opl-masked');
+      mediaWrapperElement.addClass('opl-posting');
+
+      // An animation is associated to the "opl-posting" class, wait for it to finish
+      // Delay corresponds to the animation duration
+      playerAnimationTimer = $timeout(function() {
+        playerAnimationTimer = null;
+        mediaWrapperElement.removeClass('opl-posting');
+        deferred.resolve();
+      }, 525);
+
+      return deferred.promise;
+    }
+
+    /**
+     * Animates the masking of light controls.
+     *
+     * @return {Promise} Promise resolving when animation is finished
+     */
+    function animateLightControlsMasking() {
+      if (lightControlsAnimationTimer) return $q.when();
+      var deferred = $q.defer();
+
+      lightControlsElement.removeClass('opl-light-controls-posted');
+      lightControlsElement.addClass('opl-light-controls-masking');
+
+      // An animation is associated to the "opl-light-controls-masking" class, wait for it to finish
+      // Delay corresponds to the animation duration
+      lightControlsAnimationTimer = $timeout(function() {
+        lightControlsAnimationTimer = null;
+        lightControlsElement.removeClass('opl-light-controls-masking');
+        deferred.resolve();
+      }, 150);
+
+      return deferred.promise;
+    }
+
+    /**
+     * Animates the posting of light controls.
+     *
+     * @return {Promise} Promise resolving when animation is finished
+     */
+    function animateLightControlsPosting() {
+      if (lightControlsAnimationTimer) return $q.when();
+      var deferred = $q.defer();
+
+      lightControlsElement.addClass('opl-light-controls-posting');
+
+      // An animation is associated to the "opl-light-controls-posting" class, wait for it to finish
+      // Delay corresponds to the animation duration
+      lightControlsAnimationTimer = $timeout(function() {
+        lightControlsAnimationTimer = null;
+        lightControlsElement.addClass('opl-light-controls-posted');
+        lightControlsElement.removeClass('opl-light-controls-posting');
+        deferred.resolve();
+      }, 150);
+
+      return deferred.promise;
+    }
+
+    /**
+     * Hides the player.
+     *
+     * Player is masked with an animation.
+     *
+     * @return {Promise} Promise resolving when the player is masked
+     */
+    function maskPlayer() {
+      if (mediaWrapperElement.hasClass('opl-masked')) return $q.when();
+      var deferred = $q.defer();
+
+      requestAnimationFrame(function() {
+        animatePlayerMasking().then(function() {
+          deferred.resolve();
+        }).catch(function(reason) {
+          deferred.reject(reason);
+        });
       });
+
+      return deferred.promise;
     }
 
     /**
-     * Handles mouse out events on volume bar area to reset volume preview and clear event listeners.
-     */
-    function volumeMouseOut() {
-      $document.off('mousemove', volumeMouseMove);
-      angular.element(volumeBar).off('mouseout', volumeMouseOut);
-
-      safeApply(function() {
-        ctrl.volumePreview = 0;
-      });
-    }
-
-    /**
-     * Handles mouse move events on time bar area to update the time / presentation preview accordingly.
+     * Displays the player.
      *
-     * @param {MouseEvent} event The dispatched event
-     */
-    function timeMouseMove(event) {
-      var timecode = findTimecode(
-        ((event.pageX - timeBarRect.left) / timeBarWidth) * ctrl.duration + playerService.getRealCutStart()
-      );
-
-      safeApply(function() {
-        if (timecode !== null && ctrl.timecodesByTime[timecode])
-          ctrl.timePreview = ctrl.timecodesByTime[timecode].image.large;
-        else ctrl.timePreview = null;
-
-        ctrl.timePreviewPosition = ((event.pageX - timeBarRect.left) / timeBarWidth) * 100;
-      });
-    }
-
-    /**
-     * Handles mouse out events on time bar area to reset the time preview and clear the event listeners.
-     */
-    function timeMouseOut() {
-      $document.off('mousemove', timeMouseMove);
-      angular.element(timeBar).off('mouseout', timeMouseOut);
-
-      safeApply(function() {
-        ctrl.timePreviewPosition = 0;
-        ctrl.timePreviewOpened = false;
-      });
-    }
-
-    /**
-     * Hides timecodes.
+     * Player is posted with an animation.
+     * It is not possible to post player if masking animation is still on.
      *
-     * Hide the index tab, the display mode selector and set display mode to "media" (only player is visible).
+     * @return {Promise} Promise resolving when the player is posted
      */
-    function hideTimecodes() {
-      ctrl.indexesTabDisplayed = false;
-      ctrl.selectedMode = modes[0];
+    function postPlayer() {
+      if (!mediaWrapperElement.hasClass('opl-masking') && !mediaWrapperElement.hasClass('opl-masked'))
+        return $q.when();
+
+      var deferred = $q.defer();
+
+      requestAnimationFrame(function() {
+        animatePlayerPosting().then(function() {
+          deferred.resolve();
+        }).catch(function(reason) {
+          deferred.reject(reason);
+        });
+      });
+
+      return deferred.promise;
     }
 
     /**
-     * Displays timecodes.
+     * Hides light controls.
      *
-     * Display the index tab, the display mode selector and set display mode to "both" (both player and presentation)
+     * Light controls are masked with an animation.
+     * It is not possible to mask light controls if posting animation is still on.
+     *
+     * @return {Promise} Promise resolving when light controls are masked
      */
-    function displayTimecodes() {
-      ctrl.indexesTabDisplayed = true;
-      ctrl.selectedMode = ctrl.oplMode && modes.indexOf(ctrl.oplMode) > -1 ? ctrl.oplMode : modes[1];
+    function maskLightControls() {
+      if (!lightControlsElement.hasClass('opl-light-controls-posting') &&
+          !lightControlsElement.hasClass('opl-light-controls-posted'))
+        return $q.when();
+      var deferred = $q.defer();
+
+      requestAnimationFrame(function() {
+        animateLightControlsMasking().then(function() {
+          deferred.resolve();
+        }).catch(function(reason) {
+          deferred.reject(reason);
+        });
+      });
+
+      return deferred.promise;
+    }
+
+    /**
+     * Displays light controls.
+     *
+     * Light controls are posted with an animation.
+     *
+     * @return {Promise} Promise resolving when controls are posted
+     */
+    function postLightControls() {
+      if (lightControlsElement.hasClass('opl-light-controls-posted')) return $q.when();
+
+      var deferred = $q.defer();
+
+      requestAnimationFrame(function() {
+        animateLightControlsPosting().then(function() {
+          deferred.resolve();
+        }).catch(function(reason) {
+          deferred.reject(reason);
+        });
+      });
+
+      return deferred.promise;
+    }
+
+    /**
+     * Updates tabs.
+     *
+     * Each tabs can be displayed or not depending on the available points of interest and component attributes.
+     */
+    function updateTabs() {
+      $scope.indexesTabDisplayed = ctrl.timecodes.length ? true : false;
+      $scope.chaptersTabDisplayed = ctrl.chapters.length && !isAttributeTrue('oplHideChaptersTab', false);
+      $scope.tagsTabDisplayed = ctrl.tags.length && !isAttributeTrue('oplHideTagsTab', false);
+
+      // If only 1 kind of points of interest, then hide the tabs bar
+      // If no points of interest at all, hide the points of interest bar
+      var totalTypes = $scope.chaptersTabDisplayed + $scope.tagsTabDisplayed + $scope.indexesTabDisplayed;
+      $scope.tabsHidden = (totalTypes === 1 || totalTypes === 0);
+      $scope.hidePoi = (totalTypes === 0);
     }
 
     /**
@@ -209,83 +353,104 @@
       // Makes sure "mediaId" and "sources" properties are arrays
       if (data.mediaId && !Array.isArray(data.mediaId)) data.mediaId = [data.mediaId];
       if (data.sources && !Array.isArray(data.sources)) data.sources = [data.sources];
+
     }
 
     /**
-     * Initializes the points of interest (e.g. chapters, tags).
-     */
-    function initPointsOfInterest(disableCut) {
-      if (disableCut === true) {
-        ctrl.chapters = ctrl.data.chapters || [];
-        ctrl.tags = ctrl.data.tags || [];
-      } else {
-        ctrl.chapters = playerService.getMediaPointsOfInterest('chapters') || [];
-        ctrl.tags = playerService.getMediaPointsOfInterest('tags') || [];
-      }
-    }
-
-    /**
-     * Initializes the list of timecodes.
+     * Prepares points of interest.
      *
-     * Display the index tab only if there is at least one timecode.
-     * Also prepare a copy of the list of timecodes ordered by time to avoid parsing it systematically.
+     * @param {Array} pointsOfInterest The list of points of interest as defined in component opl-data attribute
+     * @return {Array} The prepared list of points of interest with for each point of interest:
+     *   - **id** A generated unique id
+     *   - **type** The type of the point of interest, either "image" or "text"
+     *   - **time** The time the point of interest is associated to (in milliseconds)
+     *   - **abstract** Property used by the oplTiles and oplTile components to switch between small tiles and enlarged
+     *     tiles
+     *   - Only for points of interest of type "image":
+     *     - **image** The small and large images with:
+     *       - **small** Small image URL
+     *       - **large** Large image URL
+     *   - Only for points of interest of type "text":
+     *     - **title** A title
+     *     - **description** A description which may contain HTML tags
+     *     - **file** An attached file with:
+     *       - **url** The file URL
+     *       - **originalName** The file original name to use when downloading
      */
-    function initTimecodes(disableCut) {
-      var timecode;
+    function preparePointsOfInterest(pointsOfInterest) {
+      var preparedPointsOfInterest = [];
 
-      if (disableCut === true) {
-        ctrl.timecodes = ctrl.data.timecodes || [];
-        ctrl.timecodesByTime = {};
-
-        for (var i = 0; i < ctrl.timecodes.length; i++) {
-          timecode = ctrl.timecodes[i];
-          ctrl.timecodesByTime[timecode.timecode] = {image: timecode.image};
+      if (pointsOfInterest) {
+        for (var i = 0; i < pointsOfInterest.length; i++) {
+          var pointOfInterest = pointsOfInterest[i];
+          var value = pointOfInterest.hasOwnProperty('timecode') ? pointOfInterest.timecode : pointOfInterest.value;
+          preparedPointsOfInterest.push(
+            {
+              id: i,
+              type: pointOfInterest.hasOwnProperty('image') ? 'image' : 'text',
+              title: pointOfInterest.name,
+              time: value,
+              description: pointOfInterest.description,
+              image: pointOfInterest.image,
+              file: pointOfInterest.file,
+              abstract: true
+            }
+          );
         }
-      } else {
-        ctrl.timecodes = playerService.getMediaTimecodes() || [];
-        ctrl.timecodesByTime = playerService.getMediaTimecodesByTime() || {};
       }
 
-      // Got timecodes associated to the media
+      return preparedPointsOfInterest;
+    }
+
+    /**
+     * Initializes the points of interest (e.g. indexes, chapters, tags).
+     *
+     * Prepares points of interest for oplTiles components and show / hide tabs.
+     */
+    function initPointsOfInterest() {
+      if (!playerService) return;
+
+      ctrl.chapters = preparePointsOfInterest(playerService.getMediaPointsOfInterest('chapters'));
+      ctrl.tags = preparePointsOfInterest(playerService.getMediaPointsOfInterest('tags'));
+      ctrl.timecodes = preparePointsOfInterest(playerService.getMediaPointsOfInterest('timecodes'));
+
       if (ctrl.timecodes.length) {
 
-        // Use the first image of the first timecode as the current presentation image
-        timecode = findTimecode(ctrl.time);
-        ctrl.timePreview = timecode !== null ? ctrl.timecodesByTime[timecode].image.large : null;
-        ctrl.presentation = timecode !== null ? ctrl.timecodesByTime[timecode].image.large : null;
-
-        displayTimecodes();
-      } else {
-
-        // No timecodes
-        hideTimecodes();
+        // Got timecodes associated to the media
+        // Use the first image of the first index as the area 2 content
+        var pointOfInterest = playerService.findPointOfInterest('timecodes', ctrl.time);
+        ctrl.area2ImageUrl = pointOfInterest ? pointOfInterest.image.large : null;
 
       }
+
+      updateTabs();
     }
 
     /**
-     * Initializes the player.
+     * Creates a video player.
+     *
+     * Creates an instance of Player depending on the video provider (Youtube, Vimeo, HTML etc.).
      */
-    function initPlayer() {
-      if (ctrl.data.mediaId && ctrl.data.mediaId.length) {
+    function createPlayer() {
+      if (mediaData.mediaId && mediaData.mediaId.length) {
         var playerType = ctrl.oplPlayerType || 'html';
         var playerId = 'player_' + new Date().getUTCMilliseconds();
-        ctrl.mediaTemplate = 'opl-' + playerType + '.html';
-        ctrl.data.language = ctrl.language;
+        $scope.mediaTemplate = 'opl-' + playerType + '.html';
+        mediaData.language = ctrl.language;
 
         // Get an instance of a player depending on player's type
         switch (playerType.toLowerCase()) {
           case 'youtube':
             var OplYoutubePlayer = $injector.get('OplYoutubePlayer');
-            ctrl.player = new OplYoutubePlayer($element, ctrl.data, playerId);
+            ctrl.player = new OplYoutubePlayer($element, mediaData, playerId);
             break;
           case 'vimeo':
             var OplVimeoPlayer = $injector.get('OplVimeoPlayer');
-            ctrl.player = new OplVimeoPlayer($element, ctrl.data, playerId);
+            ctrl.player = new OplVimeoPlayer($element, mediaData, playerId);
             break;
           case 'html':
             var OplHTMLPlayer = $injector.get('OplHtmlPlayer');
-            ctrl.player = new OplHTMLPlayer($element, ctrl.data, playerId);
+            ctrl.player = new OplHTMLPlayer($element, mediaData, playerId);
             break;
           default:
             throw new Error('Player ' + playerType + ' is not supported');
@@ -294,61 +459,133 @@
     }
 
     /**
-     * Updates player attributes.
-     *
-     * Some attributes may change regarding on actual player data.
+     * Shows / hides icons.
      */
-    function updateAttributes() {
-      if (!ctrl.player)
-        return;
+    function updateIcons() {
+      if (!ctrl.player) return;
 
       // Icon to change player definition
       // If no definitions available, the icon is not displayed
-      ctrl.settingsIconDisplayed = (ctrl.player.getAvailableDefinitions()) ? ctrl.settingsIconDisplayed : false;
+      var mediaDefinitions = (ctrl.player && ctrl.player.getAvailableDefinitions()) || null;
+      $scope.settingsIconDisplayed = mediaDefinitions ? $scope.settingsIconDisplayed : false;
 
       // Media volume can't be changed on touch devices
       // Hide volume icon
-      if (isTouchDevice())
-        ctrl.volumeIconDisplayed = false;
+      $scope.volumeIconDisplayed = $scope.volumeIconDisplayed && !isTouchDevice();
 
-      // Full viewport and no fullScreen API available
-      // Consider the player as in fullscreen
-      if (ctrl.fullViewportActivated && !implementFullScreenAPI()) {
-        ctrl.fullscreenButton = 'reduce';
-        fullscreen = true;
-      }
-
-      // Full viewport is requested and no fullscreen API is available
-      // It should not be possible to reduce / enlarge player
-      // Hide fullscreen icon
-      if (ctrl.fullViewportActivated && !implementFullScreenAPI())
-        ctrl.fullscreenIconDisplayed = false;
-
-      // Mode icon is available only if there are timecodes
-      var modeIconDisplayed = (typeof ctrl.oplModeIcon === 'undefined') ? true : JSON.parse(ctrl.oplModeIcon);
-      ctrl.modeIconDisplayed =
-        (ctrl.indexesTabDisplayed && typeof ctrl.oplModeIcon === 'undefined') ||
-        (ctrl.indexesTabDisplayed && modeIconDisplayed);
-
-      // Set player language
-      oplI18nService.setLanguage(ctrl.oplLanguage);
+      // Template selector icon is available only if there are indexes
+      $scope.templateSelectorDisplayed = isAttributeTrue('oplModeIcon', true) && $scope.indexesTabDisplayed;
     }
 
     /**
-     * Initializes isolated scope properties and player.
+     * Updates the index preview.
      *
-     * @param {Boolean} isNew true if this is the first player initialization, false otherwise
+     * @param {Number} time The new time of the previewed index (in milliseconds)
+     * @param {Number} xPosition The position of the time on the x-axis relative to the time bar
      */
-    function init(isNew) {
+    function updatePreview(time, xPosition) {
+      if (!ctrl.timecodes.length) return;
+
+      var index = playerService.findPointOfInterest('timecodes', time);
+      $scope.previewTime = time;
+      $scope.previewUrl = index.image && index.image.small;
+
+      previewElement.attr('style', 'transform: translateX(' + (xPosition - 148 / 2) + 'px);');
+    }
+
+    /**
+     * Prepares the list of sources for the oplSettings component.
+     *
+     * @param {Array} sources The list of source ids
+     * @return {Array} The list of sources with for each source its id and its label
+     */
+    function prepareSources(sources) {
+      var preparedSources = [];
+
+      for (var i = 0; i < sources.length; i++) {
+        preparedSources.push({
+          id: sources[i],
+          label: $filter('oplTranslate')('CONTROLS_SETTINGS_SOURCE_LABEL', {'%source%': i})
+        });
+      }
+
+      return preparedSources;
+    }
+
+    /**
+     * Prepares the list of qualities for the oplSettings component.
+     *
+     * @param {Array} qualities The list of qualities with for each quality, the quality height (property "height")
+     * @return {Array} The list of qualities with for each quality:
+     *   - **id** The quality id
+     *   - **label** The quality label
+     *   - **hd** true if the quality is HD (>= 720p), false otherwise
+     */
+    function prepareQualities(qualities) {
+      var preparedQualities = [];
+
+      for (var i = 0; i < qualities.length; i++) {
+        preparedQualities.push({
+          id: String(qualities[i].height),
+          label: qualities[i].height + 'p',
+          hd: qualities[i].height >= 720
+        });
+      }
+      return preparedQualities;
+    }
+
+    /**
+     * Resets the component.
+     *
+     * Prepares data, set media to the player service, creates a player if not already created, set player media, set
+     * default values for component properties.
+     */
+    function reset() {
       if (!playerService) return;
 
-      ctrl.data = angular.copy(ctrl.oplData) || {};
-      prepareData(ctrl.data);
-      playerService.setMedia(ctrl.data);
+      var newPlayerInstantiated = false;
+      mediaData = angular.copy(ctrl.oplData) || {};
+      prepareData(mediaData);
+      playerService.setMedia(mediaData);
+
+      if (!ctrl.player) {
+
+        // Instantiate a new player
+        newPlayerInstantiated = true;
+        createPlayer();
+
+      } else {
+
+        // Player is already instantiated
+        // Just update its data
+        ctrl.player.setMedia(mediaData);
+
+      }
+
+      if (!ctrl.player) return;
+
+      ctrl.timecodes = [];
+      ctrl.chapters = [];
+      ctrl.tags = [];
+      ctrl.area2ImageUrl = null;
+      ctrl.playerId = ctrl.player.getId();
+      ctrl.selectedTemplate = TEMPLATES.FULL_1;
+      ctrl.playing = false;
+      ctrl.fullscreenEnabled = false;
+      ctrl.loading = true;
+      ctrl.initializing = true;
+      ctrl.error = null;
+      ctrl.volume = 100;
+      ctrl.loadedStart = 0;
+      ctrl.loadedPercent = 0;
+      ctrl.seenPercent = 0;
+      ctrl.time = 0;
+      ctrl.duration = 0;
+      $scope.lightVolume = 100;
 
       // Retrieve last stopped time
-      if (ctrl.positionRemembered) {
-        var cookie = $cookies.getObject('videoStopped_' + ctrl.data.mediaId);
+      if (positionRemembered) {
+        var cookie = $cookies.getObject('videoStopped_' + mediaData.mediaId);
         if (cookie) {
           ctrl.seenPercent = cookie.percent;
           ctrl.time = cookie.time;
@@ -356,171 +593,41 @@
         }
       }
 
-      if (isNew) {
-
-        // Player has never been initialized yet
-        // Create it
-        initPlayer();
-
-      } else if (ctrl.player) {
-
-        // Player is already initialized
-        // Just update its data
-        ctrl.player.setMedia(ctrl.data);
-
-      }
-
-      if (!ctrl.player)
-        return;
-
-      ctrl.isCut = ctrl.data.cut && ctrl.data.cut.length;
-      ctrl.timecodes = [];
-      ctrl.timecodesByTime = {};
-      ctrl.chapters = [];
-      ctrl.presentation = null;
-      ctrl.playerId = ctrl.player.getId();
-      ctrl.timePreviewOpened = false;
-      ctrl.volumeOpened = false;
-      ctrl.modesOpened = false;
-      ctrl.definitionOpened = false;
-      ctrl.selectMediaOpened = false;
-
-      ctrl.modes = angular.copy(modes);
-      ctrl.selectedMode = modes[1];
-      ctrl.playPauseButton = 'play';
-      ctrl.fullscreenButton = 'enlarge';
-      ctrl.volumePreview = 0;
-      ctrl.volume = 100;
-      ctrl.loadedStart = 0;
-      ctrl.loadedPercent = 0;
-      ctrl.seenPercent = 0;
-      ctrl.time = 0;
-
-      ctrl.duration = 0;
-      ctrl.timePreviewPosition = 0;
-      ctrl.indexesTabDisplayed = false;
-      ctrl.chaptersTabDisplayed = false;
-      ctrl.tagsTabDisplayed = false;
+      // Real media duration is required to be able to display points of interest
+      // Thus we have to wait for the media duration returned by the player
 
       // Get available definitions for selected source: if null, definitions are managed by the player or player does
       // not support definitions
       ctrl.mediaDefinitions = ctrl.player.getAvailableDefinitions();
-      ctrl.selectedDefinition = ctrl.mediaDefinitions &&
-        ctrl.mediaDefinitions[0] || null;
 
-      // Get source url (only Vimeo player uses this)
+      // Get source URL (only Vimeo player uses this)
       ctrl.sourceUrl = ctrl.player.getSourceUrl();
-      ctrl.loading = true;
-      ctrl.initializing = true;
-      ctrl.error = null;
 
-      // Real media duration is required to be able to display either the list of chapters or the list of timecodes
-      // Thus we wait for the duration to handle timecodes, chapters and tags
-      hideTimecodes();
-      ctrl.chaptersTabDisplayed = false;
-      ctrl.tagsTabDisplayed = false;
-      updateAttributes();
+      ctrl.mediaSources = prepareSources(mediaData.mediaId);
+      ctrl.mediaQualities = prepareQualities(ctrl.mediaDefinitions);
 
-      if (!isNew) {
+      ctrl.selectedSource = ctrl.mediaSources[ctrl.player.getSourceIndex()].id;
+      ctrl.selectedDefinition = ctrl.mediaDefinitions && ctrl.mediaDefinitions[0] || null;
+
+      updateTabs();
+      updateIcons();
+
+      // Full viewport and no fullScreen API available
+      // Consider the player as in fullscreen
+      if ($scope.fullViewportActivated && !implementFullScreenAPI()) {
+        ctrl.fullscreenEnabled = true;
+        fullscreenEnabled = true;
+      }
+
+      oplI18nService.setLanguage(ctrl.language);
+
+      if (!newPlayerInstantiated) {
 
         // Player existed before init
         // Load the new media with the new selected source
         lastTime = 0;
         ctrl.player.load();
 
-      }
-    }
-
-    /**
-     * Hides all opened settings menu with a timeout.
-     */
-    function hideSettingsWithTimeout() {
-      if (hideSettingsTimeoutPromise)
-        $timeout.cancel(hideSettingsTimeoutPromise);
-
-      if (ctrl.modesOpened || ctrl.definitionOpened || ctrl.volumeOpened || ctrl.selectMediaOpened)
-        hideSettingsTimeoutPromise = $timeout(function() {
-          ctrl.modesOpened = ctrl.definitionOpened = ctrl.volumeOpened = ctrl.selectMediaOpened = false;
-        }, 3000);
-    }
-
-    /**
-     * Processes points of interest (depending of the cut) after their values have being converted from percents to
-     * milliseconds
-     *
-     * @param {Number} duration The duration of video
-     */
-    function processMediaTabs(duration) {
-      safeApply(function() {
-        var disableCut = ctrl.cutDisabled === true;
-
-        ctrl.startCutTime = disableCut ? 0 : playerService.getRealCutStart();
-        ctrl.duration = disableCut ? duration : playerService.getCutDuration();
-
-        // Init Timecode and POI with the real duration
-        initTimecodes(disableCut);
-        initPointsOfInterest(disableCut);
-        ctrl.setTime(lastTime);
-
-        // Change value of points of interest depending on the start offset
-        if (!disableCut) {
-          playerService.processPointsOfInterestTime(ctrl.chapters);
-          playerService.processPointsOfInterestTime(ctrl.tags);
-        }
-
-        if (
-            ctrl.chapters.length &&
-            (typeof ctrl.oplHideChaptersTab === 'undefined' || JSON.parse(ctrl.oplHideChaptersTab) === false)
-        ) {
-          ctrl.chaptersTabDisplayed = true;
-        } else
-          ctrl.chaptersTabDisplayed = false;
-
-        if (
-          ctrl.tags.length &&
-          (typeof ctrl.oplHideTagsTab === 'undefined' || JSON.parse(ctrl.oplHideTagsTab) === false)
-          ) {
-          ctrl.tagsTabDisplayed = true;
-        } else
-          ctrl.tagsTabDisplayed = false;
-
-        updateAttributes();
-
-        $element.triggerHandler('durationChange', ctrl.duration);
-      });
-
-      return false;
-    }
-
-    /**
-     * Handles mouse over events on volume bar area to be able to display a preview of the future volume level.
-     *
-     * @param {MouseEvent} event The dispatched event
-     */
-    function handleVolumeBarOver(event) {
-      volumeBarRect = volumeBar.getBoundingClientRect();
-      volumeBarHeight = volumeBarRect.bottom - volumeBarRect.top;
-      $document.on('mousemove', volumeMouseMove);
-      angular.element(volumeBar).on('mouseout', volumeMouseOut);
-    }
-
-    /**
-     * Handles mouse over events on time bar area to be able to display a time /presentation preview.
-     *
-     * @param {MouseEvent} event The dispatched event
-     */
-    function handleTimeBarOver(event) {
-      timeBarRect = timeBar.getBoundingClientRect();
-      timeBarWidth = timeBarRect.right - timeBarRect.left;
-
-      if (ctrl.timecodes && ctrl.timecodes.length) {
-        timeMouseMove(event);
-        $document.on('mousemove', timeMouseMove);
-        angular.element(timeBar).on('mouseout', timeMouseOut);
-
-        safeApply(function() {
-          ctrl.timePreviewOpened = true;
-        });
       }
     }
 
@@ -540,7 +647,7 @@
         ctrl.setTime(lastTime);
         $element.triggerHandler('ready');
 
-        if ((ctrl.autoPlayActivated || playRequested) && !ctrl.player.isPlaying()) {
+        if ((autoPlayActivated || playRequested) && !ctrl.player.isPlaying()) {
           playRequested = false;
           ctrl.playPause();
         }
@@ -573,7 +680,7 @@
 
       safeApply(function() {
         ctrl.loading = false;
-        ctrl.playPauseButton = 'pause';
+        ctrl.playing = true;
         $element.triggerHandler('playing');
       });
       return false;
@@ -589,14 +696,20 @@
       event.stopImmediatePropagation();
 
       safeApply(function() {
-        playerService.setRealMediaDuration(duration);
-      });
+        playerService.setRealDuration(duration);
+        ctrl.duration = playerService.getDuration();
 
-      if (ctrl.data.needPointsOfInterestUnitConversion === true) {
-        $element.triggerHandler('needPoiConversion', duration);
-      } else {
-        processMediaTabs(duration);
-      }
+        if (mediaData.needPointsOfInterestUnitConversion === true) {
+          $element.triggerHandler('needPoiConversion', duration);
+        } else {
+          ctrl.setTime(lastTime);
+          initPointsOfInterest();
+          ctrl.selectTemplate(ctrl.oplMode);
+          updateIcons();
+          timeBarController.reset();
+          $element.triggerHandler('durationChange', ctrl.duration);
+        }
+      });
     }
 
     /**
@@ -612,9 +725,10 @@
         ctrl.selectedDefinition = ctrl.selectedDefinition ||
                 (ctrl.mediaDefinitions && ctrl.mediaDefinitions[0]) ||
                 null;
-        updateAttributes();
+        ctrl.mediaQualities = prepareQualities(ctrl.mediaDefinitions);
+        updateIcons();
         ctrl.loading = false;
-        ctrl.playPauseButton = 'pause';
+        ctrl.playing = true;
         $element.triggerHandler('play');
       });
       return false;
@@ -629,7 +743,7 @@
       event.stopImmediatePropagation();
 
       safeApply(function() {
-        ctrl.playPauseButton = 'play';
+        ctrl.playing = false;
         $element.triggerHandler('pause');
       });
       return false;
@@ -647,8 +761,8 @@
       event.stopImmediatePropagation();
 
       safeApply(function() {
-        ctrl.loadedStart = playerService.getCutPercent(data.loadedStart);
-        ctrl.loadedPercent = playerService.getCutDurationPercent(data.loadedPercent);
+        ctrl.loadedStart = playerService.getTime(data.loadedStart);
+        ctrl.loadedPercent = playerService.getDurationPercent(data.loadedPercent);
         $element.triggerHandler('loadProgress', {
           loadedStart: ctrl.loadedStart,
           loadedPercent: ctrl.loadedPercent
@@ -669,44 +783,43 @@
       event.stopImmediatePropagation();
 
       // Unnecessary playProgress events are sometimes dispatched when initializing the media
-      if (ctrl.initializing)
-        return;
+      if (ctrl.initializing) return;
 
       ctrl.loading = false;
-      var timecode = findTimecode(data.time);
 
-      var updateTime = function() {
-        ctrl.time = (ctrl.cutDisabled === true) ? data.time : playerService.getCutTime(data.time);
-        ctrl.seenPercent = (ctrl.cutDisabled === true) ?
-                               ctrl.time / ctrl.duration * 100 :
-                               playerService.getCutPercent(data.percent);
+      if (ctrl.duration && playerService.getTime(data.time) >= playerService.getDuration()) {
 
-        ctrl.presentation = timecode !== null &&
-                ctrl.timecodesByTime[timecode] ? ctrl.timecodesByTime[timecode].image.large : null;
+        // Media virtual end reached
 
-        var timeObject = {
-          time: ctrl.time,
-          percent: ctrl.seenPercent
-        };
-        $element.triggerHandler('playProgress', timeObject);
-        var expireDate = new Date();
-        expireDate.setDate(expireDate.getDate() + 1);
-
-        if (ctrl.positionRemembered)
-          $cookies.putObject('videoStopped_' + ctrl.data.mediaId, timeObject, {expires: expireDate});
-      };
-
-      // Media virtual end reached
-      if (ctrl.cutDisabled !== true &&
-          ctrl.duration &&
-          playerService.getCutTime(data.time) > playerService.getCutDuration()) {
-        ctrl.player.setTime(playerService.getRealTime(0));
-        if (ctrl.positionRemembered)
-          $cookies.remove('videoStopped_' + ctrl.data.mediaId);
+        ctrl.setTime(0);
+        if (positionRemembered) $cookies.remove('videoStopped_' + mediaData.mediaId);
         lastTime = 0;
         ctrl.player.playPause();
-      } else
-        safeApply(updateTime);
+
+        $element.triggerHandler('end');
+      } else {
+
+        // Media is still progressing
+
+        safeApply(function() {
+          ctrl.time = playerService.getTime(data.time);
+          ctrl.seenPercent = playerService.getPercent(data.time);
+
+          var pointOfInterest = playerService.findPointOfInterest('timecodes', ctrl.time);
+          ctrl.area2ImageUrl = pointOfInterest ? pointOfInterest.image.large : null;
+
+          var timeObject = {
+            time: ctrl.time,
+            percent: ctrl.seenPercent
+          };
+          $element.triggerHandler('playProgress', timeObject);
+          var expireDate = new Date();
+          expireDate.setDate(expireDate.getDate() + 1);
+
+          if (positionRemembered)
+            $cookies.putObject('videoStopped_' + mediaData.mediaId, timeObject, {expires: expireDate});
+        });
+      }
 
       return false;
     }
@@ -718,22 +831,19 @@
      */
     function handlePlayerEnd(event) {
       event.stopImmediatePropagation();
-
       safeApply(function() {
-        if (ctrl.positionRemembered)
-          $cookies.remove('videoStopped_' + ctrl.data.mediaId);
+        if (positionRemembered) $cookies.remove('videoStopped_' + mediaData.mediaId);
+
         ctrl.time = ctrl.seenPercent = 0;
         lastTime = 0;
-        ctrl.playPauseButton = 'play';
+        ctrl.playing = false;
 
-        var timecode = findTimecode(ctrl.time);
-        if (timecode !== null && ctrl.timecodes.length)
-          ctrl.presentation = ctrl.timecodesByTime[timecode] ? ctrl.timecodesByTime[timecode].image.large : null;
+        var pointOfInterest = playerService.findPointOfInterest('timecodes', ctrl.time);
+        ctrl.area2ImageUrl = pointOfInterest ? pointOfInterest.image.large : null;
 
         // Media is cut
         // Return to the cut start edge
-        if (ctrl.isCut)
-          ctrl.player.setTime(playerService.getRealTime(0));
+        if (playerService.hasCuts()) ctrl.setTime(0);
 
         $element.triggerHandler('end');
       });
@@ -751,8 +861,7 @@
       safeApply(function() {
         ctrl.loading = false;
         ctrl.initializing = false;
-
-        switch (code) {
+        switch (Number(code)) {
           case oplPlayerErrors.MEDIA_ERR_NO_SOURCE:
             ctrl.error = $filter('oplTranslate')('MEDIA_ERR_NO_SOURCE');
             break;
@@ -777,6 +886,32 @@
       });
     }
 
+    /**
+     * Handles player over event.
+     *
+     * Display the controls.
+     *
+     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
+     */
+    function handlePlayerOver(event) {
+      safeApply(function() {
+        ctrl.controlsDisplayed = true;
+      });
+    }
+
+    /**
+     * Handles player out event.
+     *
+     * Hide controls.
+     *
+     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
+     */
+    function handlePlayerOut(event) {
+      safeApply(function() {
+        ctrl.controlsDisplayed = false;
+      });
+    }
+
     Object.defineProperties(ctrl, {
 
       /**
@@ -791,75 +926,9 @@
       },
 
       /**
-       * Indicates if volume icon is displayed or not.
+       * The list of indexes.
        *
-       * @property volumeIconDisplayed
-       * @type Boolean
-       */
-      volumeIconDisplayed: {
-        value: true,
-        writable: true
-      },
-
-      /**
-       * Indicates if position is remembered.
-       *
-       * @property positionRemembered
-       * @type Boolean
-       */
-      positionRemembered: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * Indicates if time is displayed or not.
-       *
-       * @property timeDisplayed
-       * @type Boolean
-       */
-      timeDisplayed: {
-        value: true,
-        writable: true
-      },
-
-      /**
-       * Indicates if media sources icon is displayed or not.
-       *
-       * @property mediaSourcesIconDisplayed
-       * @type Boolean
-       */
-      mediaSourcesIconDisplayed: {
-        value: true,
-        writable: true
-      },
-
-      /**
-       * Indicates if player automatically plays the video or not.
-       *
-       * @property autoPlayActivated
-       * @type Boolean
-       */
-      autoPlayActivated: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * The video data.
-       *
-       * @property data
-       * @type Object
-       */
-      data: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * The filtered list of indexes of the video.
-       *
-       * It corresponds to the list of video indexes after applying cuts.
+       * It corresponds to the list of media indexes after applying cuts.
        *
        * @property timecodes
        * @type Array
@@ -870,9 +939,9 @@
       },
 
       /**
-       * The filtered list of chapters.
+       * The list of chapters.
        *
-       * It corresponds to the list of video chapters after applying cuts.
+       * It corresponds to the list of media chapters after applying cuts.
        *
        * @property chapters
        * @type Array
@@ -885,7 +954,7 @@
       /**
        * The filtered list of tags.
        *
-       * It corresponds to the list of video tags after applying cuts.
+       * It corresponds to the list of media tags after applying cuts.
        *
        * @property tags
        * @type Array
@@ -896,114 +965,13 @@
       },
 
       /**
-       * The filtered list of indexes of the video indexed by time.
-       *
-       * It corresponds to the list of video indexes after applying cuts.
-       *
-       * @property timecodesByTime
-       * @type Object
-       */
-      timecodesByTime: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * The volume preview level in percent.
-       *
-       * @property volumePreview
-       * @type Number
-       */
-      volumePreview: {
-        value: 0,
-        writable: true
-      },
-
-      /**
        * The volume level in percent.
        *
        * @property volume
        * @type Number
        */
       volume: {
-        value: 0,
-        writable: true
-      },
-
-      /**
-       * The image URL of the current index to display as preview.
-       *
-       * @property timePreview
-       * @type String
-       */
-      timePreview: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * The left position of the preview image in percent.
-       *
-       * @property timePreviewPosition
-       * @type Number
-       */
-      timePreviewPosition: {
-        value: 0,
-        writable: true
-      },
-
-      /**
-       * Indicates if index preview must be displayed or not.
-       *
-       * @property timePreviewOpened
-       * @type Boolean
-       */
-      timePreviewOpened: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * Indicates if volume controller is opened or not.
-       *
-       * @property volumeOpened
-       * @type Boolean
-       */
-      volumeOpened: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * Indicates if modes controller is opened or not.
-       *
-       * @property modesOpened
-       * @type Boolean
-       */
-      modesOpened: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * Indicates if the list of definition is opened or not.
-       *
-       * @property definitionOpened
-       * @type Boolean
-       */
-      definitionOpened: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * Indicates if the list of sources is opened or not.
-       *
-       * @property selectMediaOpened
-       * @type Boolean
-       */
-      selectMediaOpened: {
-        value: false,
+        value: 100,
         writable: true
       },
 
@@ -1019,7 +987,7 @@
       },
 
       /**
-       * The video duration.
+       * The virtual media duration.
        *
        * @property duration
        * @type Number
@@ -1030,7 +998,7 @@
       },
 
       /**
-       * The current time in milliseconds.
+       * The current virtual time in milliseconds.
        *
        * @property time
        * @type Number
@@ -1041,7 +1009,7 @@
       },
 
       /**
-       * The percent of the video that has been seen so far.
+       * The virtual percentage of the media that has been seen so far.
        *
        * @property seenPercent
        * @type Number
@@ -1052,7 +1020,7 @@
       },
 
       /**
-       * The beginning of the loaded buffer in percent of the video.
+       * The virtual beginning of the loaded buffer in percent of the media.
        *
        * @property loadedStart
        * @type Number
@@ -1063,7 +1031,7 @@
       },
 
       /**
-       * The percentage of the video which have been buffered.
+       * The virtual percentage of the media which have been buffered.
        *
        * @property loadedPercent
        * @type Number
@@ -1074,155 +1042,45 @@
       },
 
       /**
-       * The start time after applying cuts in milliseconds.
+       * The selected template.
        *
-       * @property startCutTime
-       * @type Number
+       * @property selectedTemplate
+       * @type String
        */
-      startCutTime: {
-        value: 0,
+      selectedTemplate: {
+        value: 'split_50_50',
         writable: true
       },
 
       /**
-       * Indicates if index tab is displayed or not.
+       * The URL of the image to display in area 2.
        *
-       * @property indexesTabDisplayed
+       * @property area2ImageUrl
+       * @type String
+       */
+      area2ImageUrl: {
+        value: null,
+        writable: true
+      },
+
+      /**
+       * Indicates if player is currently in fullscreen or not.
+       *
+       * @property fullscreenEnabled
        * @type Boolean
        */
-      indexesTabDisplayed: {
+      fullscreenEnabled: {
         value: false,
         writable: true
       },
 
       /**
-       * Indicates if chapter tab is displayed or not.
+       * Indicates if video is playing.
        *
-       * @property chaptersTabDisplayed
+       * @property playing
        * @type Boolean
        */
-      chaptersTabDisplayed: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * Indicates if tags tab is displayed or not.
-       *
-       * @property tagsTabDisplayed
-       * @type Boolean
-       */
-      tagsTabDisplayed: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * The selected mode.
-       *
-       * @property selectedMode
-       * @type String
-       */
-      selectedMode: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * The URL of the current index image.
-       *
-       * @property presentation
-       * @type String
-       */
-      presentation: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * The name of the player template.
-       *
-       * @property mediaTemplate
-       * @type String
-       */
-      mediaTemplate: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * Indicates if settings icon is displayed or not.
-       *
-       * @property settingsIconDisplayed
-       * @type Boolean
-       */
-      settingsIconDisplayed: {
-        value: true,
-        writable: true
-      },
-
-      /**
-       * Indicates if player should take the whole viewport.
-       *
-       * @property fullViewportActivated
-       * @type Boolean
-       */
-      fullViewportActivated: {
-        value: false,
-        writable: true
-      },
-
-      /**
-       * The fullscreen button state, either "reduce" or "enlarge".
-       *
-       * @property fullscreenButton
-       * @type String
-       */
-      fullscreenButton: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * The play / pause button state, either "play" or "pause".
-       *
-       * @property playPauseButton
-       * @type String
-       */
-      playPauseButton: {
-        value: null,
-        writable: true
-      },
-
-      /**
-       * Indicates if mode icon is displayed or not.
-       *
-       * @property modeIconDisplayed
-       * @type Boolean
-       */
-      modeIconDisplayed: {
-        value: true,
-        writable: true
-      },
-
-      /**
-       * Indicates if fullscreen icon is displayed or not.
-       *
-       * @property fullscreenIconDisplayed
-       * @type Boolean
-       */
-      fullscreenIconDisplayed: {
-        value: true,
-        writable: true
-      },
-
-      /**
-       * Indicates if video has been cut.
-       *
-       * @property isCut
-       * @type Boolean
-       */
-      isCut: {
+      playing: {
         value: false,
         writable: true
       },
@@ -1239,18 +1097,7 @@
       },
 
       /**
-       * The list of modes.
-       *
-       * @property modes
-       * @type Array
-       */
-      modes: {
-        value: [],
-        writable: true
-      },
-
-      /**
-       * The list of video definitions.
+       * The list of media definitions.
        *
        * @property mediaDefinitions
        * @type Array
@@ -1272,7 +1119,18 @@
       },
 
       /**
-       * The video source URL.
+       * The selected source.
+       *
+       * @property selectedSource
+       * @type String
+       */
+      selectedSource: {
+        value: null,
+        writable: true
+      },
+
+      /**
+       * The media source URL.
        *
        * @property sourceUrl
        * @type String
@@ -1316,13 +1174,35 @@
       },
 
       /**
-       * Indicates if cut are disabled or not.
+       * The list of sources for the actual media.
        *
-       * @property cutDisabled
+       * @property mediaSources
+       * @type Array
+       */
+      mediaSources: {
+        value: [],
+        writable: true
+      },
+
+      /**
+       * The list of qualities for the actual media.
+       *
+       * @property mediaQualities
+       * @type Array
+       */
+      mediaQualities: {
+        value: [],
+        writable: true
+      },
+
+      /**
+       * Indicates if controls are displayed or not.
+       *
+       * @property controlsDisplayed
        * @type Boolean
        */
-      cutDisabled: {
-        value: false,
+      controlsDisplayed: {
+        value: true,
         writable: true
       },
 
@@ -1333,15 +1213,16 @@
        */
       $onInit: {
         value: function() {
+          mediaWrapperElement = angular.element($element[0].querySelector('.opl-media-wrapper'));
+          previewElement = angular.element($element[0].querySelector('.opl-index-preview'));
           playerService = new OplPlayerService();
           lastTime = 0;
-          fullscreen = false;
-          timeBar = element.getElementsByClassName('opl-time-ghost')[0];
-          volumeBar = element.getElementsByClassName('opl-volume-ghost')[0];
-          ctrl.player = null;
+          fullscreenEnabled = false;
+          $scope.previewDisplayed = false;
 
-          angular.element(volumeBar).on('mouseover', handleVolumeBarOver);
-          angular.element(timeBar).on('mouseover', handleTimeBarOver);
+          mediaWrapperElement.on('mouseover', handlePlayerOver);
+          mediaWrapperElement.on('mouseout', handlePlayerOut);
+
           $element.on('oplReady', handlePlayerReady);
           $element.on('oplWaiting', handlePlayerWaiting);
           $element.on('oplPlaying', handlePlayerPlaying);
@@ -1352,9 +1233,6 @@
           $element.on('oplPlayProgress', handlePlayerPlayProgress);
           $element.on('oplEnd', handlePlayerEnd);
           $element.on('oplError', handlePlayerError);
-
-          init(true);
-          updateAttributes();
         }
       },
 
@@ -1365,14 +1243,21 @@
        */
       $postLink: {
         value: function() {
-          volumeBarRect = volumeBar.getBoundingClientRect();
-          volumeBarHeight = volumeBarRect.bottom - volumeBarRect.top;
-          timeBarRect = timeBar.getBoundingClientRect();
-          timeBarWidth = timeBarRect.right - timeBarRect.left;
-
-          // Wait for oplTabs component
           $timeout(function() {
-            oplTabsController = angular.element(document.querySelector('opl-tabs > nav')).controller('oplTabs');
+            lightControlsElement = angular.element($element[0].querySelector('.opl-light-controls'));
+            tabsController = angular.element($element[0].querySelector('.opl-tabs')).controller('oplTabs');
+
+            var templateSelectorElement = angular.element($element[0].querySelector('.opl-template-selector'));
+            var timeBarSliderElement =
+                angular.element($element[0].querySelector('.opl-controls .opl-time-bar .opl-slider'));
+            var lightTimeBarSliderElement =
+                angular.element(lightControlsElement[0].querySelector('.opl-time-bar .opl-slider'));
+
+            timeBarController = timeBarSliderElement.controller('oplSlider');
+            lightTimeBarController = lightTimeBarSliderElement.controller('oplSlider');
+            TEMPLATES = templateSelectorElement.controller('oplTemplateSelector').TEMPLATES;
+
+            reset();
           });
         }
       },
@@ -1384,8 +1269,13 @@
        */
       $onDestroy: {
         value: function() {
-          if (ctrl.player)
-            ctrl.player.destroy();
+          if (ctrl.player) ctrl.player.destroy();
+
+          mediaWrapperElement.off('mouseover mouseout');
+          $element.off(
+            'oplReady oplWaiting oplPlaying oplDurationChange oplPlay oplPause oplLoadProgress oplPlayProgress ' +
+            'oplEnd oplError'
+          );
         }
       },
 
@@ -1409,8 +1299,6 @@
        * @param {String} [changedProperties.oplFullViewport.currentValue] oplFullViewport new value
        * @param {Object} [changedProperties.oplTime] oplTime old and new value
        * @param {String} [changedProperties.oplTime.currentValue] oplTime new value
-       * @param {Object} [changedProperties.oplMediaSourcesIcon] oplMediaSourcesIcon old and new value
-       * @param {String} [changedProperties.oplMediaSourcesIcon.currentValue] oplMediaSourcesIcon new value
        * @param {Object} [changedProperties.oplRememberPosition] oplRememberPosition old and new value
        * @param {String} [changedProperties.oplRememberPosition.currentValue] oplRememberPosition new value
        * @param {Object} [changedProperties.oplLanguage] oplLanguage old and new value
@@ -1431,125 +1319,131 @@
           // oplData
           if (changedProperties.oplData && changedProperties.oplData.currentValue) {
             var oplData = changedProperties.oplData;
-            init(!oplData.previousValue || oplData.currentValue === oplData.previousValue);
+            reset();
 
             if (oplData.previousValue && oplData.previousValue.needPointsOfInterestUnitConversion === true &&
                 !oplData.currentValue.needPointsOfInterestUnitConversion) {
-              prepareData(ctrl.data);
-              playerService.setMedia(ctrl.data);
-              processMediaTabs(ctrl.duration);
+              ctrl.setTime(lastTime);
+              initPointsOfInterest();
+              ctrl.selectTemplate(ctrl.oplMode);
+              updateIcons();
+              $element.triggerHandler('durationChange', ctrl.duration);
             }
           }
 
           // oplDisableCut
           if (changedProperties.oplDisableCut && changedProperties.oplDisableCut.currentValue) {
-            newValue = changedProperties.oplDisableCut.currentValue;
-            ctrl.cutDisabled = (typeof newValue === 'undefined') ? true : JSON.parse(newValue);
+            if (!playerService) return;
+            var cutDisabled = isAttributeTrue('oplDisableCut', true);
+            playerService.setCutsStatus(!cutDisabled);
 
             if (ctrl.duration) {
-              init(false);
-              processMediaTabs(playerService.getRealDuration());
+              reset();
+              playerService.setCutsStatus(!cutDisabled);
+              ctrl.duration = playerService.getDuration();
+              initPointsOfInterest();
+              ctrl.selectTemplate(ctrl.oplMode);
+              updateIcons();
+              $element.triggerHandler('durationChange', ctrl.duration);
               ctrl.setTime(0);
             }
           }
 
           // oplFullscreenIcon
           if (changedProperties.oplFullscreenIcon && changedProperties.oplFullscreenIcon.currentValue) {
-            newValue = changedProperties.oplFullscreenIcon.currentValue;
-            ctrl.fullscreenIconDisplayed =
-              implementFullScreenAPI() && ((typeof newValue === 'undefined') ? true : JSON.parse(newValue));
-            updateAttributes();
+            $scope.fullscreenIconDisplayed = implementFullScreenAPI() && isAttributeTrue('oplFullscreenIcon', true);
+            updateIcons();
           }
 
           // oplVolumeIcon
           if (changedProperties.oplVolumeIcon && changedProperties.oplVolumeIcon.currentValue) {
-            newValue = changedProperties.oplVolumeIcon.currentValue;
-            ctrl.volumeIconDisplayed = (typeof newValue === 'undefined') ? true : JSON.parse(newValue);
-            updateAttributes();
+            $scope.volumeIconDisplayed = isAttributeTrue('oplVolumeIcon', true);
+            updateIcons();
           }
 
           // oplModeIcon
           if (changedProperties.oplModeIcon && changedProperties.oplModeIcon.currentValue) {
-            newValue = changedProperties.oplModeIcon.currentValue;
-            ctrl.modeIconDisplayed = (typeof newValue === 'undefined') ? true : JSON.parse(newValue);
-            updateAttributes();
+            $scope.templateSelectorDisplayed = isAttributeTrue('oplModeIcon', true);
+            updateIcons();
           }
 
           // oplSettingsIcon
           if (changedProperties.oplSettingsIcon && changedProperties.oplSettingsIcon.currentValue) {
-            newValue = changedProperties.oplSettingsIcon.currentValue;
-            ctrl.settingsIconDisplayed = (typeof newValue === 'undefined') ? true : JSON.parse(newValue);
-            updateAttributes();
+            $scope.settingsIconDisplayed = isAttributeTrue('oplSettingsIcon', true);
+            updateIcons();
           }
 
           // oplFullViewport
           if (changedProperties.oplFullViewport && changedProperties.oplFullViewport.currentValue) {
-            newValue = changedProperties.oplFullViewport.currentValue;
-            ctrl.fullViewportActivated = (typeof newValue === 'undefined') ? false : JSON.parse(newValue);
-            updateAttributes();
+            $scope.fullViewportActivated = isAttributeTrue('oplFullViewport', false);
+            updateIcons();
+
+            // Full viewport and no fullScreen API available
+            // Consider the player as in fullscreen
+            if ($scope.fullViewportActivated && !implementFullScreenAPI()) {
+              ctrl.fullscreenEnabled = true;
+              fullscreenEnabled = true;
+            }
           }
 
           // oplTime
           if (changedProperties.oplTime && changedProperties.oplTime.currentValue) {
-            newValue = changedProperties.oplTime.currentValue;
-            ctrl.timeDisplayed = (typeof newValue === 'undefined') ? true : JSON.parse(newValue);
-          }
-
-          // oplMediaSourcesIcon
-          if (changedProperties.oplMediaSourcesIcon && changedProperties.oplMediaSourcesIcon.currentValue) {
-            newValue = changedProperties.oplMediaSourcesIcon.currentValue;
-            ctrl.mediaSourcesIconDisplayed = (typeof newValue === 'undefined') ? false : JSON.parse(newValue);
+            $scope.timeDisplayed = isAttributeTrue('oplTime', true);
           }
 
           // oplRememberPosition
           if (changedProperties.oplRememberPosition && changedProperties.oplRememberPosition.currentValue) {
-            newValue = changedProperties.oplRememberPosition.currentValue;
-            ctrl.positionRemembered = (typeof newValue === 'undefined') ? false : JSON.parse(newValue);
+            positionRemembered = isAttributeTrue('oplRememberPosition', false);
           }
 
           // oplLanguage
           if (changedProperties.oplLanguage && changedProperties.oplLanguage.currentValue) {
             newValue = changedProperties.oplLanguage.currentValue;
             ctrl.language = (typeof newValue === 'undefined') ? 'en' : newValue;
+            oplI18nService.setLanguage(ctrl.language);
           }
 
           // oplAutoPlay
           if (changedProperties.oplAutoPlay && changedProperties.oplAutoPlay.currentValue) {
-            newValue = changedProperties.oplAutoPlay.currentValue;
-            ctrl.autoPlayActivated = (typeof newValue === 'undefined') ? false : JSON.parse(newValue);
+            autoPlayActivated = isAttributeTrue('oplAutoPlay', false);
           }
 
           // oplHideChaptersTab
           if (changedProperties.oplHideChaptersTab && changedProperties.oplHideChaptersTab.currentValue) {
-            newValue = changedProperties.oplHideChaptersTab.currentValue;
-            if (!ctrl.chapters.length || (typeof newValue !== 'undefined' && JSON.parse(newValue) === true))
-              ctrl.chaptersTabDisplayed = false;
-            else
-              ctrl.chaptersTabDisplayed = true;
+            initPointsOfInterest();
           }
 
           // oplHideTagsTab
           if (changedProperties.oplHideTagsTab && changedProperties.oplHideTagsTab.currentValue) {
-            newValue = changedProperties.oplHideTagsTab.currentValue;
-            if (!ctrl.tags.length || (typeof newValue !== 'undefined' && JSON.parse(newValue) === true))
-              ctrl.tagsTabDisplayed = false;
-            else
-              ctrl.tagsTabDisplayed = true;
+            initPointsOfInterest();
+          }
+
+          // oplMode
+          if (changedProperties.oplMode && changedProperties.oplMode.currentValue) {
+            ctrl.selectTemplate(changedProperties.oplMode.currentValue);
           }
 
         }
       },
 
       /**
-       * Sets the display mode.
+       * Sets the template.
        *
-       * @method selectMode
-       * @param {String} mode The display mode to activate, available display modes are set just before oplPlayer
-       * definition
+       * @method selectTemplate
+       * @param {String} template The template to apply, available templates are defined in templateSelector component
        */
-      selectMode: {
-        value: function(mode) {
-          ctrl.selectedMode = mode;
+      selectTemplate: {
+        value: function(template) {
+          if (!TEMPLATES) return;
+
+          if (!$scope.indexesTabDisplayed) {
+            ctrl.selectedTemplate = TEMPLATES.FULL_1;
+          } else {
+            ctrl.selectedTemplate =
+              template && Object.values(TEMPLATES).indexOf(template) > -1 ? template : TEMPLATES.SPLIT_50_50;
+          }
+
+          timeBarController.reset();
         }
       },
 
@@ -1557,10 +1451,11 @@
        * Starts / Pauses the player.
        *
        * @method playPause
+       * @param {Boolean} play true if play is requested, false if pause is requested
        */
       playPause: {
-        value: function() {
-          if (!ctrl.loading && !ctrl.error)
+        value: function(play) {
+          if (!ctrl.loading && !ctrl.error && ctrl.player)
             ctrl.player.playPause();
         }
       },
@@ -1573,7 +1468,7 @@
        */
       setVolume: {
         value: function(volume) {
-          ctrl.volume = volume;
+          if (!ctrl.player || ctrl.volume !== volume) return;
           ctrl.player.setVolume(ctrl.volume);
         }
       },
@@ -1582,15 +1477,11 @@
        * Sets the player time.
        *
        * @method setTime
-       * @param {Number} time The time to set in milliseconds
+       * @param {Number} time Time in milliseconds relative to the cut media
        */
       setTime: {
         value: function(time) {
-          if (ctrl.cutDisabled !== true) {
-            time = playerService.getRealTime(time);
-          }
-
-          ctrl.player.setTime(time);
+          ctrl.player.setTime(playerService.getRealTime(time));
         }
       },
 
@@ -1627,8 +1518,10 @@
             lastTime = ctrl.time;
             playRequested = !ctrl.player.isPaused();
             ctrl.player.setMediaSource(sourceIndex);
+            ctrl.selectedSource = ctrl.mediaSources[sourceIndex].id;
             ctrl.mediaDefinitions = ctrl.player.getAvailableDefinitions();
             ctrl.selectedDefinition = ctrl.mediaDefinitions && ctrl.mediaDefinitions[0] || null;
+            ctrl.mediaQualities = prepareQualities(ctrl.mediaDefinitions);
             ctrl.loading = true;
             ctrl.initializing = true;
             safeApply(function() {
@@ -1642,88 +1535,14 @@
     });
 
     /**
-     * Sets the player volume.
+     * Handles time bar update.
      *
-     * Volume is retrieved from the position of the cursor on the volume selector area.
+     * Updates the player current time.
      *
-     * @param {MouseEvent} event The dispatched event when clicking on the volume selector.
+     * @param {Number} value The time bar value in percent from 0 to 100
      */
-    $scope.setVolume = function(event) {
-      var volume = Math.min(Math.round(((volumeBarRect.bottom - event.pageY) / volumeBarHeight) * 100), 100);
-      ctrl.setVolume(volume);
-    };
-
-    /**
-     * Sets the player time.
-     *
-     * Time is retrieved from the position of the cursor on the time bar area.
-     *
-     * @param {MouseEvent} event The dispatched event when clicking on the progress bar.
-     */
-    $scope.setTime = function(event) {
-      timeBarRect = timeBar.getBoundingClientRect();
-      timeBarWidth = timeBarRect.right - timeBarRect.left;
-      ctrl.setTime(((event.pageX - timeBarRect.left) / timeBarWidth) * ctrl.duration);
-    };
-
-    /**
-     * Toggles the volume.
-     *
-     * If the volume selector is opened, close it, open it otherwise.
-     * Close definition, media sources and display modes if opened.
-     * Automatically close volume after 3 seconds.
-     */
-    $scope.toggleVolume = function() {
-      ctrl.modesOpened = false;
-      ctrl.definitionOpened = false;
-      ctrl.selectMediaOpened = false;
-      ctrl.volumeOpened = !ctrl.volumeOpened;
-      hideSettingsWithTimeout();
-    };
-
-    /**
-     * Toggles definition selector.
-     *
-     * If definition selector is already opened, close it, open it otherwise.
-     * Close media sources, volume and modes if opened.
-     * Automatically close definition selector after 3 seconds.
-     */
-    $scope.toggleDefinition = function() {
-      ctrl.volumeOpened = false;
-      ctrl.modesOpened = false;
-      ctrl.selectMediaOpened = false;
-      ctrl.definitionOpened = !ctrl.definitionOpened;
-      hideSettingsWithTimeout();
-    };
-
-    /**
-     * Toggles display mode selection list.
-     *
-     * If the list of display modes is opened, close it, open it otherwise.
-     * Close volume, definition and media sourcesif opened.
-     * Automatically close display modes after 3 seconds.
-     */
-    $scope.toggleModes = function() {
-      ctrl.volumeOpened = false;
-      ctrl.definitionOpened = false;
-      ctrl.selectMediaOpened = false;
-      ctrl.modesOpened = !ctrl.modesOpened;
-      hideSettingsWithTimeout();
-    };
-
-    /**
-     * Toggles media selector.
-     *
-     * If media sources selector is already opened, close it, open it otherwise.
-     * Close definition, volume and modes if opened.
-     * Automatically close definition selector after 3 seconds.
-     */
-    $scope.toggleMedia = function() {
-      ctrl.volumeOpened = false;
-      ctrl.modesOpened = false;
-      ctrl.definitionOpened = false;
-      ctrl.selectMediaOpened = !ctrl.selectMediaOpened;
-      hideSettingsWithTimeout();
+    $scope.handleTimeBarUpdate = function(value) {
+      ctrl.setTime(((value * ctrl.duration) / 100));
     };
 
     /**
@@ -1734,15 +1553,12 @@
     $scope.toggleFullscreen = function() {
 
       // Fullscreen API is available
-      if (rootElement.requestFullScreen ||
-          rootElement.mozRequestFullScreen ||
-          rootElement.webkitRequestFullScreen ||
-          rootElement.msRequestFullscreen) {
-
+      if (implementFullScreenAPI()) {
         if ((document.fullScreenElement !== 'undefined' && document.fullScreenElement === null) ||
             (document.msFullscreenElement !== 'undefined' && document.msFullscreenElement === null) ||
             (document.mozFullScreen !== 'undefined' && document.mozFullScreen === false) ||
-            (document.webkitFullscreenElement !== 'undefined' && document.webkitFullscreenElement === null)) {
+            (document.webkitFullscreenElement !== 'undefined' && document.webkitFullscreenElement === null)
+        ) {
           if (rootElement.requestFullScreen)
             rootElement.requestFullScreen();
           else if (rootElement.mozRequestFullScreen)
@@ -1752,7 +1568,7 @@
           else if (rootElement.msRequestFullscreen)
             rootElement.msRequestFullscreen();
 
-          ctrl.fullscreenButton = 'reduce';
+          ctrl.fullscreenEnabled = true;
         } else {
           if (document.exitFullscreen)
             document.exitFullscreen();
@@ -1763,56 +1579,194 @@
           else if (document.msExitFullscreen)
             document.msExitFullscreen();
 
-          ctrl.fullscreenButton = 'enlarge';
+          ctrl.fullscreenEnabled = false;
         }
 
       } else {
 
         // Fullscreen API not available
         // Use viewport fullscreen instead
-        fullscreen = ctrl.fullViewportActivated = !fullscreen;
-        ctrl.fullscreenButton = fullscreen ? 'reduce' : 'enlarge';
+        fullscreenEnabled = $scope.fullViewportActivated = !fullscreenEnabled;
+        ctrl.fullscreenEnabled = fullscreenEnabled;
 
       }
     };
 
     /**
-     * Seeks to a chapter.
+     * Handles settings update.
      *
-     * Selects the media tab and seek to the chapter timecode.
+     * Changes the quality and / or the source.
      *
-     * @param {Object} chapter The selected chapter
-     * @param {Object} chapter.value The chapter timecode
+     * @param {String} quality The quality id
+     * @param {String} source The source id
      */
-    $scope.seekToChapter = function(chapter) {
-      ctrl.player.setTime(chapter.value);
-      oplTabsController.selectViewById('media');
+    $scope.handleSettingsUpdate = function(quality, source) {
+      var i;
+
+      if (quality) {
+        for (i = 0; i < ctrl.mediaQualities.length; i++) {
+          if (ctrl.mediaQualities[i].id === quality)
+            return ctrl.setDefinition(ctrl.mediaDefinitions[i]);
+        }
+      }
+
+      if (source) {
+        for (i = 0; i < ctrl.mediaSources.length; i++) {
+          if (ctrl.mediaSources[i].id === source)
+            return ctrl.setSource(i);
+        }
+      }
     };
 
     /**
-     * Seeks to an index.
+     * Handles tabs update.
      *
-     * Selects the media tab and seek to the index timecode.
+     * Masks light controls, displays the player and changes to the given view.
      *
-     * @param {Object} index The selected index
-     * @param {Object} index.timecode The index timecode
+     * @param {Object} view The chosen view
+     * @param {String} view.oplViewId The view id
      */
-    $scope.seekToIndex = function(index) {
-      ctrl.player.setTime(index.timecode);
-      oplTabsController.selectViewById('media');
+    $scope.handleViewSelect = function(view) {
+      var selectedView = tabsController.getSelectedView();
+      if (!selectedView) return tabsController.selectViewById(view.oplViewId);
+
+      var selectedViewId = selectedView.oplViewId;
+      var tilesController = getTilesController(selectedViewId);
+
+      tilesController.reduceTile().then(function() {
+        maskLightControls();
+        return postPlayer();
+      }).then(function() {
+        tabsController.selectViewById(view.oplViewId);
+      });
     };
 
     /**
-     * Seeks to a tag.
+     * Handles view selection.
      *
-     * Selects the media tab and seek to the tag timecode.
+     * A view has been selected.
+     * Resets the oplTiles component.
      *
-     * @param {Object} tag The selected tag
-     * @param {Object} tag.value The chapter timecode
+     * @param {String} id The view id
      */
-    $scope.seekToTag = function(tag) {
-      ctrl.player.setTime(tag.value);
-      oplTabsController.selectViewById('media');
+    $scope.handleViewSelected = function(id) {
+      $timeout(function() {
+        var tilesController = getTilesController(id);
+        tilesController.reset();
+      });
+    };
+
+    /**
+     * Handles control focus.
+     *
+     * A control component has been focused. Displays the controls.
+     */
+    $scope.handleControlFocus = function() {
+      safeApply(function() {
+        ctrl.controlsDisplayed = true;
+      });
+    };
+
+    /**
+     * Handles time bar over.
+     *
+     * Displays the index preview.
+     */
+    $scope.handleTimeBarOver = function() {
+      if (!ctrl.timecodes.length) return;
+      safeApply(function() {
+        $scope.previewDisplayed = true;
+      });
+    };
+
+    /**
+     * Handles time bar out.
+     *
+     * Hides the index preview.
+     */
+    $scope.handleTimeBarOut = function() {
+      if (!ctrl.timecodes.length) return;
+      safeApply(function() {
+        $scope.previewDisplayed = false;
+      });
+    };
+
+    /**
+     * Handles time bar move.
+     *
+     * Sets preview image, time and position.
+     *
+     * @param {Number} value The time bar value in percent
+     * @param {Object} coordinates The coordinates
+     * @param {Number} coordinates.x The x position of the time bar value relative to the page
+     * @param {Number} coordinates.y The y position of the time bar value relative to the page
+     * @param {Object} sliderBoundingRectangle Slider dimension and coordinates
+     */
+    $scope.handleTimeBarMove = function(value, coordinates, sliderBoundingRectangle) {
+      if (!ctrl.timecodes.length) return;
+      var xPosition = Math.max(sliderBoundingRectangle.width * (value / 100), 0);
+
+      safeApply(function() {
+        updatePreview(playerService.getTimeFromPercent(value), xPosition);
+      });
+    };
+
+    /**
+     * Handles tile selection.
+     *
+     * Seeks to the tile time.
+     *
+     * @param {Object} tile The tile being selected
+     * @param {Number} tile.time The tile value
+     */
+    $scope.handleTileSelect = function(tile) {
+      ctrl.setTime(tile.time);
+    };
+
+    /**
+     * Handles "more info" action on a tile.
+     *
+     * Masks the player, displays light controls and enlarge tile.
+     *
+     * @param {Object} tile The tile being selected
+     * @param {String} tile.id The tile id
+     * @param {String} type The type of points of interest
+     */
+    $scope.handleTileInfo = function(tile, type) {
+      var tilesController = getTilesController(type);
+
+      maskPlayer().then(function() {
+        postLightControls();
+      });
+
+      tilesController.enlargeTile(tile.id);
+    };
+
+    /**
+     * Handles close action on a tile.
+     *
+     * Reduces tile, masks light controls and displays player.
+     *
+     * @param {Object} tile The tile being closed
+     * @param {String} tile.id The tile id
+     * @param {String} type The type of points of interest
+     */
+    $scope.handleTileClose = function(tile, type) {
+      var tilesController = getTilesController(type);
+
+      tilesController.reduceTile(tile.id);
+      maskLightControls();
+      postPlayer();
+    };
+
+    /**
+     * Handles light volume open / close.
+     *
+     * When light volume controller is opened / closed, the light control time bar has to be reset as its size has
+     * changed.
+     */
+    $scope.handleLightVolumeToggle = function() {
+      lightTimeBarController.reset();
     };
 
     // Listen to player template loaded event
@@ -1831,12 +1785,12 @@
   OplPlayerController.$inject = [
     '$injector',
     '$document',
-    '$sce',
     '$filter',
     '$timeout',
     '$cookies',
     '$scope',
     '$element',
+    '$q',
     'oplPlayerService',
     'oplI18nService',
     'oplPlayerErrors'

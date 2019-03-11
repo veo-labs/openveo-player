@@ -1,47 +1,126 @@
-@import "compass/css3/user-interface";
-@import "compass/css3/transition";
+@import "compass/css3/box-shadow";
+@import "compass/css3/box-sizing";
 
-opl-tabs nav {
-  display: none;
+$OPL_TABS_BACKGROUND_COLOR: #ffffff;
+$OPL_TABS_PRIMARY_COLOR: #000000;
+$OPL_TABS_ACCENT_COLOR: #e6007e;
+
+opl-tabs {
   position: absolute;
   top: 0;
-  color: $FOREGROUND_COLOR;
-  font-weight: bold;
-  font-size: 1.1em;
-  @include user-select(none);
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
 
-  @media(min-width: $MEDIA_MIN_WIDTH) {
-    display: block;
+.opl-tabs {
+  --opl-tabs-background-color: #{$OPL_TABS_BACKGROUND_COLOR};
+  --opl-tabs-primary-color: #{$OPL_TABS_PRIMARY_COLOR};
+  --opl-tabs-primary-color-0: #{rgba($OPL_TABS_PRIMARY_COLOR, 0.05)};
+  --opl-tabs-primary-color-1: #{rgba($OPL_TABS_PRIMARY_COLOR, 0.12)};
+  --opl-tabs-primary-color-2: #{rgba($OPL_TABS_PRIMARY_COLOR, 0.541)};
+  --opl-tabs-accent-color: #{$OPL_TABS_ACCENT_COLOR};
+  height: 100%;
+  width: 100%;
+
+  /*
+    Views placeholder.
+  */
+  & > div {
+    overflow: hidden;
+    position: absolute;
+    left: 32px;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-bottom: 1px solid var(--opl-tabs-primary-color-0, rgba($OPL_TABS_PRIMARY_COLOR, 0.05));
+    @include box-sizing(border-box);
   }
 
-  ul {
-    display: table;
-    background-color: $NEUTRAL_COLOR;
-    height: 40px;
+  /*
+    Views wrappers.
+  */
+  opl-view,
+  opl-view > div {
+    height: 100%;
+    width: 100%;
   }
 
-  li {
-    display: table-cell;
-    padding: 0 40px;
-    line-height: 40px;
-    background-color: $NEUTRAL_COLOR;
-    background-size: 100% 200%;
-    background-image: linear-gradient(to bottom, $NEUTRAL_COLOR 50%, $LIGHT_GRAY 50%);
-    @include transition(background-position-y 0.2s);
+  /*
+    Tabs.
+  */
+  .opl-tabs-wrapper {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 32px;
+    @include box-shadow(0px 4px 4px var(--opl-tabs-primary-color-1, rgba($OPL_TABS_PRIMARY_COLOR, 0.12)));
+    background-color: var(--opl-tabs-background-color, $OPL_TABS_BACKGROUND_COLOR);
+
+    ul {
+      position: absolute;
+      bottom: 0;
+      outline: none;
+
+    }
+
+    &.opl-focus {
+      background-color: var(--opl-tabs-primary-color-0, rgba($OPL_TABS_PRIMARY_COLOR, 0.05));
+    }
+
+    /*
+      Tabs buttons.
+    */
+    button {
+      color: var(--opl-tabs-primary-color-2, rgba($OPL_TABS_PRIMARY_COLOR, 0.541));
+
+      /*
+        Tab buttons focus ring and ripple in resting state.
+      */
+      &::before,
+      &::after {
+        background-color: var(--opl-tabs-primary-color, $OPL_TABS_PRIMARY_COLOR);
+      }
+    }
+
+    .opl-selected {
+
+      /*
+        Tab buttons in selected state.
+      */
+      button {
+        color: var(--opl-tabs-accent-color, $OPL_TABS_ACCENT_COLOR);
+
+        /*
+          Tab buttonss focus ring and ripple in selected state.
+        */
+        &::before,
+        &::after {
+          background-color: var(--opl-tabs-accent-color, $OPL_TABS_ACCENT_COLOR);
+        }
+      }
+    }
   }
 
-  li:focus {
-    outline: none;
-  }
+  /*
+    No tabs.
+  */
+  &.opl-no-tabs {
 
-  li:hover {
-    background-image: linear-gradient(to bottom, $NEUTRAL_COLOR 50%, $LIGHT_GRAY 50%);
-    cursor: pointer;
-    background-position-y: -12%;
-  }
+    /*
+      Views placeholder.
+    */
+    & > div {
+      left: 0;
+    }
 
-  li.opl-selected {
-    background-image: linear-gradient(to bottom, $NEUTRAL_COLOR 50%, $HIGHLIGHT_COLOR 50%);
-    background-position-y: -12%;
+    /*
+      Tabs.
+    */
+    .opl-tabs-wrapper {
+      display: none;
+    }
+
   }
 }

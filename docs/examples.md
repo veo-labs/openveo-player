@@ -2,7 +2,7 @@
 
 You can use the HTML player to play a video by its url.
 
-The HTML player expects one media Id and one url by source.
+The HTML player expects one media id with one source.
 
 ## index.html
 
@@ -47,112 +47,88 @@ The HTML player expects one media Id and one url by source.
   var app = angular.module('test.player', ['ov.player']);
 
   app.controller('TestController', TestController);
-  TestController.$inject = ['$scope', '$window', '$location'];
+  TestController.$inject = ['$scope'];
 
   /**
    * Defines the test controller.
    */
-  function TestController($scope, $window, $location) {
+  function TestController($scope) {
     $scope.data =
       {
-        mediaId: ['136081112'], // The id of the source
-        timecodes: [ // Timecodes
+        mediaId: ['136081112'], // The list of media ids, one id by source. For the "html" player, the first media id corresponds to the first source, the second media id to the second source and so on
+        timecodes: [ // A list of indexes
           {
-            timecode: 0, // Timecode in milliseconds (0 ms)
-            image: { // Image to display at 0 ms
-              small: 'http://mydomainname.local/image1-small.jpeg', // Small version of the image
-              large: 'http://mydomainname.local/image1-large.jpeg'// Large version of the image
+            timecode: 0, // The position of the index relative to the media duration (in milliseconds)
+            image: { // The small and large version of the image representing the index
+              small: 'https://host.local/image1-small.jpeg', // URL of the small image representing the index. Displayed in the list of indexes and when pointer is over the timebar. Expected small image size is 148x80
+              large: 'https://host.local/image1-large.jpeg' // URL of the large image representing the index. Displayed in the area 2 when playing time corresponds to the index time, and when an index of the list of indexes is enlarged
             }
           },
           {
-            timecode: 1200, // Timecode in milliseconds (1200 ms)
-            image: { // Image to display at 1200 ms
-              small: 'http://mydomainname.local/image2-small.jpeg', // Small version of the image
-              large: 'http://mydomainname.local/image2-large.jpeg' // Large version of the image
+            timecode: 1200, // The position of the index relative to the media duration (in milliseconds)
+            image: { // The small and large version of the image representing the index
+              small: 'https://host.local/image2-small.jpeg', // URL of the small image representing the index. Displayed in the list of indexes and when pointer is over the timebar. Expected small image size is 148x80
+              large: 'https://host.local/image2-large.jpeg' // URL of the large image representing the index. Displayed in the area 2 when playing time corresponds to the index time, and when an index of the list of indexes is enlarged
             }
           }
         ],
-        sources: [
+        sources: [ // The list of sources, one source by media id (only for the "html" player)
           {
-            files: [ // The list of video files (resolutions) for the source "136081112"
+            files: [ // A list of MP4 files (qualities)
               {
-                width: 640, // Video width for this resolution
-                height: 360, // Video height for this resolution
-                link: 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+                width: 640, // The video width in pixels
+                height: 360, // The video height in pixels
+                link: 'https://host.local/pathToSDMP4.mp4' // The URL of the MP4 file
               },
               {
-                width: 1280, // Video width for this resolution
-                height: 720, // Video height for this resolution
-                link: 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+                width: 1280, // The video width in pixels
+                height: 720, // The video height in pixels
+                link: 'https://host.local/pathToHDMP4.mp4' // The URL of the MP4 file
               }
             ]
           }
         ],
-        thumbnail: "http://mydomainname.local/thumbnail.jpg", // The media thumbnail url (only for "html" player)
-        chapters: [ // Chapters
+        thumbnail: "https://host.local/thumbnail.jpg", // The URL of the image to display before the video starts (only for the "html" player)
+        chapters: [ // A list of chapters
           {
-            name: 'Chapter 1', // Chapter name
-            description: 'Chapter 1 description', // Chapter description (can contain HTML)
-            value: 0.1 // Chapter timecode in percent (percentage of the video)
+            name: 'Simple chapter', // The chapter name displayed in the list of chapters and when a chapter is enlarged
+            description: 'Chapter 1 description', // The chapter description. The description is displayed when chapter is enlarged. Description may contain HTML tags
+            value: 1000 // The position of the chapter relative to the media duration (in milliseconds)
           },
           {
-            name: 'Chapter 2', // Chapter name
-            description: 'Chapter 2 description', // Chapter description (can contain HTML)
-            value: 0.2 // Chapter timecode in percent (percentage of the video)
-          }
-        ],
-        tags: [ // Tags
-          {
-            name: 'Simple tag', // Tag name
-            description: 'Simple tag description', // Tag description (can contain HTML)
-            value: 0.1 // Tag timecode in percent (percentage of the video)
-          },
-          {
-            name: 'Video tag', // Tag name
-            description: 'Video tag description', // Tag description (can contain HTML)
-            value: 0.2, // Tag timecode in percent (percentage of the video)
-            file: { // Video associated to the tag
-              mimetype: 'video/mp4', // Video mime type
-              basePath: 'http://mydomainname.local/video.mp4' // Url of the video
-            }
-          },
-          {
-            name: 'PDF tag', // Tag name
-            description: 'PDF tag description', // Tag description (can contain HTML)
-            value: 0.3, // Tag timecode in percent (percentage of the video)
-            file: { // PDF associated to the tag
-              mimetype: 'application/pdf', // PDF mime type
-              basePath: 'http://mydomainname.local/pdf.pdf', // Url of the PDF
-              originalname: 'pdf-name-without-extension' // PDF file name when downloading
-            }
-          },
-          {
-            name: 'Image tag', // Tag name
-            description: 'Image tag description', // Tag description (can contain HTML)
-            value: 0.4, // Tag timecode in percent (percentage of the video)
-            file: { // Image associated to the tag
-              mimetype: 'image/jpeg', // Image mime type
-              basePath: 'http://mydomainname.local/image.jpeg' // Url of the image
-            }
-          },
-          {
-            name: 'Audio tag', // Tag name
-            description: 'Audio tag description', // Tag description (can contain HTML)
-            value: 0.5, // Tag timecode in percent (percentage of the video)
-            file: { // Audio associated to the tag
-              mimetype: 'audio/mp3', // Audio mime type
-              basePath: 'http://mydomainname.local/audio.mp3' // Url of the audio file
+            name: 'Chapter with attached file', // // The chapter name displayed in the list of chapters and when a chapter is enlarged
+            description: 'Chapter with attached file description', // The chapter description. The description is displayed when chapter is enlarged. Description may contain HTML tags
+            value: 2000, // The position of the chapter relative to the media duration (in milliseconds)
+            file: { // A file attached to the chapter
+              url: 'https://host.local/video.mp4', // File URL. The displayed file name is retrieved for the URL when enlarging the chapter
+              originalName: 'download-file-name' // The name presented to the user when downloading the file (should not contain the extension)
             }
           }
         ],
-        cut: [ // Cut information (begin and end)
+        tags: [ // A list of tags
           {
-            type: 'begin', // Cut type (either "begin" or "end")
-            value: 0 // Begin timecode (percentage of the media)
+            name: 'Simple tag', // The tag name displayed in the list of tags and when a tag is enlarged
+            description: 'Simple tag description', // The tag description. The description is displayed when tag is enlarged. Description may contain HTML tags
+            value: 1000 // The position of the tag relative to the media duration (in milliseconds)
           },
           {
-            type: 'end', // Cut type (either "begin" or "end")
-            value: 0.9 // End timecode (percentage of the media)
+            name: 'Tag with attached file', // The tag name displayed in the list of tags and when a tag is enlarged
+            description: 'Tag with attached file description', // The tag description. The description is displayed when tag is enlarged. Description may contain HTML tags
+            value: 2000, // The position of the tag relative to the media duration (in milliseconds)
+            file: { // A file attached to the tag
+              url: 'https://host.local/video.mp4', // File URL. The displayed file name is retrieved for the URL when enlarging the tag
+              originalName: 'download-file-name' // The name presented to the user when downloading the file (should not contain the extension)
+            }
+          }
+        ],
+        cut: [ // The list of cuts to apply to the media, for now only start and end cuts are available
+          {
+            type: 'begin', // The cut type (either "begin" or "end")
+            value: 0 // The position of the cut relative to the media duration (in milliseconds)
+          },
+          {
+            type: 'end', // The cut type (either "begin" or "end")
+            value: 10000 // The position of the cut relative to the media duration (in milliseconds)
           }
         ]
       };
@@ -165,7 +141,7 @@ The HTML player expects one media Id and one url by source.
 
 You can also use the HTML player to play several sources (different viewpoint for example).
 
-The HTML player with several sources expects one media Id and one url by source.
+The HTML player expects one or several media ids with one or several sources. The first media id corresponds to the first source, the second media id corresponds to the second source and so on.
 
 ## index.html
 
@@ -210,42 +186,44 @@ The HTML player with several sources expects one media Id and one url by source.
   var app = angular.module('test.player', ['ov.player']);
 
   app.controller('TestController', TestController);
-  TestController.$inject = ['$scope', '$window', '$location'];
+  TestController.$inject = ['$scope'];
 
   /**
    * Defines the test controller.
    */
-  function TestController($scope, $window, $location) {
+  function TestController($scope) {
     $scope.data =
       {
-        mediaId: ['136081112', '136081113'], // Ids of the sources
-        sources: [
+        mediaId: ['136081112', '136081113'], // The list of media ids, one id by source. For the "html" player, the first media id corresponds to the first source, the second media id to the second source and so on
+        sources: [ // The list of sources, one source by media id (only for the "html" player)
           {
-            files: [ // The list of resolutions for the source "136081112"
+            files: [ // A list of MP4 files (qualities)
               {
-                width: 640, // Video width for this resolution
-                height: 360, // Video height for this resolution
-                link: 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+                width: 640, // The video width in pixels
+                height: 360, // The video height in pixels
+                link: 'https://host.local/pathToSDMP4-136081112.mp4' // The URL of the MP4 file
               },
               {
-                width: 1280, // Video width for this resolution
-                height: 720, // Video height for this resolution
-                link: 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
-              }
+                width: 1280, // The video width in pixels
+                height: 720, // The video height in pixels
+                link: 'https://host.local/pathToHDMP4-136081113.mp4' // The URL of the MP4 file
+              },
+              ...
             ]
           },
           {
-            files: [ // The list of resolutions for the source "136081113"
+            files: [ // A list of MP4 files (qualities)
               {
-                width: 640, // Video width for this resolution
-                height: 360, // Video height for this resolution
-                link: 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+                width: 640, // The video width in pixels
+                height: 360, // The video height in pixels
+                link: 'https://host.local/pathToSDMP4-136081113.mp4' // The URL of the MP4 file
               },
               {
-                width: 1280, // Video width for this resolution
-                height: 720, // Video height for this resolution
-                link: 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
-              }
+                width: 1280, // The video width in pixels
+                height: 720, // The video height in pixels
+                link: 'https://host.local/pathToHDMP4-136081113.mp4' // The URL of the MP4 file
+              },
+              ...
             ]
           }
         ],
@@ -302,15 +280,15 @@ The Vimeo player expects the id of the media hosted on Vimeo. You can specify se
   var app = angular.module('test.player', ['ov.player']);
 
   app.controller('TestController', TestController);
-  TestController.$inject = ['$scope', '$window', '$location'];
+  TestController.$inject = ['$scope'];
 
   /**
    * Defines the test controller.
    */
-  function TestController($scope, $window, $location) {
+  function TestController($scope) {
     $scope.data =
       {
-        mediaId: ['136081112'], // The id(s) of the source(s) on vimeo platform
+        mediaId: ['136081112'], // The id(s) of the source(s) on Vimeo platform
         [...]
      };
   }
@@ -365,15 +343,15 @@ The Youtube player expects the id of the media hosted on Youtube. You can specif
   var app = angular.module('test.player', ['ov.player']);
 
   app.controller('TestController', TestController);
-  TestController.$inject = ['$scope', '$window', '$location'];
+  TestController.$inject = ['$scope'];
 
   /**
    * Defines the test controller.
    */
-  function TestController($scope, $window, $location) {
+  function TestController($scope) {
     $scope.data =
       {
-        mediaId : ['136081112'], // The id(s) of the source(s) on youtube platform
+        mediaId : ['136081112'], // The id(s) of the source(s) on Youtube platform
         [...]
      };
   }
@@ -429,26 +407,26 @@ You can interact with the player using the API.
   var app = angular.module('test.player', ['ov.player']);
 
   app.controller('TestController', TestController);
-  TestController.$inject = ['$scope', '$window', '$location'];
+  TestController.$inject = ['$scope'];
 
   /**
    * Defines the test controller.
    */
-  function TestController($scope, $window, $location) {
+  function TestController($scope) {
     $scope.data = {
-      mediaId: ['136081112'], // The id(s) of the source(s) on vimeo platform
-      sources: [
+      mediaId: ['136081112'], // The list of media ids, one id by source. For the "html" player, the first media id corresponds to the first source, the second media id to the second source and so on
+      sources: [ // The list of sources, one source by media id (only for the "html" player)
         {
-          files: [ // The list of resolutions for the source "136081112" (only for "html" player)
+          files: [ // A list of MP4 files (qualities)
             {
-              width: 640, // Video width for this resolution
-              height: 360, // Video height for this resolution
-              link: 'http://mydomainname.local/pathToSDMP4.mp4' // Video url
+              width: 640, // The video width in pixels
+              height: 360, // The video height in pixels
+              link: 'https://host.local/pathToSDMP4-136081112.mp4' // The URL of the MP4 file
             },
             {
-              width: 1280, // Video width for this resolution
-              height: 720, // Video height for this resolution
-              link: 'http://mydomainname.local/pathToHDMP4.mp4' // Video url
+              width: 1280, // The video width in pixels
+              height: 720, // The video height in pixels
+              link: 'https://host.local/pathToHDMP4-136081112.mp4' // The URL of the MP4 file
             }
           ]
         }
@@ -464,8 +442,8 @@ You can interact with the player using the API.
 
       var playerController = angular.element(myPlayer).controller('oplPlayer');
 
-      // Selects a new display mode ('media')
-      playerController.selectMode('media');
+      // Selects a new display template ('split_2')
+      playerController.selectTemplate('split_2');
 
       // Starts / Pauses the player
       playerController.playPause();

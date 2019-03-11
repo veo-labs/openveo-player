@@ -1,6 +1,15 @@
-<nav>
-  <ul>
-    <li ng-repeat="view in $ctrl.views" ng-click="$ctrl.select(view)" ng-class="{'opl-selected': view.selected}">{{view.oplTitle}}</li>
-  </ul>
-</nav>
-<div ng-transclude></div>
+<div class="opl-tabs" ng-class="{'opl-no-tabs': $ctrl.oplNoTabs === 'true'}">
+  <div class="opl-tabs-wrapper">
+    <ul role="tablist" aria-orientation="vertical" tabindex="0">
+      <li ng-repeat="view in $ctrl.views" ng-class="{'opl-selected': view.selected}" role="tab" aria-selected="{{view.selected}}" aria-controls="{{view.oplViewId}}">
+        <opl-button
+                    opl-icon="{{view.oplIcon}}"
+                    opl-label="{{view.oplLabel}}"
+                    opl-no-sequential-focus="true"
+                    opl-on-update="handleButtonAction(view)"
+        ></opl-button>
+      </li>
+    </ul>
+  </div>
+  <div ng-transclude></div>
+</div>

@@ -11,7 +11,6 @@ pages:
   - 'Prerequisites': 'prerequisites.md'
   - 'Getting started': 'getting-started.md'
   - 'Adaptive streaming': 'adaptive-streaming.md'
-  - 'Animations': 'animations.md'
   - 'API': 'api.md'
   - 'Examples': 'examples.md'
 - 'DEVELOPERS':

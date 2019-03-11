@@ -19,12 +19,7 @@
   // Player translations
   app.constant('oplI18nTranslations', {
     en: {
-      VIDEO_TAB_TITLE: 'Video',
-      INDEX_TAB_TITLE: 'Index',
-      CHAPTERS_TAB_TITLE: 'Chapters',
-      TAGS_TAB_TITLE: 'Tags',
       LOADING: 'Loading...',
-      FILE_DOWNLOAD: 'Download',
       MEDIA_ERR_NO_SOURCE: 'A network error caused the video download to fail part-way.',
       MEDIA_ERR_NETWORK: 'A network error caused the video download to fail part-way.',
       MEDIA_ERR_DECODE: 'The video playback was aborted due to a corruption problem ' +
@@ -47,15 +42,21 @@
       CONTROLS_TEMPLATE_SPLIT_25_75_ARIA_LABEL: 'Mode with priority on presentation',
       CONTROLS_SETTINGS_ARIA_LABEL: 'Settings',
       CONTROLS_SETTINGS_QUALITIES_TITLE: 'Quality',
-      CONTROLS_SETTINGS_SOURCES_TITLE: 'Source'
+      CONTROLS_SETTINGS_SOURCES_TITLE: 'Source',
+      CONTROLS_SETTINGS_SOURCE_LABEL: 'Source %source%',
+      CONTROLS_PLAY_ARIA_LABEL: 'Play',
+      CONTROLS_PAUSE_ARIA_LABEL: 'Pause',
+      CONTROLS_TEMPLATES_SELECTOR_ARIA_LABEL: 'Choose player template',
+      CONTROLS_TIME_BAR_ARIA_LABEL: 'Navigate in the video',
+      CONTROLS_TIME_BAR_ARIA_VALUE_TEXT: '%value%% seen',
+      CONTROLS_FULLSCREEN_ARIA_LABEL: 'Fullscreen',
+      CONTROLS_FULLSCREEN_EXIT_ARIA_LABEL: 'Exit fullscreen',
+      TABS_CHAPTERS_ARIA_LABEL: 'Display chapters',
+      TABS_TIMECODES_ARIA_LABEL: 'Display images',
+      TABS_TAGS_ARIA_LABEL: 'Display tags'
     },
     fr: {
-      VIDEO_TAB_TITLE: 'Vidéo',
-      INDEX_TAB_TITLE: 'Index',
-      CHAPTERS_TAB_TITLE: 'Chapitres',
-      TAGS_TAB_TITLE: 'Tags',
       LOADING: 'Chargement...',
-      FILE_DOWNLOAD: 'Télécharger',
       MEDIA_ERR_NO_SOURCE: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
       MEDIA_ERR_NETWORK: 'Une erreur réseau à causé l\'échec du téléchargement de la vidéo.',
       MEDIA_ERR_DECODE: 'La lecture de la vidéo a été abandonnée en raison d\' un problème de corruption ' +
@@ -78,7 +79,18 @@
       CONTROLS_TEMPLATE_SPLIT_25_75_ARIA_LABEL: 'Mode avec priorité sur la présentation',
       CONTROLS_SETTINGS_ARIA_LABEL: 'Paramètres',
       CONTROLS_SETTINGS_QUALITIES_TITLE: 'Qualité',
-      CONTROLS_SETTINGS_SOURCES_TITLE: 'Source'
+      CONTROLS_SETTINGS_SOURCES_TITLE: 'Source',
+      CONTROLS_SETTINGS_SOURCE_LABEL: 'Source %source%',
+      CONTROLS_PLAY_ARIA_LABEL: 'Lire',
+      CONTROLS_PAUSE_ARIA_LABEL: 'Pause',
+      CONTROLS_TEMPLATES_SELECTOR_ARIA_LABEL: 'Choisir un modèle de player',
+      CONTROLS_TIME_BAR_ARIA_LABEL: 'Se déplacer dans la vidéo',
+      CONTROLS_TIME_BAR_ARIA_VALUE_TEXT: '%value%% vu',
+      CONTROLS_FULLSCREEN_ARIA_LABEL: 'Plein écran',
+      CONTROLS_FULLSCREEN_EXIT_ARIA_LABEL: 'Quitter le plein écran',
+      TABS_CHAPTERS_ARIA_LABEL: 'Afficher les chapitres',
+      TABS_TIMECODES_ARIA_LABEL: 'Afficher les indexes',
+      TABS_TAGS_ARIA_LABEL: 'Afficher les tags'
     }
   });
 

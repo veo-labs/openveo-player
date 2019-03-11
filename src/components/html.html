@@ -1,9 +1,12 @@
-<video id="{{$ctrl.playerId}}" ng-click="$ctrl.playPause()" class="opl-media-player video-js vjs-default-skin">
-  <p>Your user agent does not support the HTML5 Video element.</p>
-</video>
-<div class="opl-overlay-play-button" ng-show="$ctrl.playPauseButton === 'play'" ng-click="$ctrl.playPause()">
+<div class="opl-overlay-play-button">
+  <opl-toggle-icon-button
+                          opl-on-update="$ctrl.playPause(on)"
+  ></opl-toggle-icon-button>
   <div>
-    <div ng-if='!$ctrl.error' class="opl-icon-{{$ctrl.playPauseButton}} opl-button"></div>
     <div ng-if='$ctrl.error' class="opl-error" ng-bind='$ctrl.error'></div>
   </div>
 </div>
+
+<video id="{{$ctrl.playerId}}" class="opl-media-player video-js vjs-default-skin">
+  <p>Your user agent does not support the HTML5 Video element.</p>
+</video>

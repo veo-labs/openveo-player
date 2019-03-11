@@ -4,9 +4,9 @@ Player can be controlled by methods and emits catchable events on the player HTM
 
 # Methods
 
-## selectMode(mode)
+## selectTemplate(template)
 
-Sets the display mode.
+Sets the display template.
 
 Usage:
 
@@ -17,7 +17,7 @@ angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
   var playerController = angular.element(myPlayer).controller('oplPlayer');
-  playerController.selectMode('presentation');
+  playerController.selectTemplate('split_2');
 });
 ```
 
@@ -25,7 +25,7 @@ Arguments:
 
 Param | Type | Details
 ----- | ---- | ----
-mode  | String  | Display mode (can be either **media**, **both**, **both-presentation** or **presentation**)
+template  | String  | Display template (can be either **split_1**, **split_50_50**, **split_25_75** or **split_2**)
 
 ## playPause()
 
@@ -88,7 +88,7 @@ Arguments:
 
 Param | Type | Details
 ----- | ---- | ----
-time  | Number  | The time to set (in milliseconds)
+time  | Number  | The time to set (in milliseconds) relative to the cut media
 
 ## setDefinition(definition)
 
@@ -106,7 +106,7 @@ angular.element(myPlayer).on('ready', function(event){
   playerController.setDefinition({
     width: 1280,
     height: 720,
-    link: 'http(s)://mydomainname.local/linkToTheHDFile'
+    link: 'http(s)://host.local/linkToTheHDFile'
   });
 });
 ```
@@ -138,7 +138,7 @@ Arguments:
 
 Param | Type | Details
 ----- | ---- | ----
-source  | Number  | The index of the source to load in the list of sources
+source  | Number  | The index of the source to load from the list of sources
 
 # Events
 

@@ -9,19 +9,36 @@
  * an opl-tabs element.
  *
  * Available attributes are:
- *  - [String] **opl-title**: The title that will be display in the tab corresponding to the view
- *  - [String] **opl-view**: A CSS class that will be added to the main container of the view
- *  - [String] **opl-view-id**: The view identifier
+ *  - [String] **opl-label** The ARIA label to apply to the button. Empty by default.
+ *  - [String] **opl-class** A CSS class that will be added to the main container of the view
+ *  - [String] **opl-view-id** The view identifier
+ *  - [String] **opl-icon** The ligature name of the icon to use (from "OpenVeo-Player-Icons" font)
+ *  - [Function] **opl-on-selected** Function to call when view has been selected
  *
- * e.g.
- * <opl-tabs>
- *  <opl-view opl-title="Tab 1 title" opl-view="view-1" opl-view-id="view1">
- *    Content of the first view
- *  </opl-view>
- *  <opl-view opl-title="Tab 2 title" opl-view="view-2" opl-view-id="view1">
- *    Content of the second view
- *  </opl-view>
- * </opl-tabs>
+ * @example
+ *      var handleOnSelected = function(id) {
+ *        console.log('View ' + id + ' has been selected');
+ *      };
+ *
+ *      <opl-tabs>
+ *        <opl-view
+ *                  opl-label="Tab 1"
+ *                  opl-class="view-1"
+ *                  opl-view-id="view1"
+ *                  opl-icon="icon1_ligature"
+ *                  opl-on-selected="handleOnSelected(id)"
+ *        >
+ *          Content of the first view
+ *        </opl-view>
+ *        <opl-view
+ *                  opl-label="Tab 2"
+ *                  opl-class="view-2"
+ *                  opl-view-id="view2"
+ *                  opl-icon="icon2_ligature"
+ *        >
+ *          Content of the second view
+ *        </opl-view>
+ *      </opl-tabs>
  *
  * @class oplView
  */
@@ -33,9 +50,11 @@
     require: ['^oplTabs'],
     transclude: true,
     bindings: {
-      oplTitle: '@',
-      oplView: '@',
-      oplViewId: '@'
+      oplLabel: '@?',
+      oplClass: '@?',
+      oplViewId: '@',
+      oplIcon: '@',
+      oplOnSelect: '&'
     }
   });
 

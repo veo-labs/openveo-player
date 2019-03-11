@@ -1,16 +1,86 @@
+@import "compass/css3/box-sizing";
 @import "compass/css3/user-interface";
 @import "compass/css3/transition";
+@import "compass/css3/animation";
+@import "compass/css3/transform";
+@import "compass/css3/box-shadow";
+
+$OPL_PLAYER_PRIMARY_COLOR: #000000;
+$OPL_PLAYER_ACCENT_COLOR: #e6007e;
+$OPL_PLAYER_BACKGROUND_COLOR: #ffffff;
+$OPL_PLAYER_CONTROLS_PRIMARY_COLOR: #ffffff;
+$OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
+
+/*
+  Animate the element with a translation effect from 0 to -100% on y-axis.
+*/
+@include keyframes(opl-player-y-slide-out) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include translateY(0);
+  }
+  to {
+    @include translateY(-100%);
+  }
+}
+
+/*
+  Animate the element with a translation effect from -100% to 0 on y-axis.
+*/
+@include keyframes(opl-player-y-slide-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include translateY(-100%);
+  }
+  to {
+    @include translateY(0);
+  }
+}
+
+/*
+  Animate the element with a translation effect from 0 to --44px on y-axis.
+*/
+@include keyframes(opl-player-light-controls-y-slide-out) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include translateY(0);
+  }
+  to {
+    @include translateY(-44px);
+  }
+}
+
+/*
+  Animate the element with a translation effect from -44px to 0 on y-axis.
+*/
+@include keyframes(opl-player-light-controls-y-slide-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include translateY(-44px);
+  }
+  to {
+    @include translateY(0);
+  }
+}
 
 .opl-player {
+  --opl-player-primary-color: #{$OPL_PLAYER_PRIMARY_COLOR};
+  --opl-player-primary-color-0: #{rgba($OPL_PLAYER_PRIMARY_COLOR, 0)};
+  --opl-player-primary-color-1: #{rgba($OPL_PLAYER_PRIMARY_COLOR, 0.05)};
+  --opl-player-primary-color-2: #{rgba($OPL_PLAYER_PRIMARY_COLOR, 0.098)};
+  --opl-player-primary-color-3: #{rgba($OPL_PLAYER_PRIMARY_COLOR, 0.12)};
+  --opl-player-primary-color-4: #{rgba($OPL_PLAYER_PRIMARY_COLOR, 0.541)};
+  --opl-player-accent-color: #{$OPL_PLAYER_ACCENT_COLOR};
+  --opl-player-background-color: #{$OPL_PLAYER_BACKGROUND_COLOR};
+  --opl-player-background-color-0: #{rgba($OPL_PLAYER_BACKGROUND_COLOR, 0.12)};
+  --opl-player-background-color-1: #{rgba($OPL_PLAYER_BACKGROUND_COLOR, 0.20)};
+  --opl-player-controls-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
   position: relative;
   height: 500px;
   overflow: hidden;
-  font-family: arial, sans-serif;
+  font-family: Roboto, sans-serif;
   font-size: 12px;
-
-  * {
-    box-sizing: content-box;
-  }
+  @include box-sizing(border-box);
 
   ul {
     margin: 0;
@@ -32,10 +102,530 @@
   }
 
   .vjs-loading-spinner {
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
+
+  /*
+    No points of interest.
+  */
+  &.opl-no-poi {
+
+    /*
+      Player.
+    */
+    .opl-media-wrapper {
+      bottom: 0;
+    }
+
+    opl-tabs {
+      display: none;
+    }
+
+  }
+
+  /*
+    Light controls.
+  */
+  .opl-light-controls {
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    will-change: transform;
+    @include translateY(-44px);
+
+    /*
+      Light controls wrapper.
+    */
+    & > div {
+      display: flex;
+      width: 100%;
+      background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
+      @include box-shadow(0px 4px 6px var(--opl-player-primary-color-3, rgba($OPL_PLAYER_PRIMARY_COLOR, 0.12)));
+
+      /*
+        Light controls play / pause button.
+      */
+      opl-toggle-icon-button {
+        flex-basis: 32px;
+        flex-grow: 0;
+        flex-shrink: 0;
+      }
+
+      /*
+        Light controls current time.
+      */
+      .opl-current-time {
+        flex-basis: 56px;
+        flex-shrink: 0;
+        flex-grow: 0;
+        display: inline-block;
+        color: var(--opl-player-primary-color-4, rgba($OPL_PLAYER_PRIMARY_COLOR, 0.541));
+        vertical-align: top;
+
+        span {
+          line-height: 32px;
+          letter-spacing: 0.4px;
+        }
+      }
+
+      /*
+        Light controls volume component.
+      */
+      opl-volume {
+        flex-shrink: 0;
+        flex-grow: 0;
+      }
+
+      /*
+        Light controls volume.
+      */
+      .opl-volume {
+
+        .opl-slider {
+          --opl-slider-primary-color: #{$OPL_PLAYER_PRIMARY_COLOR};
+          --opl-slider-primary-color-0: #{rgba($OPL_PLAYER_PRIMARY_COLOR, 0.098)};
+          --opl-slider-accent-color: #{$OPL_LIGHT_CONTROLS_SLIDER_COLOR};
+
+        }
+
+      }
+
+      /*
+        Light controls play / pause button in resting state.
+      */
+      .opl-toggle-icon-button {
+        --opl-toggle-icon-button-primary-color: #{$OPL_PLAYER_PRIMARY_COLOR};
+        color: var(--opl-player-primary-color-4, rgba($OPL_PLAYER_PRIMARY_COLOR, 0.541));
+      }
+
+      /*
+        Light controls time bar.
+      */
+      .opl-time-bar {
+        flex-grow: 1;
+        margin-right: 16px;
+
+        .opl-slider {
+          --opl-slider-primary-color: #{$OPL_PLAYER_PRIMARY_COLOR};
+          --opl-slider-primary-color-0: #{rgba($OPL_PLAYER_PRIMARY_COLOR, 0.098)};
+          --opl-slider-accent-color: #{$OPL_PLAYER_ACCENT_COLOR};
+
+        }
+      }
+
+    }
+
+    /*
+      Light controls in masking state.
+    */
+    &.opl-light-controls-masking {
+      @include translateY(0);
+      @include animation-name(opl-player-light-controls-y-slide-out);
+      @include animation-duration(150ms);
+      @include animation-fill-mode(forwards);
+    }
+
+    /*
+      Light controls in posting state.
+    */
+    &.opl-light-controls-posting {
+      @include translateY(-44px);
+      @include animation-name(opl-player-light-controls-y-slide-in);
+      @include animation-duration(150ms);
+      @include animation-fill-mode(forwards);
+    }
+
+    /*
+      Light controls in posted state.
+    */
+    &.opl-light-controls-posted {
+      @include translateY(0);
+    }
+
+  }
+
+  @media(min-width: $MEDIA_SMALL_BREAKPOINT) {
+
+    /*
+      Light controls for large devices.
+    */
+    .opl-light-controls > div {
+      max-width: 616px;
+    }
+
+  }
+
+  /*
+    Media wrapper.
+  */
+  .opl-media-wrapper {
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 96px;
+    background-color: var(--opl-player-primary-color, $OPL_PLAYER_PRIMARY_COLOR);
+    border-bottom: 1px solid var(--opl-player-primary-color-1, rgba($OPL_PLAYER_PRIMARY_COLOR, 0.05));
+    will-change: transform;
+    @include translateY(0);
+
+    /*
+      Media wrapper in masking state.
+    */
+    &.opl-masking {
+      @include translateY(0);
+      @include animation-name(opl-player-y-slide-out);
+      @include animation-duration(225ms);
+      @include animation-fill-mode(forwards);
+    }
+
+    /*
+      Media wrapper in posting state.
+    */
+    &.opl-posting {
+      @include translateY(-100%);
+      @include animation-name(opl-player-y-slide-in);
+      @include animation-duration(225ms);
+      @include animation-delay(300ms);
+      @include animation-fill-mode(forwards);
+    }
+
+    /*
+      Media wrapper in masked state.
+    */
+    &.opl-masked {
+      @include translateY(-100%);
+    }
+
+    /*
+      First area (the media).
+    */
+    .opl-media {
+      position: relative;
+      width: 100%;
+      height: 100%;
+
+      .opl-media-player {
+        width: 100% !important;
+        height: 100% !important;
+        outline: none;
+      }
+
+      /*
+        Overlay play / pause button.
+      */
+      .opl-overlay-play-button {
+        z-index: 1;
+        display: table;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+
+        /*
+          Controls buttons.
+        */
+        opl-toggle-icon-button,
+        .opl-toggle-icon-button {
+          width: 100%;
+          height: 100%;
+        }
+
+        /*
+          Focus ring in button hover state.
+        */
+        .opl-toggle-icon-button:hover::before {
+          opacity: 0;
+        }
+
+        /*
+          Focus ring in button focus state.
+        */
+        .opl-toggle-icon-button.opl-focus::before {
+          opacity: 0;
+        }
+
+        & > div {
+          display: table-cell;
+          vertical-align: middle;
+          text-align: center;
+        }
+
+        .opl-error {
+          color: var(--opl-player-controls-primary-color, $OPL_PLAYER_CONTROLS_PRIMARY_COLOR);
+        }
+      }
+
+    }
+
+    /*
+      Both, both-2 and 1 templates for small devices.
+    */
+    &.opl-mode-split_50_50 .opl-area-2,
+    &.opl-mode-split_25_75 .opl-area-2,
+    &.opl-mode-split_1 .opl-area-2 {
+      display: none;
+    }
+
+    /*
+      Mode 50 / 50 for small devices.
+    */
+    &.opl-mode-split_50_50 {
+      .opl-area-2 {
+        display: none;
+      }
+    }
+
+    /*
+      Mode 25 / 75 for small devices.
+    */
+    &.opl-mode-split_25_75 {
+      .opl-area-2 {
+        display: none;
+      }
+    }
+
+    /*
+      Mode 1 for small devices.
+    */
+    &.opl-mode-split_1 {
+      .opl-area-2 {
+        display: none;
+      }
+    }
+
+    /*
+      Mode 2 for small devices.
+    */
+    &.opl-mode-split_2 {
+      .opl-area-2 {
+        display: none;
+      }
+    }
+
+    /*
+      Large devices may display both presentation and media.
+    */
+    @media(min-width: $MEDIA_LARGE_BREAKPOINT) {
+
+      /*
+        Mode 50 / 50 for large devices.
+      */
+      &.opl-mode-split_50_50 {
+        .opl-media,
+        .opl-area-2 {
+          display: block;
+          float: left;
+          width: 50%;
+        }
+        .opl-controls {
+          width: 50%;
+        }
+      }
+
+      /*
+        Mode 25 / 75 for large devices.
+      */
+      &.opl-mode-split_25_75 {
+        .opl-media,
+        .opl-area-2 {
+          display: block;
+          float: left;
+        }
+        .opl-media {
+          width: 25%;
+        }
+        .opl-area-2 {
+          width: 75%;
+        }
+        .opl-controls {
+          width: 25%;
+        }
+      }
+
+      /*
+        Mode 1 only for large devices.
+      */
+      &.opl-mode-split_1 {
+        .opl-media {
+          display: block;
+          width: 100%;
+        }
+        .opl-area-2 {
+          display: none;
+        }
+        .opl-controls {
+          width: 100%;
+        }
+      }
+
+      /*
+        Mode 2 only for large devices.
+      */
+      &.opl-mode-split_2 {
+        .opl-media {
+          display: none;
+        }
+        .opl-area-2 {
+          display: block;
+          width: 100%;
+        }
+        .opl-controls {
+          width: 100%;
+        }
+      }
+    }
+
+  }
+
+  /*
+    Area 2.
+  */
+  .opl-area-2 {
+    height: 100%;
+
+    & > div {
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+  }
+
+  .opl-controls {
+    z-index: 2;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 64px;
+    width: 100%;
+    background: linear-gradient(to top, var(--opl-player-primary-color-4, rgba($OPL_PLAYER_PRIMARY_COLOR, 0.541)), var(--opl-player-primary-color-0, rgba($OPL_PLAYER_PRIMARY_COLOR, 0)));
+    will-change: opacity;
+    @include user-select(none);
+    @include transition-property(opacity);
+    @include transition-timing-function(cubic-bezier(0, 0, 0.2, 1));
+    @include transition-duration(250ms);
+
+    /*
+      Controls in hidden state.
+    */
+    &.opl-hidden {
+      opacity: 0;
+      @include transition-property(opacity);
+      @include transition-timing-function(cubic-bezier(0.4, 0.0, 1, 1));
+      @include transition-duration(100ms);
+    }
+
+    /*
+      Left controls.
+    */
+    .opl-left-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    /*
+      Right controls.
+    */
+    .opl-right-controls {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+    /*
+      Controls buttons.
+    */
+    .opl-toggle-icon-button {
+      --opl-toggle-icon-button-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
+    }
+
+    .opl-settings .opl-button {
+      --opl-button-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
+    }
+
+    .opl-template-selector {
+      --opl-template-selector-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
+    }
+
+    /*
+      Controls wrapper.
+    */
+    & > div {
+      position: absolute;
+      left: 8px;
+      bottom: 4px;
+      height: 64px;
+      width: calc(100% - 16px);
+    }
+
+    /*
+      Controls time and duration.
+    */
+    .opl-current-time {
+      display: inline-block;
+      vertical-align: top;
+      color: var(--opl-player-controls-primary-color, $OPL_PLAYER_CONTROLS_PRIMARY_COLOR);
+
+      span {
+        line-height: 32px;
+        letter-spacing: 0.4px;
+      }
+    }
+
+    .opl-volume {
+
+      .opl-slider {
+        --opl-slider-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
+        --opl-slider-primary-color-0: #{rgba($OPL_PLAYER_CONTROLS_PRIMARY_COLOR, 0.7)};
+        --opl-slider-accent-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
+
+      }
+
+    }
+
+    .opl-time-bar {
+      position: absolute;
+      bottom: 32px;
+      left: 11px;
+      width: calc(100% - 22px);
+      height: 32px;
+
+      /*
+        Index preview.
+      */
+      .opl-index-preview {
+        position: absolute;
+        bottom: 32px;
+        left: 0;
+        width: 148px;
+        height: 80px;
+        @include box-shadow(0px 0px 8px var(--opl-player-background-color-0, rgba($OPL_PLAYER_BACKGROUND_COLOR, 0.12)), 0px 1px 2px var(--opl-player-background-color-1, rgba($OPL_PLAYER_BACKGROUND_COLOR, 0.20)));
+      }
+
+      .opl-slider {
+        --opl-slider-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
+        --opl-slider-primary-color-0: #{rgba($OPL_PLAYER_CONTROLS_PRIMARY_COLOR, 0.7)};
+        --opl-slider-accent-color: #{$OPL_PLAYER_ACCENT_COLOR};
+
+      }
+
+    }
+  }
+
 }
 
+/*
+  Player in fullscreen state.
+*/
 .opl-fullscreen > .opl-player {
   position: absolute;
   top: 0;
@@ -44,518 +634,68 @@
   height: 100%;
 }
 
-/* Full screen for browsers who supports the fullscreen API */
+/*
+  Full screen for browsers who supports the fullscreen API.
+*/
 opl-player > div:full-screen, :full-screen .opl-player {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: $BACKGROUND_COLOR;
+  background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
 }
 
-/* Full screen for Webkit based browsers */
+/*
+  Full screen for Webkit based browsers.
+*/
 opl-player > div:-webkit-full-screen, :-webkit-full-screen .opl-player {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: $BACKGROUND_COLOR;
+  background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
 }
 
-/* Full screen for Microsoft browsers */
+/*
+  Full screen for Microsoft browsers.
+*/
 opl-player > div:-ms-fullscreen, :-ms-fullscreen .opl-player {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: $BACKGROUND_COLOR;
+  background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
 }
 
-/* Full screen for Opera browsers */
+/*
+  Full screen for Opera browsers.
+*/
 opl-player > div:-o-full-screen, :-o-full-screen .opl-player {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: $BACKGROUND_COLOR;
+  background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
 }
 
-/* Full screen for Mozilla browsers */
+/*
+  Full screen for Mozilla browsers.
+*/
 opl-player > div:-moz-full-screen, :-moz-full-screen .opl-player {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: $BACKGROUND_COLOR;
-}
-
-.opl-views {
-  position: absolute;
-  width: 100%;
-  top: 0;
-  bottom: 50px;
-
-  @media(min-width: $MEDIA_MIN_WIDTH) {
-    top: 40px;
-  }
-}
-
-.opl-media-view {
-  opacity: 1;
-  width: 100%;
-  height: 100%;
-  background-color: $BACKGROUND_COLOR;
-  @include user-select(none);
-
-  &.ng-hide {
-    opacity: 0;
-  }
-}
-
-/* Media part of the media view */
-.opl-media {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.opl-media-player {
-  width: 100% !important;
-  height: 100% !important;
-  outline: none;
-}
-
-.opl-mode-presentation .opl-media {
-  display: none;
+  background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
 }
 
 /*
- * Presentation part of the media view.
- * Only media on small devices for modes media, both and
- * both-presentation.
- */
-.opl-presentation {
-  height: 100%;
-
-  & > div {
-    width: 100%;
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-
-}
-
-/* Both, both-presentation and media modes for small devices */
-.opl-mode-both .opl-presentation,
-.opl-mode-both-presentation .opl-presentation,
-.opl-mode-media .opl-presentation {
-  display: none;
-}
-
-/* Presentation mode for small devices */
-.opl-mode-presentation .opl-presentation {
-  width: 100%;
-}
-
-/* Large devices may display both presentation and media */
-@media(min-width: $MEDIA_MIN_WIDTH) {
-  .opl-media, .opl-presentation {
-    display: block;
-    float: left;
-    width: 50%;
-  }
-  .opl-mode-both .opl-presentation,
-  .opl-mode-both-presentation .opl-presentation {
-    display: block;
-  }
-
-  /* Media alone mode */
-  .opl-mode-media .opl-presentation {
-    display: none;
-  }
-  .opl-mode-media .opl-media {
-    width: 100%;
-  }
-
-  /* Small media and large presentation mode */
-  .opl-mode-both-presentation .opl-presentation {
-    width: 75%;
-  }
-  .opl-mode-both-presentation .opl-media {
-    width: 25%;
-  }
-
-  /* Presentation mode (repeat second selector to be more clear) */
-  .opl-mode-presentation .opl-media {
-    display: none;
-  }
-  .opl-mode-presentation .opl-presentation {
-    width: 100%;
-  }
-}
-
-/* Loader */
+  Loader.
+*/
 .opl-loader {
+  z-index: 2;
   position: absolute;
   bottom: 10px;
   left: 10px;
-  color: $FOREGROUND_COLOR;
-}
-
-.opl-index-view, .opl-chapters-view, .opl-tags-view {
-  opacity: 1;
-  width: 100%;
-  height: 100%;
-  background-color: #fff;
-  @include user-select(none);
-
-  &.ng-hide-add.ng-hide-add-active,
-  &.ng-hide-remove.ng-hide-remove-active {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  &.ng-hide {
-    opacity: 0;
-  }
-}
-
-.opl-controls {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  background-color: $BACKGROUND_COLOR;
-  color: $FOREGROUND_COLOR;
-  @include user-select(none);
-}
-
-.opl-time-bar {
-  height: 10px;
-  padding: 3px;
-  border: 1px solid $HIGHLIGHT_COLOR;
-  box-sizing: content-box;
-
-  & > div {
-    position: relative;
-    height: 100%;
-    cursor: pointer;
-    background-color: #666;
-  }
-}
-
-.opl-seen {
-  position: absolute;
-  width: 50%;
-  height: 100%;
-  background-color: $HIGHLIGHT_COLOR;
-  @include single-transition("width", 0.2s, "linear", 0);
-}
-
-.opl-loaded {
-  position: absolute;
-  width: 70%;
-  height: 100%;
-  background-color: $NEUTRAL_COLOR;
-  @include single-transition("width", 0.2s, "linear", 0);
-}
-
-.opl-ghost {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.opl-cursor {
-  display: none;
-  position: absolute;
-  top: 0;
-  height:100%;
-  width: 2px;
-  background-color: $FOREGROUND_COLOR;
-
-  @media(min-width: $MEDIA_MIN_WIDTH) {
-    display: block;
-  }
-
-  & > div {
-    z-index: 1;
-    position: absolute;
-    top: -130px;
-    left: -65px;
-    width: 130px;
-    height: 100px;
-    padding: 5px;
-    border: 1px solid #3d3932;
-    background-color: #fff;
-  }
-
-  img {
-    width: 130px;
-    height: 100px;
-  }
-}
-
-.opl-buttons {
-  position: relative;
-  height: 32px;
-
-  /* Left buttons */
-  .opl-left {
-    display: table;
-    position: absolute;
-    left: 10px;
-    font-size: 1.5em;
-    height: 100%;
-    line-height: 36px;
-  }
-
-  /* Right buttons */
-  .opl-right {
-    position: absolute;
-    right: 10px;
-    height: 100%;
-
-    .opl-time,
-    & > div {
-      float: left;
-      font-size: 1.5em;
-      line-height: 32px;
-      padding: 0 5px;
-    }
-
-    .opl-time {
-      font-size: 1.1em;
-
-      & > span {
-        color: #aaa;
-      }
-    }
-
-  }
-}
-
-.opl-button {
-  color: $FOREGROUND_COLOR;
-
-  &:hover {
-    cursor: pointer;
-    color: $HIGHLIGHT_COLOR;
-  }
-
-  &.opl-selected {
-    color: $HIGHLIGHT_COLOR;
-  }
-}
-
-/* Play/pause button */
-.opl-icon-play {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-/* Overlay play/pause button */
-.opl-overlay-play-button {
-  z-index: 1;
-  display: table;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  outline: none;
-
-  & > div {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-  }
-
-  .opl-button {
-    box-sizing: content-box;
-    display: block;
-    width: 20px;
-    padding: 10px 20px 10px 16px;
-    margin: 0 auto;
-    font-size: 2em;
-    background-color: $BACKGROUND_COLOR;
-    color: $FOREGROUND_COLOR;
-    @include transition(background-color 0.2s ease);
-
-    &:hover {
-      background-color: $HIGHLIGHT_COLOR;
-    }
-  }
-  .opl-error {
-    color: $FOREGROUND_COLOR;
-  }
-}
-
-/* Modes button */
-.opl-buttons .opl-right .opl-mode{
-  display: none;
-  position: relative;
-  font-size: 4em;
-  line-height: 32px;
-
-  ul {
-    z-index: 1;
-    position: absolute;
-    bottom: 32px;
-    left: -3px;
-    padding: 5px;
-    border: 1px solid $HIGHLIGHT_COLOR;
-    background-color: $BACKGROUND_COLOR;
-  }
-
-  li {
-    line-height: 30px;
-    height: 30px;
-  }
-
-  @media(min-width: $MEDIA_MIN_WIDTH) {
-    display: block;
-  }
-
-  .opl-modes-animate {
-    opacity: 1;
-
-    &.ng-hide{
-      opacity: 0;
-    }
-  }
-}
-
-/* Volume button */
-.opl-icon-volume {
-  display: none;
-  position: relative;
-
-  @media(min-width: $MEDIA_MIN_WIDTH) {
-    display: block;
-  }
-
-  & > div {
-    z-index: 1;
-    position: absolute;
-    bottom: 32px;
-    left: 5px;
-    width: 10px;
-    height: 70px;
-    padding: 5px;
-    border: 1px solid $HIGHLIGHT_COLOR;
-    background-color: $BACKGROUND_COLOR;
-  }
-
-  .opl-volume {
-    background-color: $HIGHLIGHT_COLOR;
-  }
-  .opl-volume-preview {
-    background-color: $NEUTRAL_COLOR;
-  }
-
-  .opl-volume,
-  .opl-volume-preview {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-  }
-
-  .opl-volume-animate {
-    opacity: 1;
-
-    &.ng-hide {
-      opacity: 0;
-    }
-  }
-
-}
-
-/* Definitions button */
-.opl-buttons .opl-right .opl-icon-settings {
-  display: block;
-  position: relative;
-  line-height: 32px;
-
-  ul {
-    z-index: 1;
-    position: absolute;
-    bottom: 32px;
-    left: -18px;
-    border: 1px solid $HIGHLIGHT_COLOR;
-    font-size: 0.6em;
-    background-color: $BACKGROUND_COLOR;
-    @media(min-width: $MEDIA_MIN_WIDTH) {
-      left: -10px;
-    }
-  }
-
-  li {
-    color: $FOREGROUND_COLOR;
-    line-height: 25px;
-    height: 25px;
-    padding: 0 5px;
-
-    &.opl-hd {
-      line-height: 25px;
-      height: 30px;
-    }
-
-    &:hover {
-      background-color: $HIGHLIGHT_COLOR;
-    }
-
-    &.opl-selected {
-      color: $HIGHLIGHT_COLOR;
-      font-weight: bold;
-    }
-
-    &.opl-hd:after {
-      content: 'HD';
-      font-size: 0.7em;
-      font-weight: bold;
-      vertical-align: super;
-      color: $HIGHLIGHT_COLOR;
-    }
-
-    &.opl-selected:hover, &.opl-hd:hover:after {
-      color: $FOREGROUND_COLOR;
-    }
-  }
-
-  & > div {
-    position: absolute;
-    top: 3px;
-    left: 12px;
-    height: 10px;
-    padding: 1px;
-    font-size: 0.5em;
-    line-height: 10px;
-    border-radius: 2px;
-    font-weight: bold;
-    font-family: Tahoma;
-    background-color: $HIGHLIGHT_COLOR;
-    color: $BACKGROUND_COLOR;
-  }
-
-  .opl-definitions-animate {
-    opacity: 1;
-
-    &.ng-hide {
-      opacity: 0;
-    }
-  }
-}
-
-/* Fullscreen icon */
-.opl-icon-fullscreen {
-  display: none;
-
-  @media(min-width: $MEDIA_MIN_WIDTH) {
-    display: block;
-  }
+  color: var(--opl-player-controls-primary-color, $OPL_PLAYER_CONTROLS_PRIMARY_COLOR);
 }
