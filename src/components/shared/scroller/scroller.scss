@@ -1,0 +1,134 @@
+@import "compass/css3/user-interface";
+@import "compass/css3/transform";
+@import "compass/css3/transition";
+
+$OPL_SCROLLER_PRIMARY_COLOR: #000000;
+
+opl-scroller {
+  width: 100%;
+  height: 100%;
+}
+
+.opl-scroller {
+  --opl-scroller-primary-color: #{$OPL_SCROLLER_PRIMARY_COLOR};
+  --opl-scroller-primary-color-0: #{rgba($OPL_SCROLLER_PRIMARY_COLOR, 0.2)};
+  --opl-scroller-primary-color-1: #{rgba($OPL_SCROLLER_PRIMARY_COLOR, 0.4)};
+  --opl-scroller-primary-color-2: #{rgba($OPL_SCROLLER_PRIMARY_COLOR, 0.6)};
+  position: relative;
+  width: 100%;
+  height: 100%;
+  outline: 0;
+  @include user-select(none);
+
+  /*
+    Scrollbar in resting state.
+  */
+  .opl-scrollbar {
+    position: absolute;
+    z-index: 2;
+    opacity: 0;
+    background-color: var(--opl-scroller-primary-color-0, rgba($OPL_SCROLLER_PRIMARY_COLOR, 0.2));
+    cursor: pointer;
+    will-change: opacity;
+  }
+
+  /*
+    Vertical scrollbar in resting state.
+  */
+  &.opl-vertical > .opl-scrollbar {
+    right: 0;
+    width: 8px;
+    height: 100%;
+  }
+
+  /*
+    Horizontal scrollbar in resting state.
+  */
+  &.opl-horizontal > .opl-scrollbar {
+    bottom: 0;
+    width: 100%;
+    height: 8px;
+  }
+
+  /*
+    Cursor in resting state.
+  */
+  .opl-thumb {
+    position: absolute;
+    z-index: 2;
+    opacity: 0;
+    border-radius: 8px;
+    background-color: var(--opl-scroller-primary-color-0, rgba($OPL_SCROLLER_PRIMARY_COLOR, 0.2));
+    cursor: pointer;
+    will-change: opacity, transform;
+    @include transition-property(transform, -webkit-transform, opacity);
+    @include transition-timing-function(ease, ease, cubic-bezier(0.4, 0.0, 1, 1));
+    @include transition-duration(80ms, 80ms, 100ms);
+
+    /*
+      Cursor in over state.
+    */
+    &.opl-thumb-over {
+      background-color: var(--opl-scroller-primary-color-1, rgba($OPL_SCROLLER_PRIMARY_COLOR, 0.4));
+    }
+
+    /*
+      Cursor in active state.
+    */
+    &.opl-thumb-active {
+      opacity: 1;
+      background-color: var(--opl-scroller-primary-color-2, rgba($OPL_SCROLLER_PRIMARY_COLOR, 0.6));
+    }
+  }
+
+  /*
+    Vertical scrollbar cursor in resting state.
+  */
+  &.opl-vertical > .opl-thumb {
+    top: 0;
+    right: 2px;
+    width: 4px;
+    @include transform-origin(top, left);
+    @include transform(translateY(0));
+    @include scaleX(1);
+  }
+
+  /*
+    Horizontal scrollbar cursor in resting state.
+  */
+  &.opl-horizontal > .opl-thumb {
+    bottom: 2px;
+    left: 0;
+    height: 4px;
+    @include transform-origin(bottom, left);
+    @include transform(translateX(0));
+    @include scaleY(1);
+  }
+
+  /*
+    Scroller in over state and focus state.
+  */
+  &.opl-scroller-over,
+  &.opl-scroller-focus,
+  {
+
+    /*
+      Cursor in over and focus state.
+    */
+    & > .opl-thumb {
+      opacity: 1;
+    }
+
+  }
+
+  /*
+    Scrollable content.
+  */
+  .opl-scroller-content {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+}

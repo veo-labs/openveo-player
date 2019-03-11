@@ -1,0 +1,15 @@
+<div class="opl-scroller" ng-class="{'opl-no-scrollbar': $ctrl.oplDeactivated, 'opl-horizontal': $ctrl.oplOrientation === 'horizontal', 'opl-vertical': $ctrl.oplOrientation === 'vertical'}">
+  <div class="opl-scrollbar"
+       tabindex="{{($ctrl.oplNoSequentialFocus === 'true' ? '-1' : '0')}}"
+       role="scrollbar"
+       aria-controls="{{$ctrl.oplId}}"
+       aria-value-min="0"
+       aria-value-max="100"
+       aria-orientation="{{$ctrl.oplOrientation}}"
+       aria-valuenow="{{value}}"
+       ng-show="!$ctrl.oplDeactivated"
+  >
+  </div>
+  <div class="opl-thumb" ng-show="!$ctrl.oplDeactivated"></div>
+  <div id="{{$ctrl.oplId}}" class="opl-scroller-content" ng-transclude></div>
+</div>
