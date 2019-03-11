@@ -2,10 +2,12 @@
 @import "compass/css3/transition";
 @import "compass/css3/transform";
 
-/* Slider primary color */
-$OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
+$OPL_SLIDER_PRIMARY_COLOR: #000000;
+$OPL_SLIDER_ACCENT_COLOR: #000000;
 
-/* Animation to emphasize an element with an inflate / deflate effect */
+/*
+  Animation to emphasize an element with an inflate / deflate effect.
+*/
 @include keyframes(opl-slider-emphasize) {
   0% {
     @include animation-timing-function(ease-out);
@@ -19,24 +21,33 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
   }
 }
 
+opl-slider {
+  display: inline-block;
+  width: 100%;
+  height: 32px;
+}
+
 .opl-slider {
+  --opl-slider-primary-color: #{$OPL_SLIDER_PRIMARY_COLOR};
+  --opl-slider-primary-color-0: #{rgba($OPL_SLIDER_PRIMARY_COLOR, .098)};
+  --opl-slider-accent-color: #{$OPL_SLIDER_ACCENT_COLOR};
   position: relative;
   width: 100%;
   height: 32px;
   cursor: pointer;
   touch-action: pan-x;
-  -webkit-tap-highlight-color: rgba($OV_PLAYER_SLIDER_PRIMARY_COLOR, 0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
   .opl-slider-track-container {
     position: absolute;
     top: 14px;
     width: 100%;
     height: 4px;
-    background-color: rgba($OV_PLAYER_SLIDER_PRIMARY_COLOR, .098);
+    background-color: var(--opl-slider-primary-color-0, rgba($OPL_SLIDER_PRIMARY_COLOR, .098));
 
     /*
       Hack for MS Edge which has rendering issues when transitioning the track bar, making the track bar
-      appear higher while no transformation is operated on the height on the element.
+      appear higher while no transformation is operated on the height of the element.
     */
     overflow: hidden;
   }
@@ -45,7 +56,7 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
+    background-color: var(--opl-slider-accent-color, $OPL_SLIDER_ACCENT_COLOR);
     @include transform-origin(left, top);
     will-change: transform;
   }
@@ -54,7 +65,7 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
     position: absolute;
     width: 32px;
     height: 32px;
-    transform: translateX(-50%);
+    @include translateX(-50%);
   }
 
   /*
@@ -65,8 +76,8 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
     position: absolute;
     top: 4px;
     left: 4px;
-    fill: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
-    stroke: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
+    fill: var(--opl-slider-accent-color, $OPL_SLIDER_ACCENT_COLOR);
+    stroke: var(--opl-slider-accent-color, $OPL_SLIDER_ACCENT_COLOR);
     @include scale(0.5);
     @include transition-property(transform, fill, stroke, -webkit-transform);
     @include transition-timing-function(ease-out, ease-out, ease-out, ease-out);
@@ -83,7 +94,7 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
     left: 4px;
     width: 24px;
     height: 24px;
-    background-color: $OV_PLAYER_SLIDER_PRIMARY_COLOR;
+    background-color: var(--opl-slider-accent-color, $OPL_SLIDER_ACCENT_COLOR);
     border-radius: 50%;
     opacity: 0;
     @include transition-property(transform, opacity, -webkit-transform);
@@ -94,7 +105,9 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
   &:focus {
     outline: none;
 
-    /* Slider controlled by the keyboard */
+    /*
+      Slider controlled by the keyboard.
+    */
     &:not(.opl-slider-active) .opl-slider-thumb-container,
     &:not(.opl-slider-active) .opl-slider-track {
       @include transition-property(transform, -webkit-transform);
@@ -104,11 +117,11 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
 
   }
 
-  /* Slider becomes in transition while thumb container is moving */
+  /*
+    Slider becomes in transition while thumb container is moving.
+  */
   &.opl-slider-in-transition {
 
-    /*.mdc-slider--in-transit .mdc-slider__thumb-container,
-    .mdc-slider--in-transit .mdc-slider__track {*/
     & .opl-slider-thumb-container,
     & .opl-slider-track {
       @include transition-property(transform, -webkit-transform);
@@ -116,33 +129,45 @@ $OV_PLAYER_SLIDER_PRIMARY_COLOR: rgb(0, 0, 0);
       @include transition-duration(80ms, 80ms, 80ms);
     }
 
-    /* Delay thumb transition to make sure it does not happen when clicking on the slider but when moving the slider */
+    /*
+      Delay thumb transition to make sure it does not happen when clicking on the slider but when moving the slider.
+    */
     .opl-slider-thumb {
       @include transition-delay(100ms);
     }
 
   }
 
-  /* Slider gets focused when using the keyboard */
+  /*
+    Slider gets focused when using the keyboard.
+  */
   &.opl-slider-focus {
 
-    /* Ring focus visibility is visible */
+    /*
+      Ring focus visibility is visible.
+    */
     .opl-slider-focus-ring {
       opacity: 0.36;
       @include scale3d(1.3333, 1.3333, 1.3333);
     }
 
-    /* Thumb gets animated on focus with an inflate / deflate effect ending to its resting state. */
+    /*
+      Thumb gets animated on focus with an inflate / deflate effect ending to its resting state.
+    */
     .opl-slider-thumb {
       @include animation(opl-slider-emphasize 0.26667s linear);
     }
 
   }
 
-  /* Slider becomes active when using a pointer */
+  /*
+    Slider becomes active when using a pointer.
+  */
   &.opl-slider-active {
 
-    /* Thumb active size is the size of the SVG circle. */
+    /*
+      Thumb active size is the size of the SVG circle.
+    */
     .opl-slider-thumb {
       @include scale(1);
     }

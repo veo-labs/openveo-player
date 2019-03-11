@@ -19,17 +19,36 @@
  * opl-slider is composed of a track bar and a thumb.
  *
  * Attributes are:
- * - [Number] **opl-step**: The step to use, it won't be possible to place the slider outside steps it set.
+ * - [Number] **opl-step** The step to use, it won't be possible to place the slider outside steps it set.
  *   Default to 0 (no step) meaning that the slider can be drag & drop at any value of the slider and will move one by
  *   one when using keyboard.
- * - [String] **opl-label**: The ARIA label of the slider. Default to "Select a value".
- * - [String] **opl-value-text**: The human readable text alternative of the slider value. Text will be processed by
+ * - [String] **opl-label** The ARIA label of the slider. Default to "Select a value".
+ * - [String] **opl-value-text** The human readable text alternative of the slider value. Text will be processed by
  *   oplTranslate filter and supports parameter "%value%". Empty by default.
+ * - [Function] **opl-on-focus** The function to call when component enters in focus state
+ * - [Function] **opl-on-over** The function to call when pointer enters the component
+ * - [Function] **opl-on-out** The function to call when pointer leaves the component
+ * - [Function] **opl-on-move** The function to call when pointer moves over the component
  *
  * Requires:
  * - **oplTranslate** OpenVeo Player i18n filter
  *
  * @example
+ *     var handleOnFocus = function() {
+ *       console.log('Component has received focus');
+ *     };
+ *     var handleOnOver = function() {
+ *       console.log('Pointer has entered the component');
+ *     };
+ *     var handleOnOut = function() {
+ *       console.log('Pointer has left the component');
+ *     };
+ *     var handleOnMove = function(value, coordinates, sliderBoundingRectangle) {
+ *       console.log(
+ *         'Pointer has moved over value ' + value + ' in coordinates (' + coordinates.x + ',' + coordinates.y + ')'
+ *       );
+ *       console.log(sliderBoundingRectangle);
+ *     };
  *     var sliderValue = 50;
  *
  *     <opl-slider
@@ -37,6 +56,10 @@
  *               opl-step="10"
  *               opl-label="Select a value"
  *               opl-value-text="Slider value is: %value%"
+ *               opl-on-focus="handleOnFocus()"
+ *               opl-on-over="handleOnOver()"
+ *               opl-on-out="handleOnOut()"
+ *               opl-on-move="handleOnMove(value, coordinates)"
  *     ></opl-slider>
  *
  * @class oplSlider
@@ -50,7 +73,11 @@
     bindings: {
       oplStep: '@?',
       oplLabel: '@?',
-      oplValueText: '@?'
+      oplValueText: '@?',
+      oplOnFocus: '&',
+      oplOnOver: '&',
+      oplOnOut: '&',
+      oplOnMove: '&'
     }
   });
 

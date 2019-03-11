@@ -12,10 +12,13 @@
    * @param {Object} $scope The component isolated scope
    * @param {Object} $element The HTML element holding the component
    * @param {Object} $window The AngularJS $window service
+   * @param {Object} $timeout The AngularJS $timeout service
+   * @param {Object} $q The AngularJS $q service
+   * @param {Object} oplDomFactory Helper to manipulate the DOM
    * @class OplSliderController
    * @constructor
    */
-  function OplSliderController($scope, $element, $window) {
+  function OplSliderController($scope, $element, $window, $timeout, $q, oplDomFactory) {
     var ctrl = this;
     var ngModelCtrl = $element.controller('ngModel');
     var step = 0;
@@ -23,15 +26,22 @@
     var sliderElement;
     var thumbElement;
     var trackElement;
+    var focusRingElement;
+    var trackContainerElement;
     var bodyElement;
     var preventFocus;
     var inTransition;
+
+    $scope.label = 'Select a value';
+    $scope.valueText = '';
+    $scope.valueTextParameters = null;
+    $scope.value = 0;
 
     /**
      * Updates model with actual value.
      */
     function updateModel() {
-      ngModelCtrl.$setViewValue(ctrl.value);
+      ngModelCtrl.$setViewValue($scope.value);
       ngModelCtrl.$validate();
     }
 
@@ -40,8 +50,9 @@
      *
      * Thumb and track are updated to reflect the slider value.
      */
-    function updateUI() {
-      var percentage = ctrl.value / 100;
+    function updateUi() {
+      if (!sliderElementBoundingRectangle) return;
+      var percentage = $scope.value / 100;
 
       if (inTransition) {
         var onTransitionEnd = function onTransitionEnd() {
@@ -68,48 +79,59 @@
      * @param {Number} value The value to apply to the slider between 0 and 100
      */
     function setValue(value) {
-      if (value === ctrl.value) return;
+      if (value === $scope.value) return;
 
       // If a step is defined, adjust value to be in a step
+      value = Math.min(100, Math.max(0, value || 0));
       if (step) value = Math.round(value / step) * step;
 
-      ctrl.value = value;
-      ctrl.valueTextParameters = {
-        '%value%': ctrl.value
+      $scope.value = value;
+      $scope.valueTextParameters = {
+        '%value%': $scope.value
       };
+
       updateModel();
-      updateUI();
+      updateUi();
     }
 
     /**
-     * Computes the width of the slider HTML element.
-     */
-    function computeSliderElementBoundingRectangle() {
-      sliderElementBoundingRectangle = sliderElement[0].getBoundingClientRect();
-    }
-
-    /**
-     * Gets the slider value corresponding to a pressure event.
+     * Gets the coordinates of an UIEvent.
      *
-     * @param {Event} pressureEvent Either a MouseEvent, PointerEvent or TouchEvent
-     * @return {Number} The slider value corresponding to the pressure from 0 to 100
+     * @param {UIEvent} event Either a MouseEvent, PointerEvent or TouchEvent
+     * @return {Object} The coordinates with a property "x" and a property "y"
      */
-    function getSliderPressureValue(pressureEvent) {
-      var pressurePageXPosition;
-      if (pressureEvent.targetTouches && pressureEvent.targetTouches.length > 0) {
+    function getUiEventCoordinates(event) {
+      var coordinates = {};
 
-        // This is a TouchEvent with one or several touch targets.
-        // Get the x coordinate of the first touch point relative to the left
-        // edge of the document
-        pressurePageXPosition = pressureEvent.targetTouches[0].pageX;
+      if (event.targetTouches && event.targetTouches.length > 0) {
+
+        // This is a TouchEvent with one or several touch targets
+        // Get coordinates of the first touch point relative to the document edges
+        coordinates.x = event.targetTouches[0].pageX;
+        coordinates.y = event.targetTouches[0].pageY;
+
+      } else {
+
+        // This is a MouseEvent or a PointerEvent
+        coordinates.x = event.pageX;
+        coordinates.y = event.pageY;
 
       }
 
-      // This is a MouseEvent or a PointerEvent
-      pressurePageXPosition = pressureEvent.pageX;
+      return coordinates;
+    }
 
-      var pressureSliderXPosition = pressurePageXPosition - sliderElementBoundingRectangle.left;
-      return Math.max(0, Math.min(100, pressureSliderXPosition / sliderElementBoundingRectangle.width * 100));
+    /**
+     * Gets the slider value corresponding to an UI event.
+     *
+     * @param {UIEvent} event Either a MouseEvent, PointerEvent or TouchEvent
+     * @return {Number} The slider value corresponding to the pressure from 0 to 100
+     */
+    function getValueFromUiEvent(event) {
+      var coordinates = getUiEventCoordinates(event);
+
+      var eventSliderXPosition = coordinates.x - sliderElementBoundingRectangle.left;
+      return Math.max(0, Math.min(100, eventSliderXPosition / sliderElementBoundingRectangle.width * 100));
     }
 
     /**
@@ -127,7 +149,7 @@
      * @param {KeyboardEvent} event The captured event
      */
     function handleKeyDown(event) {
-      var value = ctrl.value;
+      var value = $scope.value;
 
       if ((event.key === 'ArrowLeft' || event.keyCode === 37) ||
           (event.key === 'ArrowDown' || event.keyCode === 40)
@@ -146,7 +168,6 @@
       event.preventDefault();
       preventFocus = false;
       sliderElement[0].focus();
-      sliderElement.addClass('opl-slider-focus');
       setValue(value);
     }
 
@@ -161,6 +182,7 @@
       if (preventFocus) return;
 
       sliderElement.addClass('opl-slider-focus');
+      if (ctrl.oplOnFocus) ctrl.oplOnFocus();
     }
 
     /**
@@ -184,8 +206,19 @@
      * @param {Event} event The captured event
      */
     function handleResize(event) {
-      computeSliderElementBoundingRectangle();
-      updateUI();
+      ctrl.reset();
+    }
+
+    /**
+     * Handles move events.
+     *
+     * While moving the value of the slider is updated.
+     *
+     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
+     */
+    function handleCursorMove(event) {
+      event.preventDefault();
+      setValue(getValueFromUiEvent(event));
     }
 
     /**
@@ -196,21 +229,9 @@
      * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
      */
     function handleUp(event) {
-      bodyElement.off('mouseup pointerup touchend');
-      bodyElement.off('mousemove touchmove pointermove');
+      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off('mousemove touchmove pointermove', handleCursorMove);
       sliderElement.removeClass('opl-slider-active');
-    }
-
-    /**
-     * Handles move events.
-     *
-     * While moving the value of the slider is updated.
-     *
-     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
-     */
-    function handleMove(event) {
-      event.preventDefault();
-      setValue(getSliderPressureValue(event));
     }
 
     /**
@@ -229,56 +250,102 @@
       sliderElement.addClass('opl-slider-in-transition');
 
       bodyElement.on('mouseup pointerup touchend', handleUp);
-      bodyElement.on('mousemove touchmove pointermove', handleMove);
+      bodyElement.on('mousemove touchmove pointermove', handleCursorMove);
 
-      setValue(getSliderPressureValue(event));
+      setValue(getValueFromUiEvent(event));
+    }
+
+    /**
+     * Handles move events.
+     *
+     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
+     */
+    function handleMove(event) {
+      if (!ctrl.oplOnMove) return;
+
+      event.preventDefault();
+
+      var coordinates = getUiEventCoordinates(event);
+      ctrl.oplOnMove({
+        value: getValueFromUiEvent(event),
+        coordinates: coordinates,
+        sliderBoundingRectangle: sliderElementBoundingRectangle
+      });
+    }
+
+    /**
+     * Handles over event.
+     *
+     * @param {Event} event The captured event which may defer depending on the device (mouse, pen etc.)
+     */
+    function handleOver(event) {
+      if (
+        event.relatedTarget !== sliderElement[0] &&
+        event.relatedTarget !== thumbElement[0] &&
+        event.relatedTarget !== trackElement[0] &&
+        event.relatedTarget !== focusRingElement[0] &&
+        event.relatedTarget !== trackContainerElement[0] &&
+        !sliderElement.hasClass('opl-over')
+      ) {
+        sliderElement.addClass('opl-over');
+        if (ctrl.oplOnOver) ctrl.oplOnOver();
+        bodyElement.off('mousemove touchmove pointermove', handleMove);
+        bodyElement.on('mousemove touchmove pointermove', handleMove);
+      }
+    }
+
+    /**
+     * Handles out event.
+     *
+     * @param {Event} event The captured event which may defer depending on the device (mouse, pen etc.)
+     */
+    function handleOut(event) {
+      if (
+        event.relatedTarget !== sliderElement[0] &&
+        event.relatedTarget !== thumbElement[0] &&
+        event.relatedTarget !== trackElement[0] &&
+        event.relatedTarget !== focusRingElement[0] &&
+        event.relatedTarget !== trackContainerElement[0] &&
+        sliderElement.hasClass('opl-over')
+      ) {
+        sliderElement.removeClass('opl-over');
+        if (ctrl.oplOnOut) ctrl.oplOnOut();
+        bodyElement.off('mousemove touchmove pointermove', handleMove);
+      }
+    }
+
+    /**
+     * Sets event listeners on HTML elements of the scroller component.
+     */
+    function setEventListeners() {
+      sliderElement.on('keydown', handleKeyDown);
+      sliderElement.on('focus', handleFocus);
+      sliderElement.on('blur', handleBlur);
+      sliderElement.on('mousedown pointerdown touchstart', handleDown);
+      sliderElement.on('mouseover pointerover', handleOver);
+      sliderElement.on('mouseout pointerout', handleOut);
+
+      angular.element($window).on('resize', handleResize);
+    }
+
+    /**
+     * Removes event listeners set with setEventListeners.
+     */
+    function clearEventListeners() {
+      sliderElement.off('keydown', handleKeyDown);
+      sliderElement.off('focus', handleFocus);
+      sliderElement.off('blur', handleBlur);
+      sliderElement.off('mousedown pointerdown touchstart', handleDown);
+      sliderElement.off('mouseout pointerout', handleOver);
+      sliderElement.off('mouseout pointerout', handleOut);
+
+      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off('mousemove touchmove pointermove', handleCursorMove);
+
+      angular.element($window).off('resize', handleResize);
     }
 
     Object.defineProperties(ctrl, {
-
-      /**
-       * The slider ARIA label.
-       *
-       * @property label
-       * @type String
-       */
-      label: {
-        value: 'Select a value',
-        writable: true
-      },
-
-      /**
-       * The slider value.
-       *
-       * @property value
-       * @type Number
-       */
-      value: {
-        value: 0,
-        writable: true
-      },
-
-      /**
-       * The human readable text alternative of the slider value.
-       *
-       * @property valueText
-       * @type String
-       */
-      valueText: {
-        value: '',
-        writable: true
-      },
-
-      /**
-       * Parameters for the human readable text alternative of the slider value.
-       *
-       * @property valueTextParameters
-       * @type Object
-       */
-      valueTextParameters: {
-        value: null,
-        writable: true
-      },
 
       /**
        * Initializes controller and attributes.
@@ -293,15 +360,10 @@
           sliderElement = angular.element($element[0].querySelector('.opl-slider'));
           thumbElement = angular.element($element[0].querySelector('.opl-slider-thumb-container'));
           trackElement = angular.element($element[0].querySelector('.opl-slider-track'));
+          trackContainerElement = angular.element($element[0].querySelector('.opl-slider-track-container'));
+          focusRingElement = angular.element($element[0].querySelector('.opl-slider-focus-ring'));
 
-          computeSliderElementBoundingRectangle();
-          updateUI();
-
-          sliderElement.on('keydown', handleKeyDown);
-          sliderElement.on('focus', handleFocus);
-          sliderElement.on('blur', handleBlur);
-          sliderElement.on('mousedown pointerdown touchstart', handleDown);
-          angular.element($window).on('resize', handleResize);
+          ctrl.reset();
         }
       },
 
@@ -312,10 +374,7 @@
        */
       $onDestroy: {
         value: function() {
-          sliderElement.off('mousedown pointerdown touchstart keydown focus blur');
-          bodyElement.off('mouseup pointerup touchend mousemove touchmove pointermove');
-          thumbElement.off('transitionend');
-          angular.element($window).off('resize');
+          clearEventListeners();
         }
       },
 
@@ -341,13 +400,52 @@
 
           if (changedProperties.oplLabel && changedProperties.oplLabel.currentValue) {
             newValue = changedProperties.oplLabel.currentValue;
-            ctrl.label = (typeof newValue === 'undefined') ? 'Select a value' : newValue;
+            $scope.label = (typeof newValue === 'undefined') ? 'Select a value' : newValue;
           }
 
           if (changedProperties.oplValueText && changedProperties.oplValueText.currentValue) {
             newValue = changedProperties.oplValueText.currentValue;
-            ctrl.valueText = (typeof newValue === 'undefined') ? '' : newValue;
+            $scope.valueText = (typeof newValue === 'undefined') ? '' : newValue;
           }
+        }
+      },
+
+      /**
+       * Forces the slider to reset.
+       *
+       * This is useful if the slider position has changed since its initialization.
+       *
+       * @method reset
+       * @return {Promise} A promise resolving when reset has finished
+       */
+      reset: {
+        value: function() {
+          var deferred = $q.defer();
+          clearEventListeners();
+          setEventListeners();
+
+          oplDomFactory.waitForElementDimension(sliderElement[0], [
+            {
+              property: 'width',
+              notEqual: 0
+            },
+            {
+              property: 'width',
+              notEqual: (sliderElementBoundingRectangle) ? sliderElementBoundingRectangle.width : 0
+            }
+          ], 500).then(function(boundingRectangle) {
+            sliderElementBoundingRectangle = boundingRectangle;
+            updateUi();
+            deferred.resolve();
+          }).catch(function(reason) {
+            sliderElementBoundingRectangle = sliderElement[0].getBoundingClientRect();
+
+            // Slider size hasn't change
+            updateUi();
+            deferred.resolve();
+          });
+
+          return deferred.promise;
         }
       }
     });
@@ -358,8 +456,9 @@
      * It overrides AngularJS $render.
      */
     ngModelCtrl.$render = function() {
-      setValue(Math.min(100, Math.max(0, ngModelCtrl.$viewValue || 0)));
-      updateUI();
+      ctrl.reset().then(function() {
+        setValue(ngModelCtrl.$viewValue);
+      });
     };
 
     /**
@@ -380,7 +479,10 @@
   OplSliderController.$inject = [
     '$scope',
     '$element',
-    '$window'
+    '$window',
+    '$timeout',
+    '$q',
+    'oplDomFactory'
   ];
 
 })(angular.module('ov.player'));
