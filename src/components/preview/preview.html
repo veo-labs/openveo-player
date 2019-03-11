@@ -1,0 +1,12 @@
+<div class="opl-preview" ng-style="{'background-image': ($ctrl.oplUrl && $ctrl.preloaded && !$ctrl.error) ? 'url(' + $ctrl.oplUrl + ')' : 'none'}">
+  <div
+       ng-if="$ctrl.preloading"
+       class="opl-loader"
+  ></div>
+
+  <div class="opl-time">
+    <div ng-bind="$ctrl.oplTime | oplMillisecondsToTime"></div>
+  </div>
+
+  <p ng-if="$ctrl.error" class="opl-error-message"><span ng-bind="'PREVIEW_IMAGE_PRELOAD_ERROR' | oplTranslate"></span></p>
+</div>

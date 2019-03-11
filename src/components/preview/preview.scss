@@ -1,0 +1,110 @@
+@import "compass/css3/animation";
+@import "compass/css3/user-interface";
+@import "compass/css3/transform";
+
+$OPL_PREVIEW_PRIMARY_COLOR: #ffffff;
+$OPL_PREVIEW_BACKGROUND_COLOR: #000000;
+$OPL_PREVIEW_ACCENT_COLOR: #e2287b;
+
+/*
+  Animate the loader with an elastic effect from left to right and right to left with easing.
+*/
+@include keyframes(opl-preview-loader-elastic) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.35, 0.35, 0.43, 0.9));
+    @include translateX(0%);
+  }
+  50% {
+    @include animation-timing-function(cubic-bezier(0.35, 0.35, 0.43, 0.9));
+    @include translateX(100%);
+  }
+  100% {
+    @include translateX(0%);
+  }
+}
+
+opl-preview {
+  width: 100%;
+  height: 100%;
+}
+
+.opl-preview {
+  position: relative;
+  --opl-preview-primary-color: #{$OPL_PREVIEW_PRIMARY_COLOR};
+  --opl-preview-accent-color: #{$OPL_PREVIEW_ACCENT_COLOR};
+  --opl-preview-accent-color-0: #{rgba($OPL_PREVIEW_ACCENT_COLOR, 0.1)};
+  --opl-preview-background-color: #{$OPL_PREVIEW_BACKGROUND_COLOR};
+  --opl-preview-background-color-0: #{rgba($OPL_PREVIEW_BACKGROUND_COLOR, 0.8)};
+  width: 100%;
+  height: 100%;
+  background-color: var(--opl-preview-background-color, $OPL_PREVIEW_BACKGROUND_COLOR);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  @include user-select(none);
+
+  /*
+    Time container.
+  */
+  .opl-time {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    bottom: 0;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    color: var(--opl-preview-primary-color, $OPL_PREVIEW_PRIMARY_COLOR);
+
+    /*
+      Time text.
+    */
+    & > div {
+      flex-shrink: 1;
+      background-color: var(--opl-preview-background-color-0, rgba($OPL_PREVIEW_BACKGROUND_COLOR, 0.8));
+      padding: 8px;
+    }
+  }
+
+  /*
+    Loader.
+  */
+  .opl-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--opl-preview-accent-color-0, rgba($OPL_PREVIEW_ACCENT_COLOR, 0.1));
+    will-change: transform;
+
+    /*
+      Loader bar.
+    */
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      content: '';
+      pointer-events: none;
+      background-color: var(--opl-preview-accent-color, $OPL_PREVIEW_ACCENT_COLOR);
+      @include animation-name(opl-preview-loader-elastic);
+      @include animation-iteration-count(infinite);
+      @include animation-duration(2000ms);
+    }
+
+  }
+
+  /*
+    Error message.
+  */
+  .opl-error-message {
+    padding-top: 16px;
+    text-align: center;
+    letter-spacing: 5px;
+    font-size: 12px;
+    color: var(--opl-preview-primary-color, $OPL_PREVIEW_PRIMARY_COLOR);
+  }
+}
