@@ -1,0 +1,527 @@
+@import "compass/css3/animation";
+@import "compass/css3/user-interface";
+@import "compass/css3/transform";
+
+$OPL_TILE_PRIMARY_COLOR: #000000;
+$OPL_TILE_ACCENT_COLOR: #e2287b;
+$OPL_TILE_BACKGROUND_COLOR: #ffffff;
+$OPL_TILE_LINK_COLOR: #1a91d1;
+
+/*
+  Animate the ripple with a growing effect from 0 to 100%.
+*/
+@include keyframes(opl-tile-ripple-radius-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include scale(0);
+  }
+  to {
+    @include scale(2);
+  }
+}
+
+/*
+  Animate the ripple with resolve effect from 0 to 0.16.
+*/
+@include keyframes(opl-tile-ripple-opacity-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 0;
+  }
+  to {
+    opacity: 0.16;
+  }
+}
+
+/*
+  Animate the ripple with dissolve effect from 0.16 to 0
+*/
+@include keyframes(opl-tile-ripple-opacity-out) {
+  from {
+    @include animation-timing-function(linear);
+    opacity: 0.16;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/*
+  Animate the loader with an elsatic effect from left to right and right to left with easing.
+*/
+@include keyframes(opl-tile-loader-elastic) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.35, 0.35, 0.43, 0.9));
+    @include translateX(0%);
+  }
+  50% {
+    @include animation-timing-function(cubic-bezier(0.35, 0.35, 0.43, 0.9));
+    @include translateX(100%);
+  }
+  100% {
+    @include translateX(0%);
+  }
+}
+
+/*
+  Animate the attachment ripple with a growing effect from 0 to 1100%.
+*/
+@include keyframes(opl-tile-attachment-ripple-radius-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include scale(0);
+  }
+  to {
+    @include scale(11);
+  }
+}
+
+/*
+  Animate the attachment ripple with a resolve effect from 0 to 0.16.
+*/
+@include keyframes(opl-tile-attachment-ripple-resolve) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 0;
+  }
+  to {
+    opacity: 0.16;
+  }
+}
+
+/*
+  Animate the attachment ripple with a dissolve effect from actual opacity to 0.
+*/
+@include keyframes(opl-tile-attachment-ripple-dissolve) {
+  from {
+    @include animation-timing-function(linear);
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+opl-tile {
+  width: 100%;
+  height: 100%;
+}
+
+.opl-tile {
+  --opl-tile-primary-color: #{$OPL_TILE_PRIMARY_COLOR};
+  --opl-tile-primary-color-0: #{rgba($OPL_TILE_PRIMARY_COLOR, 0.01)};
+  --opl-tile-primary-color-1: #{rgba($OPL_TILE_PRIMARY_COLOR, 0.078)};
+  --opl-tile-primary-color-2: #{rgba($OPL_TILE_PRIMARY_COLOR, 0.118)};
+  --opl-tile-primary-color-3: #{rgba($OPL_TILE_PRIMARY_COLOR, 0.498)};
+  --opl-tile-primary-color-4: #{rgba($OPL_TILE_PRIMARY_COLOR, 0.541)};
+  --opl-tile-accent-color: #{$OPL_TILE_ACCENT_COLOR};
+  --opl-tile-accent-color-0: #{rgba($OPL_TILE_ACCENT_COLOR, 0.1)};
+  --opl-tile-background-color: #{$OPL_TILE_BACKGROUND_COLOR};
+  --opl-tile-background-color-0: #{rgba($OPL_TILE_BACKGROUND_COLOR, 0.8)};
+  --opl-tile-link-color: #{$OPL_TILE_LINK_COLOR};
+  --opl-tile-link-color-0: #{rgba($OPL_TILE_LINK_COLOR, 0.039)};
+  --opl-tile-link-color-1: #{rgba($OPL_TILE_LINK_COLOR, 0.118)};
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background-color: var(--opl-tile-background-color, $OPL_TILE_BACKGROUND_COLOR);
+  outline: none;
+  will-change: transform, opacity;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  @include user-select(none);
+
+  /*
+    Overlay in resting state.
+  */
+  &::before {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    opacity: 0;
+    pointer-events: none;
+    background-color: var(--opl-tile-primary-color, $OPL_TILE_PRIMARY_COLOR);
+  }
+
+  /*
+    Ripple in resting state.
+  */
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    opacity: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    @include scale(0);
+    @include transform-origin(center, center);
+    background-color: var(--opl-tile-primary-color, $OPL_TILE_PRIMARY_COLOR);
+  }
+
+  /*
+    Tile in over state.
+  */
+  &.opl-over {
+
+    /*
+      Overlay in over state.
+    */
+    &::before {
+      opacity: 1;
+      background-color: var(--opl-tile-primary-color-1, rgba($OPL_TILE_PRIMARY_COLOR, 0.078));
+    }
+
+  }
+
+  /*
+    Tile in focus state.
+  */
+  &:focus {
+
+    /*
+      Overlay in focus state.
+    */
+    &::before {
+      opacity: 1;
+      background-color: var(--opl-tile-primary-color-0, rgba($OPL_TILE_PRIMARY_COLOR, 0.01));
+    }
+
+  }
+
+  /*
+    Ripple in activation state.
+  */
+  &.opl-activation::after {
+    @include animation-name(opl-tile-ripple-radius-in, opl-tile-ripple-opacity-in);
+    @include animation-duration(225ms, 75ms);
+    @include animation-fill-mode(forwards, forwards);
+  }
+
+  /*
+    Ripple in deactivation state.
+  */
+  &.opl-deactivation::after {
+    @include animation-name(opl-tile-ripple-opacity-out);
+    @include animation-duration(150ms);
+    @include scale(2);
+  }
+
+  .opl-content {
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  /*
+    Reduced content.
+  */
+  .opl-abstract {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.4px;
+    color: var(--opl-tile-primary-color-3, rgba($OPL_TILE_PRIMARY_COLOR, 0.498));
+
+    /*
+      Small image preloading error.
+    */
+    .opl-error-message {
+      flex-grow: 1;
+      padding-top: 8px;
+      text-align: center;
+      letter-spacing: 5px;
+      font-size: 12px;
+    }
+
+    .opl-title {
+      flex-grow: 1;
+      overflow: hidden;
+
+      p {
+        padding: 8px;
+      }
+    }
+
+    .opl-info {
+      display: flex;
+      flex-basis: 32px;
+      flex-shrink: 0;
+      background-color: var(--opl-tile-background-color-0, rgba($OPL_TILE_BACKGROUND_COLOR, 0.8));
+
+      /*
+        Time icon.
+      */
+      .opl-access-time-icon {
+        flex-basis: 32px;
+        flex-shrink: 0;
+        font-size: 18px;
+        text-align: center;
+        line-height: 32px;
+      }
+
+      /*
+        Time text.
+      */
+      .opl-access-time {
+        flex-grow: 1;
+        overflow: hidden;
+        line-height: 32px;
+      }
+
+      /*
+        "more info" button.
+      */
+      .opl-more-button {
+        flex-basis: 32px;
+        flex-shrink: 0;
+        flex-grow: 0;
+
+        button {
+          color: var(--opl-tile-primary-color-3, rgba($OPL_TILE_PRIMARY_COLOR, 0.498));
+        }
+      }
+    }
+
+  }
+
+  &.opl-tile-abstract {
+    height: 100%;
+    cursor: pointer;
+
+    /*
+      Tile in focus state.
+    */
+    &:focus {
+
+      /*
+        Overlay in focus state.
+      */
+      &::before {
+        background-color: var(--opl-tile-primary-color-2, rgba($OPL_TILE_PRIMARY_COLOR, 0.118));
+      }
+
+    }
+
+  }
+
+  /*
+    Enlarged content.
+  */
+  .opl-full {
+    height: 100%;
+    padding: 8px 16px;
+
+    .opl-close-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border-radius: 50%;
+      background-color: var(--opl-tile-background-color, $OPL_TILE_BACKGROUND_COLOR);
+
+      .opl-button {
+        color: var(--opl-tile-primary-color, $OPL_TILE_PRIMARY_COLOR);
+      }
+    }
+
+    .opl-title-wrapper {
+      display: flex;
+
+      .opl-close-button {
+        flex-basis: 32px;
+        flex-shrink: 0;
+        flex-grow: 0;
+
+        .opl-button {
+          color: var(--opl-tile-primary-color-4, rgba($OPL_TILE_PRIMARY_COLOR, 0.541));
+        }
+      }
+
+      .opl-title {
+        flex-grow: 1;
+        padding-bottom: 16px;
+        font-family: 'Roboto-Medium', sans-serif;
+        font-size: 20px;
+        line-height: 28px;
+        letter-spacing: 0.1px;
+        color: var(--opl-tile-primary-color-3, rgba($OPL_TILE_PRIMARY_COLOR, 0.498));
+        @include user-select(text);
+      }
+    }
+
+    .opl-tile-description {
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: 0.5px;
+      color: var(--opl-tile-primary-color-3, rgba($OPL_TILE_PRIMARY_COLOR, 0.498));
+      @include user-select(text);
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        letter-spacing: 0.1px;
+      }
+
+      p {
+        font-size: 1em;
+        margin: 1em 0;
+      }
+
+      ul {
+        list-style-type: square;
+        padding-left: 40px;
+      }
+    }
+
+    .opl-attachment {
+
+      /*
+        Attachment button in resting state.
+      */
+      a {
+        overflow: hidden;
+        position: relative;
+        display: inline-block;
+        outline: none;
+        margin-top: 8px;
+        padding: 12px;
+        text-decoration: none;
+        color: var(--opl-tile-link-color, $OPL_TILE_LINK_COLOR);
+
+        span {
+          margin-left: 12px;
+          vertical-align: top;
+          line-height: 28px;
+          letter-spacing: 0.4px;
+        }
+
+        /*
+          Attachment button ripple in resting state.
+        */
+        &::after {
+          position: absolute;
+          top: 0;
+          height: 100%;
+          content: '';
+          opacity: 0;
+          pointer-events: none;
+          @include scale(0);
+          @include transform-origin(center, center);
+          left: -10%;
+          width: 20%;
+          border-radius: 50%;
+          background-color: var(--opl-tile-link-color, $OPL_TILE_LINK_COLOR);
+        }
+
+        /*
+          Attachment button in over state.
+        */
+        &:hover {
+          background-color: var(--opl-tile-link-color-0, rgba($OPL_TILE_LINK_COLOR, 0.039));
+        }
+
+        /*
+          Attachment button in focus state.
+        */
+        &.opl-focus {
+          background-color: var(--opl-tile-link-color-1, rgba($OPL_TILE_LINK_COLOR, 0.118));
+        }
+
+        /*
+          Attachment button ripple in activation state.
+        */
+        &.opl-attachment-activation::after {
+          @include animation-name(opl-tile-attachment-ripple-radius-in, opl-tile-attachment-ripple-resolve);
+          @include animation-duration(225ms, 75ms);
+          @include animation-fill-mode(forwards, forwards);
+        }
+
+        /*
+          Attachment button ripple in deactivation state.
+        */
+        &.opl-attachment-deactivation::after {
+          @include animation-name(opl-tile-attachment-ripple-dissolve);
+          @include animation-duration(150ms);
+          @include scale(1);
+        }
+      }
+
+    }
+
+    .opl-error-message {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      text-align: center;
+      letter-spacing: 5px;
+      font-size: 14px;
+    }
+
+  }
+
+  /*
+    Tile of type "image".
+  */
+  &.opl-type-image {
+
+    .opl-abstract .opl-title,
+    .opl-abstract .opl-info,
+    .opl-abstract .opl-more-button button {
+      color: var(--opl-tile-primary-color, $OPL_TILE_PRIMARY_COLOR);
+    }
+
+    .opl-full {
+      padding: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+  }
+
+  /*
+    Tile loader.
+  */
+  .opl-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--opl-tile-accent-color-0, rgba($OPL_TILE_ACCENT_COLOR, 0.1));
+    will-change: transform;
+
+    /*
+      Loader bar.
+    */
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      content: '';
+      pointer-events: none;
+      background-color: var(--opl-tile-accent-color, $OPL_TILE_ACCENT_COLOR);
+      @include animation-name(opl-tile-loader-elastic);
+      @include animation-iteration-count(infinite);
+      @include animation-duration(2000ms);
+    }
+
+  }
+
+}

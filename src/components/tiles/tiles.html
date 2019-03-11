@@ -1,0 +1,28 @@
+<div class="opl-tiles" tabindex="0">
+  <opl-scroller
+                ng-model="scrollerValue"
+                ng-change="handleScrollerChange()"
+                opl-id="opl-tiles"
+                opl-no-sequential-focus="true"
+                opl-orientation="horizontal"
+                opl-on-touch="handleScrollTouch()"
+                opl-deactivated="$ctrl.scrollerDeactivated"
+  >
+    <div class="opl-tiles-content">
+      <ul>
+        <li ng-repeat="tile in $ctrl.oplData" class="opl-tile-wrapper" data-id="{{tile.id}}">
+          <opl-tile
+                    opl-data="tile"
+                    opl-abstract="tile.abstract"
+                    opl-on-select="handleTileSelect(tile)"
+                    opl-on-more="handleTileMoreInfo(tile)"
+                    opl-on-close="handleTileClose(tile)"
+                    opl-on-ready="handleTileReady(tile)"
+                    opl-on-image-preloaded="handleTileImagePreload(tile, size)"
+                    opl-on-image-error="handleTileImageError(tile)"
+          ></opl-tile>
+        </li>
+      </ul>
+    </div>
+  </opl-scroller>
+</div>

@@ -1,0 +1,334 @@
+@import "compass/css3/transform";
+@import "compass/css3/animation";
+@import "compass/css3/box-shadow";
+
+$OPL_TILES_BACKGROUND_COLOR: #000000;
+$OPL_TILES_ACCENT_COLOR: #e2287b;
+
+/*
+  Animate the tile with resolve effect from 0 to 1.
+*/
+@include keyframes(opl-tiles-opacity-in) {
+  from {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/*
+  Animate the tile with dissolve effect from 1 to 0.
+*/
+@include keyframes(opl-tiles-opacity-out) {
+  from {
+    @include animation-timing-function(linear);
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/*
+  Animate the tile with growing effect.
+*/
+@include keyframes(opl-tile-enlarge) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include transform(translateX(var(--opl-tiles-reduced-xpos)) translateY(var(--opl-tiles-reduced-ypos)));
+    width: var(--opl-tiles-reduced-width);
+    height: var(--opl-tiles-reduced-height);
+  }
+  70% {
+    @include transform(translateX(var(--opl-tiles-reduced-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+    width: var(--opl-tiles-reduced-width);
+    height: var(--opl-tiles-enlarged-height);
+  }
+  100% {
+    @include transform(translateX(var(--opl-tiles-enlarged-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+    width: var(--opl-tiles-enlarged-width);
+    height: var(--opl-tiles-enlarged-height);
+  }
+}
+
+/*
+  Animate the tile with reducing effect.
+*/
+@include keyframes(opl-tile-reduce) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    @include transform(translateX(var(--opl-tiles-enlarged-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+    width: var(--opl-tiles-enlarged-width);
+    height: var(--opl-tiles-enlarged-height);
+  }
+  20% {
+    @include transform(translateX(var(--opl-tiles-reduced-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+    width: var(--opl-tiles-reduced-width);
+    height: var(--opl-tiles-enlarged-height);
+  }
+  100% {
+    @include transform(translateX(var(--opl-tiles-reduced-xpos)) translateY(var(--opl-tiles-reduced-ypos)));
+    width: var(--opl-tiles-reduced-width);
+    height: var(--opl-tiles-reduced-height);
+  }
+}
+
+/*
+  Animate the tile with resizing effect.
+*/
+@include keyframes(opl-tile-resize) {
+  0% {
+    @include animation-timing-function(cubic-bezier(1, -0.04, 1, .55));
+    @include transform(translateX(var(--opl-tiles-enlarged-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+    width: var(--opl-tiles-enlarged-width);
+    height: var(--opl-tiles-enlarged-height);
+  }
+  50% {
+    @include transform(translateX(var(--opl-tiles-resized-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+    width: var(--opl-tiles-resized-width);
+    height: var(--opl-tiles-enlarged-height);
+  }
+  100% {
+    @include transform(translateX(var(--opl-tiles-resized-xpos)) translateY(var(--opl-tiles-resized-ypos)));
+    width: var(--opl-tiles-resized-width);
+    height: var(--opl-tiles-resized-height);
+  }
+}
+
+/*
+  Animate the tile content with a dissolve effect.
+*/
+@include keyframes(opl-tile-dissolve) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
+  }
+}
+
+/*
+  Animate the tile content with a resolve effect.
+*/
+@include keyframes(opl-tile-resolve) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+}
+
+/*
+  Animate the tile content with dissolve and resolve effect.
+*/
+@include keyframes(opl-tile-reduce-resolve-dissolve) {
+  0% {
+    @include animation-timing-function(cubic-bezier(0.4, 0, 0.2, 1));
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+opl-tiles {
+  width: 100%;
+  width: 100%;
+}
+
+.opl-tiles {
+  --opl-tiles-accent-color: #{$OPL_TILES_ACCENT_COLOR};
+  --opl-tiles-background-color: #{$OPL_TILES_BACKGROUND_COLOR};
+  --opl-tiles-background-color-0: #{rgba($OPL_TILES_BACKGROUND_COLOR, 0.05)};
+  --opl-tiles-background-color-1: #{rgba($OPL_TILES_BACKGROUND_COLOR, 0.12)};
+  --opl-tiles-background-color-2: #{rgba($OPL_TILES_BACKGROUND_COLOR, 0.20)};
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  outline: none;
+
+  .opl-tile-wrapper {
+    --opl-tiles-reduced-width: 148px;
+    --opl-tiles-reduced-height: 80px;
+    position: absolute;
+    width: var(--opl-tiles-reduced-width);
+    height: var(--opl-tiles-reduced-height);
+    bottom: 8px;
+    @include translateX(0px);
+    will-change: transform;
+  }
+
+  #opl-tiles > div, #opl-tiles ul {
+    height: 100%;
+  }
+
+  /*
+    Tiles in focus state.
+  */
+  &.opl-focus {
+    background-color: var(--opl-tiles-background-color-, rgba($OPL_TILES_BACKGROUND_COLOR, 0.05));
+  }
+
+  /*
+    Past tiles.
+  */
+  .opl-past {
+    opacity: 0.5;
+  }
+
+  .opl-tiles-content > ul > li {
+    will-change: opacity, transform;
+    @include box-shadow(0px 0px 8px var(--opl-tiles-background-color-1, rgba($OPL_TILES_BACKGROUND_COLOR, 0.12)), 0px 1px 2px var(--opl-tiles-background-color-2, rgba($OPL_TILES_BACKGROUND_COLOR, 0.20)));
+
+    /*
+      Tile in selected state.
+    */
+    &.opl-selected {
+
+      .opl-access-time, .opl-access-time-icon {
+        color: var(--opl-tiles-accent-color, $OPL_TILES_ACCENT_COLOR);
+      }
+
+    }
+
+    /*
+      Tile in posting state.
+    */
+    &.opl-posting {
+      @include animation-name(opl-tiles-opacity-in);
+      @include animation-duration(50ms);
+      @include animation-fill-mode(forwards);
+    }
+
+    /*
+      Tile in masking state.
+    */
+    &.opl-masking {
+      @include animation-name(opl-tiles-opacity-out);
+      @include animation-duration(50ms);
+      @include animation-fill-mode(forwards);
+    }
+
+    /*
+      Tile in masked state.
+    */
+    &.opl-masked {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /*
+      Tile in enlarging state.
+    */
+    &.opl-enlarging {
+      @include transform(translateX(var(--opl-tiles-reduced-xpos)) translateY(var(--opl-tiles-reduced-ypos)));
+      width: var(--opl-tiles-reduced-width);
+      height: var(--opl-tiles-reduced-height);
+      @include animation-name(opl-tile-enlarge);
+      @include animation-duration(500ms);
+      @include animation-delay(100ms);
+      @include animation-fill-mode(forwards);
+
+      &.opl-past {
+        opacity: 1;
+      }
+
+      .opl-content {
+        @include animation-name(opl-tile-dissolve);
+        @include animation-duration(700ms);
+        @include animation-delay(100ms);
+        @include animation-fill-mode(forwards);
+      }
+    }
+
+    /*
+      Tile in enlarged state.
+    */
+    &.opl-enlarged {
+      @include transform(translateX(var(--opl-tiles-enlarged-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+      width: var(--opl-tiles-enlarged-width);
+      height: var(--opl-tiles-enlarged-height);
+
+      &.opl-past {
+        opacity: 1;
+      }
+
+      .opl-content {
+        @include animation-name(opl-tile-resolve);
+        @include animation-duration(50ms);
+        @include animation-delay(50ms);
+        @include animation-fill-mode(forwards);
+      }
+    }
+
+    /*
+      Tile in reducing state.
+    */
+    &.opl-reducing {
+      @include transform(translateX(var(--opl-tiles-enlarged-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+      width: var(--opl-tiles-enlarged-width);
+      height: var(--opl-tiles-enlarged-height);
+      @include animation-name(opl-tile-reduce);
+      @include animation-duration(500ms);
+      @include animation-fill-mode(forwards);
+
+      .opl-content {
+        @include animation-name(opl-tile-reduce-resolve-dissolve);
+        @include animation-duration(700ms);
+        @include animation-fill-mode(forwards);
+      }
+    }
+
+    /*
+      Tile in resizing state.
+    */
+    &.opl-resizing {
+      @include transform(translateX(var(--opl-tiles-enlarged-xpos)) translateY(var(--opl-tiles-enlarged-ypos)));
+      width: var(--opl-tiles-enlarged-width);
+      height: var(--opl-tiles-enlarged-height);
+      @include animation-name(opl-tile-resize);
+      @include animation-duration(50ms);
+      @include animation-fill-mode(forwards);
+
+      &.opl-past {
+        opacity: 1;
+      }
+
+      .opl-content {
+        opacity: 0;
+      }
+    }
+
+    &.opl-resized {
+      @include transform(translateX(var(--opl-tiles-resized-xpos)) translateY(var(--opl-tiles-resized-ypos)));
+      width: var(--opl-tiles-resized-width);
+      height: var(--opl-tiles-resized-height);
+
+      &.opl-past {
+        opacity: 1;
+      }
+
+      .opl-content {
+        @include animation-name(opl-tile-resolve);
+        @include animation-duration(1000ms);
+        @include animation-fill-mode(forwards);
+      }
+
+    }
+
+  }
+
+}
