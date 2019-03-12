@@ -19,7 +19,7 @@ OpenVeo Player defines an AngularJS directive **opl-player**:
   opl-remember-position="false"
   opl-chapters-tab="true"
   opl-tags-tab="true"
-  opl-disable-cut="false"
+  opl-cuts="true"
 ></opl-player>
 ```
 
@@ -320,14 +320,14 @@ Indicates if tags tab must be displayed or not (Default to **true**).
 ></opl-player>
 ```
 
-## opl-disable-cut (optional)
+## opl-cuts (optional)
 
-Indicates if cuts must be disabled or not (Default to **false**).
+Indicates if cuts must be enabled or not (Default to **true**).
 
 ```html
 <opl-player
   ...
-  opl-disable-cut="false"
+  opl-cuts="true"
 ></opl-player>
 ```
 

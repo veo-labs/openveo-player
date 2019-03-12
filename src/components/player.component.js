@@ -61,7 +61,7 @@
  *  - [Boolean] **opl-chapters-tab** true to display chapters tab (default to true)
  *  - [Boolean] **opl-tags-tab** true to display tags tab (default to true)
  *  - [Boolean] **opl-full-viewport** true to display the player in full viewport (default to false)
- *  - [Boolean] **opl-disable-cut** true to disable cuts (default to false)
+ *  - [Boolean] **opl-cuts** true to enable cuts (default to true)
  *  - [String] **opl-language** Player language code (e.g. fr) (default to "en")
  *  - [String] **opl-player-type** The type of player to use to play the media. It can be either "html", "youtube" or
  *    "vimeo" (default to "html")
@@ -275,7 +275,7 @@
  *                  opl-remember-position="false"
  *                  opl-chapters-tab="true"
  *                  opl-tags-tab="true"
- *                  opl-disable-cut="false"
+ *                  opl-cuts="true"
  *      ></opl-player>
  *
  * @class oplPlayer
@@ -301,7 +301,7 @@
       oplRememberPosition: '@?',
       oplChaptersTab: '@?',
       oplTagsTab: '@?',
-      oplDisableCut: '@?'
+      oplCuts: '@?'
     }
   });
 

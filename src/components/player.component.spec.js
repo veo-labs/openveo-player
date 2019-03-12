@@ -771,7 +771,7 @@ describe('OplPlayer', function() {
     var endCut = 9000;
     var expectedDuration = totalPointsOfInterest * 1000;
     var expectedTime = (beginCut + endCut) / 2;
-    scope.disableCuts = false;
+    scope.enableCuts = true;
     scope.data = {
       mediaId: ['1'],
       sources: expectedDefinitions,
@@ -816,7 +816,7 @@ describe('OplPlayer', function() {
     var element = angular.element('<opl-player ' +
                                 'id="opl-player-test" ' +
                                 'opl-data="data" ' +
-                                'opl-disable-cut="{{disableCuts}}" ' +
+                                'opl-cuts="{{enableCuts}}" ' +
                     '></opl-player>');
     createComponent(element, expectedDuration);
 
@@ -861,7 +861,7 @@ describe('OplPlayer', function() {
     assert.lengthOf(ctrl.tags, expectedTotalPointsOfInterest, 'Wrong number of tags');
 
     // Deactivate cuts
-    scope.disableCuts = true;
+    scope.enableCuts = false;
     $timeout.flush();
     scope.$digest();
 

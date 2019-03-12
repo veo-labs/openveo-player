@@ -17,6 +17,7 @@
 - Player attribute "opl-mode-icon" has been renamed into "opl-template-icon"
 - Player attribute "opl-hide-chapters-tab" has been renamed into "opl-chapters-tab" and has been inverted (replace "false" by "true" and "true" by "false")
 - Player attribute "opl-hide-tags-tab" has been renamed into "opl-tags-tab" and has been inverted (replace "false" by "true" and "true" by "false")
+- Player attribute "opl-disable-cut" has been renamed into "opl-cuts" and has been inverted (replace "false" by "true" and "true" by "false")
 - Sources have been added to the settings menu, consequently the attribute "opl-media-sources-icon" has been removed
 - Data property "file.basePath" for tags and chapters has been renamed into "file.url"
 - Data property "file.originalname" for tags and chapters has been renamed into "file.originalName"

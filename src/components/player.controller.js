@@ -1312,8 +1312,8 @@
        * @param {String} [changedProperties.oplChaptersTab.currentValue] oplChaptersTab new value
        * @param {Object} [changedProperties.oplTagsTab] oplTagsTab old and new value
        * @param {String} [changedProperties.oplTagsTab.currentValue] oplTagsTab new value
-       * @param {Object} [changedProperties.oplDisableCut] oplDisableCut old and new value
-       * @param {String} [changedProperties.oplDisableCut.currentValue] oplDisableCut new value
+       * @param {Object} [changedProperties.oplCuts] oplCuts old and new value
+       * @param {String} [changedProperties.oplCuts.currentValue] oplCuts new value
        */
       $onChanges: {
         value: function(changedProperties) {
@@ -1334,15 +1334,15 @@
             }
           }
 
-          // oplDisableCut
-          if (changedProperties.oplDisableCut && changedProperties.oplDisableCut.currentValue) {
+          // oplCuts
+          if (changedProperties.oplCuts && changedProperties.oplCuts.currentValue) {
             if (!playerService) return;
-            var cutDisabled = isAttributeTrue('oplDisableCut', true);
-            playerService.setCutsStatus(!cutDisabled);
+            var cutEnabled = isAttributeTrue('oplCuts', true);
+            playerService.setCutsStatus(cutEnabled);
 
             if (ctrl.duration) {
               reset();
-              playerService.setCutsStatus(!cutDisabled);
+              playerService.setCutsStatus(cutEnabled);
               ctrl.duration = playerService.getDuration();
               initPointsOfInterest();
               ctrl.selectTemplate(ctrl.oplTemplate);
