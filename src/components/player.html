@@ -1,7 +1,7 @@
 <div ng-class="{'opl-fullscreen': fullViewportActivated}">
   <div class="opl-player" ng-class="{'opl-no-poi': hidePoi}">
 
-    <div class="opl-media-wrapper opl-mode-{{$ctrl.selectedTemplate}}">
+    <div class="opl-media-wrapper opl-template-{{$ctrl.selectedTemplate}}">
       <div class="opl-media">
         <div class="opl-loader" ng-show="$ctrl.loading" ng-bind="'LOADING' | oplTranslate"></div>
         <ng-include src="mediaTemplate"></ng-include>

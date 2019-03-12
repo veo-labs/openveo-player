@@ -7,8 +7,8 @@ OpenVeo Player defines an AngularJS directive **opl-player**:
   opl-data="data"
   opl-fullscreen-icon="true"
   opl-volume-icon="true"
-  opl-mode="split_50_50"
-  opl-mode-icon="true"
+  opl-template="split_50_50"
+  opl-template-icon="true"
   opl-settings-icon="true"
   opl-veo-labs-icon="true"
   opl-time="true"
@@ -210,14 +210,14 @@ Indicates if volume icon must be displayed or not (Default to **true**).
 ></opl-player>
 ```
 
-## opl-mode-icon (optional)
+## opl-template-icon (optional)
 
 Indicates if template selector icon must be displayed or not (Default to **true**).
 
 ```html
 <opl-player
   ...
-  opl-mode-icon="true"
+  opl-template-icon="true"
 ></opl-player>
 ```
 
@@ -331,17 +331,17 @@ Indicates if cuts must be disabled or not (Default to **false**).
 ></opl-player>
 ```
 
-## opl-mode (optional)
+## opl-template (optional)
 
 Indicates the template to use. Could be either "split_50_50", "split_1", "split_2" or "split_25_75" (Default to **split_50_50**)
 
 ```javascript
-$scope.mode = 'split_50_50';
+$scope.template = 'split_50_50';
 ```
 
 ```html
 <opl-player
   ...
-  opl-mode="mode"
+  opl-template="template"
 ></opl-player>
 ```

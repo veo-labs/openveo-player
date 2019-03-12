@@ -220,7 +220,7 @@ describe('OplPlayer', function() {
 
     assert.ok(playerElement.hasClass('opl-no-poi'), 'Unexpected points of interest');
 
-    assert.ok(mediaWrapperElement.hasClass('opl-mode-split_1'), 'Wrong template');
+    assert.ok(mediaWrapperElement.hasClass('opl-template-split_1'), 'Wrong template');
 
     assert.ok(loaderElement.hasClass('ng-hide'), 'Unexpected loader');
     assert.isDefined(videoElement.attr('id'), 'Expected a player id');
@@ -593,7 +593,7 @@ describe('OplPlayer', function() {
                                               'opl-data="data" ' +
                                               'opl-fullscreen-icon="false" ' +
                                               'opl-volume-icon="false" ' +
-                                              'opl-mode-icon="false" ' +
+                                              'opl-template-icon="false" ' +
                                               'opl-settings-icon="false" ' +
                                               'opl-time="false" ' +
                                   '></opl-player>');
@@ -617,7 +617,7 @@ describe('OplPlayer', function() {
     assert.ok(settingsElement.hasClass('ng-hide'), 'Unexpected settings button');
   });
 
-  it('should be able to change the template using attribute "opl-mode"', function() {
+  it('should be able to change the template using attribute "opl-template"', function() {
     scope.data.timecodes = [
       {
         timecode: 1000,
@@ -634,18 +634,18 @@ describe('OplPlayer', function() {
     var element = angular.element('<opl-player ' +
                                               'id="opl-player-test" ' +
                                               'opl-data="data" ' +
-                                              'opl-mode="{{template}}" ' +
+                                              'opl-template="{{template}}" ' +
                                   '></opl-player>');
     createComponent(element, 10000);
 
     var mediaWrapperElement = angular.element(element[0].querySelector('.opl-media-wrapper'));
 
-    assert.ok(mediaWrapperElement.hasClass('opl-mode-' + scope.template), 'Wrong template');
+    assert.ok(mediaWrapperElement.hasClass('opl-template-' + scope.template), 'Wrong template');
 
     scope.template = 'split_50_50';
     scope.$digest();
 
-    assert.ok(mediaWrapperElement.hasClass('opl-mode-' + scope.template), 'Wrong template');
+    assert.ok(mediaWrapperElement.hasClass('opl-template-' + scope.template), 'Wrong template');
   });
 
   it('should be able to activate / deactivate full viewport', function() {
@@ -1592,7 +1592,7 @@ describe('OplPlayer', function() {
     var element = angular.element('<opl-player ' +
                                 'id="opl-player-test" ' +
                                 'opl-data="data" ' +
-                                'opl-mode="split_50_50" ' +
+                                'opl-template="split_50_50" ' +
                     '></opl-player>');
     createComponent(element, 10000);
 
@@ -1663,7 +1663,7 @@ describe('OplPlayer', function() {
 
     assert.notOk(playerElement.hasClass('opl-no-poi'), 'Expected points of interest');
 
-    assert.ok(mediaWrapperElement.hasClass('opl-mode-split_50_50'), 'Wrong template');
+    assert.ok(mediaWrapperElement.hasClass('opl-template-split_50_50'), 'Wrong template');
 
     assert.ok(loaderElement.hasClass('ng-hide'), 'Unexpected loader');
     assert.isDefined(videoElement.attr('id'), 'Expected a player id');
@@ -2151,7 +2151,7 @@ describe('OplPlayer', function() {
       createComponent(element, 10000);
 
       assert.ok(
-        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-mode-' + expectedTemplate),
+        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-template-' + expectedTemplate),
         'Wrong template'
       );
 
@@ -2161,7 +2161,7 @@ describe('OplPlayer', function() {
       scope.$digest();
 
       assert.ok(
-        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-mode-' + expectedTemplate),
+        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-template-' + expectedTemplate),
         'Wrong template'
       );
 
@@ -2171,7 +2171,7 @@ describe('OplPlayer', function() {
       scope.$digest();
 
       assert.ok(
-        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-mode-' + expectedTemplate),
+        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-template-' + expectedTemplate),
         'Wrong template'
       );
 
@@ -2181,7 +2181,7 @@ describe('OplPlayer', function() {
       scope.$digest();
 
       assert.ok(
-        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-mode-' + expectedTemplate),
+        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-template-' + expectedTemplate),
         'Wrong template'
       );
     });
@@ -2214,7 +2214,7 @@ describe('OplPlayer', function() {
       scope.$digest();
 
       assert.ok(
-        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-mode-split_50_50'),
+        angular.element(element[0].querySelector('.opl-media-wrapper')).hasClass('opl-template-split_50_50'),
         'Wrong template'
       );
     });

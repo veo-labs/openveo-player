@@ -475,7 +475,7 @@
       $scope.volumeIconDisplayed = $scope.volumeIconDisplayed && !isTouchDevice();
 
       // Template selector icon is available only if there are indexes
-      $scope.templateSelectorDisplayed = isAttributeTrue('oplModeIcon', true) && $scope.indexesTabDisplayed;
+      $scope.templateSelectorDisplayed = isAttributeTrue('oplTemplateIcon', true) && $scope.indexesTabDisplayed;
     }
 
     /**
@@ -705,7 +705,7 @@
         } else {
           ctrl.setTime(lastTime);
           initPointsOfInterest();
-          ctrl.selectTemplate(ctrl.oplMode);
+          ctrl.selectTemplate(ctrl.oplTemplate);
           updateIcons();
           timeBarController.reset();
           $element.triggerHandler('durationChange', ctrl.duration);
@@ -1292,8 +1292,8 @@
        * @param {String} [changedProperties.oplFullscreenIcon.currentValue] oplFullscreenIcon new value
        * @param {Object} [changedProperties.oplVolumeIcon] oplVolumeIcon old and new value
        * @param {String} [changedProperties.oplVolumeIcon.currentValue] oplVolumeIcon new value
-       * @param {Object} [changedProperties.oplModeIcon] oplModeIcon old and new value
-       * @param {String} [changedProperties.oplModeIcon.currentValue] oplModeIcon new value
+       * @param {Object} [changedProperties.oplTemplateIcon] oplTemplateIcon old and new value
+       * @param {String} [changedProperties.oplTemplateIcon.currentValue] oplTemplateIcon new value
        * @param {Object} [changedProperties.oplSettingsIcon] oplSettingsIcon old and new value
        * @param {String} [changedProperties.oplSettingsIcon.currentValue] oplSettingsIcon new value
        * @param {Object} [changedProperties.oplVeoLabsIcon] oplVeoLabsIcon old and new value
@@ -1328,7 +1328,7 @@
                 !oplData.currentValue.needPointsOfInterestUnitConversion) {
               ctrl.setTime(lastTime);
               initPointsOfInterest();
-              ctrl.selectTemplate(ctrl.oplMode);
+              ctrl.selectTemplate(ctrl.oplTemplate);
               updateIcons();
               $element.triggerHandler('durationChange', ctrl.duration);
             }
@@ -1345,7 +1345,7 @@
               playerService.setCutsStatus(!cutDisabled);
               ctrl.duration = playerService.getDuration();
               initPointsOfInterest();
-              ctrl.selectTemplate(ctrl.oplMode);
+              ctrl.selectTemplate(ctrl.oplTemplate);
               updateIcons();
               $element.triggerHandler('durationChange', ctrl.duration);
               ctrl.setTime(0);
@@ -1364,9 +1364,9 @@
             updateIcons();
           }
 
-          // oplModeIcon
-          if (changedProperties.oplModeIcon && changedProperties.oplModeIcon.currentValue) {
-            $scope.templateSelectorDisplayed = isAttributeTrue('oplModeIcon', true);
+          // oplTemplateIcon
+          if (changedProperties.oplTemplateIcon && changedProperties.oplTemplateIcon.currentValue) {
+            $scope.templateSelectorDisplayed = isAttributeTrue('oplTemplateIcon', true);
             updateIcons();
           }
 
@@ -1427,9 +1427,9 @@
             initPointsOfInterest();
           }
 
-          // oplMode
-          if (changedProperties.oplMode && changedProperties.oplMode.currentValue) {
-            ctrl.selectTemplate(changedProperties.oplMode.currentValue);
+          // oplTemplate
+          if (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue) {
+            ctrl.selectTemplate(changedProperties.oplTemplate.currentValue);
           }
 
         }

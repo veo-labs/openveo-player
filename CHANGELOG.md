@@ -12,7 +12,9 @@
 - Player controller property "modeIconDisplayed" has been renamed into "templateSelectorDisplayed"
 - Player controller properties "modesOpened", "modes", "volumeOpened", "volumePreview", "selectMediaOpened", "definitionOpened" have been removed
 - Player controller method "selectMode" has been renamed into "selectTemplate"
+- Player attribute "opl-mode" has been renamed into "opl-template"
 - Player attribute "opl-mode" available values are now "split_1", "split_2", "split_50_50" and "split_25_75" instead of "media", "presentation", "both" and "both-presentation"
+- Player attribute "opl-mode-icon" has been renamed into "opl-template-icon"
 - Sources have been added to the settings menu, consequently the attribute "opl-media-sources-icon" has been removed
 - Data property "file.basePath" for tags and chapters has been renamed into "file.url"
 - Data property "file.originalname" for tags and chapters has been renamed into "file.originalName"
@@ -27,7 +29,7 @@
 - Force HTML player to play inline and try to avoid native player on mobile devices
 - The control bar has been completely changed to be more user friendly and is now on the video instead of below it
 - Indexes, chapters and tags are now displayed below the player and can be accessed while keeping an eye on the video
-- opl-mode attribute is now watched and can be changed dynamically
+- opl-template attribute is now watched and can be changed dynamically
 - Add Veo-Labs brand as a button in the control bar leading to the Veo-Labs web site. Button can be removed using "opl-veo-labs-icon" attribute
 
 ## BUG FIXES

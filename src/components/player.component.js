@@ -54,7 +54,7 @@
  *      - [Number] **value** The position of the cut relative to the media duration (in milliseconds)
  *  - [Boolean] **opl-fullscreen-icon** true to display the enlarge/reduce icon (default to true)
  *  - [Boolean] **opl-volume-icon** true to display the volume icon (default to true)
- *  - [Boolean] **opl-mode-icon** true to display the template selector icon (default to true)
+ *  - [Boolean] **opl-template-icon** true to display the template selector icon (default to true)
  *  - [Boolean] **opl-settings-icon** true to display the settings icon (default to true)
  *  - [Boolean] **opl-veo-labs-icon** true to display the Veo-Labs icon (default to true)
  *  - [Boolean] **opl-time** true to display the actual time and duration (default to true)
@@ -68,7 +68,7 @@
  *  - [Boolean] **opl-auto-play** true to start playing when media is ready (default to false)
  *  - [Boolean] **opl-remember-position** true to start the media at the position the user was last time (default to
  *    false)
- *  - [String] **opl-mode** The template to choose by default (either "split_1", "split_2", "split_50_50"
+ *  - [String] **opl-template** The template to choose by default (either "split_1", "split_2", "split_50_50"
  *    or "split_25_75") (default to "split_1")
  *
  * Dispatched events are:
@@ -263,8 +263,8 @@
  *                  opl-data="data"
  *                  opl-fullscreen-icon="true"
  *                  opl-volume-icon="true"
- *                  opl-mode="split_50_50"
- *                  opl-mode-icon="true"
+ *                  opl-template="split_50_50"
+ *                  opl-template-icon="true"
  *                  opl-settings-icon="true"
  *                  opl-veo-labs-icon="true"
  *                  opl-time="true"
@@ -289,8 +289,8 @@
       oplData: '<',
       oplFullscreenIcon: '@?',
       oplVolumeIcon: '@?',
-      oplMode: '@?',
-      oplModeIcon: '@?',
+      oplTemplate: '@?',
+      oplTemplateIcon: '@?',
       oplSettingsIcon: '@?',
       oplVeoLabsIcon: '@?',
       oplTime: '@?',

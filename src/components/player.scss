@@ -366,16 +366,16 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     /*
       Both, both-2 and 1 templates for small devices.
     */
-    &.opl-mode-split_50_50 .opl-area-2,
-    &.opl-mode-split_25_75 .opl-area-2,
-    &.opl-mode-split_1 .opl-area-2 {
+    &.opl-template-split_50_50 .opl-area-2,
+    &.opl-template-split_25_75 .opl-area-2,
+    &.opl-template-split_1 .opl-area-2 {
       display: none;
     }
 
     /*
       Mode 50 / 50 for small devices.
     */
-    &.opl-mode-split_50_50 {
+    &.opl-template-split_50_50 {
       .opl-area-2 {
         display: none;
       }
@@ -384,7 +384,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     /*
       Mode 25 / 75 for small devices.
     */
-    &.opl-mode-split_25_75 {
+    &.opl-template-split_25_75 {
       .opl-area-2 {
         display: none;
       }
@@ -393,7 +393,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     /*
       Mode 1 for small devices.
     */
-    &.opl-mode-split_1 {
+    &.opl-template-split_1 {
       .opl-area-2 {
         display: none;
       }
@@ -402,7 +402,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     /*
       Mode 2 for small devices.
     */
-    &.opl-mode-split_2 {
+    &.opl-template-split_2 {
       .opl-area-2 {
         display: none;
       }
@@ -416,7 +416,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       /*
         Mode 50 / 50 for large devices.
       */
-      &.opl-mode-split_50_50 {
+      &.opl-template-split_50_50 {
         .opl-media,
         .opl-area-2 {
           display: block;
@@ -431,7 +431,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       /*
         Mode 25 / 75 for large devices.
       */
-      &.opl-mode-split_25_75 {
+      &.opl-template-split_25_75 {
         .opl-media,
         .opl-area-2 {
           display: block;
@@ -451,7 +451,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       /*
         Mode 1 only for large devices.
       */
-      &.opl-mode-split_1 {
+      &.opl-template-split_1 {
         .opl-media {
           display: block;
           width: 100%;
@@ -467,7 +467,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       /*
         Mode 2 only for large devices.
       */
-      &.opl-mode-split_2 {
+      &.opl-template-split_2 {
         .opl-media {
           display: none;
         }
