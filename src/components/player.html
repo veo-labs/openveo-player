@@ -81,6 +81,11 @@
                                     opl-on-update="toggleFullscreen(on)"
                                     opl-on-focus="handleControlFocus()"
             ></opl-toggle-icon-button>
+            <opl-veo-labs-button
+                                  ng-show="veoLabsIconDisplayed"
+                                  opl-label="{{'CONTROLS_VEO_LABS_ARIA_LABEL' | oplTranslate}}"
+                                  opl-on-focus="handleControlFocus()"
+            ></opl-veo-labs-button>
           </div>
         </div>
       </div>

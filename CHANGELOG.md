@@ -28,6 +28,7 @@
 - The control bar has been completely changed to be more user friendly and is now on the video instead of below it
 - Indexes, chapters and tags are now displayed below the player and can be accessed while keeping an eye on the video
 - opl-mode attribute is now watched and can be changed dynamically
+- Add Veo-Labs brand as a button in the control bar leading to the Veo-Labs web site. Button can be removed using "opl-veo-labs-icon" attribute
 
 ## BUG FIXES
 

@@ -538,7 +538,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     .opl-right-controls {
       position: absolute;
       bottom: 0;
-      right: 0;
+      right: 4px;
     }
 
     /*
@@ -618,6 +618,11 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
 
       }
 
+    }
+
+    .opl-veo-labs-button {
+      --opl-veo-labs-button-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
+      --opl-veo-labs-button-accent-color: #{$OPL_PLAYER_ACCENT_COLOR};
     }
   }
 
