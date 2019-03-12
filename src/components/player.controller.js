@@ -328,7 +328,7 @@
     function updateTabs() {
       $scope.indexesTabDisplayed = ctrl.timecodes.length ? true : false;
       $scope.chaptersTabDisplayed = ctrl.chapters.length && isAttributeTrue('oplChaptersTab', true);
-      $scope.tagsTabDisplayed = ctrl.tags.length && !isAttributeTrue('oplHideTagsTab', false);
+      $scope.tagsTabDisplayed = ctrl.tags.length && isAttributeTrue('oplTagsTab', true);
 
       // If only 1 kind of points of interest, then hide the tabs bar
       // If no points of interest at all, hide the points of interest bar
@@ -1310,8 +1310,8 @@
        * @param {String} [changedProperties.oplAutoPlay.currentValue] oplAutoPlay new value
        * @param {Object} [changedProperties.oplChaptersTab] oplChaptersTab old and new value
        * @param {String} [changedProperties.oplChaptersTab.currentValue] oplChaptersTab new value
-       * @param {Object} [changedProperties.oplHideTagsTab] oplHideTagsTab old and new value
-       * @param {String} [changedProperties.oplHideTagsTab.currentValue] oplHideTagsTab new value
+       * @param {Object} [changedProperties.oplTagsTab] oplTagsTab old and new value
+       * @param {String} [changedProperties.oplTagsTab.currentValue] oplTagsTab new value
        * @param {Object} [changedProperties.oplDisableCut] oplDisableCut old and new value
        * @param {String} [changedProperties.oplDisableCut.currentValue] oplDisableCut new value
        */
@@ -1422,8 +1422,8 @@
             initPointsOfInterest();
           }
 
-          // oplHideTagsTab
-          if (changedProperties.oplHideTagsTab && changedProperties.oplHideTagsTab.currentValue) {
+          // oplTagsTab
+          if (changedProperties.oplTagsTab && changedProperties.oplTagsTab.currentValue) {
             initPointsOfInterest();
           }
 

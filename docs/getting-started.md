@@ -18,7 +18,7 @@ OpenVeo Player defines an AngularJS directive **opl-player**:
   opl-auto-play="false"
   opl-remember-position="false"
   opl-chapters-tab="true"
-  opl-hide-tags-tab="false"
+  opl-tags-tab="true"
   opl-disable-cut="false"
 ></opl-player>
 ```
@@ -309,14 +309,14 @@ Indicates if chapters tab must be displayed or not (Default to **true**).
 ></opl-player>
 ```
 
-## opl-hide-tags-tab (optional)
+## opl-tags-tab (optional)
 
-Indicates if tags tab must be hidden or not (Default to **false**).
+Indicates if tags tab must be displayed or not (Default to **true**).
 
 ```html
 <opl-player
   ...
-  opl-hide-tags-tab="false"
+  opl-tags-tab="true"
 ></opl-player>
 ```
 
