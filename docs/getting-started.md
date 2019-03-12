@@ -17,7 +17,7 @@ OpenVeo Player defines an AngularJS directive **opl-player**:
   opl-player-type="html"
   opl-auto-play="false"
   opl-remember-position="false"
-  opl-hide-chapters-tab="false"
+  opl-chapters-tab="true"
   opl-hide-tags-tab="false"
   opl-disable-cut="false"
 ></opl-player>
@@ -298,14 +298,14 @@ Indicates if player must automatically start at time which video has previously 
 ></opl-player>
 ```
 
-## opl-hide-chapters-tab (optional)
+## opl-chapters-tab (optional)
 
-Indicates if chapters tab must be hidden or not (Default to **false**).
+Indicates if chapters tab must be displayed or not (Default to **true**).
 
 ```html
 <opl-player
   ...
-  opl-hide-chapters-tab="false"
+  opl-chapters-tab="true"
 ></opl-player>
 ```
 

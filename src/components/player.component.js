@@ -58,7 +58,7 @@
  *  - [Boolean] **opl-settings-icon** true to display the settings icon (default to true)
  *  - [Boolean] **opl-veo-labs-icon** true to display the Veo-Labs icon (default to true)
  *  - [Boolean] **opl-time** true to display the actual time and duration (default to true)
- *  - [Boolean] **opl-hide-chapters-tab** true to hide chapters tab (default to false)
+ *  - [Boolean] **opl-chapters-tab** true to display chapters tab (default to true)
  *  - [Boolean] **opl-hide-tags-tab** true to hide tags tab (default to false)
  *  - [Boolean] **opl-full-viewport** true to display the player in full viewport (default to false)
  *  - [Boolean] **opl-disable-cut** true to disable cuts (default to false)
@@ -273,7 +273,7 @@
  *                  opl-player-type="html"
  *                  opl-auto-play="false"
  *                  opl-remember-position="false"
- *                  opl-hide-chapters-tab="false"
+ *                  opl-chapters-tab="true"
  *                  opl-hide-tags-tab="false"
  *                  opl-disable-cut="false"
  *      ></opl-player>
@@ -299,7 +299,7 @@
       oplPlayerType: '@?',
       oplAutoPlay: '@?',
       oplRememberPosition: '@?',
-      oplHideChaptersTab: '@?',
+      oplChaptersTab: '@?',
       oplHideTagsTab: '@?',
       oplDisableCut: '@?'
     }

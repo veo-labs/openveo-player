@@ -531,7 +531,7 @@ describe('OplPlayer', function() {
     }
   });
 
-  it('should be able to hide chapters using attribute "opl-hide-chapters-tab"', function() {
+  it('should be able to hide chapters using attribute "opl-chapters-tab"', function() {
     scope.data.chapters = [
       {
         value: 1000,
@@ -542,7 +542,7 @@ describe('OplPlayer', function() {
     var element = angular.element('<opl-player ' +
                                               'id="opl-player-test" ' +
                                               'opl-data="data" ' +
-                                              'opl-hide-chapters-tab="true" ' +
+                                              'opl-chapters-tab="false" ' +
                                   '></opl-player>');
     createComponent(element, 10000);
 
