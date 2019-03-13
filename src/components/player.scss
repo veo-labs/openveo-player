@@ -634,7 +634,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         position: absolute;
         bottom: 32px;
         left: 0;
-        width: 148px;
+        width: 142px;
         height: 80px;
         @include box-shadow(0px 0px 8px var(--opl-player-background-color-0, rgba($OPL_PLAYER_BACKGROUND_COLOR, 0.12)), 0px 1px 2px var(--opl-player-background-color-1, rgba($OPL_PLAYER_BACKGROUND_COLOR, 0.20)));
       }

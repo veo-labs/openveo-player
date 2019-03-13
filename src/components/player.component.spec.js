@@ -1223,7 +1223,7 @@ describe('OplPlayer', function() {
     assert.equal(isolateScope.previewUrl, scope.data.timecodes[expectedTime / 1000].image.small, 'Wrong preview URL');
     assert.match(
       angular.element(element[0].querySelector('.opl-index-preview')).attr('style'),
-      new RegExp('transform: translateX\\(' + (expectedPreviewPosition - 148 / 2) + 'px\\)'),
+      new RegExp('transform: translateX\\(' + (expectedPreviewPosition - 142 / 2) + 'px\\)'),
       'Wrong preview position'
     );
 
@@ -1244,7 +1244,7 @@ describe('OplPlayer', function() {
     );
     assert.match(
       angular.element(element[0].querySelector('.opl-index-preview')).attr('style'),
-      new RegExp('transform: translateX\\(' + (expectedPreviewPosition - 148 / 2) + 'px\\)'),
+      new RegExp('transform: translateX\\(' + (expectedPreviewPosition - 142 / 2) + 'px\\)'),
       'Wrong preview position'
     );
   });

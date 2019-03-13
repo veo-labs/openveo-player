@@ -23,7 +23,7 @@
  *   Only for tiles of type "image":
  *   - [Object] **[image]** The tile image with:
  *     - [Object] **small** The small image. Small image is displayed when tile is reduced. Expected small image size
- *       is 148x80
+ *       is 142x80
  *       - [String] **url** The URL of the sprite containing the small image
  *       - [Number] **x** x coordinate of the small image inside the sprite
  *       - [Number] **y** y coordinate of the small image inside the sprite

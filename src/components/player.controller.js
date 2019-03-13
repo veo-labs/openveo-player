@@ -520,7 +520,7 @@
       $scope.previewTime = time;
       $scope.previewUrl = index.image && index.image.small && (index.image.small.url || index.image.small);
 
-      previewElement.attr('style', 'transform: translateX(' + (xPosition - 148 / 2) + 'px);');
+      previewElement.attr('style', 'transform: translateX(' + (xPosition - 142 / 2) + 'px);');
     }
 
     /**
