@@ -699,6 +699,7 @@ opl-player > div:-moz-full-screen, :-moz-full-screen .opl-player {
   Loader.
 */
 .opl-loader {
+  display: none;
   z-index: 2;
   position: absolute;
   bottom: 10px;
