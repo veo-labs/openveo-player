@@ -34,6 +34,7 @@
 - Indexes, chapters and tags are now displayed below the player and can be accessed while keeping an eye on the video
 - opl-template attribute is now watched and can be changed dynamically
 - Add Veo-Labs brand as a button in the control bar leading to the Veo-Labs web site. Button can be removed using "opl-veo-labs-icon" attribute
+- Small images of indexes can now be expressed using an URL plus x and y coordinates. Useful if you want to use sprites for your indexes small images
 
 ## BUG FIXES
 

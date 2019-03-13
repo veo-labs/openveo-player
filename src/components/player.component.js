@@ -27,8 +27,12 @@
  *    - [Array] **[timecodes]** A list of indexes
  *      - [Number] **timecode** The position of the index relative to the media duration (in milliseconds)
  *      - [Object] **image** The small and large version of the image representing the index
- *        - [String] **small** URL of the small image representing the index. Displayed in the list of indexes and when
- *          pointer is over the timebar. Expected small image size is 148x80
+ *        - [String|Object] **small** Either the URL of the small image representing the index or a description object
+ *          if small image is contained into a sprite. Small image is displayed in the list of indexes and when pointer
+ *          is over the timebar. Expected small image size is 148x80
+ *          - [String] **url** The URL of the sprite containing the small image
+ *          - [Number] **x** x coordinate of the small image inside the sprite
+ *          - [Number] **y** y coordinate of the small image inside the sprite
  *        - [String] **large** URL of the large image representing the index. Displayed in the area 2 when playing time
  *          corresponds to the index time, and when an index of the list of indexes is enlarged
  *    - [Array] **[chapters]** A list of chapters

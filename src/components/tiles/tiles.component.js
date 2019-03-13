@@ -35,7 +35,11 @@
  *         type: 'image',
  *         time: 40000,
  *         image: {
- *           small: 'http://host.local/image-small.jpg',
+ *           small: {
+ *             url: 'http://host.local/image-small.jpg',
+ *             x: 0,
+ *             y: 0
+ *           },
  *           large: 'http://host.local/image-large.jpg'
  *         }
  *       }

@@ -8,7 +8,7 @@
        class="opl-loader"
   ></div>
 
-  <div class="opl-content" ng-style="{'background-image': ($ctrl.oplData.image && $ctrl.oplData.image.small && $ctrl.smallImagePreloaded && !$ctrl.smallImageError && $ctrl.oplAbstract) ? 'url(' + $ctrl.oplData.image.small + ')' : 'none'}">
+  <div class="opl-content" ng-style="{'background-image': ($ctrl.oplData.image && $ctrl.oplData.image.small && $ctrl.smallImagePreloaded && !$ctrl.smallImageError && $ctrl.oplAbstract) ? 'url(' + $ctrl.oplData.image.small.url + ')' : 'none', 'background-position': $ctrl.oplData.image.small ? $ctrl.oplData.image.small.x + 'px ' + $ctrl.oplData.image.small.y + 'px' : '0px 0px' }">
 
     <div class="opl-abstract" ng-if="$ctrl.oplAbstract">
       <p ng-if="$ctrl.smallImageError && $ctrl.oplData.type === 'image'" class="opl-error-message">

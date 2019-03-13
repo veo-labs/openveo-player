@@ -340,15 +340,30 @@ describe('OplPlayer', function() {
     scope.data.timecodes = [];
 
     for (i = 0; i < totalIndexes; i++) {
-      index = {
-        timecode: i * 1000,
-        image: {
-          small: 'https://host.local/image' + i + '.jpg',
-          large: 'https://host.local/image' + i + '_large.jpg'
-        }
-      };
+      if (i % 2) {
+        index = {
+          timecode: i * 1000,
+          image: {
+            small: 'https://host.local/image' + i + '.jpg',
+            large: 'https://host.local/image' + i + '_large.jpg'
+          }
+        };
+        $httpBackend.whenGET(index.image.small).respond(200);
+      } else {
+        index = {
+          timecode: i * 1000,
+          image: {
+            small: {
+              url: 'https://host.local/image' + i + '.jpg',
+              x: i,
+              y: i + 1
+            },
+            large: 'https://host.local/image' + i + '_large.jpg'
+          }
+        };
+        $httpBackend.whenGET(index.image.small.url).respond(200);
+      }
       scope.data.timecodes.push(index);
-      $httpBackend.whenGET(index.image.small).respond(200);
       $httpBackend.whenGET(index.image.large).respond(200);
     }
 
@@ -391,7 +406,21 @@ describe('OplPlayer', function() {
       assert.isUndefined(index.title, 'Unexpected title for index ' + i);
       assert.isUndefined(index.description, 'Unexpected description for index ' + i);
       assert.equal(index.time, originalIndex.timecode, 'Wrong value for index ' + i);
-      assert.equal(index.image.small, originalIndex.image.small, 'Wrong small image for index ' + i);
+      assert.equal(
+        index.image.small.url,
+        originalIndex.image.small.url || originalIndex.image.small,
+        'Wrong small image URL for index ' + i
+      );
+      assert.equal(
+        index.image.small.x,
+        originalIndex.image.small.x || 0,
+        'Wrong small image x coordinate for index ' + i
+      );
+      assert.equal(
+        index.image.small.y,
+        originalIndex.image.small.y || 0,
+        'Wrong small image y coordinate for index ' + i
+      );
       assert.equal(index.image.large, originalIndex.image.large, 'Wrong large image for index ' + i);
       assert.isUndefined(index.file, originalIndex.file, 'Unexpected attachment file for index ' + i);
       assert.ok(index.abstract, 'Expected abstract representation for index ' + i);
@@ -1138,22 +1167,39 @@ describe('OplPlayer', function() {
     var expectedDuration = 50000;
     var totalIndexes = 50;
     var timeBarWidth = 1000;
-    var expectedPercent = 10;
-    var expectedTime = expectedDuration * expectedPercent / 100;
-    var expectedPreviewPosition = (timeBarWidth * expectedPercent / 100);
+    var expectedPercent;
+    var expectedTime;
+    var expectedPreviewPosition;
     scope.data.timecodes = [];
 
     for (var i = 0; i < totalIndexes; i++) {
+      var index;
       var value = i * 1000;
-      var index = {
-        timecode: value,
-        image: {
-          small: 'https://host.local/image' + i + '.jpg',
-          large: 'https://host.local/image' + i + '_large.jpg'
-        }
-      };
+
+      if (i % 2) {
+        index = {
+          timecode: value,
+          image: {
+            small: 'https://host.local/image' + i + '.jpg',
+            large: 'https://host.local/image' + i + '_large.jpg'
+          }
+        };
+        $httpBackend.whenGET(index.image.small).respond(200);
+      } else {
+        index = {
+          timecode: value,
+          image: {
+            small: {
+              url: 'https://host.local/image' + i + '.jpg',
+              x: i,
+              y: i + 1
+            },
+            large: 'https://host.local/image' + i + '_large.jpg'
+          }
+        };
+        $httpBackend.whenGET(index.image.small.url).respond(200);
+      }
       scope.data.timecodes.push(index);
-      $httpBackend.whenGET(index.image.small).respond(200);
       $httpBackend.whenGET(index.image.large).respond(200);
     }
     var element = angular.element('<opl-player ' +
@@ -1164,7 +1210,10 @@ describe('OplPlayer', function() {
 
     var isolateScope = element.isolateScope();
 
-    isolateScope.handleTimeBarMove(10, null, {
+    expectedPercent = 10;
+    expectedTime = expectedDuration * expectedPercent / 100;
+    expectedPreviewPosition = (timeBarWidth * expectedPercent / 100);
+    isolateScope.handleTimeBarMove(expectedPercent, null, {
       width: timeBarWidth
     });
     $timeout.flush();
@@ -1172,6 +1221,27 @@ describe('OplPlayer', function() {
 
     assert.equal(isolateScope.previewTime, expectedTime, 'Wrong preview time');
     assert.equal(isolateScope.previewUrl, scope.data.timecodes[expectedTime / 1000].image.small, 'Wrong preview URL');
+    assert.match(
+      angular.element(element[0].querySelector('.opl-index-preview')).attr('style'),
+      new RegExp('transform: translateX\\(' + (expectedPreviewPosition - 148 / 2) + 'px\\)'),
+      'Wrong preview position'
+    );
+
+    expectedPercent = 12;
+    expectedTime = expectedDuration * expectedPercent / 100;
+    expectedPreviewPosition = (timeBarWidth * expectedPercent / 100);
+    isolateScope.handleTimeBarMove(expectedPercent, null, {
+      width: timeBarWidth
+    });
+    $timeout.flush();
+    scope.$digest();
+
+    assert.equal(isolateScope.previewTime, expectedTime, 'Wrong preview time');
+    assert.equal(
+      isolateScope.previewUrl,
+      scope.data.timecodes[expectedTime / 1000].image.small.url,
+      'Wrong preview URL'
+    );
     assert.match(
       angular.element(element[0].querySelector('.opl-index-preview')).attr('style'),
       new RegExp('transform: translateX\\(' + (expectedPreviewPosition - 148 / 2) + 'px\\)'),

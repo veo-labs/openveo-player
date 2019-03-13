@@ -385,7 +385,10 @@
      *     tiles
      *   - Only for points of interest of type "image":
      *     - **image** The small and large images with:
-     *       - **small** Small image URL
+     *       - **small** Small image URL or a small image description object
+     *         - **url** Sprite URL
+     *         - **x** x coordinate of the small image in the sprite
+     *         - **y** y coordinate of the small image in the sprite
      *       - **large** Large image URL
      *   - Only for points of interest of type "text":
      *     - **title** A title
@@ -401,18 +404,28 @@
         for (var i = 0; i < pointsOfInterest.length; i++) {
           var pointOfInterest = pointsOfInterest[i];
           var value = pointOfInterest.hasOwnProperty('timecode') ? pointOfInterest.timecode : pointOfInterest.value;
-          preparedPointsOfInterest.push(
-            {
-              id: i,
-              type: pointOfInterest.hasOwnProperty('image') ? 'image' : 'text',
-              title: pointOfInterest.name,
-              time: value,
-              description: pointOfInterest.description,
-              image: pointOfInterest.image,
-              file: pointOfInterest.file,
-              abstract: true
-            }
-          );
+          var preparedPointOfInterest = {
+            id: i,
+            type: pointOfInterest.hasOwnProperty('image') ? 'image' : 'text',
+            title: pointOfInterest.name,
+            time: value,
+            description: pointOfInterest.description,
+            file: pointOfInterest.file,
+            abstract: true
+          };
+
+          if (pointOfInterest.image) {
+            preparedPointOfInterest.image = {
+              small: {
+                url: pointOfInterest.image.small.url || pointOfInterest.image.small,
+                x: pointOfInterest.image.small.x || 0,
+                y: pointOfInterest.image.small.y || 0
+              },
+              large: pointOfInterest.image.large
+            };
+          }
+
+          preparedPointsOfInterest.push(preparedPointOfInterest);
         }
       }
 
@@ -505,7 +518,7 @@
 
       var index = playerService.findPointOfInterest('timecodes', time);
       $scope.previewTime = time;
-      $scope.previewUrl = index.image && index.image.small;
+      $scope.previewUrl = index.image && index.image.small && (index.image.small.url || index.image.small);
 
       previewElement.attr('style', 'transform: translateX(' + (xPosition - 148 / 2) + 'px);');
     }

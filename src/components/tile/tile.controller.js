@@ -54,7 +54,7 @@
       if (!ctrl.oplData.image || !ctrl.oplData.image.small || ctrl.smallImagePreloading) return;
       ctrl.smallImagePreloading = true;
 
-      $http.get(ctrl.oplData.image.small).then(function() {
+      $http.get(ctrl.oplData.image.small.url).then(function() {
         ctrl.smallImagePreloading = false;
         ctrl.smallImageError = false;
         ctrl.smallImagePreloaded = true;

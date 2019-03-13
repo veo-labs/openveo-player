@@ -121,7 +121,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 40000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'image-large.jpg'
         }
       };
@@ -169,7 +173,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 40000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'image-large.jpg'
         }
       };
@@ -186,8 +194,8 @@ describe('OplTile', function() {
 
       var ctrl = element.controller('oplTile');
 
-      $httpBackend.whenGET(scope.data.image.small).respond(200);
-      $httpBackend.expectGET(scope.data.image.small);
+      $httpBackend.whenGET(scope.data.image.small.url).respond(200);
+      $httpBackend.expectGET(scope.data.image.small.url);
 
       ctrl.preload();
       $timeout.flush();
@@ -204,7 +212,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 40000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'image-large.jpg'
         }
       };
@@ -243,7 +255,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 40000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'image-large.jpg'
         }
       };
@@ -415,7 +431,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 20000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: base64Image
         }
       };
@@ -469,7 +489,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 20000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: base64Image
         }
       };
@@ -499,7 +523,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 20000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'wrong-image-url'
         }
       };
@@ -691,7 +719,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 20000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'wrong-image-url'
         }
       };
@@ -727,7 +759,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 20000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'wrong-image-url'
         }
       };
@@ -965,7 +1001,11 @@ describe('OplTile', function() {
         type: 'image',
         time: 40000,
         image: {
-          small: 'image-small.jpg',
+          small: {
+            url: 'image-small.jpg',
+            x: 42,
+            y: 43
+          },
           large: 'image-large.jpg'
         }
       };
@@ -987,16 +1027,21 @@ describe('OplTile', function() {
       var errorElement = angular.element(element[0].querySelector('.opl-error-message'));
       var ctrl = element.controller('oplTile');
 
-      $httpBackend.whenGET(scope.data.image.small).respond(200);
-      $httpBackend.expectGET(scope.data.image.small);
+      $httpBackend.whenGET(scope.data.image.small.url).respond(200);
+      $httpBackend.expectGET(scope.data.image.small.url);
 
       ctrl.preload();
       $httpBackend.flush();
 
       assert.match(
         contentElement.attr('style'),
-        new RegExp('background-image: ?url\\("' + scope.data.image.small + '"\\);'),
+        new RegExp('background-image: ?url\\("' + scope.data.image.small.url + '"\\);'),
         'Wrong image'
+      );
+      assert.match(
+        contentElement.attr('style'),
+        new RegExp('background-position: ?' + scope.data.image.small.x + 'px ' + scope.data.image.small.y + 'px;'),
+        'Wrong image position'
       );
       assert.isUndefined(errorElement[0], 'Unexpected error');
     });
@@ -1004,8 +1049,8 @@ describe('OplTile', function() {
     it('should display an error message if preloading the small image failed', function() {
       var ctrl = element.controller('oplTile');
 
-      $httpBackend.whenGET(scope.data.image.small).respond(500);
-      $httpBackend.expectGET(scope.data.image.small);
+      $httpBackend.whenGET(scope.data.image.small.url).respond(500);
+      $httpBackend.expectGET(scope.data.image.small.url);
 
       ctrl.preload();
       $httpBackend.flush();
@@ -1020,7 +1065,7 @@ describe('OplTile', function() {
     it('should display the loader when preloading the small image', function() {
       var ctrl = element.controller('oplTile');
 
-      $httpBackend.whenGET(scope.data.image.small).respond(200);
+      $httpBackend.whenGET(scope.data.image.small.url).respond(200);
 
       ctrl.preload();
       scope.$digest();

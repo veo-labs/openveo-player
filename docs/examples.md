@@ -67,7 +67,11 @@ The HTML player expects one media id with one source.
           {
             timecode: 1200, // The position of the index relative to the media duration (in milliseconds)
             image: { // The small and large version of the image representing the index
-              small: 'https://host.local/image2-small.jpeg', // URL of the small image representing the index. Displayed in the list of indexes and when pointer is over the timebar. Expected small image size is 148x80
+              small: {
+                url: 'https://host.local/sprite.jpeg', // URL of the sprite containing the small image representing the index. Displayed in the list of indexes and when pointer is over the timebar. Expected small image size is 148x80
+                x: 148, // x coordinate of the small image inside the sprite image
+                y: 0 // y coordinate of the small image inside the sprite image
+              },
               large: 'https://host.local/image2-large.jpeg' // URL of the large image representing the index. Displayed in the area 2 when playing time corresponds to the index time, and when an index of the list of indexes is enlarged
             }
           }
