@@ -416,6 +416,14 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     @media(min-width: $MEDIA_LARGE_BREAKPOINT) {
 
       /*
+        Template selector and volume controller on large devices.
+      */
+      .opl-controls opl-template-selector,
+      .opl-controls .opl-volume {
+        display: inline-block;
+      }
+
+      /*
         Light controls for large devices.
       */
       .opl-light-controls > div {
@@ -566,6 +574,13 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     }
 
     /*
+      Template selector on small devices.
+    */
+    opl-template-selector {
+      display: none;
+    }
+
+    /*
       Controls wrapper.
     */
     & > div {
@@ -590,7 +605,11 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       }
     }
 
+    /*
+      Volume controller on small devices.
+    */
     .opl-volume {
+      display: none;
 
       .opl-slider {
         --opl-slider-primary-color: #{$OPL_PLAYER_CONTROLS_PRIMARY_COLOR};
