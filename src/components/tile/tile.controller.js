@@ -254,6 +254,11 @@
      */
     function computeDescriptionHeight() {
       if (!tileElementBoundingRectangle) return;
+      if (!ctrl.oplData.description) {
+        $scope.descriptionHeight = 0;
+        return;
+      }
+
       $scope.descriptionHeight = tileElementBoundingRectangle.height - getTitleHeight() - getAttachmentHeight() - 8 * 2;
     }
 
@@ -688,7 +693,7 @@
        */
       getTileHeight: {
         value: function() {
-          var descriptionHeight = fullDescriptionScrollerController.getContentSize();
+          var descriptionHeight = (ctrl.oplData.description) ? fullDescriptionScrollerController.getContentSize() : 0;
           var tileHeight = getTitleHeight() + 8 * 2 + descriptionHeight;
           return tileHeight;
         }
@@ -703,7 +708,7 @@
         value: function() {
           var waitForElementPromises = [];
           ready = false;
-          descriptionScrollerReady = false;
+          descriptionScrollerReady = ctrl.oplData.description ? false : true;
           tileElement = angular.element($element[0].querySelector('.opl-tile'));
 
           if (ctrl.oplAbstract)
