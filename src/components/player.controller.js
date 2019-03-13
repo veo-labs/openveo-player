@@ -31,6 +31,7 @@
     var autoPlayActivated = false;
     var positionRemembered = false;
     var mediaData = null;
+    var controlsHiddingTimer;
     var mediaWrapperElement;
     var lightControlsElement;
     var previewElement;
@@ -90,6 +91,21 @@
     function isAttributeTrue(attribute, defaultValue) {
       if (typeof ctrl[attribute] === 'undefined') return defaultValue;
       return JSON.parse(ctrl[attribute]);
+    }
+
+    /**
+     * Tests if an HTML element is part of the "opl-media-wrapper" element or not.
+     *
+     * @param {HTMLElement} element The element suspected to be part of the media wrapper
+     * @return {Boolean} true if element is part of the media element, false otherwise
+     */
+    function isElementFromMedia(element) {
+      if (!element) return false;
+
+      element = angular.element(element);
+      if (element.hasClass('opl-media-wrapper')) return true;
+
+      return isElementFromMedia(element.parent()[0]);
     }
 
     /**
@@ -888,19 +904,6 @@
     }
 
     /**
-     * Handles player over event.
-     *
-     * Display the controls.
-     *
-     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
-     */
-    function handlePlayerOver(event) {
-      safeApply(function() {
-        ctrl.controlsDisplayed = true;
-      });
-    }
-
-    /**
      * Handles player out event.
      *
      * Hide controls.
@@ -908,9 +911,37 @@
      * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
      */
     function handlePlayerOut(event) {
-      safeApply(function() {
-        ctrl.controlsDisplayed = false;
-      });
+      if (ctrl.controlsDisplayed && !isElementFromMedia(event.relatedTarget)) {
+        safeApply(function() {
+          ctrl.controlsDisplayed = false;
+        });
+      }
+    }
+
+    /**
+     * Handles player move event.
+     *
+     * Automatically hide controls after 5 seconds if cursor is not moving.
+     *
+     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
+     */
+    function handlePlayerMove(event) {
+      if (controlsHiddingTimer) {
+        $timeout.cancel(controlsHiddingTimer);
+      }
+
+      if (!ctrl.controlsDisplayed) {
+        safeApply(function() {
+          ctrl.controlsDisplayed = true;
+        });
+      }
+
+      // Automatically hide controls after 5 seconds
+      controlsHiddingTimer = $timeout(function() {
+        safeApply(function() {
+          ctrl.controlsDisplayed = false;
+        });
+      }, 5000);
     }
 
     Object.defineProperties(ctrl, {
@@ -1220,8 +1251,8 @@
           fullscreenEnabled = false;
           $scope.previewDisplayed = false;
 
-          mediaWrapperElement.on('mouseover', handlePlayerOver);
           mediaWrapperElement.on('mouseout', handlePlayerOut);
+          mediaWrapperElement.on('mousemove', handlePlayerMove);
 
           $element.on('oplReady', handlePlayerReady);
           $element.on('oplWaiting', handlePlayerWaiting);
@@ -1272,7 +1303,7 @@
         value: function() {
           if (ctrl.player) ctrl.player.destroy();
 
-          mediaWrapperElement.off('mouseover mouseout');
+          mediaWrapperElement.off('mouseout mousemove');
           $element.off(
             'oplReady oplWaiting oplPlaying oplDurationChange oplPlay oplPause oplLoadProgress oplPlayProgress ' +
             'oplEnd oplError'

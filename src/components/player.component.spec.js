@@ -990,7 +990,7 @@ describe('OplPlayer', function() {
     );
   });
 
-  it('should display controls when pointer is over the media element', function() {
+  it('should display controls when pointer is moving over the media element', function() {
     var element = angular.element('<opl-player ' +
                                 'id="opl-player-test" ' +
                                 'opl-data="data" ' +
@@ -1013,13 +1013,59 @@ describe('OplPlayer', function() {
       'Expected controls to be hidden when pointer goes out'
     );
 
-    mediaWrapperElement.triggerHandler('mouseover');
+    mediaWrapperElement.triggerHandler('mousemove');
     $timeout.flush();
     scope.$digest();
 
     assert.notOk(
       angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
-      'Expected controls to be displayed when pointer is over'
+      'Expected controls to be displayed when pointer is moving over'
+    );
+  });
+
+  it('should automatically hide controls after 5 seconds if pointer is not moving', function() {
+    var element = angular.element('<opl-player ' +
+                                'id="opl-player-test" ' +
+                                'opl-data="data" ' +
+                    '></opl-player>');
+    createComponent(element, 10000);
+
+    var mediaWrapperElement = angular.element(element[0].querySelector('.opl-media-wrapper'));
+
+    mediaWrapperElement.triggerHandler('mousemove');
+    $timeout.flush();
+    scope.$digest();
+
+    assert.notOk(
+      angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
+      'Expected controls to be displayed when pointer is moving over the media wrapper'
+    );
+
+    $timeout.flush(5000);
+    scope.$digest();
+
+    assert.ok(
+      angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
+      'Expected controls to be hidden when pointer is not moving for 5 seconds'
+    );
+  });
+
+  it('should not hide controls if cursor is moving out a sub element of the media wrapper', function() {
+    var element = angular.element('<opl-player ' +
+                                'id="opl-player-test" ' +
+                                'opl-data="data" ' +
+                    '></opl-player>');
+    createComponent(element, 10000);
+
+    var mediaSubElement = angular.element(element[0].querySelector('.opl-media'));
+
+    mediaSubElement.triggerHandler('mouseout');
+    $timeout.flush();
+    scope.$digest();
+
+    assert.notOk(
+      angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
+      'Expected controls to not hide when pointer is moving out a media wrapper sub element'
     );
   });
 
