@@ -1216,7 +1216,6 @@
         value: function() {
           mediaWrapperElement = angular.element($element[0].querySelector('.opl-media-wrapper'));
           previewElement = angular.element($element[0].querySelector('.opl-index-preview'));
-          playerService = new OplPlayerService();
           lastTime = 0;
           fullscreenEnabled = false;
           $scope.previewDisplayed = false;
@@ -1245,6 +1244,7 @@
       $postLink: {
         value: function() {
           $timeout(function() {
+            playerService = new OplPlayerService();
             lightControlsElement = angular.element($element[0].querySelector('.opl-light-controls'));
             tabsController = angular.element($element[0].querySelector('.opl-tabs')).controller('oplTabs');
 
