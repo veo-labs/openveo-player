@@ -196,7 +196,7 @@ describe('OplPlayer', function() {
     var mediaWrapperElement = angular.element(element[0].querySelector('.opl-media-wrapper'));
     var overlayPlayPauseButtonElement =
         angular.element(element[0].querySelector('.opl-overlay-play-button opl-toggle-icon-button'));
-    var errorElement = angular.element(element[0].querySelector('.opl-overlay-play-button > .opl-error'));
+    var errorElement = angular.element(element[0].querySelector('.opl-error'));
     var videoElement = angular.element(element[0].querySelector('.opl-media video'));
     var loaderElement = angular.element(element[0].querySelector('.opl-loader'));
     var area2Element = angular.element(element[0].querySelector('.opl-area-2 > div'));
@@ -1763,7 +1763,7 @@ describe('OplPlayer', function() {
 
     var playerElement = angular.element(element[0].querySelector('.opl-player'));
     var mediaWrapperElement = angular.element(element[0].querySelector('.opl-media-wrapper'));
-    var errorElement = angular.element(element[0].querySelector('.opl-overlay-play-button > .opl-error'));
+    var errorElement = angular.element(element[0].querySelector('.opl-error'));
     var videoElement = angular.element(element[0].querySelector('.opl-media video'));
     var loaderElement = angular.element(element[0].querySelector('.opl-loader'));
     var area2Element = angular.element(element[0].querySelector('.opl-area-2 > div'));

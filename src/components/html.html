@@ -1,9 +1,6 @@
-<div class="opl-overlay-play-button">
-  <opl-toggle-icon-button
-                          opl-on-update="$ctrl.playPause(on)"
-  ></opl-toggle-icon-button>
+<div class="opl-error" ng-if='$ctrl.error'>
   <div>
-    <div ng-if='$ctrl.error' class="opl-error" ng-bind='$ctrl.error'></div>
+    <div ng-bind='$ctrl.error'></div>
   </div>
 </div>
 

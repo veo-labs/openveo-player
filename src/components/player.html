@@ -2,6 +2,12 @@
   <div class="opl-player" ng-class="{'opl-no-poi': hidePoi}">
 
     <div class="opl-media-wrapper opl-template-{{$ctrl.selectedTemplate}}">
+      <div class="opl-overlay-play-button">
+        <opl-toggle-icon-button
+                                opl-on-update="$ctrl.playPause(on)"
+        ></opl-toggle-icon-button>
+      </div>
+
       <div class="opl-media">
         <div class="opl-loader" ng-show="$ctrl.loading" ng-bind="'LOADING' | oplTranslate"></div>
         <ng-include src="mediaTemplate"></ng-include>

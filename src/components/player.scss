@@ -317,9 +317,9 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       }
 
       /*
-        Overlay play / pause button.
+        HTML player error message.
       */
-      .opl-overlay-play-button {
+      .opl-error {
         z-index: 1;
         display: table;
         position: absolute;
@@ -327,42 +327,54 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         left: 0;
         width: 100%;
         height: 100%;
-        outline: none;
-
-        /*
-          Controls buttons.
-        */
-        opl-toggle-icon-button,
-        .opl-toggle-icon-button {
-          width: 100%;
-          height: 100%;
-        }
-
-        /*
-          Focus ring in button hover state.
-        */
-        .opl-toggle-icon-button:hover::before {
-          opacity: 0;
-        }
-
-        /*
-          Focus ring in button focus state.
-        */
-        .opl-toggle-icon-button.opl-focus::before {
-          opacity: 0;
-        }
 
         & > div {
           display: table-cell;
           vertical-align: middle;
           text-align: center;
-        }
 
-        .opl-error {
-          color: var(--opl-player-controls-primary-color, $OPL_PLAYER_CONTROLS_PRIMARY_COLOR);
+          & > div {
+            color: var(--opl-player-controls-primary-color, $OPL_PLAYER_CONTROLS_PRIMARY_COLOR);
+          }
         }
       }
 
+    }
+
+    /*
+      Overlay play / pause button.
+    */
+    .opl-overlay-play-button {
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      outline: none;
+
+      /*
+        Controls buttons.
+      */
+      opl-toggle-icon-button,
+      .opl-toggle-icon-button {
+        width: 100%;
+        height: 100%;
+      }
+
+      /*
+        Focus ring in button hover state.
+      */
+      .opl-toggle-icon-button:hover::before {
+        opacity: 0;
+      }
+
+      /*
+        Focus ring in button focus state.
+      */
+      .opl-toggle-icon-button.opl-focus::before {
+        opacity: 0;
+      }
     }
 
     /*
@@ -440,9 +452,6 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
           float: left;
           width: 50%;
         }
-        .opl-controls {
-          width: 50%;
-        }
       }
 
       /*
@@ -460,9 +469,6 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         .opl-area-2 {
           width: 75%;
         }
-        .opl-controls {
-          width: 25%;
-        }
       }
 
       /*
@@ -476,9 +482,6 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         .opl-area-2 {
           display: none;
         }
-        .opl-controls {
-          width: 100%;
-        }
       }
 
       /*
@@ -490,9 +493,6 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         }
         .opl-area-2 {
           display: block;
-          width: 100%;
-        }
-        .opl-controls {
           width: 100%;
         }
       }

@@ -1495,8 +1495,6 @@
             ctrl.selectedTemplate =
               template && Object.values(TEMPLATES).indexOf(template) > -1 ? template : TEMPLATES.SPLIT_50_50;
           }
-
-          timeBarController.reset();
         }
       },
 
