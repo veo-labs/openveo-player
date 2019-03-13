@@ -143,6 +143,7 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     & > div {
       display: flex;
       width: 100%;
+      max-width: 100%;
       background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
       @include box-shadow(0px 4px 6px var(--opl-player-primary-color-3, rgba($OPL_PLAYER_PRIMARY_COLOR, 0.12)));
 
@@ -413,6 +414,13 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       Large devices may display both presentation and media.
     */
     @media(min-width: $MEDIA_LARGE_BREAKPOINT) {
+
+      /*
+        Light controls for large devices.
+      */
+      .opl-light-controls > div {
+        max-width: 616px;
+      }
 
       /*
         Mode 50 / 50 for large devices.
