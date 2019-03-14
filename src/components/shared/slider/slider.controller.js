@@ -433,7 +433,7 @@
               property: 'width',
               notEqual: (sliderElementBoundingRectangle) ? sliderElementBoundingRectangle.width : 0
             }
-          ], 500).then(function(boundingRectangle) {
+          ], 50).then(function(boundingRectangle) {
             sliderElementBoundingRectangle = boundingRectangle;
             updateUi();
             deferred.resolve();

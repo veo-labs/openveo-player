@@ -82,7 +82,7 @@
      * @method waitForController
      */
     function waitForController(element, componentName, timeout) {
-      if (!timeout) timeout = 500;
+      if (!timeout) timeout = 50;
       if (!element) return $q.reject('Element not specified');
       var deferred = $q.defer();
       var controller = null;
@@ -92,7 +92,7 @@
         return controller ? true : false;
       };
 
-      wait(isControllerReady).then(function() {
+      wait(isControllerReady, timeout).then(function() {
         deferred.resolve(controller);
       }).catch(function(reason) {
         deferred.reject(reason);
@@ -116,7 +116,7 @@
      * @method waitForElementDimension
      */
     function waitForElementDimension(element, validators, timeout) {
-      if (!timeout) timeout = 500;
+      if (!timeout) timeout = 50;
       if (!element) return $q.reject('Element not specified');
       var deferred = $q.defer();
       var elementBoundingRectangle = null;
@@ -130,7 +130,9 @@
           left: boundingRectangle.left,
           right: boundingRectangle.right,
           top: boundingRectangle.top,
-          width: boundingRectangle.width
+          width: boundingRectangle.width,
+          clientWidth: element.clientWidth,
+          clientHeight: element.clientHeight
         };
 
         for (var i = 0; i < validators.length; i++) {
@@ -153,7 +155,7 @@
         return true;
       };
 
-      wait(isElementReady).then(function() {
+      wait(isElementReady, timeout).then(function() {
         deferred.resolve(elementBoundingRectangle);
       }).catch(function(reason) {
         deferred.reject(reason);
@@ -172,7 +174,7 @@
      * @method waitForElement
      */
     function waitForElement(parentElement, selector, timeout) {
-      if (!timeout) timeout = 500;
+      if (!timeout) timeout = 50;
       if (!parentElement || !selector) return $q.reject('Parent element or selector not specified');
       var deferred = $q.defer();
 
@@ -180,7 +182,7 @@
         return parentElement.querySelector(selector) ? true : false;
       };
 
-      wait(isElementPresent).then(function() {
+      wait(isElementPresent, timeout).then(function() {
         deferred.resolve();
       }).catch(function(reason) {
         deferred.reject(reason);
