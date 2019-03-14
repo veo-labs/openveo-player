@@ -374,7 +374,6 @@ opl-tile {
 
     .opl-tile-description {
       font-size: 16px;
-      line-height: 21px;
       letter-spacing: 0.5px;
       color: var(--opl-tile-primary-color-3, rgba($OPL_TILE_PRIMARY_COLOR, 0.498));
       @include user-select(text);
@@ -387,6 +386,7 @@ opl-tile {
       }
 
       p {
+        line-height: 21px;
         font-size: 1em;
         margin: 1em 0;
       }
