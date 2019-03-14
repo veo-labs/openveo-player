@@ -319,7 +319,6 @@ describe('OplVolume', function() {
     assert.ok(volumeElement.hasClass('opl-over'), 'Expected class "opl-over"');
 
     volumeElement.triggerHandler('mouseout');
-    $timeout.flush();
     angular.element(sliderWrapperElement).triggerHandler('transitionend');
 
     assert.notOk(volumeElement.hasClass('opl-over'), 'Unexpected class "opl-over"');
@@ -361,7 +360,6 @@ describe('OplVolume', function() {
     $timeout.flush();
 
     volumeElement.triggerHandler('mouseout');
-    $timeout.flush();
     angular.element(sliderWrapperElement).triggerHandler('transitionend');
     $timeout.flush();
 

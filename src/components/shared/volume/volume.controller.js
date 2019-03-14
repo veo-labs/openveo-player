@@ -25,11 +25,25 @@
     var sliderWrapperElement;
     var opening;
     var closing;
-    var toggleTimer;
     var opened = false;
 
     $scope.level = 50;
     $scope.sliderValue = 0;
+
+    /**
+     * Tests if an HTML element is part of the volume component or not.
+     *
+     * @param {HTMLElement} element The element suspected to be part of the volume component
+     * @return {Boolean} true if element is part of the volume component, false otherwise
+     */
+    function isElementFromComponent(element) {
+      if (!element) return false;
+
+      element = angular.element(element);
+      if (element.hasClass('opl-volume')) return true;
+
+      return isElementFromComponent(element.parent()[0]);
+    }
 
     /**
      * Animates the volume controller opening.
@@ -125,24 +139,19 @@
      * @param {Event} event The captured event which may defer depending on the device (mouse, pen etc.)
      */
     function handleOver(event) {
-      if (opening || closing) return;
+      if (opening || closing || opened) return;
 
-      if (toggleTimer) {
-        $timeout.cancel(toggleTimer);
-        toggleTimer = null;
-      }
+      if (!isElementFromComponent(event.relatedTarget)) {
+        opening = true;
+        requestAnimationFrame(function() {
+          animateOpening().then(function() {
+            opening = false;
+            opened = true;
 
-      if (opened) return;
-
-      opening = true;
-      requestAnimationFrame(function() {
-        animateOpening().then(function() {
-          opening = false;
-          opened = true;
-
-          if (ctrl.oplOnOpen) ctrl.oplOnOpen();
+            if (ctrl.oplOnOpen) ctrl.oplOnOpen();
+          });
         });
-      });
+      }
     }
 
     /**
@@ -153,8 +162,7 @@
     function handleOut(event) {
       if (closing || opening || !opened) return;
 
-      toggleTimer = $timeout(function() {
-        if (!opened) return;
+      if (!isElementFromComponent(event.relatedTarget)) {
         closing = true;
         requestAnimationFrame(function() {
           animateClosing().then(function() {
@@ -164,7 +172,7 @@
             if (ctrl.oplOnClose) ctrl.oplOnClose();
           });
         });
-      }, 100);
+      }
     }
 
     Object.defineProperties(ctrl, {
