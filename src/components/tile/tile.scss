@@ -165,7 +165,7 @@ opl-tile {
   }
 
   /*
-    Tile in over state.
+    Full tile in over state.
   */
   &.opl-over {
 
@@ -173,8 +173,7 @@ opl-tile {
       Overlay in over state.
     */
     &::before {
-      opacity: 1;
-      background-color: var(--opl-tile-primary-color-1, rgba($OPL_TILE_PRIMARY_COLOR, 0.078));
+      opacity: 0;
     }
 
   }
@@ -297,6 +296,21 @@ opl-tile {
   &.opl-tile-abstract {
     height: 100%;
     cursor: pointer;
+
+    /*
+      Abstract tile in over state.
+    */
+    &.opl-over {
+
+      /*
+        Overlay in over state.
+      */
+      &::before {
+        opacity: 1;
+        background-color: var(--opl-tile-primary-color-1, rgba($OPL_TILE_PRIMARY_COLOR, 0.078));
+      }
+
+    }
 
     /*
       Tile in focus state.
