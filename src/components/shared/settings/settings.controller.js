@@ -26,9 +26,9 @@
     var settingsElement;
     var itemElements;
     var settingsTimer;
-    var dialogElementBoundingRectangle = null;
     var leavingAsked = false;
     var computing = false;
+    var initialized = false;
 
     /**
      * Finds a settings item element by id.
@@ -87,7 +87,7 @@
     function computeDialogSize() {
       settingsElement.attr(
         'style',
-        '--opl-settings-dialog-height: ' + dialogElementBoundingRectangle.height + 'px;'
+        '--opl-settings-dialog-height: ' + dialogElement[0].clientHeight + 'px;'
       );
     }
 
@@ -424,14 +424,13 @@
        */
       reset: {
         value: function() {
-          if (!settingsElement) return;
+          if (!initialized) return;
           computing = true;
           itemElements = settingsElement[0].querySelectorAll('li');
           buttonElement = angular.element($element[0].querySelector('.opl-button'));
           dialogElement = angular.element(settingsElement[0].querySelector('.opl-dialog'));
 
           $timeout(function() {
-            dialogElementBoundingRectangle = dialogElement[0].getBoundingClientRect();
             computeDialogSize();
             clearEventListeners();
             setEventListeners();
@@ -459,6 +458,7 @@
        */
       $postLink: {
         value: function() {
+          initialized = true;
 
           // Wait for oplButton component and quality/source items.
           // Template for oplButton component is stored in cache and will be processed in next loop.

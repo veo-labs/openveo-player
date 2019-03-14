@@ -114,7 +114,7 @@ describe('OplScroller', function() {
 
         element = $compile(element)(scope);
         scope.$digest();
-        $timeout.flush();
+        $timeout.flush(1000);
 
         scrollerElement = angular.element(element[0].querySelector('.opl-scroller'));
         scrollbarElement = angular.element(element[0].querySelector('.opl-scrollbar'));
@@ -273,7 +273,7 @@ describe('OplScroller', function() {
 
         contentWrapperElement.attr('style', scrollbar.sizeProperty + ': 800px;');
         angular.element(window).triggerHandler('resize');
-        $timeout.flush();
+        $timeout.flush(1000);
 
         thumbElementBoundingRectangle = thumbElement[0].getBoundingClientRect();
         assert.ok(initialThumbSize > thumbElementBoundingRectangle[scrollbar.sizeProperty], 'Wrong thumb size');
@@ -447,7 +447,7 @@ describe('OplScroller', function() {
 
         contentWrapperElement.attr('style', scrollbar.sizeProperty + ': 800px;');
         ctrl.reset();
-        $timeout.flush();
+        $timeout.flush(1000);
 
         thumbElementBoundingRectangle = thumbElement[0].getBoundingClientRect();
         assert.ok(initialThumbSize > thumbElementBoundingRectangle[scrollbar.sizeProperty], 'Wrong thumb size');

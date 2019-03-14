@@ -24,6 +24,9 @@
     var ctrl = this;
     var ready = false;
     var descriptionScrollerReady = false;
+    var reseting = false;
+    var resetRequested = false;
+    var initialized = false;
     var bodyElement;
     var tileElement;
     var abstractMoreInfoButtonElement;
@@ -45,7 +48,40 @@
     var deactivationAttachmentTimer;
     var deactivationAnimationRequested;
     var deactivationAttachmentAnimationRequested;
-    var tileElementBoundingRectangle;
+    var tileHeight;
+
+    /**
+     * Finds elements in the DOM.
+     */
+    function findElements() {
+      if (ctrl.oplAbstract) {
+
+        // Abstract
+
+        abstractTitleElement = angular.element($element[0].querySelector('.opl-abstract .opl-title'));
+        abstractTimeElement = angular.element($element[0].querySelector('.opl-abstract .opl-access-time'));
+        abstractMoreInfoButtonElement = angular.element($element[0].querySelector('.opl-abstract opl-button'));
+        abstractTimeIconElement = angular.element(
+          $element[0].querySelector('.opl-abstract .opl-access-time-icon')
+        );
+      } else {
+
+        // Full
+
+        if (ctrl.oplData.title)
+          fullTitleElement = angular.element($element[0].querySelector('.opl-full .opl-title'));
+
+        if (ctrl.oplData.description)
+          fullDescriptionScrollerElement = angular.element($element[0].querySelector('.opl-full opl-scroller'));
+
+        if (ctrl.oplData.file) {
+          fullAttachmentElement = angular.element($element[0].querySelector('.opl-full .opl-attachment'));
+          fullAttachmentButtonElement = angular.element(fullAttachmentElement[0].querySelector('a'));
+        }
+
+        fullCloseButtonElement = angular.element($element[0].querySelector('.opl-close-button opl-button'));
+      }
+    }
 
     /**
      * Preloads the small image of the tile (only if type is "image").
@@ -234,8 +270,7 @@
      */
     function getTitleHeight() {
       if (!fullTitleElement || !fullTitleElement.length) return 0;
-      var fullTitleElementBoundingRectangle = fullTitleElement[0].getBoundingClientRect();
-      return fullTitleElementBoundingRectangle.height;
+      return fullTitleElement[0].clientHeight;
     }
 
     /**
@@ -245,21 +280,35 @@
      */
     function getAttachmentHeight() {
       if (!fullAttachmentElement || !fullAttachmentElement.length) return 0;
-      var fullAttachmentElementBoundingRectangle = fullAttachmentElement[0].getBoundingClientRect();
-      return fullAttachmentElementBoundingRectangle.height;
+      return fullAttachmentElement[0].clientHeight;
     }
 
     /**
      * Computes description element height.
      */
-    function computeDescriptionHeight() {
-      if (!tileElementBoundingRectangle) return;
-      if (!ctrl.oplData.description) {
-        $scope.descriptionHeight = 0;
-        return;
-      }
+    function getDescriptionHeight() {
+      if (!tileHeight || !ctrl.oplData.description) return 0;
+      return tileHeight - getTitleHeight() - getAttachmentHeight() - 8 * 2;
+    }
 
-      $scope.descriptionHeight = tileElementBoundingRectangle.height - getTitleHeight() - getAttachmentHeight() - 8 * 2;
+    /**
+     * Computes tile element height.
+     *
+     * @return {Promise} A promise resolving with tile height
+     */
+    function computeTileHeight() {
+      var deferred = $q.defer();
+
+      oplDomFactory.waitForElementDimension(tileElement[0], [{
+        property: 'clientHeight',
+        notEqual: 0
+      }]).then(function(boundingRectangle) {
+        deferred.resolve(boundingRectangle.clientHeight);
+      }, function() {
+        deferred.resolve(tileElement[0].clientHeight);
+      });
+
+      return deferred.promise;
     }
 
     /**
@@ -658,7 +707,7 @@
         value: function() {
           if (!tileElement || !tileElement.length) return;
           if (ctrl.oplAbstract) tileElement[0].focus();
-          else fullCloseButtonController.focus();
+          else if (fullCloseButtonController) fullCloseButtonController.focus();
         }
       },
 
@@ -693,9 +742,7 @@
        */
       getTileHeight: {
         value: function() {
-          var descriptionHeight = (ctrl.oplData.description) ? fullDescriptionScrollerController.getContentSize() : 0;
-          var tileHeight = getTitleHeight() + 8 * 2 + descriptionHeight;
-          return tileHeight;
+          return getTitleHeight() + $scope.descriptionHeight + getAttachmentHeight() + 8 * 2;
         }
       },
 
@@ -706,8 +753,15 @@
        */
       reset: {
         value: function() {
+          if (!initialized) return;
+          if (reseting) {
+            resetRequested = true;
+            return;
+          }
+
           var waitForElementPromises = [];
           ready = false;
+          reseting = true;
           descriptionScrollerReady = ctrl.oplData.description ? false : true;
           tileElement = angular.element($element[0].querySelector('.opl-tile'));
 
@@ -717,47 +771,23 @@
             waitForElementPromises.push(oplDomFactory.waitForElement($element[0], '.opl-full'));
 
           $q.all(waitForElementPromises).then(function() {
-            if (ctrl.oplAbstract) {
-              abstractTitleElement = angular.element($element[0].querySelector('.opl-abstract .opl-title'));
-              abstractTimeElement = angular.element($element[0].querySelector('.opl-abstract .opl-access-time'));
-              abstractMoreInfoButtonElement = angular.element($element[0].querySelector('.opl-abstract opl-button'));
-              abstractTimeIconElement = angular.element(
-                $element[0].querySelector('.opl-abstract .opl-access-time-icon')
-              );
-            } else {
-              if (ctrl.oplData.title)
-                fullTitleElement = angular.element($element[0].querySelector('.opl-full .opl-title'));
-
-              if (ctrl.oplData.description)
-                fullDescriptionScrollerElement = angular.element($element[0].querySelector('.opl-full opl-scroller'));
-
-              if (ctrl.oplData.file) {
-                fullAttachmentElement = angular.element($element[0].querySelector('.opl-full .opl-attachment'));
-                fullAttachmentButtonElement = angular.element(fullAttachmentElement[0].querySelector('a'));
-              }
-
-              fullCloseButtonElement = angular.element($element[0].querySelector('.opl-close-button opl-button'));
-            }
+            findElements();
+            clearEventListeners();
+            setEventListeners();
 
             if (ctrl.oplData.file) {
               var urlChunks = ctrl.oplData.file.url.match(/.*\/([^#?]*)/);
               ctrl.fileName = urlChunks[1];
             }
 
-            return oplDomFactory.waitForElementDimension(tileElement[0], [{
-              property: 'height',
-              notEqual: 0
-            }]);
-          }).then(function(elementBoundingRectangle) {
+            return computeTileHeight();
+          }).then(function(height) {
+            tileHeight = height;
+
             var waitForElementControllerPromises = [];
 
-            clearEventListeners();
-            setEventListeners();
-
-            tileElementBoundingRectangle = elementBoundingRectangle;
-
             if (!ctrl.oplAbstract) {
-              computeDescriptionHeight();
+              $scope.descriptionHeight = getDescriptionHeight();
 
               if (ctrl.oplData.description) {
                 var descriptionScrollerPromise =
@@ -784,11 +814,23 @@
 
               $q.all(waitForElementControllerPromises).then(function() {
                 ready = true;
+                reseting = false;
                 if (ctrl.oplOnReady && descriptionScrollerReady) ctrl.oplOnReady();
+
+                if (resetRequested) {
+                  resetRequested = false;
+                  ctrl.reset();
+                }
               });
             } else if (ctrl.oplOnReady) {
               ready = true;
-              ctrl.oplOnReady();
+              reseting = false;
+              if (ctrl.oplOnReady) ctrl.oplOnReady();
+
+              if (resetRequested) {
+                resetRequested = false;
+                ctrl.reset();
+              }
             }
           });
 
@@ -814,6 +856,7 @@
        */
       $postLink: {
         value: function() {
+          initialized = true;
           ctrl.reset();
         }
       },

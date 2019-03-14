@@ -371,11 +371,8 @@ describe('OplTile', function() {
         element[0].querySelector('.opl-description .opl-tile-description')
       );
       var attachmentElement = angular.element(element[0].querySelector('.opl-attachment'));
-      var tileElementBoundingRectangle = tileElement[0].getBoundingClientRect();
-      var titleElementBoundingRectangle = titleElement[0].getBoundingClientRect();
-      var attachmentElementBoundingRectangle = attachmentElement[0].getBoundingClientRect();
-      var descriptionHeight = tileElementBoundingRectangle.height - titleElementBoundingRectangle.height -
-          attachmentElementBoundingRectangle.height - 8 * 2;
+      var descriptionHeight = tileElement[0].clientHeight - titleElement[0].clientHeight -
+          attachmentElement[0].clientHeight - 8 * 2;
 
       assert.isUndefined(loaderElement[0], 'Unexpected loader');
       assert.isUndefined(abstractElement[0], 'Unexpected abstract');

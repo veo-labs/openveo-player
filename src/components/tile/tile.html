@@ -60,7 +60,7 @@
         </div>
       </div>
 
-      <div class="opl-description" style="height: {{descriptionHeight}}px;" ng-if="$ctrl.oplData.type === 'text' && $ctrl.oplData.description">
+      <div class="opl-description" ng-style="{'height': descriptionHeight ? descriptionHeight + 'px' : 'auto'}" ng-if="$ctrl.oplData.type === 'text' && $ctrl.oplData.description">
         <opl-scroller
                       ng-model="scrollerValue"
                       opl-id="opl-tile-{{$ctrl.oplData.id}}-description"

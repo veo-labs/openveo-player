@@ -26,8 +26,6 @@
     var scrollerElement;
     var scrollbarElement;
     var bodyElement;
-    var contentElementBoundingRectangle;
-    var containerElementBoundingRectangle;
     var thumbOver;
     var thumbActivated;
     var thumbSize;
@@ -36,6 +34,10 @@
     var containerSize;
     var containerPosition;
     var ngModelCtrl = $element.controller('ngModel');
+    var ready = false;
+    var reseting = false;
+    var resetRequested = false;
+    var initialized = false;
 
     $scope.value = 0;
 
@@ -46,6 +48,83 @@
      */
     function isTouchDevice() {
       return true == ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch);
+    }
+
+    /**
+     * Computes the container size and position.
+     *
+     * @return {Promise} A promise resolving with the computed container size and position
+     */
+    function computeContainer() {
+      var deferred = $q.defer();
+      var containerLeftPosition;
+      var containerTopPosition;
+      var containerWidth;
+      var containerHeight;
+
+      oplDomFactory.waitForElementDimension(contentWrapperElement[0], [
+        {
+          property: 'clientWidth',
+          notEqual: contentWrapperElement[0].clientWidth
+        },
+        {
+          property: 'clientHeight',
+          notEqual: contentWrapperElement[0].clientHeight
+        }
+      ]).then(function(boundingRectangle) {
+        containerLeftPosition = boundingRectangle.left;
+        containerTopPosition = boundingRectangle.top;
+        containerWidth = boundingRectangle.clientWidth;
+        containerHeight = boundingRectangle.clientHeight;
+        deferred.resolve({
+          size: (ctrl.oplOrientation === 'horizontal') ? containerWidth : containerHeight,
+          position: (ctrl.oplOrientation === 'horizontal') ? containerLeftPosition : containerTopPosition
+        });
+      }, function() {
+        var boundingRectangle = contentWrapperElement[0].getBoundingClientRect();
+        containerLeftPosition = boundingRectangle.left;
+        containerTopPosition = boundingRectangle.top;
+        containerWidth = contentWrapperElement[0].clientWidth;
+        containerHeight = contentWrapperElement[0].clientHeight;
+        deferred.resolve({
+          size: (ctrl.oplOrientation === 'horizontal') ? containerWidth : containerHeight,
+          position: (ctrl.oplOrientation === 'horizontal') ? containerLeftPosition : containerTopPosition
+        });
+      });
+
+      return deferred.promise;
+    }
+
+    /**
+     * Computes the content size.
+     *
+     * @return {Promise} A promise resolving with the computed content size
+     */
+    function computeContentSize() {
+      var deferred = $q.defer();
+      var contentWidth;
+      var contentHeight;
+
+      oplDomFactory.waitForElementDimension(contentElement[0], [
+        {
+          property: 'clientWidth',
+          notEqual: contentElement[0].clientWidth
+        },
+        {
+          property: 'clientHeight',
+          notEqual: contentElement[0].clientHeight
+        }
+      ]).then(function(boundingRectangle) {
+        contentWidth = boundingRectangle.clientWidth;
+        contentHeight = boundingRectangle.clientHeight;
+        deferred.resolve((ctrl.oplOrientation === 'horizontal') ? contentWidth : contentHeight);
+      }, function() {
+        contentWidth = contentElement[0].clientWidth;
+        contentHeight = contentElement[0].clientHeight;
+        deferred.resolve((ctrl.oplOrientation === 'horizontal') ? contentWidth : contentHeight);
+      });
+
+      return deferred.promise;
     }
 
     /**
@@ -489,6 +568,7 @@
        */
       $postLink: {
         value: function() {
+          initialized = true;
 
           // Wait for child components
           $timeout(function() {
@@ -534,56 +614,19 @@
        */
       reset: {
         value: function() {
-          if (isTouchDevice() || !scrollerElement) return;
-          var waitForElementDimensionPromises = [];
+          if (isTouchDevice() || !initialized) return;
+          if (reseting) {
+            resetRequested = true;
+            return;
+          }
 
+          reseting = true;
           contentElement = angular.element($element[0].querySelector('.opl-scroller-content > div'));
 
-          var contentElementPromise = oplDomFactory.waitForElementDimension(contentElement[0], [
-            {
-              property: 'width',
-              notEqual: 0
-            },
-            {
-              property: 'height',
-              notEqual: 0
-            }
-          ]);
-          waitForElementDimensionPromises.push(contentElementPromise);
-          contentElementPromise.then(function(boundingRectangle) {
-            contentElementBoundingRectangle = boundingRectangle;
-          });
-
-          var containerElementPromise = oplDomFactory.waitForElementDimension(contentWrapperElement[0], [
-            {
-              property: 'width',
-              notEqual: 0
-            },
-            {
-              property: 'height',
-              notEqual: 0
-            }
-          ]);
-          waitForElementDimensionPromises.push(containerElementPromise);
-          containerElementPromise.then(function(boundingRectangle) {
-            containerElementBoundingRectangle = boundingRectangle;
-          });
-
-          $q.all(waitForElementDimensionPromises).then(function() {
-            if (containerElementBoundingRectangle) {
-              var containerLeftPosition = containerElementBoundingRectangle.left;
-              var containerTopPosition = containerElementBoundingRectangle.top;
-              var containerWidth = containerElementBoundingRectangle.width;
-              var containerHeight = containerElementBoundingRectangle.height;
-              containerSize = (ctrl.oplOrientation === 'horizontal') ? containerWidth : containerHeight;
-              containerPosition = (ctrl.oplOrientation === 'horizontal') ? containerLeftPosition : containerTopPosition;
-            }
-
-            if (contentElementBoundingRectangle) {
-              var contentWidth = contentElementBoundingRectangle.width;
-              var contentHeight = contentElementBoundingRectangle.height;
-              contentSize = (ctrl.oplOrientation === 'horizontal') ? contentWidth : contentHeight;
-            }
+          $q.all([computeContentSize(), computeContainer()]).then(function(results) {
+            contentSize = results[0];
+            containerSize = results[1].size;
+            containerPosition = results[1].position;
 
             clearEventListeners();
 
@@ -594,11 +637,20 @@
             updateThumb();
             setValue($scope.value, true);
 
-            if (ctrl.oplOnReady) ctrl.oplOnReady();
+            reseting = false;
+
+            if (!ready) {
+              ready = true;
+              if (ctrl.oplOnReady) ctrl.oplOnReady();
+            }
+
+            if (resetRequested) {
+              resetRequested = false;
+              ctrl.reset();
+            }
           });
         }
       }
-
     });
 
     /**

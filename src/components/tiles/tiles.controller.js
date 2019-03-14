@@ -39,9 +39,9 @@
     var tilesContentElement;
     var tilesListElement;
     var scrollerElement;
-    var enlargedTileElementBoundingRectangle;
-    var tilesElementBoundingRectangle;
-    var tileElementBoundingRectangle;
+    var enlargedTileElementSize;
+    var tilesElementSize;
+    var tileElementSize;
     var tilesContentWidth;
     var leaveRequested;
     var scrollTimeoutPromise;
@@ -53,6 +53,9 @@
     var marginTop = 40;
     var document = $document[0];
     var lastTime = 0;
+    var reseting = false;
+    var resetRequested = false;
+    var initialized = false;
 
     $scope.scrollerValue = 0;
 
@@ -73,11 +76,11 @@
       // Calculates the position and size of the enlarged tile
       var scrollValue = scrollerElement.controller('oplScroller').getScrollValue();
       var enlargedHeight =
-          (enlargedTileElementBoundingRectangle && enlargedTileElementBoundingRectangle.height) || 0;
+          (enlargedTileElementSize && enlargedTileElementSize.height) || 0;
       var enlargedWidth =
-          (enlargedTileElementBoundingRectangle && enlargedTileElementBoundingRectangle.width) || 0;
-      var enlargedTileMaxHeight = tilesElementBoundingRectangle.height - tileMargin * 2 - marginTop;
-      var enlargedTileMaxWidth = tilesElementBoundingRectangle.width - tileMargin * 2;
+          (enlargedTileElementSize && enlargedTileElementSize.width) || 0;
+      var enlargedTileMaxHeight = tilesElementSize.height - tileMargin * 2 - marginTop;
+      var enlargedTileMaxWidth = tilesElementSize.width - tileMargin * 2;
       var enlargedAvailableYSpace = enlargedTileMaxHeight - enlargedHeight;
       var enlargedAvailableXSpace = enlargedTileMaxWidth - enlargedWidth;
       var enlargedXPos = scrollValue + tileMargin + enlargedAvailableXSpace / 2;
@@ -104,6 +107,72 @@
     }
 
     /**
+     * Computes the tiles element size.
+     *
+     * @return {Promise} A promise resolving with the computed tiles element size
+     */
+    function computeTilesContainerSize() {
+      var deferred = $q.defer();
+
+      oplDomFactory.waitForElementDimension(tilesElement[0], [
+        {
+          property: 'clientWidth',
+          notEqual: 0
+        },
+        {
+          property: 'clientHeight',
+          notEqual: 0
+        }
+      ]).then(function(boundingRectangle) {
+        deferred.resolve({
+          width: boundingRectangle.clientWidth,
+          height: boundingRectangle.clientHeight
+        });
+      }, function() {
+        deferred.resolve({
+          width: tilesElement[0].clientWidth,
+          height: tilesElement[0].clientHeight
+        });
+      });
+
+      return deferred.promise;
+    }
+
+    /**
+     * Computes tile size.
+     *
+     * @return {Promise} A promise resolving with the computed tile size
+     */
+    function computeTileSize() {
+      if (!tileWrapperElements.length) {
+        return $q.when({
+          width: 0,
+          height: 0
+        });
+      }
+      var deferred = $q.defer();
+
+      oplDomFactory.waitForElementDimension(tileWrapperElements[0], [
+        {
+          property: 'clientWidth',
+          notEqual: 0
+        }
+      ]).then(function(boundingRectangle) {
+        deferred.resolve({
+          width: boundingRectangle.clientWidth,
+          height: boundingRectangle.clientHeight
+        });
+      }, function() {
+        deferred.resolve({
+          width: tileWrapperElements[0].clientWidth,
+          height: tileWrapperElements[0].clientHeight
+        });
+      });
+
+      return deferred.promise;
+    }
+
+    /**
      * Gets the list of visible tiles regarding scroller value.
      *
      * The list of visible tiles is the list of tiles fitting in the scrollable container frame.
@@ -111,15 +180,15 @@
      * @return {Array} The list of tiles
      */
     function getVisibleTiles() {
-      if (!tilesElementBoundingRectangle || !tileElementBoundingRectangle) return;
+      if (!tilesElementSize || !tileElementSize) return;
 
       var scrollLeft = scrollerElement.controller('oplScroller').getScrollValue();
       var totalLeftTilesMasked = Math.round(
         tileWrapperElements.length -
-        ((tilesContentWidth - scrollLeft) / (tileMargin + tileElementBoundingRectangle.width))
+        ((tilesContentWidth - scrollLeft) / (tileMargin + tileElementSize.width))
       );
       var maxVisibleTiles = Math.round(
-        tilesElementBoundingRectangle.width / (tileMargin + tileElementBoundingRectangle.width)
+        tilesElementSize.width / (tileMargin + tileElementSize.width)
       );
 
       return tileWrapperElements.slice(totalLeftTilesMasked, totalLeftTilesMasked + maxVisibleTiles).map(
@@ -138,7 +207,7 @@
       if (!tileWrapperElements || !tileWrapperElements.length || !ctrl.automaticScrollActivated) return;
 
       scrollerElement.controller('oplScroller').setScrollValue(
-        (tileMargin + tileElementBoundingRectangle.width) * index
+        (tileMargin + tileElementSize.width) * index
       );
     }
 
@@ -196,7 +265,7 @@
     function updateTile(index) {
       if (!tileWrapperElements || !tileWrapperElements.length) return;
 
-      var tileWidth = tileElementBoundingRectangle.width;
+      var tileWidth = tileElementSize.width;
       var tileWrapperElement = tileWrapperElements[index];
       var tileWrapperXPosition = ((index + 1) * tileMargin) + (index * tileWidth);
       var tileWrapperYPosition = 0;
@@ -222,7 +291,7 @@
       if (!tileWrapperElements || !tileWrapperElements.length) return;
 
       // Get tile dimensions
-      var tileWidth = tileElementBoundingRectangle.width;
+      var tileWidth = tileElementSize.width;
 
       for (var i = 0; i < tileWrapperElements.length; i++) updateTile(i);
       tilesContentWidth =
@@ -248,7 +317,8 @@
      * Calculates the full size of an enlarged tile.
      *
      * In case of a tile of type "text" it creates a temporary opl-tile element copying the given tile and add it to
-     * the DOM to find its size.
+     * the DOM to find its size. Tile description has no limitation in height to get the full height of the tile in
+     * case height is infinite.
      * In case of a tile of type "image" it resolves the promise with the size of the large image if already preloaded
      * or enlarged tile maximum size. If large image is not already preloaded, it will be as soon as the tile will be
      * set as enlarged. "opl-on-image-preloaded" attribute is used to be informed when large image has been preloaded.
@@ -257,10 +327,10 @@
      * @return {Promise} A promise resolving with the size of the tile
      */
     function computeTileFullSize(index) {
-      if (!tilesElementBoundingRectangle) return $q.reject();
+      if (!tilesElementSize) return $q.reject();
 
-      var enlargedTileMaxHeight = tilesElementBoundingRectangle.height - marginTop - tileMargin * 2;
-      var enlargedTileMaxWidth = tilesElementBoundingRectangle.width - tileMargin * 2;
+      var enlargedTileMaxHeight = tilesElementSize.height - marginTop - tileMargin * 2;
+      var enlargedTileMaxWidth = tilesElementSize.width - tileMargin * 2;
       var tileElement = angular.element(tileElements[index]);
 
       if (ctrl.oplData[index].type === 'image') {
@@ -289,7 +359,7 @@
           }
         ]).then(function(boundingRectangle) {
           boundingRectangle.height = Math.min(enlargedTileMaxHeight, tileHeight);
-          boundingRectangle.width = (tilesElementBoundingRectangle.width - tileMargin * 2);
+          boundingRectangle.width = (tilesElementSize.width - tileMargin * 2);
           liElement.remove();
           deferred.resolve(boundingRectangle);
         });
@@ -302,7 +372,8 @@
       liElement.attr(
         'style',
         'transform: translateX(' + ghostTileXPosition + 'px);' +
-        'width: var(--opl-tiles-enlarged-width);'
+        'width: var(--opl-tiles-enlarged-width);' +
+        'height: auto;'
       );
       oplTileElement.attr('opl-data', 'ghostTile');
       oplTileElement.attr('opl-abstract', 'ghostTile.abstract');
@@ -744,8 +815,8 @@
           var tileIndex = findTileIndexById(id);
 
           // Compute the size of the tile as it will be when enlarged
-          computeTileFullSize(tileIndex).then(function(tileBoundingRectangle) {
-            enlargedTileElementBoundingRectangle = tileBoundingRectangle;
+          computeTileFullSize(tileIndex).then(function(tileSize) {
+            enlargedTileElementSize = tileSize;
             enlargeTile(tileIndex).then(function() {
               deferred.resolve();
             }).catch(function(reason) {
@@ -781,7 +852,15 @@
        */
       reset: {
         value: function() {
-          var waitForElementDimensionPromises = [];
+          if (!initialized) return;
+
+          if (reseting) {
+            resetRequested = true;
+            return;
+          }
+
+          reseting = true;
+
           tilesElement = angular.element($element[0].querySelector('.opl-tiles'));
           tilesListElement = angular.element($element[0].querySelector('ul'));
           tileElements = $element[0].querySelectorAll('opl-tile');
@@ -789,41 +868,29 @@
           scrollerElement = angular.element($element[0].querySelector('opl-scroller'));
           tilesContentElement = angular.element($element[0].querySelector('.opl-tiles-content'));
 
-          clearEventListeners();
-          setEventListeners();
+          $q.all([
+            computeTilesContainerSize(),
+            computeTileSize(),
+            oplDomFactory.waitForController(scrollerElement[0], 'oplScroller')
+          ]).then(function(results) {
+            tilesElementSize = results[0];
+            tileElementSize = results[1];
 
-          var tilesElementPromise = oplDomFactory.waitForElementDimension(tilesElement[0], [
-            {
-              property: 'width',
-              notEqual: 0
-            },
-            {
-              property: 'height',
-              notEqual: 0
-            }
-          ]);
-          waitForElementDimensionPromises.push(tilesElementPromise);
-          tilesElementPromise.then(function(boundingRectangle) {
-            tilesElementBoundingRectangle = boundingRectangle;
-          });
+            clearEventListeners();
+            setEventListeners();
 
-          var tileElementPromise = oplDomFactory.waitForElementDimension(tileWrapperElements[0], [
-            {
-              property: 'width',
-              notEqual: 0
-            }
-          ]);
-          waitForElementDimensionPromises.push(tileElementPromise);
-          tileElementPromise.then(function(boundingRectangle) {
-            tileElementBoundingRectangle = boundingRectangle;
-          });
-
-          $q.all(waitForElementDimensionPromises).then(function() {
             resetTiles();
             updateTiles();
             scrollerElement.controller('oplScroller').reset();
             preloadTiles();
             selectTile(ctrl.oplTime);
+
+            reseting = false;
+
+            if (resetRequested) {
+              resetRequested = false;
+              ctrl.reset();
+            }
           });
         }
       },
@@ -835,6 +902,7 @@
        */
       $postLink: {
         value: function() {
+          initialized = true;
 
           // Wait for child components
           $timeout(function() {
@@ -965,8 +1033,8 @@
      * @param {Number} size.height The image height
      */
     $scope.handleTileImagePreload = function(tile, size) {
-      var enlargedTileMaxHeight = tilesElementBoundingRectangle.height - marginTop - tileMargin * 2;
-      var enlargedTileMaxWidth = tilesElementBoundingRectangle.width - tileMargin * 2;
+      var enlargedTileMaxHeight = tilesElementSize.height - marginTop - tileMargin * 2;
+      var enlargedTileMaxWidth = tilesElementSize.width - tileMargin * 2;
       var tileRatio = enlargedTileMaxWidth / enlargedTileMaxHeight;
       var ratio = size.width / size.height;
       var imageWidth;
@@ -994,8 +1062,8 @@
 
       requestAnimationFrame(function() {
         animateResizing().then(function() {
-          enlargedTileElementBoundingRectangle.height = imageHeight;
-          enlargedTileElementBoundingRectangle.width = imageWidth;
+          enlargedTileElementSize.height = imageHeight;
+          enlargedTileElementSize.width = imageWidth;
           computeEnlargedProperties(imageWidth, imageHeight);
           updateTile(enlargedTileIndex);
           focusTile(enlargedTileIndex);

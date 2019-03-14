@@ -143,7 +143,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var tilesElement = angular.element(element[0].querySelector('.opl-tiles'));
     var scrollerElement = angular.element(element[0].querySelector('.opl-tiles > opl-scroller'));
@@ -211,7 +211,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var tilesElement = angular.element(element[0].querySelector('.opl-tiles'));
 
@@ -230,17 +230,20 @@ describe('OplTiles', function() {
       {
         id: 1,
         type: 'text',
-        time: 20000
+        time: 20000,
+        title: 'Title 1'
       },
       {
         id: 2,
         type: 'text',
-        time: 40000
+        time: 40000,
+        title: 'Title 2'
       },
       {
         id: 3,
         type: 'text',
-        time: 60000
+        time: 60000,
+        title: 'Title 3'
       }
     ];
 
@@ -261,7 +264,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var tilesElement = angular.element(element[0].querySelector('.opl-tiles'));
 
@@ -320,7 +323,8 @@ describe('OplTiles', function() {
       scope.data.push({
         id: i + 1,
         type: 'text',
-        time: String(1000 * i)
+        time: String(1000 * i),
+        title: 'Title ' + i
       });
     }
 
@@ -332,7 +336,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
   });
 
   it('should preload new visible tiles when focusing next tile using arrow keys', function() {
@@ -361,7 +365,8 @@ describe('OplTiles', function() {
       scope.data.push({
         id: i + 1,
         type: 'text',
-        time: String(1000 * i)
+        time: String(1000 * i),
+        title: 'Title ' + i
       });
     }
 
@@ -373,7 +378,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var tilesElement = angular.element(element[0].querySelector('.opl-tiles'));
 
@@ -410,17 +415,20 @@ describe('OplTiles', function() {
       {
         id: 1,
         type: 'text',
-        time: 20000
+        time: 20000,
+        title: 'Title 1'
       },
       {
         id: 2,
         type: 'text',
-        time: 40000
+        time: 40000,
+        title: 'Title 2'
       },
       {
         id: 3,
         type: 'text',
-        time: 60000
+        time: 60000,
+        title: 'Title 3'
       }
     ];
 
@@ -441,7 +449,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var tilesElement = angular.element(element[0].querySelector('.opl-tiles'));
     var ctrl = element.controller('oplTiles');
@@ -476,14 +484,14 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var tilesElement = angular.element(element[0].querySelector('.opl-tiles'));
     var totalPreloadCalls = Math.min(Math.round(scope.containerWidth / (scope.tileWidth + 8)), scope.data.length);
 
     tilesElement.attr('style', 'width: ' + newWidth + 'px;');
     angular.element(window).triggerHandler('resize');
-    $timeout.flush();
+    $timeout.flush(1000);
     totalPreloadCalls += Math.min(Math.round(newWidth / (scope.tileWidth + 8)), scope.data.length);
 
     ScrollerController.prototype.reset.should.have.been.called.exactly(2);
@@ -505,7 +513,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var isolateScope = element.isolateScope();
 
@@ -528,7 +536,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var isolateScope = element.isolateScope();
 
@@ -551,7 +559,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var isolateScope = element.isolateScope();
 
@@ -598,7 +606,7 @@ describe('OplTiles', function() {
     $document[0].body.appendChild(element[0]);
     element = $compile(element)(scope);
     scope.$digest();
-    $timeout.flush();
+    $timeout.flush(1000);
 
     var isolateScope = element.isolateScope();
 
@@ -629,7 +637,8 @@ describe('OplTiles', function() {
         {
           id: 1,
           type: 'text',
-          time: '20000'
+          time: 20000,
+          title: 'Title 1'
         }
       ];
       element = angular.element('<opl-tiles ' +
@@ -640,7 +649,7 @@ describe('OplTiles', function() {
       $document[0].body.appendChild(element[0]);
       element = $compile(element)(scope);
       scope.$digest();
-      $timeout.flush();
+      $timeout.flush(1000);
 
       var ctrl = element.controller('oplTiles');
       var tilesElement = angular.element(element[0].querySelector('.opl-tiles'));
@@ -716,7 +725,7 @@ describe('OplTiles', function() {
       $document[0].body.appendChild(element[0]);
       element = $compile(element)(scope);
       scope.$digest();
-      $timeout.flush();
+      $timeout.flush(1000);
 
       var ctrl = element.controller('oplTiles');
       var isolateScope = element.isolateScope();
@@ -853,7 +862,7 @@ describe('OplTiles', function() {
       $document[0].body.appendChild(element[0]);
       element = $compile(element)(scope);
       scope.$digest();
-      $timeout.flush();
+      $timeout.flush(1000);
 
       var ctrl = element.controller('oplTiles');
       var isolateScope = element.isolateScope();
@@ -910,7 +919,7 @@ describe('OplTiles', function() {
       expectedImageHeight = 500;
       tilesElement.attr('style', 'width: ' + containerWidth + 'px; height:' + containerHeight + 'px;');
       angular.element(window).triggerHandler('resize');
-      $timeout.flush();
+      $timeout.flush(1000);
 
       ctrl.enlargeTile(scope.data[0].id);
       $timeout.flush(1000);
@@ -941,7 +950,7 @@ describe('OplTiles', function() {
       expectedImageHeight = 1400;
       tilesElement.attr('style', 'width: ' + containerWidth + 'px; height:' + containerHeight + 'px;');
       angular.element(window).triggerHandler('resize');
-      $timeout.flush();
+      $timeout.flush(1000);
 
       ctrl.enlargeTile(scope.data[0].id);
       $timeout.flush(1000);
@@ -972,7 +981,7 @@ describe('OplTiles', function() {
       expectedImageHeight = 1000;
       tilesElement.attr('style', 'width: ' + containerWidth + 'px; height:' + containerHeight + 'px;');
       angular.element(window).triggerHandler('resize');
-      $timeout.flush();
+      $timeout.flush(1000);
 
       ctrl.enlargeTile(scope.data[0].id);
       $timeout.flush(1000);
@@ -1003,7 +1012,7 @@ describe('OplTiles', function() {
       expectedImageHeight = 1000;
       tilesElement.attr('style', 'width: ' + containerWidth + 'px; height:' + containerHeight + 'px;');
       angular.element(window).triggerHandler('resize');
-      $timeout.flush();
+      $timeout.flush(1000);
 
       ctrl.enlargeTile(scope.data[0].id);
       $timeout.flush(1000);
@@ -1034,7 +1043,7 @@ describe('OplTiles', function() {
       expectedImageHeight = 200;
       tilesElement.attr('style', 'width: ' + containerWidth + 'px; height:' + containerHeight + 'px;');
       angular.element(window).triggerHandler('resize');
-      $timeout.flush();
+      $timeout.flush(1000);
 
       ctrl.enlargeTile(scope.data[0].id);
       $timeout.flush(1000);
@@ -1065,7 +1074,7 @@ describe('OplTiles', function() {
       expectedImageHeight = 4000;
       tilesElement.attr('style', 'width: ' + containerWidth + 'px; height:' + containerHeight + 'px;');
       angular.element(window).triggerHandler('resize');
-      $timeout.flush();
+      $timeout.flush(1000);
 
       ctrl.enlargeTile(scope.data[0].id);
       $timeout.flush(1000);
@@ -1096,7 +1105,7 @@ describe('OplTiles', function() {
       expectedImageHeight = 5000;
       tilesElement.attr('style', 'width: ' + containerWidth + 'px; height:' + containerHeight + 'px;');
       angular.element(window).triggerHandler('resize');
-      $timeout.flush();
+      $timeout.flush(1000);
 
       ctrl.enlargeTile(scope.data[0].id);
       $timeout.flush(1000);
@@ -1130,7 +1139,8 @@ describe('OplTiles', function() {
         {
           id: 1,
           type: 'text',
-          time: 10000
+          time: 10000,
+          title: 'Title 1'
         }
       ];
       element = angular.element('<opl-tiles ' +
@@ -1141,7 +1151,7 @@ describe('OplTiles', function() {
       $document[0].body.appendChild(element[0]);
       element = $compile(element)(scope);
       scope.$digest();
-      $timeout.flush();
+      $timeout.flush(1000);
 
       var ctrl = element.controller('oplTiles');
       var tileElements = angular.element(element[0].querySelectorAll('.opl-tiles-content > ul > li'));
