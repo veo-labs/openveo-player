@@ -345,10 +345,11 @@
       var liElement;
       var deferred = $q.defer();
       var isolatedScope = $rootScope.$new(true);
-      var ghostTileXPosition = tilesContentWidth + tileMargin;
+      var ghostTileXPosition = Math.max(tilesElementSize.width + tileMargin, tilesContentWidth + tileMargin);
 
       isolatedScope.ghostTile = angular.copy(ctrl.oplData[index]);
       isolatedScope.ghostTile.abstract = false;
+
       isolatedScope.handleReady = function() {
         var tileHeight = liElement.find('opl-tile').controller('oplTile').getTileHeight(enlargedTileMaxHeight);
 
