@@ -62,8 +62,8 @@
  *  - [Boolean] **opl-settings-icon** true to display the settings icon (default to true)
  *  - [Boolean] **opl-veo-labs-icon** true to display the Veo-Labs icon (default to true)
  *  - [Boolean] **opl-time** true to display the actual time and duration (default to true)
- *  - [Boolean] **opl-chapters-tab** true to display chapters tab (default to true)
- *  - [Boolean] **opl-tags-tab** true to display tags tab (default to true)
+ *  - [Boolean] **opl-chapters** true to display chapters (default to true)
+ *  - [Boolean] **opl-tags** true to display tags (default to true)
  *  - [Boolean] **opl-full-viewport** true to display the player in full viewport (default to false)
  *  - [Boolean] **opl-cuts** true to enable cuts (default to true)
  *  - [String] **opl-language** Player language code (e.g. fr) (default to "en")
@@ -277,8 +277,8 @@
  *                  opl-player-type="html"
  *                  opl-auto-play="false"
  *                  opl-remember-position="false"
- *                  opl-chapters-tab="true"
- *                  opl-tags-tab="true"
+ *                  opl-chapters="true"
+ *                  opl-tags="true"
  *                  opl-cuts="true"
  *      ></opl-player>
  *
@@ -303,8 +303,8 @@
       oplPlayerType: '@?',
       oplAutoPlay: '@?',
       oplRememberPosition: '@?',
-      oplChaptersTab: '@?',
-      oplTagsTab: '@?',
+      oplChapters: '@?',
+      oplTags: '@?',
       oplCuts: '@?'
     }
   });

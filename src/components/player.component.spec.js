@@ -560,7 +560,7 @@ describe('OplPlayer', function() {
     }
   });
 
-  it('should be able to hide chapters using attribute "opl-chapters-tab"', function() {
+  it('should be able to hide chapters using attribute "opl-chapters"', function() {
     scope.data.chapters = [
       {
         value: 1000,
@@ -571,7 +571,7 @@ describe('OplPlayer', function() {
     var element = angular.element('<opl-player ' +
                                               'id="opl-player-test" ' +
                                               'opl-data="data" ' +
-                                              'opl-chapters-tab="false" ' +
+                                              'opl-chapters="false" ' +
                                   '></opl-player>');
     createComponent(element, 10000);
 
@@ -588,7 +588,7 @@ describe('OplPlayer', function() {
     assert.equal(tabsElement.attr('opl-no-tabs'), 'true', 'Unexpected tabs');
   });
 
-  it('should be able to hide tags using attribute "opl-tags-tab"', function() {
+  it('should be able to hide tags using attribute "opl-tags"', function() {
     scope.data.tags = [
       {
         value: 1000,
@@ -599,7 +599,7 @@ describe('OplPlayer', function() {
     var element = angular.element('<opl-player ' +
                                               'id="opl-player-test" ' +
                                               'opl-data="data" ' +
-                                              'opl-tags-tab="false" ' +
+                                              'opl-tags="false" ' +
                                   '></opl-player>');
     createComponent(element, 10000);
 

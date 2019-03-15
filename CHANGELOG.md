@@ -15,8 +15,8 @@
 - Player attribute "opl-mode" has been renamed into "opl-template"
 - Player attribute "opl-mode" available values are now "split_1", "split_2", "split_50_50" and "split_25_75" instead of "media", "presentation", "both" and "both-presentation"
 - Player attribute "opl-mode-icon" has been renamed into "opl-template-icon"
-- Player attribute "opl-hide-chapters-tab" has been renamed into "opl-chapters-tab" and has been inverted (replace "false" by "true" and "true" by "false")
-- Player attribute "opl-hide-tags-tab" has been renamed into "opl-tags-tab" and has been inverted (replace "false" by "true" and "true" by "false")
+- Player attribute "opl-hide-chapters-tab" has been renamed into "opl-chapters" and has been inverted (replace "false" by "true" and "true" by "false")
+- Player attribute "opl-hide-tags-tab" has been renamed into "opl-tags" and has been inverted (replace "false" by "true" and "true" by "false")
 - Player attribute "opl-disable-cut" has been renamed into "opl-cuts" and has been inverted (replace "false" by "true" and "true" by "false")
 - Sources have been added to the settings menu, consequently the attribute "opl-media-sources-icon" has been removed
 - Data property "file.basePath" for tags and chapters has been renamed into "file.url"

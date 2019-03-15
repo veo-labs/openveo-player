@@ -139,7 +139,7 @@
                 opl-view-id="chapters"
                 opl-icon="book"
                 opl-on-select="handleViewSelected(id)"
-                ng-if="chaptersTabDisplayed"
+                ng-if="chaptersDisplayed"
       >
         <opl-tiles
                    opl-data="$ctrl.chapters"
@@ -155,7 +155,7 @@
                 opl-view-id="timecodes"
                 opl-icon="image"
                 opl-on-select="handleViewSelected(id)"
-                ng-if="indexesTabDisplayed"
+                ng-if="indexesDisplayed"
       >
         <opl-tiles
                    opl-data="$ctrl.timecodes"
@@ -171,7 +171,7 @@
                 opl-view-id="tags"
                 opl-icon="note"
                 opl-on-select="handleViewSelected(id)"
-                ng-if="tagsTabDisplayed"
+                ng-if="tagsDisplayed"
       >
         <opl-tiles
                    opl-data="$ctrl.tags"

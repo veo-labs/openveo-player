@@ -48,9 +48,9 @@
 
     $scope.volumeIconDisplayed = true;
     $scope.timeDisplayed = true;
-    $scope.indexesTabDisplayed = false;
-    $scope.chaptersTabDisplayed = false;
-    $scope.tagsTabDisplayed = false;
+    $scope.indexesDisplayed = false;
+    $scope.chaptersDisplayed = false;
+    $scope.tagsDisplayed = false;
     $scope.mediaTemplate = null;
     $scope.settingsIconDisplayed = true;
     $scope.veoLabsIconDisplayed = true;
@@ -342,13 +342,13 @@
      * Each tabs can be displayed or not depending on the available points of interest and component attributes.
      */
     function updateTabs() {
-      $scope.indexesTabDisplayed = ctrl.timecodes.length ? true : false;
-      $scope.chaptersTabDisplayed = ctrl.chapters.length && isAttributeTrue('oplChaptersTab', true);
-      $scope.tagsTabDisplayed = ctrl.tags.length && isAttributeTrue('oplTagsTab', true);
+      $scope.indexesDisplayed = ctrl.timecodes.length ? true : false;
+      $scope.chaptersDisplayed = ctrl.chapters.length && isAttributeTrue('oplChapters', true);
+      $scope.tagsDisplayed = ctrl.tags.length && isAttributeTrue('oplTags', true);
 
       // If only 1 kind of points of interest, then hide the tabs bar
       // If no points of interest at all, hide the points of interest bar
-      var totalTypes = $scope.chaptersTabDisplayed + $scope.tagsTabDisplayed + $scope.indexesTabDisplayed;
+      var totalTypes = $scope.chaptersDisplayed + $scope.tagsDisplayed + $scope.indexesDisplayed;
       $scope.tabsHidden = (totalTypes === 1 || totalTypes === 0);
       $scope.hidePoi = (totalTypes === 0);
     }
@@ -504,7 +504,7 @@
       $scope.volumeIconDisplayed = $scope.volumeIconDisplayed && !isTouchDevice();
 
       // Template selector icon is available only if there are indexes
-      $scope.templateSelectorDisplayed = isAttributeTrue('oplTemplateIcon', true) && $scope.indexesTabDisplayed;
+      $scope.templateSelectorDisplayed = isAttributeTrue('oplTemplateIcon', true) && $scope.indexesDisplayed;
     }
 
     /**
@@ -1352,10 +1352,10 @@
        * @param {String} [changedProperties.oplLanguage.currentValue] oplLanguage new value
        * @param {Object} [changedProperties.oplAutoPlay] oplAutoPlay old and new value
        * @param {String} [changedProperties.oplAutoPlay.currentValue] oplAutoPlay new value
-       * @param {Object} [changedProperties.oplChaptersTab] oplChaptersTab old and new value
-       * @param {String} [changedProperties.oplChaptersTab.currentValue] oplChaptersTab new value
-       * @param {Object} [changedProperties.oplTagsTab] oplTagsTab old and new value
-       * @param {String} [changedProperties.oplTagsTab.currentValue] oplTagsTab new value
+       * @param {Object} [changedProperties.oplChapters] oplChapters old and new value
+       * @param {String} [changedProperties.oplChapters.currentValue] oplChapters new value
+       * @param {Object} [changedProperties.oplTags] oplTags old and new value
+       * @param {String} [changedProperties.oplTags.currentValue] oplTags new value
        * @param {Object} [changedProperties.oplCuts] oplCuts old and new value
        * @param {String} [changedProperties.oplCuts.currentValue] oplCuts new value
        */
@@ -1463,17 +1463,17 @@
               $element.triggerHandler('durationChange', ctrl.duration);
               ctrl.setTime(0);
             }
-          } else if ((changedProperties.oplChaptersTab && changedProperties.oplChaptersTab.currentValue) ||
-                    (changedProperties.oplTagsTab && changedProperties.oplTagsTab.currentValue) ||
+          } else if ((changedProperties.oplChapters && changedProperties.oplChapters.currentValue) ||
+                    (changedProperties.oplTags && changedProperties.oplTags.currentValue) ||
                     (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue)) {
 
-            // oplChaptersTab
-            if (changedProperties.oplChaptersTab && changedProperties.oplChaptersTab.currentValue) {
+            // oplChapters
+            if (changedProperties.oplChapters && changedProperties.oplChapters.currentValue) {
               initPointsOfInterest();
             }
 
-            // oplTagsTab
-            if (changedProperties.oplTagsTab && changedProperties.oplTagsTab.currentValue) {
+            // oplTags
+            if (changedProperties.oplTags && changedProperties.oplTags.currentValue) {
               initPointsOfInterest();
             }
 
@@ -1496,7 +1496,7 @@
         value: function(template) {
           if (!TEMPLATES) return;
 
-          if (!$scope.indexesTabDisplayed) {
+          if (!$scope.indexesDisplayed) {
             ctrl.selectedTemplate = TEMPLATES.FULL_1;
           } else {
             ctrl.selectedTemplate =
