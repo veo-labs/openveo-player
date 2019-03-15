@@ -1363,80 +1363,51 @@
         value: function(changedProperties) {
           var newValue;
 
-          // oplData
-          if (changedProperties.oplData && changedProperties.oplData.currentValue) {
-            var oplData = changedProperties.oplData;
-            reset();
+          if ((changedProperties.oplFullscreenIcon && changedProperties.oplFullscreenIcon.currentValue) ||
+              (changedProperties.oplVolumeIcon && changedProperties.oplVolumeIcon.currentValue) ||
+              (changedProperties.oplTemplateIcon && changedProperties.oplTemplateIcon.currentValue) ||
+              (changedProperties.oplSettingsIcon && changedProperties.oplSettingsIcon.currentValue) ||
+              (changedProperties.oplVeoLabsIcon && changedProperties.oplVeoLabsIcon.currentValue) ||
+              (changedProperties.oplFullViewport && changedProperties.oplFullViewport.currentValue)) {
 
-            if (oplData.previousValue && oplData.previousValue.needPointsOfInterestUnitConversion === true &&
-                !oplData.currentValue.needPointsOfInterestUnitConversion) {
-              ctrl.setTime(lastTime);
-              initPointsOfInterest();
-              ctrl.selectTemplate(ctrl.oplTemplate);
-              updateIcons();
-              $element.triggerHandler('durationChange', ctrl.duration);
+            // oplFullscreenIcon
+            if (changedProperties.oplFullscreenIcon && changedProperties.oplFullscreenIcon.currentValue) {
+              $scope.fullscreenIconDisplayed = implementFullScreenAPI() && isAttributeTrue('oplFullscreenIcon', true);
             }
-          }
 
-          // oplCuts
-          if (changedProperties.oplCuts && changedProperties.oplCuts.currentValue) {
-            if (!playerService) return;
-            var cutEnabled = isAttributeTrue('oplCuts', true);
-            playerService.setCutsStatus(cutEnabled);
-
-            if (ctrl.duration) {
-              reset();
-              playerService.setCutsStatus(cutEnabled);
-              ctrl.duration = playerService.getDuration();
-              initPointsOfInterest();
-              ctrl.selectTemplate(ctrl.oplTemplate);
-              updateIcons();
-              $element.triggerHandler('durationChange', ctrl.duration);
-              ctrl.setTime(0);
+            // oplVolumeIcon
+            if (changedProperties.oplVolumeIcon && changedProperties.oplVolumeIcon.currentValue) {
+              $scope.volumeIconDisplayed = isAttributeTrue('oplVolumeIcon', true);
             }
-          }
 
-          // oplFullscreenIcon
-          if (changedProperties.oplFullscreenIcon && changedProperties.oplFullscreenIcon.currentValue) {
-            $scope.fullscreenIconDisplayed = implementFullScreenAPI() && isAttributeTrue('oplFullscreenIcon', true);
-            updateIcons();
-          }
-
-          // oplVolumeIcon
-          if (changedProperties.oplVolumeIcon && changedProperties.oplVolumeIcon.currentValue) {
-            $scope.volumeIconDisplayed = isAttributeTrue('oplVolumeIcon', true);
-            updateIcons();
-          }
-
-          // oplTemplateIcon
-          if (changedProperties.oplTemplateIcon && changedProperties.oplTemplateIcon.currentValue) {
-            $scope.templateSelectorDisplayed = isAttributeTrue('oplTemplateIcon', true);
-            updateIcons();
-          }
-
-          // oplSettingsIcon
-          if (changedProperties.oplSettingsIcon && changedProperties.oplSettingsIcon.currentValue) {
-            $scope.settingsIconDisplayed = isAttributeTrue('oplSettingsIcon', true);
-            updateIcons();
-          }
-
-          // oplVeoLabsIcon
-          if (changedProperties.oplVeoLabsIcon && changedProperties.oplVeoLabsIcon.currentValue) {
-            $scope.veoLabsIconDisplayed = isAttributeTrue('oplVeoLabsIcon', true);
-            updateIcons();
-          }
-
-          // oplFullViewport
-          if (changedProperties.oplFullViewport && changedProperties.oplFullViewport.currentValue) {
-            $scope.fullViewportActivated = isAttributeTrue('oplFullViewport', false);
-            updateIcons();
-
-            // Full viewport and no fullScreen API available
-            // Consider the player as in fullscreen
-            if ($scope.fullViewportActivated && !implementFullScreenAPI()) {
-              ctrl.fullscreenEnabled = true;
-              fullscreenEnabled = true;
+            // oplTemplateIcon
+            if (changedProperties.oplTemplateIcon && changedProperties.oplTemplateIcon.currentValue) {
+              $scope.templateSelectorDisplayed = isAttributeTrue('oplTemplateIcon', true);
             }
+
+            // oplSettingsIcon
+            if (changedProperties.oplSettingsIcon && changedProperties.oplSettingsIcon.currentValue) {
+              $scope.settingsIconDisplayed = isAttributeTrue('oplSettingsIcon', true);
+            }
+
+            // oplVeoLabsIcon
+            if (changedProperties.oplVeoLabsIcon && changedProperties.oplVeoLabsIcon.currentValue) {
+              $scope.veoLabsIconDisplayed = isAttributeTrue('oplVeoLabsIcon', true);
+            }
+
+            // oplFullViewport
+            if (changedProperties.oplFullViewport && changedProperties.oplFullViewport.currentValue) {
+              $scope.fullViewportActivated = isAttributeTrue('oplFullViewport', false);
+
+              // Full viewport and no fullScreen API available
+              // Consider the player as in fullscreen
+              if ($scope.fullViewportActivated && !implementFullScreenAPI()) {
+                ctrl.fullscreenEnabled = true;
+                fullscreenEnabled = true;
+              }
+            }
+
+            updateIcons();
           }
 
           // oplTime
@@ -1461,21 +1432,57 @@
             autoPlayActivated = isAttributeTrue('oplAutoPlay', false);
           }
 
-          // oplChaptersTab
-          if (changedProperties.oplChaptersTab && changedProperties.oplChaptersTab.currentValue) {
-            initPointsOfInterest();
-          }
+          // oplData
+          if (changedProperties.oplData && changedProperties.oplData.currentValue) {
+            var oplData = changedProperties.oplData;
+            reset();
 
-          // oplTagsTab
-          if (changedProperties.oplTagsTab && changedProperties.oplTagsTab.currentValue) {
-            initPointsOfInterest();
-          }
+            if (oplData.previousValue && oplData.previousValue.needPointsOfInterestUnitConversion === true &&
+                !oplData.currentValue.needPointsOfInterestUnitConversion) {
+              ctrl.setTime(lastTime);
+              initPointsOfInterest();
+              ctrl.selectTemplate(ctrl.oplTemplate);
+              updateIcons();
+              $element.triggerHandler('durationChange', ctrl.duration);
+            }
+          } else if (changedProperties.oplCuts && changedProperties.oplCuts.currentValue) {
 
-          // oplTemplate
-          if (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue) {
-            ctrl.selectTemplate(changedProperties.oplTemplate.currentValue);
-          }
+            // oplCuts
 
+            if (!playerService) return;
+            var cutEnabled = isAttributeTrue('oplCuts', true);
+            playerService.setCutsStatus(cutEnabled);
+
+            if (ctrl.duration) {
+              reset();
+              playerService.setCutsStatus(cutEnabled);
+              ctrl.duration = playerService.getDuration();
+              initPointsOfInterest();
+              ctrl.selectTemplate(ctrl.oplTemplate);
+              updateIcons();
+              $element.triggerHandler('durationChange', ctrl.duration);
+              ctrl.setTime(0);
+            }
+          } else if ((changedProperties.oplChaptersTab && changedProperties.oplChaptersTab.currentValue) ||
+                    (changedProperties.oplTagsTab && changedProperties.oplTagsTab.currentValue) ||
+                    (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue)) {
+
+            // oplChaptersTab
+            if (changedProperties.oplChaptersTab && changedProperties.oplChaptersTab.currentValue) {
+              initPointsOfInterest();
+            }
+
+            // oplTagsTab
+            if (changedProperties.oplTagsTab && changedProperties.oplTagsTab.currentValue) {
+              initPointsOfInterest();
+            }
+
+            // oplTemplate
+            if (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue) {
+              ctrl.selectTemplate(changedProperties.oplTemplate.currentValue);
+            }
+
+          }
         }
       },
 

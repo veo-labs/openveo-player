@@ -40,6 +40,7 @@
 
 - Fix "grunt remove:doc" which hasn't worked since version 2.2.0
 - Fix translation of the error message when no source
+- Fix changing player attributes dynamically. Changing "ov-auto-play", "ov-remember-position", "ov-full-viewport" and so on wasn't always working
 
 ## DEPENDENCIES
 
