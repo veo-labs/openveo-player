@@ -18,6 +18,7 @@ OpenVeo Player defines an AngularJS directive **opl-player**:
   opl-auto-play="false"
   opl-remember-position="false"
   opl-chapters="true"
+  opl-indexes="true"
   opl-tags="true"
   opl-cuts="true"
 ></opl-player>
@@ -310,6 +311,17 @@ Indicates if chapters must be displayed or not (Default to **true**).
 <opl-player
   ...
   opl-chapters="true"
+></opl-player>
+```
+
+## opl-indexes (optional)
+
+Indicates if indexes must be displayed or not (Default to **true**).
+
+```html
+<opl-player
+  ...
+  opl-indexes="true"
 ></opl-player>
 ```
 

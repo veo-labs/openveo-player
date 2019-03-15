@@ -342,7 +342,7 @@
      * Each tabs can be displayed or not depending on the available points of interest and component attributes.
      */
     function updateTabs() {
-      $scope.indexesDisplayed = ctrl.timecodes.length ? true : false;
+      $scope.indexesDisplayed = ctrl.timecodes.length && isAttributeTrue('oplIndexes', true);
       $scope.chaptersDisplayed = ctrl.chapters.length && isAttributeTrue('oplChapters', true);
       $scope.tagsDisplayed = ctrl.tags.length && isAttributeTrue('oplTags', true);
 
@@ -1354,6 +1354,8 @@
        * @param {String} [changedProperties.oplAutoPlay.currentValue] oplAutoPlay new value
        * @param {Object} [changedProperties.oplChapters] oplChapters old and new value
        * @param {String} [changedProperties.oplChapters.currentValue] oplChapters new value
+       * @param {Object} [changedProperties.oplIndexes] oplIndexes old and new value
+       * @param {String} [changedProperties.oplIndexes.currentValue] oplIndexes new value
        * @param {Object} [changedProperties.oplTags] oplTags old and new value
        * @param {String} [changedProperties.oplTags.currentValue] oplTags new value
        * @param {Object} [changedProperties.oplCuts] oplCuts old and new value
@@ -1464,11 +1466,17 @@
               ctrl.setTime(0);
             }
           } else if ((changedProperties.oplChapters && changedProperties.oplChapters.currentValue) ||
+                    (changedProperties.oplIndexes && changedProperties.oplIndexes.currentValue) ||
                     (changedProperties.oplTags && changedProperties.oplTags.currentValue) ||
                     (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue)) {
 
             // oplChapters
             if (changedProperties.oplChapters && changedProperties.oplChapters.currentValue) {
+              initPointsOfInterest();
+            }
+
+            // oplIndexes
+            if (changedProperties.oplIndexes && changedProperties.oplIndexes.currentValue) {
               initPointsOfInterest();
             }
 

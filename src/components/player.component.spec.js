@@ -588,6 +588,34 @@ describe('OplPlayer', function() {
     assert.equal(tabsElement.attr('opl-no-tabs'), 'true', 'Unexpected tabs');
   });
 
+  it('should be able to hide indexes using attribute "opl-indexes"', function() {
+    scope.data.timecodes = [
+      {
+        timecode: 1000,
+        name: 'Timecode'
+      }
+    ];
+
+    var element = angular.element('<opl-player ' +
+                                              'id="opl-player-test" ' +
+                                              'opl-data="data" ' +
+                                              'opl-indexes="false" ' +
+                                  '></opl-player>');
+    createComponent(element, 10000);
+
+    var playerElement = angular.element(element[0].querySelector('.opl-player'));
+    var tabsElement = angular.element(element[0].querySelector('opl-tabs'));
+    var chaptersViewElement = angular.element(element[0].querySelector('opl-view[opl-class="opl-chapters-view"]'));
+    var tagsViewElement = angular.element(element[0].querySelector('opl-view[opl-class="opl-tags-view"]'));
+    var indexesViewElement = angular.element(element[0].querySelector('opl-view[opl-class="opl-timecodes-view"]'));
+
+    assert.isUndefined(indexesViewElement[0], 'Unexpected indexes');
+    assert.isUndefined(tagsViewElement[0], 'Unexpected tags');
+    assert.isUndefined(chaptersViewElement[0], 'Unexpected chapters');
+    assert.ok(playerElement.hasClass('opl-no-poi'), 'Unexpected points of interest');
+    assert.equal(tabsElement.attr('opl-no-tabs'), 'true', 'Unexpected tabs');
+  });
+
   it('should be able to hide tags using attribute "opl-tags"', function() {
     scope.data.tags = [
       {

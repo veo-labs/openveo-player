@@ -63,6 +63,7 @@
  *  - [Boolean] **opl-veo-labs-icon** true to display the Veo-Labs icon (default to true)
  *  - [Boolean] **opl-time** true to display the actual time and duration (default to true)
  *  - [Boolean] **opl-chapters** true to display chapters (default to true)
+ *  - [Boolean] **opl-indexes** true to display indexes (default to true)
  *  - [Boolean] **opl-tags** true to display tags (default to true)
  *  - [Boolean] **opl-full-viewport** true to display the player in full viewport (default to false)
  *  - [Boolean] **opl-cuts** true to enable cuts (default to true)
@@ -278,6 +279,7 @@
  *                  opl-auto-play="false"
  *                  opl-remember-position="false"
  *                  opl-chapters="true"
+ *                  opl-indexes="true"
  *                  opl-tags="true"
  *                  opl-cuts="true"
  *      ></opl-player>
@@ -304,6 +306,7 @@
       oplAutoPlay: '@?',
       oplRememberPosition: '@?',
       oplChapters: '@?',
+      oplIndexes: '@?',
       oplTags: '@?',
       oplCuts: '@?'
     }
