@@ -76,6 +76,7 @@
         <a
            ng-href="{{$ctrl.oplData.file.url + '?filename=' + $ctrl.oplData.file.originalName}}"
            download="{{$ctrl.oplData.file.originalName}}"
+           target="_blank"
         >
           <i class="opl-icon">attachment</i><span ng-bind="$ctrl.fileName"></span>
         </a>
