@@ -321,6 +321,18 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       }
 
       /*
+        Loader.
+      */
+      .opl-loader {
+        display: none;
+        z-index: 2;
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: var(--opl-player-controls-primary-color, $OPL_PLAYER_CONTROLS_PRIMARY_COLOR);
+      }
+
+      /*
         HTML player error message.
       */
       .opl-error {
@@ -724,16 +736,4 @@ opl-player > div:-moz-full-screen, :-moz-full-screen .opl-player {
   width: 100%;
   height: 100%;
   background-color: var(--opl-player-background-color, $OPL_PLAYER_BACKGROUND_COLOR);
-}
-
-/*
-  Loader.
-*/
-.opl-loader {
-  display: none;
-  z-index: 2;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  color: var(--opl-player-controls-primary-color, $OPL_PLAYER_CONTROLS_PRIMARY_COLOR);
 }
