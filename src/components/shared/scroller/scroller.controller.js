@@ -630,12 +630,12 @@
 
             clearEventListeners();
 
-            if (ctrl.oplDeactivated) return;
+            if (!ctrl.oplDeactivated) {
+              setEventListeners();
 
-            setEventListeners();
-
-            updateThumb();
-            setValue($scope.value, true);
+              updateThumb();
+              setValue($scope.value, true);
+            }
 
             reseting = false;
 
