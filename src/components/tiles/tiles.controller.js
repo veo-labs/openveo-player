@@ -56,6 +56,7 @@
     var reseting = false;
     var resetRequested = false;
     var initialized = false;
+    var expectedTilesPreload = false;
 
     $scope.scrollerValue = 0;
 
@@ -981,14 +982,19 @@
      */
     $scope.handleScrollerChange = function() {
       if (!scrollTimeoutPromise) {
+        expectedTilesPreload = false;
 
         preloadTiles();
 
         // Add a delay to avoid parsing the list of tiles too many times
         scrollTimeoutPromise = $timeout(function() {
           scrollTimeoutPromise = null;
+
+          if (expectedTilesPreload) $scope.handleScrollerChange();
         }, 100);
 
+      } else {
+        expectedTilesPreload = true;
       }
     };
 
