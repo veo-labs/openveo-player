@@ -31,14 +31,18 @@ describe('OplPreview', function() {
 
   it('should display an image and a time', function() {
     scope.time = 42000;
-    scope.url = '/image.jpg';
+    scope.image = {
+      url: '/image.jpg',
+      x: 42,
+      y: 43
+    };
 
-    $httpBackend.whenGET(scope.url).respond(200);
-    $httpBackend.expectGET(scope.url);
+    $httpBackend.whenGET(scope.image.url).respond(200);
+    $httpBackend.expectGET(scope.image.url);
 
     element = angular.element('<opl-preview ' +
                                 'opl-time="time" ' +
-                                'opl-url="url"' +
+                                'opl-image="image"' +
                               '></opl-preview>');
     element = $compile(element)(scope);
     scope.$digest();
@@ -51,24 +55,62 @@ describe('OplPreview', function() {
 
     assert.match(
       previewElement.attr('style'),
-      new RegExp('background-image: ?url\\("' + scope.url + '"\\);'),
+      new RegExp('background-image: ?url\\("' + scope.image.url + '"\\);'),
       'Wrong image'
+    );
+    assert.match(
+      previewElement.attr('style'),
+      new RegExp('background-position: ?-' + scope.image.x + 'px -' + scope.image.y + 'px;'),
+      'Wrong image position'
     );
     assert.isUndefined(loaderElement[0], 'Unexpected loader');
     assert.isUndefined(errorElement[0], 'Unexpected error');
     assert.equal(timeElement.html(), $filter('oplMillisecondsToTime')(scope.time), 'Wrong time');
   });
 
-  it('should display a loader while image is preloading', function() {
+  it('should be able to set "opl-image" using an URL', function() {
     scope.time = 42000;
-    scope.url = '/image.jpg';
+    scope.image = '/image.jpg';
 
-    $httpBackend.whenGET(scope.url).respond(200);
-    $httpBackend.expectGET(scope.url);
+    $httpBackend.whenGET(scope.image).respond(200);
+    $httpBackend.expectGET(scope.image);
 
     element = angular.element('<opl-preview ' +
                                 'opl-time="time" ' +
-                                'opl-url="url"' +
+                                'opl-image="image"' +
+                              '></opl-preview>');
+    element = $compile(element)(scope);
+    scope.$digest();
+    $httpBackend.flush();
+
+    var previewElement = angular.element(element[0].querySelector('.opl-preview'));
+
+    assert.match(
+      previewElement.attr('style'),
+      new RegExp('background-image: ?url\\("' + scope.image + '"\\);'),
+      'Wrong image'
+    );
+    assert.match(
+      previewElement.attr('style'),
+      new RegExp('background-position: ?0px 0px;'),
+      'Wrong image position'
+    );
+  });
+
+  it('should display a loader while image is preloading', function() {
+    scope.time = 42000;
+    scope.image = {
+      url: '/image.jpg',
+      x: 42,
+      y: 43
+    };
+
+    $httpBackend.whenGET(scope.image.url).respond(200);
+    $httpBackend.expectGET(scope.image.url);
+
+    element = angular.element('<opl-preview ' +
+                                'opl-time="time" ' +
+                                'opl-image="image"' +
                               '></opl-preview>');
     element = $compile(element)(scope);
     scope.$digest();
@@ -82,6 +124,11 @@ describe('OplPreview', function() {
       previewElement.attr('style'),
       new RegExp('background-image: ?none;'),
       'Unexpected image'
+    );
+    assert.match(
+      previewElement.attr('style'),
+      new RegExp('background-position: ?-' + scope.image.x + 'px -' + scope.image.y + 'px;'),
+      'Wrong image position'
     );
     assert.isDefined(loaderElement[0], 'Expected loader');
     assert.isUndefined(errorElement[0], 'Unexpected error');
@@ -90,14 +137,18 @@ describe('OplPreview', function() {
 
   it('should display an error message if preloading image failed', function() {
     scope.time = 42000;
-    scope.url = '/image.jpg';
+    scope.image = {
+      url: '/image.jpg',
+      x: 42,
+      y: 43
+    };
 
     $httpBackend.whenGET(scope.url).respond(404);
     $httpBackend.expectGET(scope.url);
 
     element = angular.element('<opl-preview ' +
                                 'opl-time="time" ' +
-                                'opl-url="url"' +
+                                'opl-image="image"' +
                               '></opl-preview>');
     element = $compile(element)(scope);
     scope.$digest();
@@ -113,7 +164,6 @@ describe('OplPreview', function() {
       new RegExp('background-image: ?none;'),
       'Unexpected image'
     );
-
     assert.isUndefined(loaderElement[0], 'Unexpected loader');
     assert.equal(
       angular.element(errorElement[0].querySelector('span')).html(),
@@ -125,14 +175,18 @@ describe('OplPreview', function() {
 
   it('should be able to change time dynamically', function() {
     scope.time = 42000;
-    scope.url = '/image.jpg';
+    scope.image = {
+      url: '/image.jpg',
+      x: 42,
+      y: 43
+    };
 
-    $httpBackend.whenGET(scope.url).respond(200);
-    $httpBackend.expectGET(scope.url);
+    $httpBackend.whenGET(scope.image.url).respond(200);
+    $httpBackend.expectGET(scope.image.url);
 
     element = angular.element('<opl-preview ' +
                                 'opl-time="time" ' +
-                                'opl-url="url"' +
+                                'opl-image="image"' +
                               '></opl-preview>');
     element = $compile(element)(scope);
     scope.$digest();
@@ -150,30 +204,87 @@ describe('OplPreview', function() {
 
   it('should be able to change image dynamically', function() {
     scope.time = 42000;
-    scope.url = '/image.jpg';
+    scope.image = {
+      url: '/image.jpg',
+      x: 42,
+      y: 43
+    };
 
-    $httpBackend.whenGET(scope.url).respond(200);
-    $httpBackend.expectGET(scope.url);
+    $httpBackend.whenGET(scope.image.url).respond(200);
+    $httpBackend.expectGET(scope.image.url);
 
     element = angular.element('<opl-preview ' +
                                 'opl-time="time" ' +
-                                'opl-url="url"' +
+                                'opl-image="image"' +
                               '></opl-preview>');
     element = $compile(element)(scope);
     scope.$digest();
     $httpBackend.flush();
 
-    scope.url = '/image2.jpg';
-    $httpBackend.whenGET(scope.url).respond(200);
-    $httpBackend.expectGET(scope.url);
+    scope.image = {
+      url: '/image2.jpg',
+      x: 44,
+      y: 45
+    };
+    $httpBackend.whenGET(scope.image.url).respond(200);
+    $httpBackend.expectGET(scope.image.url);
     scope.$digest();
     $httpBackend.flush();
 
+    var previewElement = angular.element(element[0].querySelector('.opl-preview'));
+
     assert.match(
-      angular.element(element[0].querySelector('.opl-preview')).attr('style'),
-      new RegExp('background-image: ?url\\("' + scope.url + '"\\);'),
+      previewElement.attr('style'),
+      new RegExp('background-image: ?url\\("' + scope.image.url + '"\\);'),
       'Wrong image'
     );
+    assert.match(
+      previewElement.attr('style'),
+      new RegExp('background-position: ?-' + scope.image.x + 'px -' + scope.image.y + 'px;'),
+      'Wrong image position'
+    );
+  });
+
+  it('should not preload the same image several time', function() {
+    scope.time = 42000;
+    scope.image = {
+      url: '/image.jpg',
+      x: 42,
+      y: 43
+    };
+
+    $httpBackend.whenGET(scope.image.url).respond(200);
+    $httpBackend.expectGET(scope.image.url);
+
+    element = angular.element('<opl-preview ' +
+                                'opl-time="time" ' +
+                                'opl-image="image"' +
+                              '></opl-preview>');
+    element = $compile(element)(scope);
+    scope.$digest();
+    $httpBackend.flush();
+
+    scope.image = {
+      url: '/image.jpg',
+      x: 44,
+      y: 45
+    };
+    scope.$digest();
+
+    var previewElement = angular.element(element[0].querySelector('.opl-preview'));
+
+    assert.match(
+      previewElement.attr('style'),
+      new RegExp('background-image: ?url\\("' + scope.image.url + '"\\);'),
+      'Wrong image'
+    );
+    assert.match(
+      previewElement.attr('style'),
+      new RegExp('background-position: ?-' + scope.image.x + 'px -' + scope.image.y + 'px;'),
+      'Wrong image position'
+    );
+
+    $httpBackend.verifyNoOutstandingRequest();
   });
 
 });

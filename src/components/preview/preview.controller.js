@@ -17,17 +17,26 @@
    */
   function OplPreviewController($scope, $element, $http) {
     var ctrl = this;
+    var preloadedImageUrls = [];
+    $scope.url = null;
+    $scope.position = {
+      x: 0,
+      y: 0
+    };
 
     /**
      * Preloads the image.
+     *
+     * @param {String} url The image URL to preload
      */
-    function preloadImage() {
-      if (!ctrl.oplUrl || ctrl.preloading || ctrl.preloaded) return;
+    function preloadImage(url) {
+      if (!url || ctrl.preloading || ctrl.preloaded) return;
       ctrl.preloading = true;
 
-      $http.get(ctrl.oplUrl).then(function() {
+      $http.get(url).then(function() {
         ctrl.preloading = false;
         ctrl.preloaded = true;
+        preloadedImageUrls.push(url);
       }).catch(function() {
         ctrl.preloading = false;
         ctrl.preloaded = true;
@@ -75,16 +84,22 @@
        *
        * @method $onChanges
        * @param {Object} changedProperties Properties which have changed since last digest loop
-       * @param {Object} [changedProperties.oplUrl] oplUrl old and new value
-       * @param {String} [changedProperties.oplUrl.currentValue] oplUrl new value
+       * @param {Object} [changedProperties.oplImage] oplImage old and new value
+       * @param {String} [changedProperties.oplImage.currentValue] oplImage new value
        */
       $onChanges: {
         value: function(changedProperties) {
-          if (changedProperties.oplUrl && changedProperties.oplUrl.currentValue) {
-            ctrl.preloaded = false;
-            ctrl.preloading = false;
-            ctrl.error = false;
-            preloadImage();
+          if (changedProperties.oplImage && changedProperties.oplImage.currentValue) {
+            if (preloadedImageUrls.indexOf(ctrl.oplImage.url || ctrl.oplImage) === -1) {
+              ctrl.preloaded = false;
+              ctrl.preloading = false;
+              ctrl.error = false;
+              preloadImage(ctrl.oplImage.url || ctrl.oplImage);
+            }
+
+            $scope.url = ctrl.oplImage.url || ctrl.oplImage;
+            $scope.position.x = ctrl.oplImage.x || 0;
+            $scope.position.y = ctrl.oplImage.y || 0;
           }
         }
       }

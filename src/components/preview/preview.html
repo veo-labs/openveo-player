@@ -1,4 +1,4 @@
-<div class="opl-preview" ng-style="{'background-image': ($ctrl.oplUrl && $ctrl.preloaded && !$ctrl.error) ? 'url(' + $ctrl.oplUrl + ')' : 'none'}">
+<div class="opl-preview" ng-style="{'background-image': (url && $ctrl.preloaded && !$ctrl.error) ? 'url(' + url + ')' : 'none', 'background-position': (url) ? '-' + position.x + 'px -' + position.y + 'px' : '0px 0px'}">
   <div
        ng-if="$ctrl.preloading"
        class="opl-loader"

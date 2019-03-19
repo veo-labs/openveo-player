@@ -518,7 +518,7 @@
 
       var index = playerService.findPointOfInterest('timecodes', time);
       $scope.previewTime = time;
-      $scope.previewUrl = index.image && index.image.small && (index.image.small.url || index.image.small);
+      $scope.previewImage = index.image && index.image.small;
 
       previewElement.attr('style', 'transform: translateX(' + (xPosition - 142 / 2) + 'px);');
     }

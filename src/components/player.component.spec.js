@@ -1248,7 +1248,11 @@ describe('OplPlayer', function() {
     scope.$digest();
 
     assert.equal(isolateScope.previewTime, expectedTime, 'Wrong preview time');
-    assert.equal(isolateScope.previewUrl, scope.data.timecodes[expectedTime / 1000].image.small, 'Wrong preview URL');
+    assert.deepEqual(
+      isolateScope.previewImage,
+      scope.data.timecodes[expectedTime / 1000].image.small,
+      'Wrong preview image'
+    );
     assert.match(
       angular.element(element[0].querySelector('.opl-index-preview')).attr('style'),
       new RegExp('transform: translateX\\(' + (expectedPreviewPosition - 142 / 2) + 'px\\)'),
@@ -1265,10 +1269,10 @@ describe('OplPlayer', function() {
     scope.$digest();
 
     assert.equal(isolateScope.previewTime, expectedTime, 'Wrong preview time');
-    assert.equal(
-      isolateScope.previewUrl,
-      scope.data.timecodes[expectedTime / 1000].image.small.url,
-      'Wrong preview URL'
+    assert.deepEqual(
+      isolateScope.previewImage,
+      scope.data.timecodes[expectedTime / 1000].image.small,
+      'Wrong preview image'
     );
     assert.match(
       angular.element(element[0].querySelector('.opl-index-preview')).attr('style'),

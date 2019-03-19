@@ -38,9 +38,6 @@ opl-preview {
   width: 100%;
   height: 100%;
   background-color: var(--opl-preview-background-color, $OPL_PREVIEW_BACKGROUND_COLOR);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
   @include user-select(none);
 
   /*
