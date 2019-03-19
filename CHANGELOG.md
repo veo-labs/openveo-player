@@ -5,7 +5,7 @@
 - Drop support for HTML player flash technology
 - Drop support for AngularJS &lt; 1.5.11
 - Drop support for VideoJS &lt; 7.3.0
-- Drop support for Internet Explorer 11
+- Drop support for Internet Explorer
 - All player components are now prefixed by opl- instead of op-
 - Player controller property "selectedMode" has been renamed into "selectedTemplate"
 - Player controller property "playPauseButton" has been replaced by "playing"
