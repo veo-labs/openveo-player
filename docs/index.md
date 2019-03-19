@@ -15,7 +15,6 @@ OpenVeo Player has been tested on the following browsers:
 ![Google Chrome](images/browsers/chrome.gif)
 ![Opera](images/browsers/opera.gif)
 ![Internet Explorer](images/browsers/edge.gif)
-![Internet Explorer](images/browsers/ie.gif)
 
 ## Screenshots
 
