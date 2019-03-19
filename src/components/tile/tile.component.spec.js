@@ -1037,7 +1037,7 @@ describe('OplTile', function() {
       );
       assert.match(
         contentElement.attr('style'),
-        new RegExp('background-position: ?' + scope.data.image.small.x + 'px ' + scope.data.image.small.y + 'px;'),
+        new RegExp('background-position: ?-' + scope.data.image.small.x + 'px -' + scope.data.image.small.y + 'px;'),
         'Wrong image position'
       );
       assert.isUndefined(errorElement[0], 'Unexpected error');
