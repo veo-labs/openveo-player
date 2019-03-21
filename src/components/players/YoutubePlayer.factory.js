@@ -318,12 +318,20 @@
      * @return {Array} The list of available definitions
      */
     YoutubePlayer.prototype.getAvailableDefinitions = function() {
-      var definitions = [];
+      var qualities = [];
+      if (!this.player) return qualities;
 
-      if (this.player)
-        definitions = this.player.getAvailableQualityLevels();
+      var youtubeQualities = this.player.getAvailableQualityLevels();
 
-      return definitions || [];
+      youtubeQualities.forEach(function(quality) {
+        qualities.push({
+          id: quality,
+          label: quality,
+          hd: (quality === 'hd720' || quality === 'hd1080' || quality === 'highres')
+        });
+      });
+
+      return qualities;
     };
 
     /**
@@ -344,13 +352,24 @@
     };
 
     /**
+     * Gets current definition of the current source.
+     *
+     * @method getDefinition
+     * @return {String} The definition id
+     */
+    YoutubePlayer.prototype.getDefinition = function() {
+      if (!this.player) return null;
+      return this.player.getPlaybackQuality();
+    };
+
+    /**
      * Changes definition of the current source.
      *
      * @method setDefinition
-     * @param {String} definition Definition from the list of available definitions
+     * @param {String} id The definition id
      */
-    YoutubePlayer.prototype.setDefinition = function(definition) {
-      this.player.setPlaybackQuality(definition);
+    YoutubePlayer.prototype.setDefinition = function(id) {
+      this.player.setPlaybackQuality(id);
       this.jPlayerElement.triggerHandler('oplReady');
     };
 

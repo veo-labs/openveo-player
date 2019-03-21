@@ -22,6 +22,7 @@ describe('OplPlayer', function() {
   var expectedPlayerId;
   var expectedSourceUrl;
   var expectedSourceIndex;
+  var expectedQualityIndex;
   var originalRequestAnimationFrame;
 
   /**
@@ -50,6 +51,7 @@ describe('OplPlayer', function() {
     expectedPlayerId = '42';
     expectedSourceUrl = '';
     expectedSourceIndex = 0;
+    expectedQualityIndex = 0;
 
     Player = function(element) {
       this.element = element;
@@ -58,7 +60,15 @@ describe('OplPlayer', function() {
       return expectedPlayerId;
     });
     Player.prototype.getAvailableDefinitions = chai.spy(function() {
-      return expectedDefinitions[expectedSourceIndex].files;
+      var qualities = [];
+      expectedDefinitions[expectedSourceIndex].files.forEach(function(quality) {
+        qualities.push({
+          id: String(quality.height),
+          label: quality.height + 'p',
+          hd: quality.height >= 720
+        });
+      });
+      return qualities;
     });
     Player.prototype.getSourceUrl = chai.spy(function() {
       return expectedSourceUrl;
@@ -74,6 +84,9 @@ describe('OplPlayer', function() {
     Player.prototype.setMedia = chai.spy(function() {});
     Player.prototype.setMediaSource = chai.spy(function() {});
     Player.prototype.load = chai.spy(function() {});
+    Player.prototype.getDefinition = chai.spy(function() {
+      return String(expectedDefinitions[expectedSourceIndex].files[expectedQualityIndex].height);
+    });
     Player.prototype.isPlaying = chai.spy(function() {
       return false;
     });
@@ -1405,7 +1418,7 @@ describe('OplPlayer', function() {
     }
     assert.strictEqual(
       ctrl.selectedDefinition,
-      expectedDefinitions[expectedSourceIndex].files[0],
+      String(expectedDefinitions[expectedSourceIndex].files[0].height),
       'Wrong definition selected'
     );
     assert.strictEqual(
@@ -1430,7 +1443,7 @@ describe('OplPlayer', function() {
     }
     assert.strictEqual(
       ctrl.selectedDefinition,
-      expectedDefinitions[expectedSourceIndex].files[0],
+      String(expectedDefinitions[expectedSourceIndex].files[0].height),
       'Wrong definition selected'
     );
     assert.strictEqual(
@@ -1501,7 +1514,7 @@ describe('OplPlayer', function() {
   });
 
   it('should change quality if a new quality is selected from settings', function() {
-    var expectedQualityIndex = 0;
+    expectedQualityIndex = 0;
     expectedDefinitions = [
       {
         files: [
@@ -1530,19 +1543,20 @@ describe('OplPlayer', function() {
 
     assert.strictEqual(
       ctrl.selectedDefinition,
-      expectedDefinitions[0].files[expectedQualityIndex],
+      String(expectedDefinitions[0].files[expectedQualityIndex].height),
       'Wrong quality selected'
     );
 
     // Change quality
     expectedQualityIndex = 1;
     isolateScope.handleSettingsUpdate(String(expectedDefinitions[0].files[expectedQualityIndex].height));
-    $timeout.flush();
+    element.triggerHandler('oplReady');
+    $timeout.flush(1000);
     scope.$digest();
 
     assert.strictEqual(
       ctrl.selectedDefinition,
-      expectedDefinitions[0].files[expectedQualityIndex],
+      String(expectedDefinitions[0].files[expectedQualityIndex].height),
       'Wrong quality selected'
     );
   });
@@ -2533,7 +2547,7 @@ describe('OplPlayer', function() {
 
       assert.strictEqual(
         ctrl.selectedDefinition,
-        expectedDefinitions[0].files[0],
+        String(expectedDefinitions[0].files[0].height),
         'Wrong quality selected'
       );
 
@@ -2614,7 +2628,7 @@ describe('OplPlayer', function() {
 
       assert.strictEqual(
         ctrl.selectedDefinition,
-        expectedDefinitions[expectedSourceIndex].files[0],
+        String(expectedDefinitions[expectedSourceIndex].files[0].height),
         'Wrong quality selected'
       );
 

@@ -237,6 +237,16 @@
     };
 
     /**
+     * Gets current definition id.
+     *
+     * @method getDefinition
+     * @return {String} The current definition id
+     */
+    Player.prototype.getDefinition = function() {
+      throw new Error('getDefinition method not implemented for this player');
+    };
+
+    /**
      * Changes definition of the current source.
      *
      * @method setDefinition

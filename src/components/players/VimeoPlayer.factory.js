@@ -298,6 +298,15 @@
     };
 
     /**
+     * Returns undefined as Vimeo player does not support qualities.
+     *
+     * @method getDefinition
+     * @return {Undefined}
+     */
+    VimeoPlayer.prototype.getDefinition = function() {
+    };
+
+    /**
      * Changes definition of the current source.
      *
      * Nothing to do, adaptive streaming is managed by vimeo player.

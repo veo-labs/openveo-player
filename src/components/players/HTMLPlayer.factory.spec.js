@@ -121,8 +121,12 @@ describe('HTMLPlayer', function() {
   it('should order the list of media definitions', function() {
     var definitions = player.getAvailableDefinitions();
     assert.isDefined(definitions);
-    assert.equal(definitions[0].width, 1280);
-    assert.equal(definitions[1].width, 640);
+    assert.equal(definitions[0].id, '720', 'Wrong quality id for quality 0');
+    assert.equal(definitions[0].label, '720p', 'Wrong quality label for quality 0');
+    assert.ok(definitions[0].hd, 'Expected HD quality for quality 0');
+    assert.equal(definitions[1].id, '360', 'Wrong quality id for quality 1');
+    assert.equal(definitions[1].label, '360p', 'Wrong quality label for quality 1');
+    assert.notOk(definitions[1].hd, 'Unexpected HD quality for quality 1');
   });
 
   it('should order the list of media sources if adaptive sources are defined', function() {

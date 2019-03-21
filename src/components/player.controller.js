@@ -544,28 +544,6 @@
     }
 
     /**
-     * Prepares the list of qualities for the oplSettings component.
-     *
-     * @param {Array} qualities The list of qualities with for each quality, the quality height (property "height")
-     * @return {Array} The list of qualities with for each quality:
-     *   - **id** The quality id
-     *   - **label** The quality label
-     *   - **hd** true if the quality is HD (>= 720p), false otherwise
-     */
-    function prepareQualities(qualities) {
-      var preparedQualities = [];
-
-      for (var i = 0; i < qualities.length; i++) {
-        preparedQualities.push({
-          id: String(qualities[i].height),
-          label: qualities[i].height + 'p',
-          hd: qualities[i].height >= 720
-        });
-      }
-      return preparedQualities;
-    }
-
-    /**
      * Resets the component.
      *
      * Prepares data, set media to the player service, creates a player if not already created, set player media, set
@@ -636,10 +614,10 @@
       ctrl.sourceUrl = ctrl.player.getSourceUrl();
 
       ctrl.mediaSources = prepareSources(mediaData.mediaId);
-      ctrl.mediaQualities = prepareQualities(ctrl.mediaDefinitions);
+      ctrl.mediaQualities = angular.copy(ctrl.mediaDefinitions);
 
       ctrl.selectedSource = ctrl.mediaSources[ctrl.player.getSourceIndex()].id;
-      ctrl.selectedDefinition = ctrl.mediaDefinitions && ctrl.mediaDefinitions[0] || null;
+      ctrl.selectedDefinition = ctrl.player.getDefinition();
 
       updateTabs();
       updateIcons();
@@ -677,6 +655,7 @@
         ctrl.loading = false;
         ctrl.initializing = false;
         ctrl.setTime(lastTime);
+        ctrl.selectedDefinition = ctrl.player.getDefinition();
         $element.triggerHandler('ready');
 
         if ((autoPlayActivated || playRequested) && !ctrl.player.isPlaying()) {
@@ -754,10 +733,8 @@
 
       safeApply(function() {
         ctrl.mediaDefinitions = ctrl.player.getAvailableDefinitions();
-        ctrl.selectedDefinition = ctrl.selectedDefinition ||
-                (ctrl.mediaDefinitions && ctrl.mediaDefinitions[0]) ||
-                null;
-        ctrl.mediaQualities = prepareQualities(ctrl.mediaDefinitions);
+        ctrl.selectedDefinition = ctrl.player.getDefinition();
+        ctrl.mediaQualities = angular.copy(ctrl.mediaDefinitions);
         updateIcons();
         ctrl.loading = false;
         ctrl.playing = true;
@@ -1557,18 +1534,17 @@
        * Changes the source definition.
        *
        * @method setDefinition
-       * @param {Object} definition The new definition from the list of available definitions
+       * @param {String} id The definition id
        */
       setDefinition: {
-        value: function(definition) {
-          if (definition && definition !== ctrl.selectedDefinition) {
+        value: function(id) {
+          if (id && id !== ctrl.selectedDefinition) {
             lastTime = ctrl.time;
             playRequested = !ctrl.player.isPaused();
-            ctrl.selectedDefinition = definition;
             ctrl.loading = true;
             ctrl.initializing = true;
             safeApply(function() {
-              ctrl.player.setDefinition(ctrl.selectedDefinition);
+              ctrl.player.setDefinition(id);
             });
           }
         }
@@ -1588,8 +1564,8 @@
             ctrl.player.setMediaSource(sourceIndex);
             ctrl.selectedSource = ctrl.mediaSources[sourceIndex].id;
             ctrl.mediaDefinitions = ctrl.player.getAvailableDefinitions();
-            ctrl.selectedDefinition = ctrl.mediaDefinitions && ctrl.mediaDefinitions[0] || null;
-            ctrl.mediaQualities = prepareQualities(ctrl.mediaDefinitions);
+            ctrl.selectedDefinition = ctrl.player.getDefinition();
+            ctrl.mediaQualities = angular.copy(ctrl.mediaDefinitions);
             ctrl.loading = true;
             ctrl.initializing = true;
             safeApply(function() {
@@ -1671,12 +1647,7 @@
     $scope.handleSettingsUpdate = function(quality, source) {
       var i;
 
-      if (quality) {
-        for (i = 0; i < ctrl.mediaQualities.length; i++) {
-          if (ctrl.mediaQualities[i].id === quality)
-            return ctrl.setDefinition(ctrl.mediaDefinitions[i]);
-        }
-      }
+      if (quality) return ctrl.setDefinition(quality);
 
       if (source) {
         for (i = 0; i < ctrl.mediaSources.length; i++) {

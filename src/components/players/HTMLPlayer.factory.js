@@ -105,14 +105,12 @@
      *
      * @param {Object} definition The definition from the list of available definitions
      */
-    function load(definition) {
+    function load() {
       var mediaSource;
-      var availableDefinitions = this.getAvailableDefinitions();
-      var sourceDefinition = definition ||
-          availableDefinitions && availableDefinitions[0] ||
-          null;
+      var availableDefinitions = this.media.sources[this.selectedSourceIndex].files;
+      var definition = this.definition || availableDefinitions && availableDefinitions[0] || null;
 
-      if (!sourceDefinition) {
+      if (!definition) {
 
         // Adaptive streaming
         mediaSource = this.media.sources[this.selectedSourceIndex].adaptive.map(function(obj) {
@@ -125,7 +123,7 @@
       } else {
 
         // Files
-        mediaSource = [{src: sourceDefinition.link, type: 'video/mp4'}];
+        mediaSource = [{src: definition.link, type: 'video/mp4'}];
 
       }
 
@@ -163,6 +161,21 @@
     function HtmlPlayer(jPlayerElement, media, id) {
       OplPlayer.prototype.init.call(this, jPlayerElement, id);
       this.setMedia(media);
+
+      Object.defineProperties(this, {
+
+        /**
+         * Definition for the current source.
+         *
+         * @property error
+         * @type String
+         */
+        definition: {
+          value: null,
+          writable: true
+        }
+
+      });
     }
 
     HtmlPlayer.prototype = new OplPlayer();
@@ -230,13 +243,32 @@
     };
 
     /**
+     * Gets current definition of the current source.
+     *
+     * @method getDefinition
+     * @return {String} the definition id
+     */
+    HtmlPlayer.prototype.getDefinition = function() {
+      if (this.definition) return String(this.definition.height);
+
+      var files = this.media.sources[this.selectedSourceIndex].files;
+      if (files && files.length) return String(files[0].height);
+    };
+
+    /**
      * Changes definition of the current source.
      *
      * @method setDefinition
-     * @param {Object} definition Definition from the list of available definitions
+     * @param {String} id The definition id
      */
-    HtmlPlayer.prototype.setDefinition = function(definition) {
-      load.call(this, definition);
+    HtmlPlayer.prototype.setDefinition = function(id) {
+      for (var i = 0; i < this.media.sources[this.selectedSourceIndex].files.length; i++) {
+        if (String(this.media.sources[this.selectedSourceIndex].files[i].height) === id) {
+          this.definition = this.media.sources[this.selectedSourceIndex].files[i];
+          load.call(this);
+          break;
+        }
+      }
     };
 
     /**
@@ -337,7 +369,17 @@
      */
     HtmlPlayer.prototype.getAvailableDefinitions = function() {
       var media = this.media.sources[this.selectedSourceIndex];
-      return (!media.adaptive || media.adaptive.length == 0) ? media.files : null;
+      if (media.adaptive && media.adaptive.length) return null;
+
+      var qualities = [];
+      media.files.forEach(function(quality) {
+        qualities.push({
+          id: String(quality.height),
+          label: quality.height + 'p',
+          hd: quality.height >= 720
+        });
+      });
+      return qualities;
     };
 
     /**
