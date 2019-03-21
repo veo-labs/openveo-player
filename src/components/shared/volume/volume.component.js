@@ -11,6 +11,7 @@
  * component (volume controller).
  *
  * Attributes are:
+ * - [Boolean] **opl-no-sequential-focus** true to set volume tabindex to -1, false to set volume tabindex to 0
  * - [Function] **opl-on-focus** The function to call when component enters in focus state
  * - [Function] **opl-on-open** The function to call when volume controller is opened
  * - [Function] **opl-on-close** The function to call when volume controller is closed
@@ -29,6 +30,7 @@
  *
  *     <opl-volume
  *                 ng-model="volumeLevel"
+ *                 opl-no-sequential-focus="false"
  *                 opl-on-focus="handleOnFocus()"
  *                 opl-on-open="handleOnOpen()"
  *                 opl-on-close="handleOnClose()"
@@ -46,6 +48,7 @@
     controller: 'OplVolumeController',
     require: ['?ngModel'],
     bindings: {
+      oplNoSequentialFocus: '@?',
       oplOnFocus: '&',
       oplOnOpen: '&',
       oplOnClose: '&'

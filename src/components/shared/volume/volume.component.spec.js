@@ -111,6 +111,29 @@ describe('OplVolume', function() {
     );
   });
 
+  it('should be able to deactivate sequential focus', function() {
+    scope.value = 50;
+
+    var element = angular.element('<opl-volume ng-model="value" opl-no-sequential-focus="true"></opl-volume>');
+    element = $compile(element)(scope);
+    scope.$digest();
+    $timeout.flush();
+
+    var buttonElement = element.find('opl-toggle-icon-button');
+    var sliderElement = element.find('opl-slider');
+
+    assert.equal(
+      buttonElement.attr('opl-no-sequential-focus'),
+      'true',
+      'Unexpected sequential focus on the toggle button'
+    );
+    assert.equal(
+      sliderElement.attr('opl-no-sequential-focus'),
+      'true',
+      'Unexpected sequential focus on the slider'
+    );
+  });
+
   it('should not be able to set a volume bigger than 100', function() {
     scope.value = 150;
 

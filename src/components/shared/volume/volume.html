@@ -7,6 +7,7 @@
                           opl-on-label="{{'CONTROLS_VOLUME_UNMUTE_ARIA_LABEL' | oplTranslate}}"
                           opl-on-update="$ctrl.toggleSound(on)"
                           opl-on-focus="handleFocus()"
+                          opl-no-sequential-focus="{{$ctrl.oplNoSequentialFocus}}"
   ></opl-toggle-icon-button>
   <div>
     <opl-slider
@@ -16,6 +17,7 @@
                 opl-label="{{'CONTROLS_VOLUME_CURSOR_ARIA_LABEL' | oplTranslate}}"
                 opl-value-text="{{'CONTROLS_VOLUME_TEXT_ARIA_LABEL' | oplTranslate}}"
                 opl-on-focus="handleFocus()"
+                opl-no-sequential-focus="{{$ctrl.oplNoSequentialFocus}}"
     ></opl-slider>
   </div>
 </div>
