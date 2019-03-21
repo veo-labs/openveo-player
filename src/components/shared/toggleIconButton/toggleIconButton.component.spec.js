@@ -53,6 +53,20 @@ describe('OplToggleIconButton', function() {
     );
   });
 
+  it('should be able to deactivate sequential focus', function() {
+    var element = angular.element('<opl-toggle-icon-button ' +
+                                  ' opl-no-sequential-focus="true"' +
+                                  '></opl-toggle-icon-button>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    assert.equal(
+      angular.element(element[0].querySelector('button')).attr('tabindex'),
+      '-1',
+      'Wrong tabindex'
+    );
+  });
+
   it('should display "on" icon if state is "on"', function() {
     var expectedOnIconLigature = 'on_icon';
     var element = angular.element('<opl-toggle-icon-button ' +

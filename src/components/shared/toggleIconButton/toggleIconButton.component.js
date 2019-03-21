@@ -21,6 +21,7 @@
  *   font)
  * - [String] **opl-off-label** The ARIA label to apply to the button when state is "off". Empty by default.
  * - [String] **opl-on-label** The ARIA label to apply to the button when state is "on". Empty by default.
+ * - [Boolean] **opl-no-sequential-focus** true to set button tabindex to -1, false to set button tabindex to 0
  * - [Function] **opl-on-update** The function to call when actioned
  * - [Function] **opl-on-focus** The function to call when component enters in focus state
  *
@@ -35,6 +36,7 @@
  *                            opl-on-icon="pause"
  *                            opl-off-label="Off ARIA label"
  *                            opl-on-label="On ARIA label"
+ *                            opl-no-sequential-focus="false"
  *                            opl-on-update="handleOnUpdate(on)"
  *                            opl-on-focus="handleOnFocus()"
  *     ></opl-toggle-icon-button>
@@ -52,6 +54,7 @@
       oplOnIcon: '@?',
       oplOffLabel: '@?',
       oplOnLabel: '@?',
+      oplNoSequentialFocus: '@?',
       oplOnUpdate: '&',
       oplOnFocus: '&'
     }

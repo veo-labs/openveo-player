@@ -1,4 +1,4 @@
-<button class="opl-toggle-icon-button" tabindex="0" aria-pressed="{{on}}" aria-label="{{label}}">
+<button class="opl-toggle-icon-button" tabindex="{{($ctrl.oplNoSequentialFocus === 'true' ? '-1' : '0')}}" aria-pressed="{{on}}" aria-label="{{label}}">
   <i class="opl-icon opl-off" ng-show="!on" ng-bind="offIcon"></i>
   <i class="opl-icon opl-on" ng-show="on" ng-bind="onIcon"></i>
 </button>
