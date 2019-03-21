@@ -25,6 +25,7 @@
  * - [String] **opl-label** The ARIA label of the slider. Default to "Select a value".
  * - [String] **opl-value-text** The human readable text alternative of the slider value. Text will be processed by
  *   oplTranslate filter and supports parameter "%value%". Empty by default.
+ * - [Boolean] **opl-no-sequential-focus** true to set slider tabindex to -1, false to set slider tabindex to 0
  * - [Function] **opl-on-focus** The function to call when component enters in focus state
  * - [Function] **opl-on-over** The function to call when pointer enters the component
  * - [Function] **opl-on-out** The function to call when pointer leaves the component
@@ -56,6 +57,7 @@
  *               opl-step="10"
  *               opl-label="Select a value"
  *               opl-value-text="Slider value is: %value%"
+ *               opl-no-sequential-focus="false"
  *               opl-on-focus="handleOnFocus()"
  *               opl-on-over="handleOnOver()"
  *               opl-on-out="handleOnOut()"
@@ -74,6 +76,7 @@
       oplStep: '@?',
       oplLabel: '@?',
       oplValueText: '@?',
+      oplNoSequentialFocus: '@?',
       oplOnFocus: '&',
       oplOnOver: '&',
       oplOnOut: '&',

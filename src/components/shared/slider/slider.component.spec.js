@@ -96,6 +96,25 @@ describe('OplSlider', function() {
     );
   });
 
+  it('should be able to deactivate sequential focus', function() {
+    scope.value = 50;
+
+    var element = angular.element('<opl-slider ' +
+                                  'ng-model="value" ' +
+                                  'opl-no-sequential-focus="true"' +
+                                  '></opl-slider>');
+    $document[0].body.appendChild(element[0]);
+    element = $compile(element)(scope);
+    scope.$digest();
+    $timeout.flush(1000);
+
+    assert.equal(
+      angular.element(element[0].querySelector('.opl-slider')).attr('tabindex'),
+      '-1',
+      'Wrong tabindex'
+    );
+  });
+
   it('should set label to "Select a value" if not defined', function() {
     scope.value = 50;
 
