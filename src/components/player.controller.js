@@ -57,6 +57,7 @@
     $scope.fullViewportActivated = false;
     $scope.templateSelectorDisplayed = true;
     $scope.fullscreenIconDisplayed = true;
+    $scope.overlayPlayPauseSupported = false;
 
     /**
      * Tests if browser implements the fullscreen API or not.
@@ -612,6 +613,7 @@
       ctrl.time = 0;
       ctrl.duration = 0;
       $scope.lightVolume = 100;
+      $scope.overlayPlayPauseSupported = ctrl.player.isOverlayPlayPauseSupported();
 
       // Retrieve last stopped time
       if (positionRemembered) {

@@ -341,6 +341,16 @@
     };
 
     /**
+     * Indicates that the HTML player does not support overlay play / pause button.
+     *
+     * @method isOverlayPlayPauseSupported
+     * @return {Boolean} false
+     */
+    HtmlPlayer.prototype.isOverlayPlayPauseSupported = function() {
+      return false;
+    };
+
+    /**
      * Destroys the player.
      *
      * Remove all events listeners.

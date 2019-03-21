@@ -394,19 +394,13 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     }
 
     /*
-      Both, both-2 and 1 templates for small devices.
-    */
-    &.opl-template-split_50_50 .opl-area-2,
-    &.opl-template-split_25_75 .opl-area-2,
-    &.opl-template-split_1 .opl-area-2 {
-      display: none;
-    }
-
-    /*
       Mode 50 / 50 for small devices.
     */
     &.opl-template-split_50_50 {
       .opl-area-2 {
+        display: none;
+      }
+      .opl-overlay-play-button.opl-overlay-supported {
         display: none;
       }
     }
@@ -418,6 +412,9 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       .opl-area-2 {
         display: none;
       }
+      .opl-overlay-play-button.opl-overlay-supported {
+        display: none;
+      }
     }
 
     /*
@@ -427,6 +424,9 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
       .opl-area-2 {
         display: none;
       }
+      .opl-overlay-play-button.opl-overlay-supported {
+        display: none;
+      }
     }
 
     /*
@@ -434,6 +434,9 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
     */
     &.opl-template-split_2 {
       .opl-area-2 {
+        display: none;
+      }
+      .opl-overlay-play-button.opl-overlay-supported {
         display: none;
       }
     }
@@ -468,6 +471,12 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
           float: left;
           width: 50%;
         }
+
+        .opl-overlay-play-button.opl-overlay-supported {
+          display: block;
+          left: 50%;
+          width: 50%;
+        }
       }
 
       /*
@@ -485,6 +494,11 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         .opl-area-2 {
           width: 75%;
         }
+        .opl-overlay-play-button.opl-overlay-supported {
+          display: block;
+          left: 25%;
+          width: 75%;
+        }
       }
 
       /*
@@ -498,6 +512,9 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         .opl-area-2 {
           display: none;
         }
+        .opl-overlay-play-button.opl-overlay-supported {
+          display: none;
+        }
       }
 
       /*
@@ -509,6 +526,11 @@ $OPL_LIGHT_CONTROLS_SLIDER_COLOR: #6e6e6e;
         }
         .opl-area-2 {
           display: block;
+          width: 100%;
+        }
+        .opl-overlay-play-button.opl-overlay-supported {
+          display: block;
+          left: 0;
           width: 100%;
         }
       }

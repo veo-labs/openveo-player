@@ -2,7 +2,7 @@
   <div class="opl-player" ng-class="{'opl-no-poi': hidePoi}">
 
     <div class="opl-media-wrapper opl-template-{{$ctrl.selectedTemplate}}">
-      <div class="opl-overlay-play-button">
+      <div class="opl-overlay-play-button" ng-class="{'opl-overlay-supported': overlayPlayPauseSupported}">
         <opl-toggle-icon-button
                                 opl-on-update="$ctrl.playPause(on)"
         ></opl-toggle-icon-button>

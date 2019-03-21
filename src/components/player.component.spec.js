@@ -83,6 +83,9 @@ describe('OplPlayer', function() {
     Player.prototype.playPause = chai.spy(function() {
       this.element.triggerHandler('oplPlay');
     });
+    Player.prototype.isOverlayPlayPauseSupported = chai.spy(function() {
+      return false;
+    });
 
     HtmlPlayer = function(element) {
       Player.call(this, element);
@@ -331,6 +334,22 @@ describe('OplPlayer', function() {
         'Wrong label for media source ' + i
       );
     }
+  });
+
+  it('should add "opl-overlay-supported" class if player supports overlay controls', function() {
+    Player.prototype.isOverlayPlayPauseSupported = function() {
+      return true;
+    };
+
+    var element = angular.element('<opl-player ' +
+                                              'id="opl-player-test" ' +
+                                              'opl-data="data" ' +
+                                  '></opl-player>');
+    createComponent(element, 10000);
+
+    var overlayButtonElement = angular.element(element[0].querySelector('.opl-overlay-play-button'));
+
+    assert.ok(overlayButtonElement.hasClass('opl-overlay-supported'), 'Expected class "opl-overlay-supported"');
   });
 
   it('should be able to display a list of indexes', function() {

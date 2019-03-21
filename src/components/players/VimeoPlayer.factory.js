@@ -309,6 +309,16 @@
     };
 
     /**
+     * Indicates that the Vimeo player supports overlay play / pause button.
+     *
+     * @method isOverlayPlayPauseSupported
+     * @return {Boolean} true
+     */
+    VimeoPlayer.prototype.isOverlayPlayPauseSupported = function() {
+      return true;
+    };
+
+    /**
      * Destroys the player.
      *
      * Remove all events listeners.

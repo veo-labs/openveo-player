@@ -246,6 +246,16 @@
       throw new Error('setDefinition method not implemented for this player');
     };
 
+    /**
+     * Indicates if the player supports an overlay play / pause button.
+     *
+     * @method isOverlayPlayPauseSupported
+     * @return {Boolean} true if overlay play / pause button is supported, false otherwise
+     */
+    Player.prototype.isOverlayPlayPauseSupported = function() {
+      throw new Error('isOverlayPlayPauseSupported method not implemented for this player');
+    };
+
     return Player;
   }
 
