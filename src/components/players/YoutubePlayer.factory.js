@@ -116,7 +116,8 @@
             iv_load_policy: 3,
             showinfo: 0,
             controls: 0,
-            hl: this.media.language
+            hl: this.media.language,
+            enablejsapi: 1
           },
           events: {
             onReady: function() { // Youtube API is ready to be called
