@@ -107,6 +107,7 @@
                                 opl-off-label="{{'CONTROLS_PLAY_ARIA_LABEL' | oplTranslate}}"
                                 opl-on-label="{{'CONTROLS_PAUSE_ARIA_LABEL' | oplTranslate}}"
                                 opl-on-update="$ctrl.playPause(on)"
+                                opl-no-sequential-focus="true"
         ></opl-toggle-icon-button>
         <opl-volume
                     ng-model="$ctrl.volume"
@@ -114,6 +115,7 @@
                     ng-show="volumeIconDisplayed"
                     opl-on-open="handleLightVolumeToggle()"
                     opl-on-close="handleLightVolumeToggle()"
+                    opl-no-sequential-focus="true"
         ></opl-volume>
         <div
              class="opl-current-time"
@@ -127,6 +129,7 @@
                       ng-change="handleTimeBarUpdate($ctrl.seenPercent);"
                       opl-label="{{'CONTROLS_TIME_BAR_ARIA_LABEL' | oplTranslate}}"
                       opl-value-text="{{'CONTROLS_TIME_BAR_ARIA_VALUE_TEXT' | oplTranslate}}"
+                      opl-no-sequential-focus="true"
           ></opl-slider>
         </div>
       </div>
