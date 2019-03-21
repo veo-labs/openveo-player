@@ -58,6 +58,20 @@ describe('OplButton', function() {
     assert.equal(angular.element(buttonElement).attr('aria-label'), expectedLabel, 'Wrong label');
   });
 
+  it('should be able to deactivate sequential focus', function() {
+    var element = angular.element('<opl-button ' +
+                                  ' opl-no-sequential-focus="true"' +
+                                  '></opl-button>');
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    assert.equal(
+      angular.element(element[0].querySelector('button')).attr('tabindex'),
+      '-1',
+      'Wrong tabindex'
+    );
+  });
+
   it('should call oplOnUpdate function if clicked', function() {
     var element = angular.element('<opl-button opl-on-update="expectedOnUpdateFunction()"></opl-button>');
 
