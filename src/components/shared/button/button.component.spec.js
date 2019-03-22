@@ -5,6 +5,7 @@ window.assert = chai.assert;
 describe('OplButton', function() {
   var $compile;
   var $rootScope;
+  var oplEventsFactory;
   var scope;
   var originalRequestAnimationFrame;
   var bodyElement;
@@ -22,9 +23,10 @@ describe('OplButton', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$window_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$window_, _oplEventsFactory_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
+    oplEventsFactory = _oplEventsFactory_;
     bodyElement = angular.element(_$window_.document.body);
   }));
 
@@ -80,8 +82,8 @@ describe('OplButton', function() {
     scope.$digest();
 
     var buttonElement = element.find('button');
-    buttonElement.triggerHandler('mousedown');
-    bodyElement.triggerHandler('mouseup');
+    buttonElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    bodyElement.triggerHandler(oplEventsFactory.EVENTS.UP);
 
     scope.expectedOnUpdateFunction.should.have.been.called.exactly(1);
   });

@@ -14,10 +14,11 @@
    * @param {Object} $scope Component isolated scope
    * @param {Object} $q The AngularJS $q service
    * @param {Object} $window The AngularJS $window service
+   * @param {Object} oplEventsFactory Helper to manipulate the DOM events
    * @class OplButtonController
    * @constructor
    */
-  function OplButtonController($element, $timeout, $scope, $q, $window) {
+  function OplButtonController($element, $timeout, $scope, $q, $window, oplEventsFactory) {
     var ctrl = this;
     var buttonElement;
     var bodyElement;
@@ -141,7 +142,7 @@
       event.stopImmediatePropagation();
       event.preventDefault();
 
-      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
       requestAnimationFrame(function() {
         deactivationAnimationRequested = true;
         animateDeactivation();
@@ -169,7 +170,7 @@
       requestAnimationFrame(function() {
         animateActivation();
       });
-      bodyElement.on('mouseup pointerup touchend', handleUp);
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleUp);
     }
 
     /**
@@ -228,7 +229,7 @@
           buttonElement.on('keydown', handleKeyDown);
           buttonElement.on('focus', handleFocus);
           buttonElement.on('blur', handleBlur);
-          buttonElement.on('mousedown pointerdown touchstart', handleDown);
+          buttonElement.on(oplEventsFactory.EVENTS.DOWN, handleDown);
         }
       },
 
@@ -240,9 +241,9 @@
       $onDestroy: {
         value: function() {
           buttonElement.off(
-            'mousedown pointerdown touchstart keydown focus blur'
+            oplEventsFactory.EVENTS.DOWN + ' keydown focus blur'
           );
-          bodyElement.off('mouseup pointerup touchend', handleUp);
+          bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
           if (activationTimer) $timeout.cancel(activationTimer);
           if (deactivationTimer) $timeout.cancel(deactivationTimer);
         }
@@ -252,6 +253,6 @@
   }
 
   app.controller('OplButtonController', OplButtonController);
-  OplButtonController.$inject = ['$element', '$timeout', '$scope', '$q', '$window'];
+  OplButtonController.$inject = ['$element', '$timeout', '$scope', '$q', '$window', 'oplEventsFactory'];
 
 })(angular.module('ov.player'));

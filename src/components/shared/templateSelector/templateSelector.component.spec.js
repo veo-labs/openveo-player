@@ -7,6 +7,7 @@ describe('OplTemplateSelector', function() {
   var $rootScope;
   var $timeout;
   var $document;
+  var oplEventsFactory;
   var scope;
   var originalRequestAnimationFrame;
 
@@ -27,11 +28,12 @@ describe('OplTemplateSelector', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$document_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$document_, _oplEventsFactory_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $document = _$document_;
+    oplEventsFactory = _oplEventsFactory_;
   }));
 
   // Initializes tests
@@ -40,35 +42,34 @@ describe('OplTemplateSelector', function() {
   });
 
   /**
-   * Triggers a "mouseover" event on the template selector.
+   * Triggers a down event on the template selector.
    *
-   * It triggers a "mouseover" event and make sure posting animation is complete.
+   * It triggers the event and make sure posting animation is complete.
    *
    * @param {HTMLElement} element The opl-template-selector element
    */
-  function triggerMouseOver(element) {
-    var templateSelectorElement = angular.element(element[0].querySelector('.opl-template-selector'));
+  function triggerPointerDown(element) {
     var templateElements = element[0].querySelectorAll('button');
+    var selectedTemplate = element[0].querySelector('.opl-selected');
+    var templateSelectorElement = angular.element(element[0].querySelector('.opl-template-selector'));
 
-    templateSelectorElement.triggerHandler('mouseover');
+    templateSelectorElement.triggerHandler({type: oplEventsFactory.EVENTS.DOWN, target: selectedTemplate});
     templateElements.forEach(function(templateElement) {
       angular.element(templateElement).triggerHandler('transitionend');
     });
   }
 
   /**
-   * Triggers a "mouseout" event on the template selector.
+   * Waits 5 seconds until templates are closed.
    *
-   * It triggers a "mouseout" event and make sure masking animation is complete.
+   * It waits 5 seconds and make sure masking animation is complete.
    *
    * @param {HTMLElement} element The opl-template-selector element
    */
-  function triggerMouseOut(element) {
-    var templateSelectorElement = angular.element(element[0].querySelector('.opl-template-selector'));
+  function waitForClosedTemplates(element) {
     var templateElements = element[0].querySelectorAll('button');
 
-    templateSelectorElement.triggerHandler('mouseout');
-    $timeout.flush();
+    $timeout.flush(5000);
     templateElements.forEach(function(templateElement) {
       angular.element(templateElement).triggerHandler('transitionend');
     });
@@ -94,7 +95,7 @@ describe('OplTemplateSelector', function() {
   /**
    * Clicks on a template.
    *
-   * It fires a "mousedown" event followed by a "mouseup" event on the template element.
+   * It fires a down event followed by a up event on the template element.
    *
    * @param {HTMLElement} element The opl-template-selector element
    * @param {String} template The name of the template to click on
@@ -107,8 +108,8 @@ describe('OplTemplateSelector', function() {
     for (var i = 0; i < templateElements.length; i++) {
       var templateElement = angular.element(templateElements[i]);
       if (templateElement.attr('data-id') === template) {
-        templateSelectorElement.triggerHandler({type: 'mousedown', target: templateElement[0]});
-        bodyElement.triggerHandler({type: 'mouseup', target: templateElement[0]});
+        templateSelectorElement.triggerHandler({type: oplEventsFactory.EVENTS.DOWN, target: templateElement[0]});
+        bodyElement.triggerHandler({type: oplEventsFactory.EVENTS.UP, target: templateElement[0]});
       }
     }
   }
@@ -220,7 +221,7 @@ describe('OplTemplateSelector', function() {
     });
   });
 
-  it('should display all templates on pointer over and hide templates on pointer out', function() {
+  it('should display all templates on pointer down and hide templates after 5 seconds', function() {
     scope.template = 'split_1';
     var element = angular.element('<opl-template-selector ' +
                                   ' opl-template="{{template}}"' +
@@ -231,7 +232,7 @@ describe('OplTemplateSelector', function() {
 
     var templateElements = element[0].querySelectorAll('button');
 
-    triggerMouseOver(element);
+    triggerPointerDown(element);
 
     templateElements.forEach(function(templateElement) {
       templateElement = angular.element(templateElement);
@@ -242,7 +243,7 @@ describe('OplTemplateSelector', function() {
       );
     });
 
-    triggerMouseOut(element);
+    waitForClosedTemplates(element);
 
     templateElements.forEach(function(templateElement) {
       templateElement = angular.element(templateElement);
@@ -294,7 +295,7 @@ describe('OplTemplateSelector', function() {
     var templateSelectorElement = angular.element(element[0].querySelector('.opl-template-selector'));
     var templateElements = element[0].querySelectorAll('button');
 
-    triggerMouseOver(element);
+    triggerPointerDown(element);
 
     scope.template = expectedTemplate;
     scope.$digest();

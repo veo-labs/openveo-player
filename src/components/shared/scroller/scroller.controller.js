@@ -15,10 +15,11 @@
    * @param {Object} $timeout AngularJS $timeout service
    * @param {Object} $q AngularJS $q service
    * @param {Object} oplDomFactory Helper to manipulate the DOM
+   * @param {Object} oplEventsFactory Helper to manipulate DOM events
    * @class OplScrollerController
    * @constructor
    */
-  function OplScrollerController($window, $scope, $element, $timeout, $q, oplDomFactory) {
+  function OplScrollerController($window, $scope, $element, $timeout, $q, oplDomFactory, oplEventsFactory) {
     var ctrl = this;
     var thumbElement;
     var contentElement;
@@ -197,8 +198,8 @@
      * @return {Number} The position of the UI event relative to the page
      */
     function getUiEventPagePosition(event) {
-      var pagePositionProperty = (ctrl.oplOrientation === 'horizontal') ? 'pageX' : 'pageY';
-      return event[pagePositionProperty];
+      var coordinates = oplEventsFactory.getUiEventCoordinates(event);
+      return (ctrl.oplOrientation === 'horizontal') ? coordinates.x : coordinates.y;
     }
 
     /**
@@ -316,8 +317,8 @@
      */
     function handleThumbUp(event) {
       event.preventDefault();
-      bodyElement.off('mouseup pointerup', handleThumbUp);
-      bodyElement.off('mousemove pointermove', handleThumbMove);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleThumbUp);
+      bodyElement.off(oplEventsFactory.EVENTS.MOVE, handleThumbMove);
       thumbElement.removeClass('opl-thumb-active');
       thumbActivated = false;
       updateThumb();
@@ -343,8 +344,8 @@
       uiEventThumbPosition = getUiEventPositionOnThumb(event);
       updateThumb();
 
-      bodyElement.on('mouseup pointerup', handleThumbUp);
-      bodyElement.on('mousemove pointermove', handleThumbMove);
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleThumbUp);
+      bodyElement.on(oplEventsFactory.EVENTS.MOVE, handleThumbMove);
     }
 
     /**
@@ -445,13 +446,18 @@
       scrollbarElement.on('focus', handleFocus);
       scrollbarElement.on('blur', handleBlur);
 
-      scrollerElement.on('mouseover pointerover', handleContentOver);
-      scrollerElement.on('mouseout pointerout', handleContentOut);
+      if (oplEventsFactory.EVENTS.OVER) {
+        scrollerElement.on(oplEventsFactory.EVENTS.OVER, handleContentOver);
+        scrollerElement.on(oplEventsFactory.EVENTS.OUT, handleContentOut);
+      }
       scrollerElement.on('wheel', handleWheel);
 
-      thumbElement.on('mousedown pointerdown', handleThumbDown);
-      thumbElement.on('mouseover pointerover', handleThumbOver);
-      thumbElement.on('mouseout pointerout', handleThumbOut);
+      thumbElement.on(oplEventsFactory.EVENTS.DOWN, handleThumbDown);
+
+      if (oplEventsFactory.EVENTS.OVER) {
+        thumbElement.on(oplEventsFactory.EVENTS.OVER, handleThumbOver);
+        thumbElement.on(oplEventsFactory.EVENTS.OUT, handleThumbOut);
+      }
 
       angular.element($window).on('resize', handleResize);
     }
@@ -460,20 +466,18 @@
      * Removes event listeners set with setEventListeners.
      */
     function clearEventListeners() {
-      scrollbarElement.off('keydown', handleKeyDown);
-      scrollbarElement.off('focus', handleFocus);
-      scrollbarElement.off('blur', handleBlur);
+      scrollbarElement.off('keydown focus blur');
 
-      scrollerElement.off('mouseover pointerover', handleContentOver);
-      scrollerElement.off('mouseout pointerout', handleContentOut);
-      scrollerElement.off('wheel', handleWheel);
+      if (oplEventsFactory.EVENTS.OVER)
+        scrollerElement.off(oplEventsFactory.EVENTS.OVER + ' ' + oplEventsFactory.EVENTS.OUT);
 
-      thumbElement.off('mousedown pointerdown', handleThumbDown);
-      thumbElement.off('mouseover pointerover', handleThumbOver);
-      thumbElement.off('mouseout pointerout', handleThumbOut);
+      scrollerElement.off('wheel');
 
-      bodyElement.off('mouseup pointerup', handleThumbUp);
-      bodyElement.off('mousemove pointermove', handleThumbMove);
+      thumbElement.off(oplEventsFactory.EVENTS.DOWN);
+      if (oplEventsFactory.EVENTS.OVER)
+        thumbElement.off(oplEventsFactory.EVENTS.OVER + ' ' + oplEventsFactory.EVENTS.OUT);
+
+      bodyElement.off(oplEventsFactory.EVENTS.UP + ' ' + oplEventsFactory.EVENTS.MOVE);
 
       angular.element($window).off('resize', handleResize);
     }
@@ -557,6 +561,8 @@
           if (isTouchDevice()) {
             var overflowProperty = (ctrl.oplOrientation === 'horizontal') ? 'overflow-x' : 'overflow-y';
             contentWrapperElement.attr('style', overflowProperty + ': scroll;');
+            ready = true;
+            if (ctrl.oplOnReady) ctrl.oplOnReady();
           }
         }
       },
@@ -683,7 +689,8 @@
     '$element',
     '$timeout',
     '$q',
-    'oplDomFactory'
+    'oplDomFactory',
+    'oplEventsFactory'
   ];
 
 })(angular.module('ov.player'));

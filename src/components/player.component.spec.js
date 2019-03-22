@@ -12,6 +12,7 @@ describe('OplPlayer', function() {
   var $filter;
   var oplI18nService;
   var oplPlayerErrors;
+  var oplEventsFactory;
   var scope;
   var ctrl;
   var Player;
@@ -146,7 +147,7 @@ describe('OplPlayer', function() {
   beforeEach(
     inject(
       function(_$compile_, _$rootScope_, _$timeout_, _$document_, _$filter_, _$httpBackend_, _oplI18nService_,
-                _oplPlayerErrors_) {
+                _oplPlayerErrors_, _oplEventsFactory_) {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
         $timeout = _$timeout_;
@@ -155,6 +156,7 @@ describe('OplPlayer', function() {
         $httpBackend = _$httpBackend_;
         oplI18nService = _oplI18nService_;
         oplPlayerErrors = _oplPlayerErrors_;
+        oplEventsFactory = _oplEventsFactory_;
       }
     )
   );
@@ -1109,6 +1111,39 @@ describe('OplPlayer', function() {
     assert.notOk(
       angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
       'Expected controls to be displayed when pointer is moving over'
+    );
+  });
+
+  it('should display controls when clicking on media element', function() {
+    var element = angular.element('<opl-player ' +
+                                'id="opl-player-test" ' +
+                                'opl-data="data" ' +
+                    '></opl-player>');
+    createComponent(element, 10000);
+
+    var mediaWrapperElement = angular.element(element[0].querySelector('.opl-media-wrapper'));
+
+    assert.notOk(
+      angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
+      'Expected controls to be displayed by default'
+    );
+
+    mediaWrapperElement.triggerHandler('mouseout');
+    $timeout.flush();
+    scope.$digest();
+
+    assert.ok(
+      angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
+      'Expected controls to be hidden when pointer goes out'
+    );
+
+    mediaWrapperElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    $timeout.flush();
+    scope.$digest();
+
+    assert.notOk(
+      angular.element(element[0].querySelector('.opl-controls')).hasClass('opl-hidden'),
+      'Expected controls to be displayed when media element is clicked'
     );
   });
 

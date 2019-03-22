@@ -15,10 +15,11 @@
    * @param {Object} $timeout The AngularJS $timeout service
    * @param {Object} $q The AngularJS $q service
    * @param {Object} oplDomFactory Helper to manipulate the DOM
+   * @param {Object} oplEventsFactory Helper to manipulate the DOM events
    * @class OplSliderController
    * @constructor
    */
-  function OplSliderController($scope, $element, $window, $timeout, $q, oplDomFactory) {
+  function OplSliderController($scope, $element, $window, $timeout, $q, oplDomFactory, oplEventsFactory) {
     var ctrl = this;
     var ngModelCtrl = $element.controller('ngModel');
     var step = 0;
@@ -95,40 +96,13 @@
     }
 
     /**
-     * Gets the coordinates of an UIEvent.
-     *
-     * @param {UIEvent} event Either a MouseEvent, PointerEvent or TouchEvent
-     * @return {Object} The coordinates with a property "x" and a property "y"
-     */
-    function getUiEventCoordinates(event) {
-      var coordinates = {};
-
-      if (event.targetTouches && event.targetTouches.length > 0) {
-
-        // This is a TouchEvent with one or several touch targets
-        // Get coordinates of the first touch point relative to the document edges
-        coordinates.x = event.targetTouches[0].pageX;
-        coordinates.y = event.targetTouches[0].pageY;
-
-      } else {
-
-        // This is a MouseEvent or a PointerEvent
-        coordinates.x = event.pageX;
-        coordinates.y = event.pageY;
-
-      }
-
-      return coordinates;
-    }
-
-    /**
      * Gets the slider value corresponding to an UI event.
      *
      * @param {UIEvent} event Either a MouseEvent, PointerEvent or TouchEvent
      * @return {Number} The slider value corresponding to the pressure from 0 to 100
      */
     function getValueFromUiEvent(event) {
-      var coordinates = getUiEventCoordinates(event);
+      var coordinates = oplEventsFactory.getUiEventCoordinates(event);
 
       var eventSliderXPosition = coordinates.x - sliderElementBoundingRectangle.left;
       return Math.max(0, Math.min(100, eventSliderXPosition / sliderElementBoundingRectangle.width * 100));
@@ -229,8 +203,8 @@
      * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
      */
     function handleUp(event) {
-      bodyElement.off('mouseup pointerup touchend', handleUp);
-      bodyElement.off('mousemove touchmove pointermove', handleCursorMove);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.MOVE, handleCursorMove);
       sliderElement.removeClass('opl-slider-active');
     }
 
@@ -249,8 +223,8 @@
       sliderElement.addClass('opl-slider-active');
       sliderElement.addClass('opl-slider-in-transition');
 
-      bodyElement.on('mouseup pointerup touchend', handleUp);
-      bodyElement.on('mousemove touchmove pointermove', handleCursorMove);
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleUp);
+      bodyElement.on(oplEventsFactory.EVENTS.MOVE, handleCursorMove);
 
       setValue(getValueFromUiEvent(event));
     }
@@ -265,7 +239,7 @@
 
       event.preventDefault();
 
-      var coordinates = getUiEventCoordinates(event);
+      var coordinates = oplEventsFactory.getUiEventCoordinates(event);
       ctrl.oplOnMove({
         value: getValueFromUiEvent(event),
         coordinates: coordinates,
@@ -289,8 +263,8 @@
       ) {
         sliderElement.addClass('opl-over');
         if (ctrl.oplOnOver) ctrl.oplOnOver();
-        bodyElement.off('mousemove touchmove pointermove', handleMove);
-        bodyElement.on('mousemove touchmove pointermove', handleMove);
+        bodyElement.off(oplEventsFactory.EVENTS.MOVE, handleMove);
+        bodyElement.on(oplEventsFactory.EVENTS.MOVE, handleMove);
       }
     }
 
@@ -310,7 +284,7 @@
       ) {
         sliderElement.removeClass('opl-over');
         if (ctrl.oplOnOut) ctrl.oplOnOut();
-        bodyElement.off('mousemove touchmove pointermove', handleMove);
+        bodyElement.off(oplEventsFactory.EVENTS.MOVE, handleMove);
       }
     }
 
@@ -321,9 +295,12 @@
       sliderElement.on('keydown', handleKeyDown);
       sliderElement.on('focus', handleFocus);
       sliderElement.on('blur', handleBlur);
-      sliderElement.on('mousedown pointerdown touchstart', handleDown);
-      sliderElement.on('mouseover pointerover', handleOver);
-      sliderElement.on('mouseout pointerout', handleOut);
+      sliderElement.on(oplEventsFactory.EVENTS.DOWN, handleDown);
+
+      if (oplEventsFactory.EVENTS.OVER) {
+        sliderElement.on(oplEventsFactory.EVENTS.OVER, handleOver);
+        sliderElement.on(oplEventsFactory.EVENTS.OUT, handleOut);
+      }
 
       angular.element($window).on('resize', handleResize);
     }
@@ -332,15 +309,16 @@
      * Removes event listeners set with setEventListeners.
      */
     function clearEventListeners() {
-      sliderElement.off('keydown', handleKeyDown);
-      sliderElement.off('focus', handleFocus);
-      sliderElement.off('blur', handleBlur);
-      sliderElement.off('mousedown pointerdown touchstart', handleDown);
-      sliderElement.off('mouseout pointerout', handleOver);
-      sliderElement.off('mouseout pointerout', handleOut);
+      sliderElement.off('keydown focus blur ' + oplEventsFactory.EVENTS.DOWN);
 
-      bodyElement.off('mouseup pointerup touchend', handleUp);
-      bodyElement.off('mousemove touchmove pointermove', handleCursorMove);
+      if (oplEventsFactory.EVENTS.OVER)
+        sliderElement.off(oplEventsFactory.EVENTS.OVER + ' ' + oplEventsFactory.EVENTS.OUT);
+
+      thumbElement.off('transitionend');
+
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.MOVE, handleCursorMove);
+      bodyElement.off(oplEventsFactory.EVENTS.MOVE, handleMove);
 
       angular.element($window).off('resize', handleResize);
     }
@@ -482,7 +460,8 @@
     '$window',
     '$timeout',
     '$q',
-    'oplDomFactory'
+    'oplDomFactory',
+    'oplEventsFactory'
   ];
 
 })(angular.module('ov.player'));

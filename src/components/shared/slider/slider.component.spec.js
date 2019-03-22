@@ -8,6 +8,7 @@ describe('OplSlider', function() {
   var $timeout;
   var $filter;
   var $document;
+  var oplEventsFactory;
   var scope;
   var bodyElement;
   var originalRequestAnimationFrame;
@@ -29,12 +30,13 @@ describe('OplSlider', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$filter_, _$document_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$filter_, _$document_, _oplEventsFactory_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $filter = _$filter_;
     $document = _$document_;
+    oplEventsFactory = _oplEventsFactory_;
   }));
 
   // Initializes tests
@@ -360,7 +362,7 @@ describe('OplSlider', function() {
 
     var sliderElement = angular.element(element[0].querySelector('.opl-slider'));
 
-    sliderElement.triggerHandler('mousedown');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
     scope.$apply();
 
     assert.ok(sliderElement.hasClass('opl-slider-active'), 'Expected class "opl-slider-active"');
@@ -376,7 +378,7 @@ describe('OplSlider', function() {
 
     var sliderElement = angular.element(element[0].querySelector('.opl-slider'));
 
-    sliderElement.triggerHandler('mouseup');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.UP);
     scope.$apply();
 
     assert.notOk(sliderElement.hasClass('opl-slider-active'), 'Unexpected class "opl-slider-active"');
@@ -460,7 +462,7 @@ describe('OplSlider', function() {
 
     var sliderElement = angular.element(element[0].querySelector('.opl-slider'));
 
-    sliderElement.triggerHandler('mouseover');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
 
     scope.handleOnOver.should.have.been.called.exactly(1);
   });
@@ -479,8 +481,8 @@ describe('OplSlider', function() {
 
     var sliderElement = angular.element(element[0].querySelector('.opl-slider'));
 
-    sliderElement.triggerHandler('mouseover');
-    sliderElement.triggerHandler('mouseout');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
 
     scope.handleOnOut.should.have.been.called.exactly(1);
   });
@@ -517,13 +519,13 @@ describe('OplSlider', function() {
     expectedCoordinates.x = sliderElementBoundingRectangle.left + 100;
     expectedCoordinates.y = sliderElementBoundingRectangle.top + 20;
 
-    sliderElement.triggerHandler('mouseover');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
     bodyElement.triggerHandler({
-      type: 'mousemove',
+      type: oplEventsFactory.EVENTS.MOVE,
       pageX: expectedCoordinates.x,
       pageY: expectedCoordinates.y
     });
-    sliderElement.triggerHandler('mouseout');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
 
     scope.handleOnMove.should.have.been.called.exactly(1);
   });
@@ -549,13 +551,13 @@ describe('OplSlider', function() {
     expectedCoordinates.x = sliderElementBoundingRectangle.left + 100;
     expectedCoordinates.y = sliderElementBoundingRectangle.top + 20;
 
-    sliderElement.triggerHandler('mousedown');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
     bodyElement.triggerHandler({
-      type: 'mousemove',
+      type: oplEventsFactory.EVENTS.MOVE,
       pageX: expectedCoordinates.x,
       pageY: expectedCoordinates.y
     });
-    sliderElement.triggerHandler('mouseup');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.UP);
 
     assert.equal(
       scope.value,
@@ -576,11 +578,11 @@ describe('OplSlider', function() {
 
     var sliderElement = angular.element(element[0].querySelector('.opl-slider'));
 
-    sliderElement.triggerHandler('mouseover');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
 
     assert.ok(sliderElement.hasClass('opl-over'), 'Expected class "opl-over"');
 
-    sliderElement.triggerHandler('mouseout');
+    sliderElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
 
     assert.notOk(sliderElement.hasClass('opl-over'), 'Unexpected class "opl-over"');
   });

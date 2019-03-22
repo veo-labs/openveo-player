@@ -13,10 +13,11 @@
    * @param {Object} $element The HTML element holding the component
    * @param {Object} $timeout The AngularJS $timeout service
    * @param {Object} $q The AngularJS $q service
+   * @param {Object} oplEventsFactory Helper to manipulate the DOM events
    * @class OplVolumeController
    * @constructor
    */
-  function OplVolumeController($scope, $element, $timeout, $q) {
+  function OplVolumeController($scope, $element, $timeout, $q, oplEventsFactory) {
     var ctrl = this;
     var ngModelCtrl = $element.controller('ngModel');
     var volumeElement;
@@ -215,8 +216,10 @@
             sliderElement = angular.element($element[0].querySelector('.opl-slider'));
             buttonElement = angular.element($element[0].querySelector('.opl-toggle-icon-button'));
 
-            volumeElement.on('mouseover pointerover', handleOver);
-            volumeElement.on('mouseout pointerout', handleOut);
+            if (oplEventsFactory.EVENTS.OVER) {
+              volumeElement.on(oplEventsFactory.EVENTS.OVER, handleOver);
+              volumeElement.on(oplEventsFactory.EVENTS.OUT, handleOut);
+            }
             sliderElement.on('focus', handleFocus);
             sliderElement.on('blur', handleBlur);
             buttonElement.on('focus', handleFocus);
@@ -237,7 +240,8 @@
        */
       $onDestroy: {
         value: function() {
-          volumeElement.off('mouseover pointerover mouseout pointerout');
+          if (oplEventsFactory.EVENTS.OVER)
+            volumeElement.off(oplEventsFactory.EVENTS.OVER + ' ' + oplEventsFactory.EVENTS.OUT);
 
           if (sliderElement) sliderElement.off('focus blur');
           if (buttonElement) buttonElement.off('focus blur');
@@ -306,7 +310,8 @@
     '$scope',
     '$element',
     '$timeout',
-    '$q'
+    '$q',
+    'oplEventsFactory'
   ];
 
 })(angular.module('ov.player'));

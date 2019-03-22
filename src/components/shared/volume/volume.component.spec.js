@@ -8,6 +8,7 @@ describe('OplVolume', function() {
   var $timeout;
   var $document;
   var $filter;
+  var oplEventsFactory;
   var scope;
   var ctrl;
   var originalRequestAnimationFrame;
@@ -29,12 +30,13 @@ describe('OplVolume', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$filter_, _$document_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$filter_, _$document_, _oplEventsFactory_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $filter = _$filter_;
     $document = _$document_;
+    oplEventsFactory = _oplEventsFactory_;
   }));
 
   // Initializes tests
@@ -335,13 +337,13 @@ describe('OplVolume', function() {
     var volumeElement = angular.element(element[0].querySelector('.opl-volume'));
     var sliderWrapperElement = angular.element(element[0].querySelector('.opl-volume > div'));
 
-    volumeElement.triggerHandler('mouseover');
+    volumeElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
     angular.element(sliderWrapperElement).triggerHandler('transitionend');
     $timeout.flush();
 
     assert.ok(volumeElement.hasClass('opl-over'), 'Expected class "opl-over"');
 
-    volumeElement.triggerHandler('mouseout');
+    volumeElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
     angular.element(sliderWrapperElement).triggerHandler('transitionend');
 
     assert.notOk(volumeElement.hasClass('opl-over'), 'Unexpected class "opl-over"');
@@ -359,7 +361,7 @@ describe('OplVolume', function() {
     var volumeElement = angular.element(element[0].querySelector('.opl-volume'));
     var sliderWrapperElement = angular.element(element[0].querySelector('.opl-volume > div'));
 
-    volumeElement.triggerHandler('mouseover');
+    volumeElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
     angular.element(sliderWrapperElement).triggerHandler('transitionend');
     $timeout.flush();
 
@@ -378,11 +380,11 @@ describe('OplVolume', function() {
     var volumeElement = angular.element(element[0].querySelector('.opl-volume'));
     var sliderWrapperElement = angular.element(element[0].querySelector('.opl-volume > div'));
 
-    volumeElement.triggerHandler('mouseover');
+    volumeElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
     angular.element(sliderWrapperElement).triggerHandler('transitionend');
     $timeout.flush();
 
-    volumeElement.triggerHandler('mouseout');
+    volumeElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
     angular.element(sliderWrapperElement).triggerHandler('transitionend');
     $timeout.flush();
 

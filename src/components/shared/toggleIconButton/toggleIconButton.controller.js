@@ -14,10 +14,11 @@
    * @param {Object} $scope Component isolated scope
    * @param {Object} $q The AngularJS $q service
    * @param {Object} $window The AngularJS $window service
+   * @param {Object} oplEventsFactory To help manipulate DOM events
    * @class OplToggleIconButtonController
    * @constructor
    */
-  function OplToggleIconButtonController($element, $timeout, $scope, $q, $window) {
+  function OplToggleIconButtonController($element, $timeout, $scope, $q, $window, oplEventsFactory) {
     var ctrl = this;
     var bodyElement;
     var buttonElement;
@@ -138,7 +139,7 @@
      * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
      */
     function handleUp(event) {
-      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
 
       if (ctrl.oplOnIcon && ctrl.oplOffIcon) {
         requestAnimationFrame(function() {
@@ -146,6 +147,7 @@
           animateDeactivation();
         });
       }
+
       activated = false;
       callAction();
     }
@@ -167,7 +169,7 @@
           animateActivation();
         });
       }
-      bodyElement.on('mouseup pointerup touchend', handleUp);
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleUp);
     }
 
     /**
@@ -210,7 +212,7 @@
           buttonElement.on('keydown', handleKeyDown);
           buttonElement.on('focus', handleFocus);
           buttonElement.on('blur', handleBlur);
-          buttonElement.on('mousedown pointerdown touchstart', handleDown);
+          buttonElement.on(oplEventsFactory.EVENTS.DOWN, handleDown);
         }
       },
 
@@ -221,8 +223,8 @@
        */
       $onDestroy: {
         value: function() {
-          buttonElement.off('mousedown pointerdown touchstart keydown focus blur');
-          bodyElement.off('mouseup pointerup touchend', handleUp);
+          buttonElement.off('keydown focus blur ' + oplEventsFactory.EVENTS.DOWN);
+          bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
           if (activationTimer) $timeout.cancel(activationTimer);
           if (deactivationTimer) $timeout.cancel(deactivationTimer);
         }
@@ -276,6 +278,6 @@
   }
 
   app.controller('OplToggleIconButtonController', OplToggleIconButtonController);
-  OplToggleIconButtonController.$inject = ['$element', '$timeout', '$scope', '$q', '$window'];
+  OplToggleIconButtonController.$inject = ['$element', '$timeout', '$scope', '$q', '$window', 'oplEventsFactory'];
 
 })(angular.module('ov.player'));

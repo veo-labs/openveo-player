@@ -17,10 +17,11 @@
    * @param {Object} $q The AngularJS $q service
    * @param {Object} $window The AngularJS $window service
    * @param {Object} oplDomFactory Helper to manipulate the DOM
+   * @param {Object} oplEventsFactory Helper to manipulate the DOM events
    * @class OplTileController
    * @constructor
    */
-  function OplTileController($scope, $element, $timeout, $http, $sce, $q, $window, oplDomFactory) {
+  function OplTileController($scope, $element, $timeout, $http, $sce, $q, $window, oplDomFactory, oplEventsFactory) {
     var ctrl = this;
     var ready = false;
     var descriptionScrollerReady = false;
@@ -319,7 +320,7 @@
      * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
      */
     function handleUp(event) {
-      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
       requestAnimationFrame(function() {
         deactivationAnimationRequested = true;
         animateDeactivation();
@@ -343,7 +344,7 @@
       requestAnimationFrame(function() {
         animateActivation();
       });
-      bodyElement.on('mouseup pointerup touchend', handleUp);
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleUp);
     }
 
     /**
@@ -354,7 +355,7 @@
      * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
      */
     function handleAttachmentUp(event) {
-      bodyElement.off('mouseup pointerup touchend', handleAttachmentUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleAttachmentUp);
 
       requestAnimationFrame(function() {
         deactivationAttachmentAnimationRequested = true;
@@ -377,7 +378,7 @@
       requestAnimationFrame(function() {
         animateAttachmentActivation();
       });
-      bodyElement.on('mouseup pointerup touchend', handleAttachmentUp);
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleAttachmentUp);
     }
 
     /**
@@ -577,15 +578,19 @@
      */
     function setEventListeners() {
       if (ctrl.oplAbstract) {
-        abstractTitleElement.on('mouseover pointerover', handleOver);
-        abstractTitleElement.on('mouseout pointerout', handleOut);
-        abstractTimeIconElement.on('mouseover pointerover', handleOver);
-        abstractTimeIconElement.on('mouseout pointerout', handleOut);
-        abstractTimeElement.on('mouseover pointerover', handleOver);
-        abstractTimeElement.on('mouseout pointerout', handleOut);
-        tileElement.on('mousedown pointerdown touchstart', handleDown);
+
+        if (oplEventsFactory.EVENTS.OVER) {
+          abstractTitleElement.on(oplEventsFactory.EVENTS.OVER, handleOver);
+          abstractTitleElement.on(oplEventsFactory.EVENTS.OUT, handleOut);
+          abstractTimeIconElement.on(oplEventsFactory.EVENTS.OVER, handleOver);
+          abstractTimeIconElement.on(oplEventsFactory.EVENTS.OUT, handleOut);
+          abstractTimeElement.on(oplEventsFactory.EVENTS.OVER, handleOver);
+          abstractTimeElement.on(oplEventsFactory.EVENTS.OUT, handleOut);
+        }
+
+        tileElement.on(oplEventsFactory.EVENTS.DOWN, handleDown);
       } else if (fullAttachmentButtonElement) {
-        fullAttachmentButtonElement.on('mousedown pointerdown touchstart', handleAttachmentDown);
+        fullAttachmentButtonElement.on(oplEventsFactory.EVENTS.DOWN, handleAttachmentDown);
         fullAttachmentButtonElement.on('focus', handleAttachmentFocus);
         fullAttachmentButtonElement.on('blur', handleAttachmentBlur);
       }
@@ -598,23 +603,22 @@
      * Removes event listeners set with setEventListeners.
      */
     function clearEventListeners() {
-      tileElement.off('mousedown pointerdown touchstart focus blur keydown');
+      tileElement.off(oplEventsFactory.EVENTS.DOWN + ' focus blur keydown');
 
-      if (ctrl.oplAbstract) {
-        if (abstractTitleElement && abstractTimeIconElement && abstractTimeElement) {
-          abstractTitleElement.off('mouseover pointerover mouseout pointerout');
-          abstractTimeIconElement.off('mouseover pointerover mouseout pointerout');
-          abstractTimeElement.off('mouseover pointerover mouseout pointerout');
-        }
-        bodyElement.off('mouseup pointerup touchend', handleUp);
-      } else {
-        if (fullAttachmentButtonElement) {
-          fullAttachmentButtonElement.off(
-            'mousedown pointerdown touchstart focus blur'
-          );
-        }
-        bodyElement.off('mouseup pointerup touchend', handleAttachmentUp);
+      if (oplEventsFactory.EVENTS.OVER) {
+        if (abstractTitleElement)
+          abstractTitleElement.off(oplEventsFactory.EVENTS.OVER + ' ' + oplEventsFactory.EVENTS.OUT);
+
+        if (abstractTimeIconElement)
+          abstractTimeIconElement.off(oplEventsFactory.EVENTS.OVER + ' ' + oplEventsFactory.EVENTS.OUT);
+
+        if (abstractTimeElement)
+          abstractTimeElement.off(oplEventsFactory.EVENTS.OVER + ' ' + oplEventsFactory.EVENTS.OUT);
       }
+
+      if (fullAttachmentButtonElement) fullAttachmentButtonElement.off(oplEventsFactory.EVENTS.DOWN + ' focus blur');
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleAttachmentUp);
     }
 
     Object.defineProperties(ctrl, {
@@ -938,7 +942,8 @@
     '$sce',
     '$q',
     '$window',
-    'oplDomFactory'
+    'oplDomFactory',
+    'oplEventsFactory'
   ];
 
 })(angular.module('ov.player'));

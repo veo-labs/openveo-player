@@ -7,6 +7,7 @@ describe('OplScroller', function() {
   var $rootScope;
   var $timeout;
   var $document;
+  var oplEventsFactory;
   var scope;
   var element;
   var scrollerElement;
@@ -51,11 +52,12 @@ describe('OplScroller', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$document_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$document_, _oplEventsFactory_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $document = _$document_;
+    oplEventsFactory = _oplEventsFactory_;
   }));
 
   // Mock component style
@@ -162,11 +164,11 @@ describe('OplScroller', function() {
       });
 
       it('should set class "opl-scroller-over" to the scroller element when pointer is over', function() {
-        scrollerElement.triggerHandler('mouseover');
+        scrollerElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
 
         assert.ok(scrollerElement.hasClass('opl-scroller-over'), 'Expected class "opl-scroller-over"');
 
-        scrollerElement.triggerHandler('mouseout');
+        scrollerElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
 
         assert.notOk(scrollerElement.hasClass('opl-scroller-over'), 'Unexpected class "opl-scroller-over"');
       });
@@ -174,29 +176,29 @@ describe('OplScroller', function() {
       it('should set class "opl-thumb-over" to the cursor element and enlarge it when pointer is over', function() {
         var enlargeRegex = new RegExp(scrollbar.scaleProperty + '\\(1\\.[0-9]*\\)');
 
-        thumbElement.triggerHandler('mouseover');
+        thumbElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
 
         assert.ok(thumbElement.hasClass('opl-thumb-over'), 'Expected class "opl-thumb-over"');
         assert.match(thumbElement.attr('style'), enlargeRegex, 'Expected cursor to be enlarged');
 
-        thumbElement.triggerHandler('mouseout');
+        thumbElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
 
         assert.notMatch(thumbElement.attr('style'), enlargeRegex, 'Expected cursor to be normal');
         assert.notOk(thumbElement.hasClass('opl-thumb-over'), 'Unexpected class "opl-thumb-over"');
       });
 
       it('should set class "opl-thumb-active" to the cursor element when activated', function() {
-        thumbElement.triggerHandler('mousedown');
+        thumbElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
 
         assert.ok(thumbElement.hasClass('opl-thumb-active'), 'Expected class "opl-thumb-active"');
 
-        bodyElement.triggerHandler('mouseup');
+        bodyElement.triggerHandler(oplEventsFactory.EVENTS.UP);
 
         assert.notOk(thumbElement.hasClass('opl-thumb-active'), 'Unexpected class "opl-thumb-active"');
       });
 
       it('should call function defined in "opl-on-touch" attribute when used', function() {
-        thumbElement.triggerHandler('mousedown');
+        thumbElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
         scrollbarElement.triggerHandler({type: 'keydown', keyCode: scrollbar.forwardKey});
         scrollerElement.triggerHandler({type: 'wheel', deltaY: 42});
 
@@ -212,9 +214,9 @@ describe('OplScroller', function() {
         var variation = 100;
         var previousValue = scope.value;
 
-        var mouseDownEvent = {type: 'mousedown'};
-        var mouseMoveEvent = {type: 'mousemove'};
-        var mouseUpEvent = {type: 'mouseup'};
+        var mouseDownEvent = {type: oplEventsFactory.EVENTS.DOWN};
+        var mouseMoveEvent = {type: oplEventsFactory.EVENTS.MOVE};
+        var mouseUpEvent = {type: oplEventsFactory.EVENTS.UP};
         mouseDownEvent[scrollbar.pagePositionProperty] = thumbPagePosition;
         mouseMoveEvent[scrollbar.pagePositionProperty] = thumbPagePosition + variation;
         mouseUpEvent[scrollbar.pagePositionProperty] = thumbPagePosition + variation;
@@ -244,9 +246,9 @@ describe('OplScroller', function() {
         var positionOnThumb = thumbSize / 2;
         var previousValue = scope.value;
 
-        var mouseDownEvent = {type: 'mousedown'};
-        var mouseMoveEvent = {type: 'mousemove'};
-        var mouseUpEvent = {type: 'mouseup'};
+        var mouseDownEvent = {type: oplEventsFactory.EVENTS.DOWN};
+        var mouseMoveEvent = {type: oplEventsFactory.EVENTS.MOVE};
+        var mouseUpEvent = {type: oplEventsFactory.EVENTS.UP};
         mouseDownEvent[scrollbar.pagePositionProperty] = thumbPagePosition + positionOnThumb;
         mouseMoveEvent[scrollbar.pagePositionProperty] = thumbPagePosition + positionOnThumb + variation;
         mouseUpEvent[scrollbar.pagePositionProperty] = thumbPagePosition + positionOnThumb + variation;
@@ -474,9 +476,9 @@ describe('OplScroller', function() {
         scope.deactivated = true;
         scope.$digest();
 
-        var mouseDownEvent = {type: 'mousedown'};
-        var mouseMoveEvent = {type: 'mousemove'};
-        var mouseUpEvent = {type: 'mouseup'};
+        var mouseDownEvent = {type: oplEventsFactory.EVENTS.DOWN};
+        var mouseMoveEvent = {type: oplEventsFactory.EVENTS.MOVE};
+        var mouseUpEvent = {type: oplEventsFactory.EVENTS.UP};
         mouseMoveEvent[scrollbar.pagePositionProperty] = 100;
         mouseUpEvent[scrollbar.pagePositionProperty] = 100;
         thumbElement.triggerHandler(mouseDownEvent);

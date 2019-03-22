@@ -53,8 +53,7 @@
      * Removes event listeners set with setEventListeners.
      */
     function clearEventListeners() {
-      linkElement.off('focus', handleFocus);
-      linkElement.off('blur', handleBlur);
+      linkElement.off('focus blur');
     }
 
     Object.defineProperties(ctrl, {

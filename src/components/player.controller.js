@@ -20,11 +20,12 @@
    * @param {Function} OplPlayerService The PlayerService constructor to manage a media in a playing context
    * @param {Object} oplI18nService The service to manage languages
    * @param {Object} oplPlayerErrors The player errors
+   * @param {Object} oplEventsFactory Helper to manipulate the DOM events
    * @class OplPlayerController
    * @constructor
    */
   function OplPlayerController($injector, $document, $filter, $timeout, $cookies, $scope, $element, $q,
-                                OplPlayerService, oplI18nService, oplPlayerErrors) {
+                                OplPlayerService, oplI18nService, oplPlayerErrors, oplEventsFactory) {
     var ctrl = this;
     var document = $document[0];
     var rootElement = $element.children()[0];
@@ -917,7 +918,7 @@
      *
      * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
      */
-    function handlePlayerMove(event) {
+    function handlePlayerOn(event) {
       if (controlsHiddingTimer) {
         $timeout.cancel(controlsHiddingTimer);
       }
@@ -1242,9 +1243,14 @@
           lastTime = 0;
           fullscreenEnabled = false;
           $scope.previewDisplayed = false;
+          $scope.touchDevice = isTouchDevice();
 
+          // We can't rely on pointerup to close the controls because it appends each time the pen (for example) is
+          // released.
+          // We pointer is pressed the controls are displayed
+          // We pointer is pressed and moving on the media wrapper, the controls are displayed
+          mediaWrapperElement.on('mousemove ' + oplEventsFactory.EVENTS.DOWN, handlePlayerOn);
           mediaWrapperElement.on('mouseout', handlePlayerOut);
-          mediaWrapperElement.on('mousemove', handlePlayerMove);
 
           $element.on('oplReady', handlePlayerReady);
           $element.on('oplWaiting', handlePlayerWaiting);
@@ -1295,7 +1301,11 @@
         value: function() {
           if (ctrl.player) ctrl.player.destroy();
 
-          mediaWrapperElement.off('mouseout mousemove');
+          mediaWrapperElement.off(
+            oplEventsFactory.EVENTS.OUT + ' ' +
+            oplEventsFactory.EVENTS.MOVE + ' ' +
+            oplEventsFactory.EVENTS.DOWN
+          );
           $element.off(
             'oplReady oplWaiting oplPlaying oplDurationChange oplPlay oplPause oplLoadProgress oplPlayProgress ' +
             'oplEnd oplError'
@@ -1832,7 +1842,8 @@
     '$q',
     'oplPlayerService',
     'oplI18nService',
-    'oplPlayerErrors'
+    'oplPlayerErrors',
+    'oplEventsFactory'
   ];
 
 })(angular, angular.module('ov.player'));

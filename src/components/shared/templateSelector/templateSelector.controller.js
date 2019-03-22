@@ -22,15 +22,16 @@
    * @param {Object} $filter AngularJS $filter service
    * @param {Object} $q AngularJS $q service
    * @param {Object} $window AngularJS $window service
+   * @param {Object} oplEventsFactory Helper to manipulate the DOM events
    * @class OplTemplateSelectorController
    * @constructor
    */
-  function OplTemplateSelectorController($element, $scope, $timeout, $filter, $q, $window) {
+  function OplTemplateSelectorController($element, $scope, $timeout, $filter, $q, $window, oplEventsFactory) {
     var ctrl = this;
     var bodyElement;
     var templateSelectorElement;
     var templateElements;
-    var maskingRequested = false;
+    var templatesClosingTimer;
     var selectingAnimationRunning = false;
     var postingAnimationRunning = false;
     var maskingAnimationRunning = false;
@@ -113,15 +114,19 @@
         templateElement = angular.element(templateElement);
 
         if (angular.element(templateElement[0]).attr('data-id') === $scope.selectedTemplate) {
+          templateElement.addClass('opl-selected');
           templateElement.attr(
             'style',
-            'opacity: 1; transform: translateX(0px);'
+            'opacity: 1;' +
+            'transform: translateX(0px);'
           );
           setTemplateAsDisplayed(angular.element(templateElement).attr('data-id'));
         } else {
+          templateElement.removeClass('opl-selected');
           templateElement.attr(
             'style',
-            'opacity: 0; transform: translateX(0px);'
+            'opacity: 0;' +
+            'transform: translateX(0px);'
           );
           setTemplateAsHidden(angular.element(templateElement).attr('data-id'));
         }
@@ -360,6 +365,7 @@
         if (!templateElement) return;
         templateElement = angular.element(templateElement);
         if (templateElement.attr('data-id') === newTemplate) {
+          templateElement.addClass('opl-selected');
 
           // Selected template
           // Move template along the x-axis to its initial position and set full opacity
@@ -373,6 +379,7 @@
           );
 
         } else {
+          templateElement.removeClass('opl-selected');
 
           // Other templates
           // Move template along the y-axis and make it disappear
@@ -495,6 +502,36 @@
      */
     function callAction(template) {
       if (ctrl.oplOnUpdate && template !== $scope.selectedTemplate) ctrl.oplOnUpdate({template: template});
+    }
+
+    /**
+     * Hides the list of templates.
+     */
+    function closeTemplates() {
+      if (selectingAnimationRunning) return;
+      if (templatesClosingTimer) $timeout.cancel(templatesClosingTimer);
+
+      requestAnimationFrame(function() {
+        animateTemplatesMasking();
+      });
+    }
+
+    /**
+     * Displays the list of templates.
+     */
+    function openTemplates() {
+      if (selectingAnimationRunning) return;
+
+      requestAnimationFrame(function() {
+        animateTemplatesPosting().then(function() {
+
+          // Automatically close templates after 5 seconds
+          templatesClosingTimer = $timeout(function() {
+            closeTemplates();
+          }, 5000);
+
+        });
+      });
     }
 
     /**
@@ -622,48 +659,6 @@
     }
 
     /**
-     * Handles over event.
-     *
-     * Displays the list of templates.
-     *
-     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
-     */
-    function handleOver(event) {
-      if (selectingAnimationRunning) return;
-
-      maskingRequested = false;
-      requestAnimationFrame(function() {
-        animateTemplatesPosting();
-      });
-    }
-
-    /**
-     * Handles out event.
-     *
-     * Hides the list of templates.
-     *
-     * @param {Event} event The captured event which may defer depending on the device (mouse, touchpad, pen etc.)
-     */
-    function handleOut(event) {
-      if (selectingAnimationRunning) return;
-
-      // As template buttons are computed outside the templateSelector main HTML element (position absolute), an "over"
-      // and an "out" event will be dispatched each time the pointer leaves and enters a new template button.
-      // To avoid executing the animateTemplatesMasking function too many times, we wait for the next loop to be sure
-      // that no "over" event has been dispatched just after the "out" event.
-      // On the next loop, if maskingRequested is still set to "true" then the animateTemplatesMasking function is
-      // called.
-      maskingRequested = true;
-      $timeout(function() {
-        if (!maskingRequested) return;
-
-        requestAnimationFrame(function() {
-          animateTemplatesMasking();
-        });
-      });
-    }
-
-    /**
      * Handles release events.
      *
      * Deactivates template. After releasing, template is not longer active.
@@ -676,7 +671,7 @@
       // Find template element from event. The event can come from the template icon or the template itself.
       var templateElement = (!angular.element(event.target).attr('data-id')) ? event.target.parentNode : event.target;
 
-      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
 
       templateElements.forEach(function(templateElement) {
         requestAnimationFrame(function() {
@@ -702,9 +697,10 @@
       var templateElement = (!angular.element(event.target).attr('data-id')) ? event.target.parentNode : event.target;
 
       if (templateElement.activated) return;
+      if (!templateSelectorElement.hasClass('opl-posted')) openTemplates();
 
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleUp);
       templateElement.activated = true;
-      bodyElement.on('mouseup pointerup touchend', handleUp);
       requestAnimationFrame(function() {
         animateTemplateActivation(angular.element(templateElement).attr('data-id'));
       });
@@ -741,14 +737,10 @@
             angular.element(templateElements).on('blur', handleTemplateBlur);
           });
 
-          // Careful: handleOver and handleOut are called twice on some devices, one with a pointer event and one with
-          // a mouse event.
           templateSelectorElement.on('keydown', handleKeyDown);
           templateSelectorElement.on('focus', handleFocus);
           templateSelectorElement.on('blur', handleBlur);
-          templateSelectorElement.on('mouseover pointerover', handleOver);
-          templateSelectorElement.on('mouseout pointerout', handleOut);
-          templateSelectorElement.on('mousedown pointerdown touchstart', handleDown);
+          templateSelectorElement.on(oplEventsFactory.EVENTS.DOWN, handleDown);
         }
       },
 
@@ -760,10 +752,12 @@
       $onDestroy: {
         value: function() {
           templateSelectorElement.off(
-            'keydown focus blur mouseover pointerover mouseout pointerout mousedown pointerdown touchstart'
+            oplEventsFactory.EVENTS.DOWN + ' focus blur keydown'
           );
-          if (templateElements) angular.element(templateElements).off('focus blur');
-          bodyElement.off('mouseup pointerup touchend', handleUp);
+
+          if (templateElements) angular.element(templateElements).off('focus blur transitionend');
+
+          bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
         }
       },
 
@@ -789,10 +783,14 @@
               (newTemplateIndex === -1) ? templates[0].id : changedProperties.oplTemplate.currentValue;
 
             if (templateSelectorElement && templateSelectorElement.hasClass('opl-posted')) {
-              animateTemplateSelecting(oldTemplate, $scope.selectedTemplate).then(function() {
-                resetTemplateElementsPositions();
-                reorderTemplates();
-                focusTemplate($scope.selectedTemplate);
+              if (templatesClosingTimer) $timeout.cancel(templatesClosingTimer);
+
+              requestAnimationFrame(function() {
+                animateTemplateSelecting(oldTemplate, $scope.selectedTemplate).then(function() {
+                  resetTemplateElementsPositions();
+                  reorderTemplates();
+                  focusTemplate($scope.selectedTemplate);
+                });
               });
             } else {
 
@@ -809,6 +807,14 @@
   }
 
   app.controller('OplTemplateSelectorController', OplTemplateSelectorController);
-  OplTemplateSelectorController.$inject = ['$element', '$scope', '$timeout', '$filter', '$q', '$window'];
+  OplTemplateSelectorController.$inject = [
+    '$element',
+    '$scope',
+    '$timeout',
+    '$filter',
+    '$q',
+    '$window',
+    'oplEventsFactory'
+  ];
 
 })(angular.module('ov.player'));

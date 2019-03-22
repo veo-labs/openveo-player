@@ -15,10 +15,11 @@
    * @param {Object} $q The AngularJS $q service
    * @param {Object} $window The AngularJS $window service
    * @param {Object} oplDomFactory Helper to manipulate the DOM
+   * @param {Object} oplEventsFactory Helper to manipulate the DOM events
    * @class OplSettingsController
    * @constructor
    */
-  function OplSettingsController($scope, $element, $timeout, $q, $window, oplDomFactory) {
+  function OplSettingsController($scope, $element, $timeout, $q, $window, oplDomFactory, oplEventsFactory) {
     var ctrl = this;
     var bodyElement;
     var buttonElement;
@@ -300,7 +301,7 @@
       // Find item element from event. The event can come from one of item children or the item itself
       var itemElement = (!angular.element(event.target).attr('data-id')) ? event.target.parentNode : event.target;
 
-      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
 
       // Deactivate all items
       itemElements.forEach(function(itemElement) {
@@ -332,7 +333,7 @@
       if (itemElement.activated) return;
 
       itemElement.activated = true;
-      bodyElement.on('mouseup pointerup touchend', handleUp);
+      bodyElement.on(oplEventsFactory.EVENTS.UP, handleUp);
       requestAnimationFrame(function() {
         animateItemActivation(angular.element(itemElement).attr('data-id'));
       });
@@ -385,10 +386,10 @@
      */
     function setEventListeners() {
       angular.element(itemElements).on('keydown', handleKeyDown);
-      angular.element(itemElements).on('mousedown pointerdown touchstart', handleDown);
+      angular.element(itemElements).on(oplEventsFactory.EVENTS.DOWN, handleDown);
       angular.element(itemElements).on('focus', handleFocus);
       angular.element(itemElements).on('blur', handleBlur);
-      angular.element(bodyElement).on('mouseup pointerup touchend', handleBodyUp);
+      angular.element(bodyElement).on(oplEventsFactory.EVENTS.UP, handleBodyUp);
     }
 
     /**
@@ -397,11 +398,11 @@
     function clearEventListeners() {
       if (itemElements) {
         angular.element(itemElements).off(
-          'keydown mousedown pointerdown touchstart mouseup pointerup touchend focus blur'
+          oplEventsFactory.EVENTS.DOWN + ' keydown focus blur ' + oplEventsFactory.EVENTS.UP
         );
       }
-      bodyElement.off('mouseup pointerup touchend', handleBodyUp);
-      bodyElement.off('mouseup pointerup touchend', handleUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleBodyUp);
+      bodyElement.off(oplEventsFactory.EVENTS.UP, handleUp);
     }
 
     Object.defineProperties(ctrl, {
@@ -540,7 +541,8 @@
     '$timeout',
     '$q',
     '$window',
-    'oplDomFactory'
+    'oplDomFactory',
+    'oplEventsFactory'
   ];
 
 })(angular.module('ov.player'));

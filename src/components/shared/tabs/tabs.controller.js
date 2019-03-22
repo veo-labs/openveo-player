@@ -243,7 +243,7 @@
        */
       $onDestroy: {
         value: function() {
-          tabsListElement.off('keydown focus');
+          tabsListElement.off('keydown focus blur');
         }
       }
 

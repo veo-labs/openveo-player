@@ -62,6 +62,7 @@ opl-template-selector {
   vertical-align: top;
 
   button {
+    z-index: 1;
     position: absolute;
     top: 0;
     width: 32px;
@@ -76,6 +77,13 @@ opl-template-selector {
     color: var(--opl-template-selector-primary-color, $OPL_TEMPLATE_SELECTOR_PRIMARY_COLOR);
     @include box-sizing(border-box);
     @include user-select(none);
+
+    /*
+      Button is selected state.
+    */
+    &.opl-selected {
+      z-index: 2;
+    }
 
     /*
       Focus ring and ripple resting state sizes are the same as the button.

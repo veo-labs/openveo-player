@@ -8,6 +8,7 @@ describe('OplSettings', function() {
   var $timeout;
   var $filter;
   var $document;
+  var oplEventsFactory;
   var bodyElement;
   var scope;
   var originalRequestAnimationFrame;
@@ -29,11 +30,12 @@ describe('OplSettings', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$filter_, _$document_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$filter_, _$document_, _oplEventsFactory_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $filter = _$filter_;
+    oplEventsFactory = _oplEventsFactory_;
     $document = _$document_;
   }));
 
@@ -421,8 +423,8 @@ describe('OplSettings', function() {
 
     var qualityElements = element.find('ul')[0].querySelectorAll('li');
 
-    angular.element(qualityElements[1]).triggerHandler('mousedown');
-    bodyElement.triggerHandler({type: 'mouseup', target: qualityElements[1]});
+    angular.element(qualityElements[1]).triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    bodyElement.triggerHandler({type: oplEventsFactory.EVENTS.UP, target: qualityElements[1]});
     scope.$apply();
 
     scope.handleOnUpdate.should.have.been.called.exactly(1);
@@ -514,8 +516,8 @@ describe('OplSettings', function() {
     ctrl.toggleSettings();
     $timeout.flush();
 
-    angular.element(sourceElements[1]).triggerHandler('mousedown');
-    bodyElement.triggerHandler({type: 'mouseup', target: sourceElements[1]});
+    angular.element(sourceElements[1]).triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    bodyElement.triggerHandler({type: oplEventsFactory.EVENTS.UP, target: sourceElements[1]});
     scope.$apply();
 
     scope.handleOnUpdate.should.have.been.called.exactly(1);
@@ -828,7 +830,7 @@ describe('OplSettings', function() {
     ctrl.toggleSettings();
     $timeout.flush();
 
-    bodyElement.triggerHandler('mouseup');
+    bodyElement.triggerHandler(oplEventsFactory.EVENTS.UP);
 
     assert.notOk(
       angular.element(element[0].querySelector('.opl-settings')).hasClass('opl-posted'),

@@ -20,7 +20,7 @@
       <div class="opl-controls" ng-class="{'opl-hidden': !$ctrl.controlsDisplayed}">
         <div>
           <div class="opl-time-bar">
-            <div class="opl-index-preview" ng-show="previewDisplayed">
+            <div class="opl-index-preview" ng-show="previewDisplayed && !touchDevice">
               <opl-preview
                            opl-time="previewTime"
                            opl-image="previewImage"
@@ -79,7 +79,7 @@
             ></opl-settings>
             <opl-toggle-icon-button
                                     ng-show="fullscreenIconDisplayed"
-                                    opl-on="{{$ctrl.fullscreen}}"
+                                    opl-on="{{$ctrl.fullscreenEnabled}}"
                                     opl-off-icon="fullscreen"
                                     opl-on-icon="fullscreen_exit"
                                     opl-off-label="{{'CONTROLS_FULLSCREEN_ARIA_LABEL' | oplTranslate}}"

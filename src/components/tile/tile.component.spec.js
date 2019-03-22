@@ -9,6 +9,7 @@ describe('OplTile', function() {
   var $document;
   var $filter;
   var $httpBackend;
+  var oplEventsFactory;
   var scope;
   var element;
   var bodyElement;
@@ -28,14 +29,19 @@ describe('OplTile', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$document_, _$filter_, _$httpBackend_) {
-    $rootScope = _$rootScope_;
-    $compile = _$compile_;
-    $timeout = _$timeout_;
-    $document = _$document_;
-    $filter = _$filter_;
-    $httpBackend = _$httpBackend_;
-  }));
+  beforeEach(
+    inject(
+      function(_$compile_, _$rootScope_, _$timeout_, _$document_, _$filter_, _$httpBackend_, _oplEventsFactory_) {
+        $rootScope = _$rootScope_;
+        $compile = _$compile_;
+        $timeout = _$timeout_;
+        $document = _$document_;
+        $filter = _$filter_;
+        $httpBackend = _$httpBackend_;
+        oplEventsFactory = _oplEventsFactory_;
+      }
+    )
+  );
 
   // Mock component style
   beforeEach(function() {
@@ -310,19 +316,19 @@ describe('OplTile', function() {
       var timeIconElement = angular.element(element[0].querySelector('.opl-access-time-icon'));
       var timeElement = angular.element(element[0].querySelector('.opl-access-time'));
 
-      titleElement.triggerHandler('mouseover');
+      titleElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
       assert.ok(tileElement.hasClass('opl-over'), 'Expected class "opl-over"');
-      titleElement.triggerHandler('mouseout');
+      titleElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
       assert.notOk(tileElement.hasClass('opl-over'), 'Unexpected class "opl-over"');
 
-      timeIconElement.triggerHandler('mouseover');
+      timeIconElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
       assert.ok(tileElement.hasClass('opl-over'), 'Expected class "opl-over"');
-      timeIconElement.triggerHandler('mouseout');
+      timeIconElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
       assert.notOk(tileElement.hasClass('opl-over'), 'Unexpected class "opl-over"');
 
-      timeElement.triggerHandler('mouseover');
+      timeElement.triggerHandler(oplEventsFactory.EVENTS.OVER);
       assert.ok(tileElement.hasClass('opl-over'), 'Expected class "opl-over"');
-      timeElement.triggerHandler('mouseout');
+      timeElement.triggerHandler(oplEventsFactory.EVENTS.OUT);
       assert.notOk(tileElement.hasClass('opl-over'), 'Unexpected class "opl-over"');
     });
 
@@ -885,8 +891,8 @@ describe('OplTile', function() {
 
     var tileElement = angular.element(element[0].querySelector('.opl-tile'));
 
-    tileElement.triggerHandler('mousedown');
-    bodyElement.triggerHandler('mouseup');
+    tileElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    bodyElement.triggerHandler(oplEventsFactory.EVENTS.UP);
 
     scope.handleOnSelect.should.have.been.called.exactly(1);
   });

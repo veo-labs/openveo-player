@@ -6,6 +6,7 @@ describe('OplToggleIconButton', function() {
   var $compile;
   var $rootScope;
   var $document;
+  var oplEventsFactory;
   var scope;
   var bodyElement;
 
@@ -16,10 +17,11 @@ describe('OplToggleIconButton', function() {
   });
 
   // Dependencies injections
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$document_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$document_, _oplEventsFactory_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $document = _$document_;
+    oplEventsFactory = _oplEventsFactory_;
   }));
 
   // Initializes tests
@@ -184,8 +186,8 @@ describe('OplToggleIconButton', function() {
     scope.$digest();
 
     var buttonElement = element.find('button');
-    buttonElement.triggerHandler('mousedown');
-    bodyElement.triggerHandler('mouseup');
+    buttonElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    bodyElement.triggerHandler(oplEventsFactory.EVENTS.UP);
 
     scope.expectedOnUpdateFunction.should.have.been.called.exactly(1);
   });
@@ -216,8 +218,8 @@ describe('OplToggleIconButton', function() {
     var offElement = element[0].querySelector('.opl-off');
 
     // Switch state to "on"
-    buttonElement.triggerHandler('mousedown');
-    bodyElement.triggerHandler('mouseup');
+    buttonElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    bodyElement.triggerHandler(oplEventsFactory.EVENTS.UP);
     scope.$digest();
 
     assert.notOk(
@@ -232,8 +234,8 @@ describe('OplToggleIconButton', function() {
     assert.equal(buttonElement.attr('aria-label'), scope.expectedOnLabel, 'Expected "on" label');
 
     // Switch state to "off"
-    buttonElement.triggerHandler('mousedown');
-    bodyElement.triggerHandler('mouseup');
+    buttonElement.triggerHandler(oplEventsFactory.EVENTS.DOWN);
+    bodyElement.triggerHandler(oplEventsFactory.EVENTS.UP);
     scope.$digest();
 
     assert.notOk(
