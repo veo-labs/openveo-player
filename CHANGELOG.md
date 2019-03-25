@@ -1,4 +1,4 @@
-# 5.0.0 / YYYY-MM-DD
+# 5.0.0 / 2019-03-25
 
 ## BREAKING CHANGES
 
@@ -51,6 +51,7 @@
 - **angular-cookies** has been upgraded from 1.4.1 to **1.5.11"**
 - **angular-mocks** has been upgraded from 1.4.1 to **1.5.11"**
 - **angular-route** has been upgraded from 1.4.1 to **1.5.11"**
+- **@openveo/api** has been upgraded from 5.1.0 to **6.2.0"**
 
 # 4.0.0 / 2018-05-04
 
