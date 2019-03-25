@@ -254,7 +254,8 @@
       if (!tileElements || !tileElements.length) return;
 
       tileElements.forEach(function(tileElement) {
-        angular.element(tileElement).controller('oplTile').reset();
+        var tileController = angular.element(tileElement).controller('oplTile');
+        if (tileController) tileController.reset();
       });
     }
 
@@ -310,7 +311,8 @@
       if (!tiles) return;
 
       tiles.forEach(function(tileElement) {
-        angular.element(tileElement).controller('oplTile').preload();
+        var tileController = angular.element(tileElement).controller('oplTile');
+        if (tileController) angular.element(tileElement).controller('oplTile').preload();
       });
     }
 
@@ -401,7 +403,7 @@
 
       for (var i = 0; i < tileElements.length; i++) {
         var tileController = angular.element(tileElements[i]).controller('oplTile');
-        if (tileController.oplData.time > time) break;
+        if (tileController && tileController.oplData.time > time) break;
         index = i;
       }
 
