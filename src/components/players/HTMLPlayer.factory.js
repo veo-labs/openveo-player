@@ -297,9 +297,10 @@
      * @method playPause
      */
     HtmlPlayer.prototype.playPause = function() {
-      if (this.player.paused() || this.player.ended())
-        this.player.play();
-      else
+      if (this.player.paused() || this.player.ended()) {
+        var playPromise = this.player.play();
+        if (playPromise !== undefined) playPromise.then(function() {}).catch(function() {});
+      } else
         this.player.pause();
     };
 
