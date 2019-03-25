@@ -345,7 +345,7 @@ describe('OplPlayer', function() {
       assert.equal(ctrl.mediaSources[i].id, scope.data.mediaId[i], 'Wrong id for media source ' + i);
       assert.equal(
         ctrl.mediaSources[i].label,
-        $filter('oplTranslate')('CONTROLS_SETTINGS_SOURCE_LABEL', {'%source%': i}),
+        $filter('oplTranslate')('CONTROLS_SETTINGS_SOURCE_LABEL', {'%source%': i + 1}),
         'Wrong label for media source ' + i
       );
     }

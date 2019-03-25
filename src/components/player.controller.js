@@ -538,7 +538,7 @@
       for (var i = 0; i < sources.length; i++) {
         preparedSources.push({
           id: sources[i],
-          label: $filter('oplTranslate')('CONTROLS_SETTINGS_SOURCE_LABEL', {'%source%': i})
+          label: $filter('oplTranslate')('CONTROLS_SETTINGS_SOURCE_LABEL', {'%source%': i + 1})
         });
       }
 
