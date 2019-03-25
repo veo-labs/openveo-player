@@ -398,6 +398,8 @@
        */
       reset: {
         value: function() {
+          if (inTransition) return $q.when();
+
           var deferred = $q.defer();
           clearEventListeners();
           setEventListeners();
