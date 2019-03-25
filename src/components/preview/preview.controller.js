@@ -90,10 +90,11 @@
       $onChanges: {
         value: function(changedProperties) {
           if (changedProperties.oplImage && changedProperties.oplImage.currentValue) {
+            ctrl.error = false;
+
             if (preloadedImageUrls.indexOf(ctrl.oplImage.url || ctrl.oplImage) === -1) {
               ctrl.preloaded = false;
               ctrl.preloading = false;
-              ctrl.error = false;
               preloadImage(ctrl.oplImage.url || ctrl.oplImage);
             }
 
