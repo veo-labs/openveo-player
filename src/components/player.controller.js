@@ -499,7 +499,8 @@
       // Icon to change player definition
       // If no definitions available, the icon is not displayed
       var mediaDefinitions = (ctrl.player && ctrl.player.getAvailableDefinitions()) || null;
-      $scope.settingsIconDisplayed = mediaDefinitions ? $scope.settingsIconDisplayed : false;
+      $scope.settingsIconDisplayed =
+        mediaDefinitions || (ctrl.mediaSources && ctrl.mediaSources.length > 1) ? $scope.settingsIconDisplayed : false;
 
       // Media volume can't be changed on touch devices
       // Hide volume icon
