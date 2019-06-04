@@ -1,3 +1,9 @@
+# 5.0.1 / YYYY-MM-DD
+
+## BUG FIXES
+
+- Fix "opl-cuts" attribute which wasn't working the first time it was set but was working when changed
+
 # 5.0.0 / 2019-03-25
 
 ## BREAKING CHANGES

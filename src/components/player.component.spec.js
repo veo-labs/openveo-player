@@ -405,7 +405,7 @@ describe('OplPlayer', function() {
                                               'id="opl-player-test" ' +
                                               'opl-data="data" ' +
                                   '></opl-player>');
-    createComponent(element, 10000);
+    createComponent(element, 100000);
 
     var playerElement = angular.element(element[0].querySelector('.opl-player'));
     var tabsElement = angular.element(element[0].querySelector('opl-tabs'));
@@ -434,7 +434,6 @@ describe('OplPlayer', function() {
     for (i = 0; i < scope.data.timecodes.length; i++) {
       var originalIndex = scope.data.timecodes[i];
       index = ctrl.timecodes[i];
-
       assert.equal(index.id, i, 'Wrong id for index ' + i);
       assert.equal(index.type, 'image', 'Wrong type for index ' + i);
       assert.isUndefined(index.title, 'Unexpected title for index ' + i);
@@ -484,7 +483,7 @@ describe('OplPlayer', function() {
                                               'id="opl-player-test" ' +
                                               'opl-data="data" ' +
                                   '></opl-player>');
-    createComponent(element, 10000);
+    createComponent(element, 100000);
 
     var playerElement = angular.element(element[0].querySelector('.opl-player'));
     var tabsElement = angular.element(element[0].querySelector('opl-tabs'));
@@ -548,7 +547,7 @@ describe('OplPlayer', function() {
                                               'id="opl-player-test" ' +
                                               'opl-data="data" ' +
                                   '></opl-player>');
-    createComponent(element, 10000);
+    createComponent(element, 100000);
 
     var playerElement = angular.element(element[0].querySelector('.opl-player'));
     var tabsElement = angular.element(element[0].querySelector('opl-tabs'));

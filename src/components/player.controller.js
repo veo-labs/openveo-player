@@ -31,6 +31,7 @@
     var rootElement = $element.children()[0];
     var autoPlayActivated = false;
     var positionRemembered = false;
+    var cutEnabled = true;
     var mediaData = null;
     var controlsHiddingTimer;
     var mediaWrapperElement;
@@ -558,6 +559,7 @@
       mediaData = angular.copy(ctrl.oplData) || {};
       prepareData(mediaData);
       playerService.setMedia(mediaData);
+      playerService.setCutsStatus(cutEnabled);
 
       if (!ctrl.player) {
 
@@ -1424,6 +1426,33 @@
             autoPlayActivated = isAttributeTrue('oplAutoPlay', false);
           }
 
+          // oplChapters / oplIndexes / oplTags
+          if ((changedProperties.oplChapters && changedProperties.oplChapters.currentValue) ||
+              (changedProperties.oplIndexes && changedProperties.oplIndexes.currentValue) ||
+              (changedProperties.oplTags && changedProperties.oplTags.currentValue)) {
+            initPointsOfInterest();
+          }
+
+          // oplTemplate
+          if (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue) {
+            ctrl.selectTemplate(changedProperties.oplTemplate.currentValue);
+          }
+
+          // oplCuts
+          if (changedProperties.oplCuts && changedProperties.oplCuts.currentValue) {
+            cutEnabled = isAttributeTrue('oplCuts', true);
+
+            if (ctrl.duration && (!changedProperties.oplData || !changedProperties.oplData.currentValue)) {
+              reset();
+              ctrl.duration = playerService.getDuration();
+              initPointsOfInterest();
+              ctrl.selectTemplate(ctrl.oplTemplate);
+              updateIcons();
+              $element.triggerHandler('durationChange', ctrl.duration);
+              ctrl.setTime(0);
+            }
+          }
+
           // oplData
           if (changedProperties.oplData && changedProperties.oplData.currentValue) {
             var oplData = changedProperties.oplData;
@@ -1437,49 +1466,6 @@
               updateIcons();
               $element.triggerHandler('durationChange', ctrl.duration);
             }
-          } else if (changedProperties.oplCuts && changedProperties.oplCuts.currentValue) {
-
-            // oplCuts
-
-            if (!playerService) return;
-            var cutEnabled = isAttributeTrue('oplCuts', true);
-            playerService.setCutsStatus(cutEnabled);
-
-            if (ctrl.duration) {
-              reset();
-              playerService.setCutsStatus(cutEnabled);
-              ctrl.duration = playerService.getDuration();
-              initPointsOfInterest();
-              ctrl.selectTemplate(ctrl.oplTemplate);
-              updateIcons();
-              $element.triggerHandler('durationChange', ctrl.duration);
-              ctrl.setTime(0);
-            }
-          } else if ((changedProperties.oplChapters && changedProperties.oplChapters.currentValue) ||
-                    (changedProperties.oplIndexes && changedProperties.oplIndexes.currentValue) ||
-                    (changedProperties.oplTags && changedProperties.oplTags.currentValue) ||
-                    (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue)) {
-
-            // oplChapters
-            if (changedProperties.oplChapters && changedProperties.oplChapters.currentValue) {
-              initPointsOfInterest();
-            }
-
-            // oplIndexes
-            if (changedProperties.oplIndexes && changedProperties.oplIndexes.currentValue) {
-              initPointsOfInterest();
-            }
-
-            // oplTags
-            if (changedProperties.oplTags && changedProperties.oplTags.currentValue) {
-              initPointsOfInterest();
-            }
-
-            // oplTemplate
-            if (changedProperties.oplTemplate && changedProperties.oplTemplate.currentValue) {
-              ctrl.selectTemplate(changedProperties.oplTemplate.currentValue);
-            }
-
           }
         }
       },
