@@ -59,6 +59,7 @@
         var onTransitionEnd = function onTransitionEnd() {
           sliderElement.removeClass('opl-slider-in-transition');
           thumbElement.off('transitionend');
+          inTransition = false;
         };
         thumbElement.on('transitionend', onTransitionEnd);
       }

@@ -3,6 +3,7 @@
 ## BUG FIXES
 
 - Fix "opl-cuts" attribute which wasn't working the first time it was set but was working when changed
+- Fix slider cursor position when slider's size changes
 
 # 5.0.0 / 2019-03-25
 
