@@ -64,7 +64,7 @@ describe('OplScroller', function() {
   beforeEach(function() {
     var style = 'body {width: ' + containerWidth + 'px; height: ' + containerHeight + 'px;}' +
       'opl-scroller,.opl-scroller {position: relative;width: 100%; height: 100%;}' +
-      '.opl-thumb {position: absolute;}' +
+      '.opl-thumb {position: absolute; top: 0; left: 0;}' +
       '.opl-scroller-content {overflow: hidden; width: 100%; height: 100%;}';
 
     var styleElement = $document[0].createElement('style');
@@ -310,6 +310,7 @@ describe('OplScroller', function() {
         initialValue += scope.step;
         thumbElementPosition = thumbElement[0].getBoundingClientRect()[scrollbar.directionProperty];
         contentWrapperElementPosition = contentWrapperElement[0].getBoundingClientRect()[scrollbar.directionProperty];
+
         assert.equal(scope.value, initialValue, 'Wrong value after forward');
         assert.equal(
           thumbElementPosition - contentWrapperElementPosition,
