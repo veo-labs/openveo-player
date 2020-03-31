@@ -24,8 +24,20 @@
    * @class OplPlayerController
    * @constructor
    */
-  function OplPlayerController($injector, $document, $filter, $timeout, $cookies, $scope, $element, $q,
-                                OplPlayerService, oplI18nService, oplPlayerErrors, oplEventsFactory) {
+  function OplPlayerController(
+    $injector,
+    $document,
+    $filter,
+    $timeout,
+    $cookies,
+    $scope,
+    $element,
+    $q,
+    OplPlayerService,
+    oplI18nService,
+    oplPlayerErrors,
+    oplEventsFactory
+  ) {
     var ctrl = this;
     var document = $document[0];
     var rootElement = $element.children()[0];
@@ -406,10 +418,11 @@
       if (pointsOfInterest) {
         for (var i = 0; i < pointsOfInterest.length; i++) {
           var pointOfInterest = pointsOfInterest[i];
-          var value = pointOfInterest.hasOwnProperty('timecode') ? pointOfInterest.timecode : pointOfInterest.value;
+          var value = pointOfInterest.value;
+          if (Object.prototype.hasOwnProperty.call(pointOfInterest, 'timecode')) value = pointOfInterest.timecode;
           var preparedPointOfInterest = {
             id: i,
-            type: pointOfInterest.hasOwnProperty('image') ? 'image' : 'text',
+            type: Object.prototype.hasOwnProperty.call(pointOfInterest, 'image') ? 'image' : 'text',
             title: pointOfInterest.name,
             time: value,
             description: pointOfInterest.description,

@@ -403,45 +403,46 @@ describe('OplScroller', function() {
       });
 
       it(
-      'should move the cursor by a step of 1 when using arrow keys without setting "opl-step" attribute',
-      function() {
-        var thumbElementPosition;
-        var contentWrapperElementPosition;
-        var thumbElementBoundingRectangle = thumbElement[0].getBoundingClientRect();
-        var contentWrapperElementBoundingRectangle = contentWrapperElement[0].getBoundingClientRect();
-        var contentWrapperSize = contentWrapperElementBoundingRectangle[scrollbar.sizeProperty];
-        var thumbSize = thumbElementBoundingRectangle[scrollbar.sizeProperty];
-        var initialValue = scope.value;
+        'should move the cursor by a step of 1 when using arrow keys without setting "opl-step" attribute',
+        function() {
+          var thumbElementPosition;
+          var contentWrapperElementPosition;
+          var thumbElementBoundingRectangle = thumbElement[0].getBoundingClientRect();
+          var contentWrapperElementBoundingRectangle = contentWrapperElement[0].getBoundingClientRect();
+          var contentWrapperSize = contentWrapperElementBoundingRectangle[scrollbar.sizeProperty];
+          var thumbSize = thumbElementBoundingRectangle[scrollbar.sizeProperty];
+          var initialValue = scope.value;
 
-        scope.step = null;
-        scope.$digest();
+          scope.step = null;
+          scope.$digest();
 
-        // Forward
-        scrollbarElement.triggerHandler({type: 'keydown', keyCode: scrollbar.forwardKey});
+          // Forward
+          scrollbarElement.triggerHandler({type: 'keydown', keyCode: scrollbar.forwardKey});
 
-        initialValue += 1;
-        thumbElementPosition = thumbElement[0].getBoundingClientRect()[scrollbar.directionProperty];
-        contentWrapperElementPosition = contentWrapperElement[0].getBoundingClientRect()[scrollbar.directionProperty];
-        assert.equal(scope.value, initialValue, 'Wrong value after forward');
-        assert.equal(
-          thumbElementPosition - contentWrapperElementPosition,
-          (initialValue / 100) * (contentWrapperSize - thumbSize),
-          'Wrong cursor position after forward'
-        );
+          initialValue += 1;
+          thumbElementPosition = thumbElement[0].getBoundingClientRect()[scrollbar.directionProperty];
+          contentWrapperElementPosition = contentWrapperElement[0].getBoundingClientRect()[scrollbar.directionProperty];
+          assert.equal(scope.value, initialValue, 'Wrong value after forward');
+          assert.equal(
+            thumbElementPosition - contentWrapperElementPosition,
+            (initialValue / 100) * (contentWrapperSize - thumbSize),
+            'Wrong cursor position after forward'
+          );
 
-        // Backward
-        scrollbarElement.triggerHandler({type: 'keydown', keyCode: scrollbar.backwardKey});
+          // Backward
+          scrollbarElement.triggerHandler({type: 'keydown', keyCode: scrollbar.backwardKey});
 
-        initialValue -= 1;
-        thumbElementPosition = thumbElement[0].getBoundingClientRect()[scrollbar.directionProperty];
-        contentWrapperElementPosition = contentWrapperElement[0].getBoundingClientRect()[scrollbar.directionProperty];
-        assert.equal(scope.value, initialValue, 'Wrong value after backward');
-        assert.equal(
-          thumbElementPosition - contentWrapperElementPosition,
-          (initialValue / 100) * (contentWrapperSize - thumbSize),
-          'Wrong cursor position after backward'
-        );
-      });
+          initialValue -= 1;
+          thumbElementPosition = thumbElement[0].getBoundingClientRect()[scrollbar.directionProperty];
+          contentWrapperElementPosition = contentWrapperElement[0].getBoundingClientRect()[scrollbar.directionProperty];
+          assert.equal(scope.value, initialValue, 'Wrong value after backward');
+          assert.equal(
+            thumbElementPosition - contentWrapperElementPosition,
+            (initialValue / 100) * (contentWrapperSize - thumbSize),
+            'Wrong cursor position after backward'
+          );
+        }
+      );
 
       it('should be able to force the scroller to update', function() {
         var thumbElementBoundingRectangle = thumbElement[0].getBoundingClientRect();

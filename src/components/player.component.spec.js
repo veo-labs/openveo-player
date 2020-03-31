@@ -146,8 +146,17 @@ describe('OplPlayer', function() {
   // Dependencies injections
   beforeEach(
     inject(
-      function(_$compile_, _$rootScope_, _$timeout_, _$document_, _$filter_, _$httpBackend_, _oplI18nService_,
-                _oplPlayerErrors_, _oplEventsFactory_) {
+      function(
+        _$compile_,
+        _$rootScope_,
+        _$timeout_,
+        _$document_,
+        _$filter_,
+        _$httpBackend_,
+        _oplI18nService_,
+        _oplPlayerErrors_,
+        _oplEventsFactory_
+      ) {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
         $timeout = _$timeout_;

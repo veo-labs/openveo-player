@@ -1161,26 +1161,28 @@ describe('PlayerService', function() {
       assert.equal(playerService.getTimeFromPercent(50), 250, 'Wrong percentage');
     });
 
-    it('should return the time corresponding to the given percentage relative to full media if cuts are deactivated',
-    function() {
-      media = {
-        cut: [
-          {
-            type: 'begin',
-            value: 100
-          },
-          {
-            type: 'end',
-            value: 600
-          }
-        ]
-      };
-      playerService.setMedia(media);
-      playerService.setRealDuration(1000);
-      playerService.setCutsStatus(false);
+    it(
+      'should return the time corresponding to the given percentage relative to full media if cuts are deactivated',
+      function() {
+        media = {
+          cut: [
+            {
+              type: 'begin',
+              value: 100
+            },
+            {
+              type: 'end',
+              value: 600
+            }
+          ]
+        };
+        playerService.setMedia(media);
+        playerService.setRealDuration(1000);
+        playerService.setCutsStatus(false);
 
-      assert.equal(playerService.getTimeFromPercent(50), 500, 'Wrong percentage');
-    });
+        assert.equal(playerService.getTimeFromPercent(50), 500, 'Wrong percentage');
+      }
+    );
 
   });
 
