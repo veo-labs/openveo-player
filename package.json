@@ -51,7 +51,7 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "mocha": "^7.1.1",
     "pre-commit": "^1.2.2",
-    "roboto-fontface": "0.10.0",
+    "roboto-fontface": "^0.10.0",
     "video.js": "7.3.0"
   },
   "scripts": {
