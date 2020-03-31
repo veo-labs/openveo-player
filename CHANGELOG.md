@@ -15,6 +15,7 @@
 - **grunt-eslint** has been upgraded from 19.0.0 to **22.0.0**
 - **grunt-gh-pages** has been upgraded from 2.0.0 to **3.1.0**
 - **grunt-karma** has been upgraded from 2.0.0 to **3.0.2**
+- **grunt-mkdocs** has been upgraded from 0.2.0 to **1.0.1**
 
 # 5.0.1 / 2019-06-04
 
