@@ -13,6 +13,7 @@
 - **grunt-contrib-uglify** has been upgraded from 2.0.0 to **4.0.1**
 - **grunt-contrib-watch** sub dependencies have been upgraded
 - **grunt-eslint** has been upgraded from 19.0.0 to **22.0.0**
+- **grunt-gh-pages** has been upgraded from 2.0.0 to **3.1.0**
 
 # 5.0.1 / 2019-06-04
 
