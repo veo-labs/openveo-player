@@ -44,7 +44,7 @@
     "grunt-mkdocs": "^1.0.1",
     "grunt-replace": "^1.0.1",
     "karma": "^4.4.1",
-    "karma-chai": "0.1.0",
+    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "2.0.0",
     "karma-firefox-launcher": "1.0.0",
     "karma-ie-launcher": "1.0.0",
