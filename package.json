@@ -30,7 +30,7 @@
     "angular-cookies": "1.5.11",
     "angular-mocks": "1.5.11",
     "angular-route": "1.5.11",
-    "chai": "4.0.2",
+    "chai": "^4.2.0",
     "chai-spies": "1.0.0",
     "grunt": "1.0.1",
     "grunt-angular-templates": "1.1.0",
