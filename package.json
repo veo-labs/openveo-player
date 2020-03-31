@@ -36,7 +36,7 @@
     "grunt-angular-templates": "^1.2.0",
     "grunt-contrib-compass": "^1.1.1",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-uglify": "2.0.0",
+    "grunt-contrib-uglify": "^4.0.1",
     "grunt-contrib-watch": "1.1.0",
     "grunt-eslint": "19.0.0",
     "grunt-gh-pages": "2.0.0",

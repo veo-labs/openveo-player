@@ -10,6 +10,7 @@
 - **grunt** has been upgraded from 1.0.1 to **1.1.0**
 - **grunt-angular-templates** has been upgraded from 1.1.0 to **1.2.0**
 - **grunt-contrib-compass** sub dependencies have been upgraded
+- **grunt-contrib-uglify** has been upgraded from 2.0.0 to **4.0.1**
 
 # 5.0.1 / 2019-06-04
 
