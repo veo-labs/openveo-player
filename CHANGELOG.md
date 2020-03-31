@@ -19,6 +19,7 @@
 - **grunt-replace** sub dependencies have been upgraded
 - **karma** has been upgraded from 1.3.0 to **4.4.1**
 - **karma-chrome-launcher** has been upgraded from 2.0.0 to **3.1.0**
+- **karma-firefox-launcher** has been upgraded from 1.0.0 to **1.3.0**
 
 # 5.0.1 / 2019-06-04
 
