@@ -45,6 +45,7 @@
     var positionRemembered = false;
     var cutEnabled = true;
     var mediaData = null;
+    var initialStartTime = null;
     var controlsHiddingTimer;
     var mediaWrapperElement;
     var lightControlsElement;
@@ -620,6 +621,12 @@
         }
       }
 
+      // An initial start time has been specified
+      if (initialStartTime !== null) {
+        ctrl.time = initialStartTime;
+        lastTime = ctrl.time;
+      }
+
       // Real media duration is required to be able to display points of interest
       // Thus we have to wait for the media duration returned by the player
 
@@ -731,6 +738,7 @@
           $element.triggerHandler('needPoiConversion', duration);
         } else {
           ctrl.setTime(lastTime);
+          ctrl.seenPercent = playerService.getPercent(lastTime);
           initPointsOfInterest();
           ctrl.selectTemplate(ctrl.oplTemplate);
           updateIcons();
@@ -1425,6 +1433,12 @@
           // oplRememberPosition
           if (changedProperties.oplRememberPosition && changedProperties.oplRememberPosition.currentValue) {
             positionRemembered = isAttributeTrue('oplRememberPosition', false);
+          }
+
+          // oplStartTime
+          if (changedProperties.oplStartTime && changedProperties.oplStartTime.currentValue) {
+            newValue = changedProperties.oplStartTime.currentValue;
+            initialStartTime = (typeof newValue === 'undefined') ? null : Number(newValue);
           }
 
           // oplLanguage

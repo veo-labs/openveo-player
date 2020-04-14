@@ -4,6 +4,10 @@
 
 - Drop support for NodeJS &lt; 12.4.0 and NPM &lt; 6.9.0
 
+## NEW FEATURES
+
+- Attribute "opl-start-time" has been added to the player to be able to specify a time in milliseconds to start at, this attribute has priority on attribute "opl-remember-position"
+
 ## DEPENDENCIES
 
 - **chai** has been upgraded from 4.0.2 to **4.2.0**

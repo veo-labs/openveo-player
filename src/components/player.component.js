@@ -74,7 +74,7 @@
  *  - [Boolean] **opl-remember-position** true to start the media at the position the user was last time (default to
  *    false)
  *  - [String] **opl-template** The template to choose by default (either "split_1", "split_2", "split_50_50"
- *    or "split_25_75") (default to "split_1")
+ *  - [String] **opl-start-time** The time in milliseconds to start at (default to 0)
  *
  * Dispatched events are:
  *  - **ready** The player is ready to receive actions
@@ -282,6 +282,7 @@
  *                  opl-indexes="true"
  *                  opl-tags="true"
  *                  opl-cuts="true"
+ *                  opl-start-time="0"
  *      ></opl-player>
  *
  * @class oplPlayer
@@ -308,7 +309,8 @@
       oplChapters: '@?',
       oplIndexes: '@?',
       oplTags: '@?',
-      oplCuts: '@?'
+      oplCuts: '@?',
+      oplStartTime: '@?'
     }
   });
 

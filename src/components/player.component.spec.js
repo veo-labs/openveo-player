@@ -864,6 +864,39 @@ describe('OplPlayer', function() {
     assert.equal(ctrl.seenPercent, (expectedTime / expectedDuration) * 100, 'Wrong seen percentage');
   });
 
+  it('should be able to start at a specific time', function() {
+    var expectedDuration = 10000;
+    var expectedTime = expectedDuration / 2;
+    var playerHtml = '<opl-player ' +
+                                'id="opl-player-test" ' +
+                                'opl-data="data" ' +
+                                'opl-start-time="' + expectedTime + '" ' +
+                    '></opl-player>';
+    var element = angular.element(playerHtml);
+    scope = $rootScope.$new();
+    scope.data = {
+      mediaId: ['1'],
+      sources: expectedDefinitions
+    };
+    element = angular.element(playerHtml);
+    createComponent(element, expectedDuration);
+
+    var timeElement = angular.element(element[0].querySelector('.opl-left-controls .opl-current-time'));
+    var lightTimeElement = angular.element(element[0].querySelector('.opl-light-controls .opl-current-time'));
+
+    assert.equal(
+      timeElement.find('span').html(),
+      $filter('oplMillisecondsToTime')(expectedTime) + ' / ' + $filter('oplMillisecondsToTime')(expectedDuration),
+      'Wrong time and duration'
+    );
+    assert.equal(
+      lightTimeElement.find('span').html(),
+      $filter('oplMillisecondsToTime')(expectedTime),
+      'Wrong light time'
+    );
+    assert.equal(ctrl.seenPercent, (expectedTime / expectedDuration) * 100, 'Wrong seen percentage');
+  });
+
   it('should be able to virtually cut the media and deactivate / activate cuts', function() {
     var totalPointsOfInterest = 50;
     var beginCut = 5000;

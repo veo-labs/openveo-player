@@ -21,6 +21,7 @@ OpenVeo Player defines an AngularJS directive **opl-player**:
   opl-indexes="true"
   opl-tags="true"
   opl-cuts="true"
+  opl-start-time="2000"
 ></opl-player>
 ```
 
@@ -359,5 +360,16 @@ $scope.template = 'split_50_50';
 <opl-player
   ...
   opl-template="template"
+></opl-player>
+```
+
+## opl-start-time (optional)
+
+Indicates the time the player will start at in milliseconds (Default to **0**).
+
+```html
+<opl-player
+  ...
+  opl-start-time="2000"
 ></opl-player>
 ```
