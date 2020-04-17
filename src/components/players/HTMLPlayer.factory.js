@@ -129,7 +129,6 @@
 
       this.player.src(mediaSource);
       this.player.poster(this.media.thumbnail);
-      this.player.load();
     }
 
     // All HTML player events

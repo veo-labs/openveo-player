@@ -112,7 +112,9 @@
   app.config(function() {
     var deactivateDashJsLogs = function(player, mediaPlayer) {
       if (videojs && videojs.log) {
-        mediaPlayer.getDebug().setLogToBrowserConsole(false);
+        mediaPlayer.updateSettings({
+          debug: {logLevel: dashjs.Debug.LOG_LEVEL_NONE}
+        });
       }
     };
 
