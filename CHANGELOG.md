@@ -12,6 +12,7 @@
 
 - Fix HTML player errors which were not dispatched and couldn't be listened to
 - Fix player setVolume API
+- Fix HTML player selected quality, when changing source the video corresponding to the quality of the previous source was played instead of the video corresponding to the quality of the actual source
 
 ## DEPENDENCIES
 

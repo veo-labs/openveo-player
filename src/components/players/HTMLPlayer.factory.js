@@ -111,7 +111,23 @@
     function load() {
       var mediaSource;
       var availableDefinitions = this.media.sources[this.selectedSourceIndex].files;
-      var definition = this.definition || availableDefinitions && availableDefinitions[0] || null;
+      var definition = null;
+
+      if (this.definition && availableDefinitions) {
+
+        // Look for current definition in the list of available definition
+        // We make sure that the definition is the definition from the current source and not from a previously
+        // selected source
+        for (var i = 0; i < availableDefinitions.length; i++) {
+          if (availableDefinitions[i].height === this.definition.height) {
+            definition = availableDefinitions[i];
+            break;
+          }
+        }
+
+      }
+
+      definition = definition || availableDefinitions && availableDefinitions[0] || null;
 
       if (!definition) {
 

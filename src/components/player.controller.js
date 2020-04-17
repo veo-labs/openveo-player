@@ -1587,14 +1587,14 @@
             playRequested = !ctrl.player.isPaused();
             ctrl.player.setMediaSource(sourceIndex);
             ctrl.selectedSource = ctrl.mediaSources[sourceIndex].id;
-            ctrl.mediaDefinitions = ctrl.player.getAvailableDefinitions();
-            ctrl.selectedDefinition = ctrl.player.getDefinition();
-            ctrl.mediaQualities = angular.copy(ctrl.mediaDefinitions);
             ctrl.loading = true;
             ctrl.initializing = true;
             safeApply(function() {
               ctrl.sourceUrl = ctrl.player.getSourceUrl();
               ctrl.player.load();
+              ctrl.mediaDefinitions = ctrl.player.getAvailableDefinitions();
+              ctrl.selectedDefinition = ctrl.player.getDefinition();
+              ctrl.mediaQualities = angular.copy(ctrl.mediaDefinitions);
             });
           }
         }
