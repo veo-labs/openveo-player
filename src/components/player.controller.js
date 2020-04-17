@@ -1483,6 +1483,7 @@
           // oplData
           if (changedProperties.oplData && changedProperties.oplData.currentValue) {
             var oplData = changedProperties.oplData;
+            if (ctrl.player) ctrl.player.setMediaSource(0);
             reset();
 
             if (oplData.previousValue && oplData.previousValue.needPointsOfInterestUnitConversion === true &&
