@@ -103,11 +103,7 @@ angular.element(myPlayer).on('ready', function(event){
   console.log('ready');
 
   var playerController = angular.element(myPlayer).controller('oplPlayer');
-  playerController.setDefinition({
-    width: 1280,
-    height: 720,
-    link: 'http(s)://host.local/linkToTheHDFile'
-  });
+  playerController.setDefinition('720');
 });
 ```
 
@@ -115,7 +111,7 @@ Arguments:
 
 Param | Type | Details
 ----- | ---- | ----
-definition  | Object  | The definition description object
+definition  | String  | The definition height as String
 
 ## setSource
 
