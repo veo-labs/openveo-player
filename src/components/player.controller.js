@@ -889,13 +889,13 @@
      * Handles player error event.
      *
      * @param {Event} event The dispatched event
-     * @param {Number} code The error code
+     * @param {Object} error The error with code
      */
-    function handlePlayerError(event, code) {
+    function handlePlayerError(event, error) {
       safeApply(function() {
         ctrl.loading = false;
         ctrl.initializing = false;
-        switch (Number(code)) {
+        switch (error.code) {
           case oplPlayerErrors.MEDIA_ERR_NO_SOURCE:
             ctrl.error = $filter('oplTranslate')('MEDIA_ERR_NO_SOURCE');
             break;
@@ -916,7 +916,7 @@
             break;
         }
 
-        $element.triggerHandler('error', {code: code, message: ctrl.error});
+        $element.triggerHandler('error', {code: error.code, message: ctrl.error});
       });
     }
 

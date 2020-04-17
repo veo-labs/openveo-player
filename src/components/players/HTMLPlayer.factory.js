@@ -12,7 +12,7 @@
    *
    * @class OplHtmlPlayer
    */
-  function OplHtmlPlayer(OplPlayer, $window, $document, $sce) {
+  function OplHtmlPlayer(OplPlayer, $window, $document, $sce, oplPlayerErrors) {
 
     /**
      * Handles all player media events.
@@ -89,10 +89,13 @@
 
         // Media error
         case 'error':
-          if (this.player.networkState() == this.player.NETWORK_NO_SOURCE) {
-            event.target.error = {code: 'NO_SOURCE', MEDIA_NO_SOURCE: 'NO_SOURCE'};
-          }
-          this.jPlayerElement.triggerHandler('error', event.target.error && event.target.error.code);
+          var error = this.player.error();
+          var code = error && error.code;
+
+          if (this.player.networkState() == HTMLMediaElement.NETWORK_NO_SOURCE)
+            code = oplPlayerErrors.MEDIA_ERR_NO_SOURCE;
+
+          this.jPlayerElement.triggerHandler('oplError', {code: code});
           break;
 
         default:
@@ -415,6 +418,6 @@
   }
 
   app.factory('OplHtmlPlayer', OplHtmlPlayer);
-  OplHtmlPlayer.$inject = ['OplPlayer', '$window', '$document', '$sce'];
+  OplHtmlPlayer.$inject = ['OplPlayer', '$window', '$document', '$sce', 'oplPlayerErrors'];
 
 })(angular, angular.module('ov.player'));

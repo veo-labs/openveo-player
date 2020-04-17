@@ -8,6 +8,10 @@
 
 - Attribute "opl-start-time" has been added to the player to be able to specify a time in milliseconds to start at, this attribute has priority on attribute "opl-remember-position"
 
+## BUG FIXES
+
+- Fix HTML player errors which were not dispatched and couldn't be listened to
+
 ## DEPENDENCIES
 
 - **chai** has been upgraded from 4.0.2 to **4.2.0**

@@ -137,16 +137,19 @@
               self.load();
             },
             onError: function(error) {
+              var code;
               switch (error.data) {
                 case 100:
                 case 101:
                 case 150:
-                  self.jPlayerElement.triggerHandler('oplError', oplPlayerErrors.MEDIA_ERR_PERMISSION);
+                  code = oplPlayerErrors.MEDIA_ERR_PERMISSION;
                   break;
                 default:
-                  self.jPlayerElement.triggerHandler('oplError', oplPlayerErrors.MEDIA_ERR_UNKNOWN);
+                  code = oplPlayerErrors.MEDIA_ERR_UNKNOWN;
                   break;
               }
+
+              self.jPlayerElement.triggerHandler('oplError', {code: code});
             }
           },
           videoId: this.media.mediaId[this.selectedSourceIndex]

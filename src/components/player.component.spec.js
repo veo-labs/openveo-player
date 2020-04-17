@@ -1112,7 +1112,7 @@ describe('OplPlayer', function() {
     element.triggerHandler('oplWaiting');
     $timeout.flush();
     scope.$digest();
-    element.triggerHandler('oplError');
+    element.triggerHandler('oplError', {code: 'unknown'});
     $timeout.flush();
     scope.$digest();
 
@@ -2215,37 +2215,37 @@ describe('OplPlayer', function() {
 
     expectedErrorCode = oplPlayerErrors.MEDIA_ERR_NO_SOURCE;
     expectedErrorMessage = $filter('oplTranslate')('MEDIA_ERR_NO_SOURCE');
-    element.triggerHandler('oplError', String(expectedErrorCode));
+    element.triggerHandler('oplError', {code: expectedErrorCode});
     $timeout.flush();
     scope.$digest();
 
     expectedErrorCode = oplPlayerErrors.MEDIA_ERR_NETWORK;
     expectedErrorMessage = $filter('oplTranslate')('MEDIA_ERR_NETWORK');
-    element.triggerHandler('oplError', String(expectedErrorCode));
+    element.triggerHandler('oplError', {code: expectedErrorCode});
     $timeout.flush();
     scope.$digest();
 
     expectedErrorCode = oplPlayerErrors.MEDIA_ERR_DECODE;
     expectedErrorMessage = $filter('oplTranslate')('MEDIA_ERR_DECODE');
-    element.triggerHandler('oplError', String(expectedErrorCode));
+    element.triggerHandler('oplError', {code: expectedErrorCode});
     $timeout.flush();
     scope.$digest();
 
     expectedErrorCode = oplPlayerErrors.MEDIA_ERR_SRC_NOT_SUPPORTED;
     expectedErrorMessage = $filter('oplTranslate')('MEDIA_ERR_SRC_NOT_SUPPORTED');
-    element.triggerHandler('oplError', String(expectedErrorCode));
+    element.triggerHandler('oplError', {code: expectedErrorCode});
     $timeout.flush();
     scope.$digest();
 
     expectedErrorCode = oplPlayerErrors.MEDIA_ERR_PERMISSION;
     expectedErrorMessage = $filter('oplTranslate')('MEDIA_ERR_PERMISSION');
-    element.triggerHandler('oplError', String(expectedErrorCode));
+    element.triggerHandler('oplError', {code: expectedErrorCode});
     $timeout.flush();
     scope.$digest();
 
     expectedErrorCode = 'unknown';
     expectedErrorMessage = $filter('oplTranslate')('MEDIA_ERR_DEFAULT');
-    element.triggerHandler('oplError', expectedErrorCode);
+    element.triggerHandler('oplError', {code: expectedErrorCode});
     $timeout.flush();
     scope.$digest();
   });
@@ -2522,7 +2522,7 @@ describe('OplPlayer', function() {
 
       Player.prototype.playPause = chai.spy(function() {});
 
-      element.triggerHandler('oplError', oplPlayerErrors.MEDIA_ERR_NO_SOURCE);
+      element.triggerHandler('oplError', {code: oplPlayerErrors.MEDIA_ERR_NO_SOURCE});
       $timeout.flush();
       scope.$digest();
 
