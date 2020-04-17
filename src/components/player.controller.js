@@ -367,6 +367,18 @@
       var totalTypes = $scope.chaptersDisplayed + $scope.tagsDisplayed + $scope.indexesDisplayed;
       $scope.tabsHidden = (totalTypes === 1 || totalTypes === 0);
       $scope.hidePoi = (totalTypes === 0);
+
+      var selectedView = tabsController.getSelectedView();
+      if (!selectedView || totalTypes === 3) return;
+
+      // If selected tab is no longer displayed, select the next one
+      var firstDisplayedView = $scope.indexesDisplayed ? 'timecodes' : ($scope.chaptersDisplayed ? 'chapters' : 'tags');
+      if (
+        !$scope.indexesDisplayed && selectedView.oplViewId === 'timecodes' ||
+        !$scope.chaptersDisplayed && selectedView.oplViewId === 'chapters' ||
+        !$scope.tagsDisplayed && selectedView.oplViewId === 'tags'
+      )
+        $scope.handleViewSelect({oplViewId: firstDisplayedView});
     }
 
     /**

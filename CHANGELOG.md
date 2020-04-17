@@ -14,6 +14,7 @@
 - Fix player setVolume API
 - Fix HTML player selected quality, when changing source the video corresponding to the quality of the previous source was played instead of the video corresponding to the quality of the actual source
 - Fix selected source when dynamically changing opl-data attribute
+- Fix empty indexes / chapters / tags bar when changing opl-indexes / opl-chapters / opl-tags attributes
 
 ## DEPENDENCIES
 
