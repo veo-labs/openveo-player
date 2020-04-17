@@ -49,7 +49,7 @@
             ></opl-toggle-icon-button>
             <opl-volume
                         ng-model="$ctrl.volume"
-                        ng-change="$ctrl.setVolume($ctrl.volume)"
+                        ng-change="updateVolume()"
                         ng-show="volumeIconDisplayed"
                         opl-on-focus="handleControlFocus()"
             ></opl-volume>
@@ -111,7 +111,7 @@
         ></opl-toggle-icon-button>
         <opl-volume
                     ng-model="$ctrl.volume"
-                    ng-change="$ctrl.setVolume($ctrl.volume)"
+                    ng-change="updateVolume()"
                     ng-show="volumeIconDisplayed"
                     opl-on-open="handleLightVolumeToggle()"
                     opl-on-close="handleLightVolumeToggle()"

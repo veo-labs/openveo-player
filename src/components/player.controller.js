@@ -674,7 +674,7 @@
       event.stopImmediatePropagation();
 
       safeApply(function() {
-        ctrl.player.setVolume(ctrl.volume);
+        $scope.updateVolume();
         ctrl.error = null;
         ctrl.loading = false;
         ctrl.initializing = false;
@@ -1537,8 +1537,8 @@
        */
       setVolume: {
         value: function(volume) {
-          if (!ctrl.player || ctrl.volume !== volume) return;
-          ctrl.player.setVolume(ctrl.volume);
+          ctrl.volume = volume;
+          $scope.updateVolume();
         }
       },
 
@@ -1601,6 +1601,14 @@
       }
 
     });
+
+    /**
+     * Updates player volume with current volume.
+     */
+    $scope.updateVolume = function() {
+      if (!ctrl.player) return;
+      ctrl.player.setVolume(ctrl.volume);
+    };
 
     /**
      * Handles time bar update.

@@ -11,6 +11,7 @@
 ## BUG FIXES
 
 - Fix HTML player errors which were not dispatched and couldn't be listened to
+- Fix player setVolume API
 
 ## DEPENDENCIES
 
