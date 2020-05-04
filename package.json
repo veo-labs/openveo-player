@@ -1,6 +1,6 @@
 {
   "name": "@openveo/player",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "OpenVeo player to play a video with associated images and chapters",
   "keywords": [
     "openveo",
@@ -24,7 +24,7 @@
     "url": "https://github.com/veo-labs/openveo-player.git"
   },
   "devDependencies": {
-    "@openveo/api": "6.*",
+    "@openveo/api": "^7.0.0",
     "angular": "1.5.11",
     "angular-animate": "1.5.11",
     "angular-cookies": "1.5.11",
