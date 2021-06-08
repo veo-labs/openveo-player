@@ -28,7 +28,7 @@
         case 'progress':
 
           // Got buffering information
-          // Caution, the progress event maybe dispatched event if buffer is empty
+          // Caution, the progress event maybe dispatched even if buffer is empty
           var buffer = this.player.buffered();
           if (buffer.length >= 1) {
             var loadedStart = (this.player.currentTime() / this.player.duration()) || 0;
