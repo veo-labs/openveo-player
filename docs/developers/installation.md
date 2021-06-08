@@ -5,4 +5,4 @@
 # Install project's dependencies
 
     cd openveo-player
-    npm install
+    npm ci
