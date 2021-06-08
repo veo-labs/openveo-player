@@ -5,12 +5,12 @@
 module.exports = {
 
   // Obfuscate components JavaScript files
-  // Use grunt uglify:components --production to skip source maps generation
+  // Use grunt uglify:components --with-source-maps to add source maps generation
   // Not that this task should be run after concat:components
   components: {
     options: {
-      sourceMap: !process.production,
-      sourceMapIn: !process.production ? '<%= project.buildJsPath %>/openveo-player.js.map' : null
+      sourceMap: process.withSourceMaps,
+      sourceMapIn: process.withSourceMaps ? '<%= project.buildJsPath %>/openveo-player.js.map' : null
     },
     expand: true,
     cwd: '<%= project.buildJsPath %>/',

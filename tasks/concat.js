@@ -11,12 +11,12 @@ module.exports = {
   },
 
   // Concatenate components JavaScript files
-  // Use grunt concat:components --production to skip source maps generation
+  // Use grunt concat:components --with-source-maps to add source maps generation
   // Note that src property is empty because it is filled by the components-set-concat-src task
   // Consequently using this task directly won't have any effect
   components: {
     options: {
-      sourceMap: !process.production,
+      sourceMap: process.withSourceMaps,
       sourceMapStyle: 'link'
     },
     src: [],

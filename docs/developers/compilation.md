@@ -4,11 +4,11 @@ OpenVeo player is written using AngularJS and SASS / Compass. SASS files need to
 
 # Compiling the OpenVeo Player
 
-You can compile the OpenVeo Player with source maps using the following command:
+You can compile the OpenVeo Player using the following command:
 
-    grunt dist
+    npm run build
 
-You can add the *--production* option to compile without source maps (for production):
+You can add the *--with-source-maps* option to compile with source maps (for development):
 
-    grunt dist --production
+    npm run build -- --with-source-maps
 

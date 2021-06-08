@@ -5,12 +5,12 @@
 module.exports = {
 
   // Build OpenVeo Player stylesheet
-  // Use grunt compass:components --production to skip source maps generation
+  // Use grunt compass:components --with-source-maps to add source maps generation
   // Note that "banner" option does not work with "sourcemap" property
   components: {
     options: {
-      banner: process.production ? '/* openveo-player v<%= pkg.version %> */\n' : null,
-      sourcemap: !process.production,
+      banner: (!process.withSourceMaps) ? '/* openveo-player v<%= pkg.version %> */\n' : null,
+      sourcemap: process.withSourceMaps,
       sassDir: '<%= project.buildCssPath %>',
       cssDir: '<%= project.buildCssPath %>',
       environment: 'production',

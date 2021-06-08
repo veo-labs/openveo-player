@@ -4,7 +4,7 @@
 // For more information about Grunt copy, have a look at @openveo/api
 var componentsSrc = [];
 
-if (process.production) {
+if (!process.withSourceMaps) {
   componentsSrc.push(
     '<%= project.buildCssPath %>/openveo-player.min.css',
     '<%= project.buildJsPath %>/openveo-player.min.js'
