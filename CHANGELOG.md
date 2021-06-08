@@ -3,6 +3,7 @@
 ## BREAKING CHANGES
 
 - No longer tested on NodeJS &lt; 16.3.0 and NPM &lt; 7.15.1
+- No longer tested on Opera and Edge
 
 # 6.0.0 / 2020-05-04
 

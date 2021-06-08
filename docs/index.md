@@ -8,13 +8,9 @@ OpenVeo Player has been tested on the following browsers:
 
 - Google Chrome 58
 - Mozilla Firefox 52
-- Opera 45
-- Edge
 
 ![Firefox](images/browsers/firefox.gif)
 ![Google Chrome](images/browsers/chrome.gif)
-![Opera](images/browsers/opera.gif)
-![Internet Explorer](images/browsers/edge.gif)
 
 ## Screenshots
 
