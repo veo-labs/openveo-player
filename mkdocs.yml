@@ -17,7 +17,7 @@ nav:
   - 'The basics': 'developers/basics.md'
   - 'Prerequisites': 'developers/prerequisites.md'
   - 'Installation': 'developers/installation.md'
-  - 'CSS / SASS / JS compilation': 'developers/compilation.md'
+  - 'Compilation': 'developers/compilation.md'
   - 'I18N and I10N': 'developers/i18n.md'
   - 'Coding standards': 'developers/coding-standards.md'
   - 'Unit tests': 'developers/unit-tests.md'
