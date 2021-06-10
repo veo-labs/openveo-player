@@ -59,7 +59,7 @@
     "build": "npx grunt dist",
     "doc": "npx grunt doc",
     "lint": "npx grunt eslint",
-    "postpublish": "npx grunt deploy-doc",
+    "postpublish": "npm run doc && npx grunt gh-pages:doc",
     "prepack": "npm run build",
     "test": "npx grunt test"
   },

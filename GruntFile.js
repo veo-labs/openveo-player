@@ -63,9 +63,6 @@ module.exports = function(grunt) {
   // Generate documentation
   grunt.registerTask('doc', ['remove:doc', 'mkdocs:doc', 'rename:doc']);
 
-  // Deploy documentation to github pages
-  grunt.registerTask('deploy-doc', ['doc', 'gh-pages:doc']);
-
   // Dynamically set src property of concat:components and copy:components-sources tasks
   // The list of sources is built dynamically by the ngDp:components and ngtemplates:components tasks
   grunt.registerTask(
