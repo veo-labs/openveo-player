@@ -61,7 +61,8 @@
     "lint": "npx grunt eslint",
     "postpublish": "npm run doc && npx grunt gh-pages:doc",
     "prepack": "npm run build",
-    "test": "npx grunt test"
+    "test": "npx grunt test",
+    "watch": "npx grunt watch:components"
   },
   "precommit": [
     "lint",

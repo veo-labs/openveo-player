@@ -54,9 +54,6 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('copy', openVeoApi.grunt.copyTask(grunt));
   grunt.registerMultiTask('ngDp', openVeoApi.grunt.ngDpTask(grunt));
 
-  // Listen to changes on SCSS files and generate CSS files
-  grunt.registerTask('default', ['watch:components']);
-
   // Execute tests
   grunt.registerTask('test', ['ngDp:components', 'karma:components']);
 
