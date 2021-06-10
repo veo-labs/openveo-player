@@ -57,6 +57,7 @@
   },
   "scripts": {
     "build": "npx grunt dist",
+    "doc": "npx grunt doc",
     "lint": "npx grunt eslint",
     "postpublish": "npx grunt deploy-doc",
     "prepack": "npm run build",
