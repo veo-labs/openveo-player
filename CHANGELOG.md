@@ -5,6 +5,10 @@
 - No longer tested on NodeJS &lt; 16.3.0 and NPM &lt; 7.15.1
 - No longer tested on Opera and Edge
 
+## DEPENDENCIES
+
+- **chai** has been upgraded from 4.2.0 to **4.3.4**
+
 # 6.0.0 / 2020-05-04
 
 ## BREAKING CHANGES
