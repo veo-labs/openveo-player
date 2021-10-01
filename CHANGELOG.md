@@ -9,6 +9,7 @@
 
 - **chai** has been upgraded from 4.2.0 to **4.3.4**
 - **karma** has been upgraded from 4.4.1 to **6.3.4**
+- **karma-mocha** has been upgraded from 1.3.0 to **2.0.1**
 
 # 6.0.0 / 2020-05-04
 
