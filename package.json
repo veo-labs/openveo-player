@@ -52,7 +52,7 @@
     "mocha": "^9.1.1",
     "pre-commit": "^1.2.2",
     "roboto-fontface": "^0.10.0",
-    "video.js": "^7.7.5"
+    "video.js": "^7.15.4"
   },
   "scripts": {
     "build": "npx grunt dist",
