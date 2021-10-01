@@ -41,7 +41,6 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^22.0.0",
     "grunt-gh-pages": "^3.1.0",
-    "grunt-mkdocs": "^1.0.1",
     "grunt-replace": "^1.0.1",
     "karma": "^6.3.4",
     "karma-chai": "^0.1.0",
@@ -56,7 +55,7 @@
   "scripts": {
     "build": "npm run build:clean && npx grunt dist",
     "build:clean": "npx ovRemove ./build && npx ovRemove ./dist",
-    "doc": "npm run doc:clean && npx grunt doc",
+    "doc": "mkdocs build -c -d \"./site/$(echo $npm_package_version)\"",
     "doc:clean": "npx ovRemove ./site",
     "lint": "npx grunt eslint",
     "postpublish": "npm run doc && npx grunt gh-pages:doc",

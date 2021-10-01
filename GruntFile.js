@@ -45,15 +45,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-mkdocs');
   grunt.loadNpmTasks('grunt-gh-pages');
 
   grunt.registerMultiTask('rename', openVeoApi.grunt.renameTask(grunt));
   grunt.registerMultiTask('copy', openVeoApi.grunt.copyTask(grunt));
   grunt.registerMultiTask('ngDp', openVeoApi.grunt.ngDpTask(grunt));
-
-  // Generate documentation
-  grunt.registerTask('doc', ['mkdocs:doc', 'rename:doc']);
 
   // Dynamically set src property of concat:components and copy:components-sources tasks
   // The list of sources is built dynamically by the ngDp:components and ngtemplates:components tasks

@@ -1,7 +1,6 @@
 site_name: Openveo Player
 repo_url: https://github.com/veo-labs/openveo-player
 theme: readthedocs
-site_dir: site/version
 markdown_extensions:
   - fenced_code
   - tables
