@@ -49,12 +49,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-gh-pages');
 
   grunt.registerMultiTask('rename', openVeoApi.grunt.renameTask(grunt));
-  grunt.registerMultiTask('remove', openVeoApi.grunt.removeTask(grunt));
   grunt.registerMultiTask('copy', openVeoApi.grunt.copyTask(grunt));
   grunt.registerMultiTask('ngDp', openVeoApi.grunt.ngDpTask(grunt));
 
   // Generate documentation
-  grunt.registerTask('doc', ['remove:doc', 'mkdocs:doc', 'rename:doc']);
+  grunt.registerTask('doc', ['mkdocs:doc', 'rename:doc']);
 
   // Dynamically set src property of concat:components and copy:components-sources tasks
   // The list of sources is built dynamically by the ngDp:components and ngtemplates:components tasks
@@ -100,7 +99,6 @@ module.exports = function(grunt) {
   // Build the OpenVeo Player sources
   // Use grunt dist --production to build sources without source maps
   grunt.registerTask('dist', [
-    'remove:build',
     'ngDp:components',
     'ngtemplates:components',
     'components-set-src',

@@ -54,8 +54,10 @@
     "video.js": "^7.15.4"
   },
   "scripts": {
-    "build": "npx grunt dist",
-    "doc": "npx grunt doc",
+    "build": "npm run build:clean && npx grunt dist",
+    "build:clean": "npx ovRemove ./build && npx ovRemove ./dist",
+    "doc": "npm run doc:clean && npx grunt doc",
+    "doc:clean": "npx ovRemove ./site",
     "lint": "npx grunt eslint",
     "postpublish": "npm run doc && npx grunt gh-pages:doc",
     "prepack": "npm run build",
