@@ -44,7 +44,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-angular-templates');
-  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-mkdocs');
   grunt.loadNpmTasks('grunt-gh-pages');
@@ -53,9 +52,6 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('remove', openVeoApi.grunt.removeTask(grunt));
   grunt.registerMultiTask('copy', openVeoApi.grunt.copyTask(grunt));
   grunt.registerMultiTask('ngDp', openVeoApi.grunt.ngDpTask(grunt));
-
-  // Execute tests
-  grunt.registerTask('test', ['ngDp:components', 'karma:components']);
 
   // Generate documentation
   grunt.registerTask('doc', ['remove:doc', 'mkdocs:doc', 'rename:doc']);
