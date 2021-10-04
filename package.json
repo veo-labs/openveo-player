@@ -41,7 +41,6 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify": "^4.0.1",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-gh-pages": "^3.1.0",
     "grunt-replace": "^1.0.1",
     "karma": "^6.3.4",
     "karma-chai": "^0.1.0",
@@ -58,8 +57,9 @@
     "build:clean": "npx ovRemove ./build && npx ovRemove ./dist",
     "doc": "mkdocs build -c -d \"./site/$(echo $npm_package_version)\"",
     "doc:clean": "npx ovRemove ./site",
+    "doc:deploy": "npx ovDeployGithubPages \"site/$(echo $npm_package_version)\"",
     "lint": "npx eslint \"*.js\" \"src/**/*.js\" \"tasks/**/*.js\"",
-    "postpublish": "npm run doc && npx grunt gh-pages:doc",
+    "postpublish": "npm run doc && npm run doc:deploy",
     "prepack": "npm run build",
     "test": "npx grunt ngDp:components && npx karma start ./karmaConf.js",
     "watch": "npx grunt watch:components"

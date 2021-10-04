@@ -44,7 +44,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-angular-templates');
-  grunt.loadNpmTasks('grunt-gh-pages');
 
   grunt.registerMultiTask('rename', openVeoApi.grunt.renameTask(grunt));
   grunt.registerMultiTask('copy', openVeoApi.grunt.copyTask(grunt));
