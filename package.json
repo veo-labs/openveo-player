@@ -52,7 +52,8 @@
     "video.js": "^7.15.4"
   },
   "scripts": {
-    "build": "npm run build:clean && npx grunt dist",
+    "build": "npm run build:clean && ./scripts/build.js production",
+    "build:development": "./scripts/build.js",
     "build:clean": "npx ovRemove ./build && npx ovRemove ./dist",
     "doc": "mkdocs build -c -d \"./site/$(echo $npm_package_version)\"",
     "doc:clean": "npx ovRemove ./site",
@@ -61,7 +62,7 @@
     "postpublish": "npm run doc && npm run doc:deploy",
     "prepack": "npm run build",
     "test": "npx grunt ngDp:components && npx karma start ./karmaConf.js",
-    "watch": "npm run build && npx ovWatch -d ./src -c build"
+    "watch": "npm run build:development && npx ovWatch -d ./src -c build:development"
   },
   "precommit": [
     "lint",

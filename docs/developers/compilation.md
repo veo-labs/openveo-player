@@ -6,7 +6,7 @@ OpenVeo player is written using AngularJS and SASS / Compass. SASS files need to
 
 You can compile sources for development using:
 
-    npm run build -- --with-source-maps
+    npm run build:development
 
 You can also automatically compile sources for development on file change using:
 
