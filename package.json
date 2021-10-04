@@ -40,7 +40,6 @@
     "grunt-contrib-compass": "^1.1.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify": "^4.0.1",
-    "grunt-contrib-watch": "^1.1.0",
     "grunt-replace": "^1.0.1",
     "karma": "^6.3.4",
     "karma-chai": "^0.1.0",
@@ -62,7 +61,7 @@
     "postpublish": "npm run doc && npm run doc:deploy",
     "prepack": "npm run build",
     "test": "npx grunt ngDp:components && npx karma start ./karmaConf.js",
-    "watch": "npx grunt watch:components"
+    "watch": "npm run build && npx ovWatch -d ./src -c build"
   },
   "precommit": [
     "lint",
