@@ -12,9 +12,9 @@
   "globals": {
 
     // Add angular to environment globals but do not authorize to overwrite it
-    angular: false,
-    YT: false,
-    videojs: false
+    "angular": false,
+    "YT": false,
+    "videojs": false
 
   },
   "rules": {

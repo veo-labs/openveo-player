@@ -1,20 +1,30 @@
 {
 
+  // Make this configuration file as the root one
+  "root": true,
+
   // Extends eslint recommended rules
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended"
+  ],
+
   "env": {
 
     // Add browser environment globals
     "browser": true,
 
     // Add node.js environment globals
-    "node": true
+    "node": true,
+
+    // Enable ECMAScript 2017 features
+    "es2017": true
 
   },
   "globals": {
 
     // Add angular to environment globals but do not authorize to overwrite it
-    angular: false
+    "angular": false
 
   },
   "rules": {
@@ -121,21 +131,6 @@
     // Disallow early use
     "no-use-before-define": 2,
 
-    // Disallow mixed requires
-    "no-mixed-requires": 2,
-
-    // Disallow new require
-    "no-new-require": 2,
-
-    // Disallow string concatenation when using _dirname and _filename
-    "no-path-concat": 2,
-
-    // Disallow process.exit()
-    "no-process-exit": 2,
-
-    // Disallow synchronous methods
-    "no-sync": 2,
-
     // Disallow spaces inside of brackets
     "array-bracket-spacing": 2,
 
@@ -236,7 +231,22 @@
     "spaced-comment": [2, "always"],
 
     // Limit Maximum Length of Line
-    "max-len": [2, 120, 2, {"ignoreUrls": true}]
+    "max-len": [2, 120, 2, {"ignoreUrls": true}],
+
+    // Disallow mixed requires
+    "node/no-mixed-requires": 2,
+
+    // Disallow new require
+    "node/no-new-require": 2,
+
+    // Disallow string concatenation when using _dirname and _filename
+    "node/no-path-concat": 2,
+
+    // Disallow process.exit()
+    "node/no-process-exit": 2,
+
+    // Disallow synchronous methods
+    "node/no-sync": 2
 
   }
 }

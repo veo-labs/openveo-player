@@ -42,7 +42,7 @@ nbproject
 /mkdocs.yml
 
 # Eslint
-.eslintrc
+.eslintrc.json
 
 # Build
 /build
