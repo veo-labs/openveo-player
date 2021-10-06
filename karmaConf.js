@@ -28,7 +28,7 @@ module.exports = function(config) {
 
   // Sources
   resources.js.forEach(function(file) {
-    files.push('src/' + file);
+    files.push(file);
   });
 
   // Templates

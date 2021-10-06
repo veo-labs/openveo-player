@@ -24,11 +24,6 @@ nbproject
 # Sass cache files
 .sass-cache
 
-# Grunt files
-/GruntFile.js
-/tasks
-/.grunt
-
 # Git
 .gitignore
 .gitattributes

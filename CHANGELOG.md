@@ -4,15 +4,23 @@
 
 - No longer tested on NodeJS &lt; 16.3.0 and NPM &lt; 7.15.1
 - No longer tested on Opera and Edge
+- Unminified version of the player is no longer provided with the package
 
 ## DEPENDENCIES
 
 - **chai** has been upgraded from 4.2.0 to **4.3.4**
 - **eslint** has been upgraded from 22.0.0 to **23.0.0**
+- **grunt** has been removed
+- **grunt-angular-templates** has been removed
+- **grunt-cli** has been removed
+- **grunt-contrib-compass** has been removed
+- **grunt-contrib-concat** has been removed
+- **grunt-contrib-uglify** has been removed
 - **grunt-eslint** has been removed
 - **grunt-gh-pages** has been removed
 - **grunt-karma** has been removed
 - **grunt-mkdocs** has been removed
+- **grunt-replace** has been removed
 - **karma** has been upgraded from 4.4.1 to **6.3.4**
 - **karma-mocha** has been upgraded from 1.3.0 to **2.0.1**
 - **mocha** has been upgraded from 7.1.1 to **9.1.1**

@@ -1,7 +1,11 @@
 {
 
   "rules": {
-    "node/shebang": 0
+    "node/shebang": 0,
+
+    // Allow to require @openveo/api even if it is not in the list of dependencies but only in devDependencies
+    "node/no-unpublished-require": 0
+
   }
 
 }
