@@ -23,6 +23,7 @@ nbproject
 
 # Sass cache files
 .sass-cache
+/compass.rb
 
 # Git
 .gitignore
@@ -43,5 +44,7 @@ nbproject
 /build
 
 # Source maps
+/dist/js
+/dist/scss
 /dist/*.map
 /dist/*.scss
