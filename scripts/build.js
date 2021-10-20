@@ -40,6 +40,7 @@ function log(message) {
 /**
  * Compiles and concat JavaScript files.
  *
+ * @param {String} workingDirectory Path of the directory from where to launch the compilation
  * @param {Array} filesPaths The list of files paths to compile and concat
  * @param {String} outputPath The file output path
  * @return {Promise} Promise resolving when JavaScript files have been compiled
