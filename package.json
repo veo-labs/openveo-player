@@ -48,7 +48,7 @@
   "scripts": {
     "build": "npm run build:clean && ./scripts/build.js production",
     "build:development": "./scripts/build.js",
-    "build:clean": "npx ovRemove ./build && npx ovRemove ./dist",
+    "build:clean": "npx ovRemove ./build ./dist",
     "doc": "mkdocs build -c -d \"./site/$(echo $npm_package_version)\"",
     "doc:clean": "npx ovRemove ./site",
     "doc:deploy": "npx ovDeployGithubPages \"site/$(echo $npm_package_version)\"",
