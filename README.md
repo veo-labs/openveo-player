@@ -4,7 +4,7 @@ OpenVeo Player is an [AngularJS](https://angularjs.org/) directive to wrap an HT
 
 # Documentation
 
-Documentation is available on [Github pages](http://veo-labs.github.io/openveo-player/6.0.0/index.html).
+Documentation is available on [Github pages](http://veo-labs.github.io/openveo-player/7.0.0/index.html).
 
 # Contributors
 
