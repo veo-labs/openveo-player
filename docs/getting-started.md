@@ -10,7 +10,6 @@ OpenVeo Player defines an AngularJS directive **opl-player**:
   opl-template="split_50_50"
   opl-template-icon="true"
   opl-settings-icon="true"
-  opl-veo-labs-icon="true"
   opl-time="true"
   opl-full-viewport="false"
   opl-language="en"
@@ -235,17 +234,6 @@ Indicates if settings icon must be displayed or not (Default to **true**).
 <opl-player
   ...
   opl-settings-icon="true"
-></opl-player>
-```
-
-## opl-veo-labs-icon (optional)
-
-Indicates if Veo-Labs icon must be displayed or not (Default to **true**).
-
-```html
-<opl-player
-  ...
-  opl-veo-labs-icon="true"
 ></opl-player>
 ```
 

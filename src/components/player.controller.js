@@ -68,7 +68,6 @@
     $scope.tagsDisplayed = false;
     $scope.mediaTemplate = null;
     $scope.settingsIconDisplayed = true;
-    $scope.veoLabsIconDisplayed = true;
     $scope.fullViewportActivated = false;
     $scope.templateSelectorDisplayed = true;
     $scope.fullscreenIconDisplayed = true;
@@ -1365,8 +1364,6 @@
        * @param {String} [changedProperties.oplTemplateIcon.currentValue] oplTemplateIcon new value
        * @param {Object} [changedProperties.oplSettingsIcon] oplSettingsIcon old and new value
        * @param {String} [changedProperties.oplSettingsIcon.currentValue] oplSettingsIcon new value
-       * @param {Object} [changedProperties.oplVeoLabsIcon] oplVeoLabsIcon old and new value
-       * @param {String} [changedProperties.oplVeoLabsIcon.currentValue] oplVeoLabsIcon new value
        * @param {Object} [changedProperties.oplFullViewport] oplFullViewport old and new value
        * @param {String} [changedProperties.oplFullViewport.currentValue] oplFullViewport new value
        * @param {Object} [changedProperties.oplTime] oplTime old and new value
@@ -1394,7 +1391,6 @@
               (changedProperties.oplVolumeIcon && changedProperties.oplVolumeIcon.currentValue) ||
               (changedProperties.oplTemplateIcon && changedProperties.oplTemplateIcon.currentValue) ||
               (changedProperties.oplSettingsIcon && changedProperties.oplSettingsIcon.currentValue) ||
-              (changedProperties.oplVeoLabsIcon && changedProperties.oplVeoLabsIcon.currentValue) ||
               (changedProperties.oplFullViewport && changedProperties.oplFullViewport.currentValue)) {
 
             // oplFullscreenIcon
@@ -1415,11 +1411,6 @@
             // oplSettingsIcon
             if (changedProperties.oplSettingsIcon && changedProperties.oplSettingsIcon.currentValue) {
               $scope.settingsIconDisplayed = isAttributeTrue('oplSettingsIcon', true);
-            }
-
-            // oplVeoLabsIcon
-            if (changedProperties.oplVeoLabsIcon && changedProperties.oplVeoLabsIcon.currentValue) {
-              $scope.veoLabsIconDisplayed = isAttributeTrue('oplVeoLabsIcon', true);
             }
 
             // oplFullViewport

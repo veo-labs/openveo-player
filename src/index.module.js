@@ -51,7 +51,6 @@
       CONTROLS_TIME_BAR_ARIA_VALUE_TEXT: '%value%% seen',
       CONTROLS_FULLSCREEN_ARIA_LABEL: 'Fullscreen',
       CONTROLS_FULLSCREEN_EXIT_ARIA_LABEL: 'Exit fullscreen',
-      CONTROLS_VEO_LABS_ARIA_LABEL: 'Go to Veo-Labs web site',
       TABS_CHAPTERS_ARIA_LABEL: 'Display chapters',
       TABS_TIMECODES_ARIA_LABEL: 'Display images',
       TABS_TAGS_ARIA_LABEL: 'Display tags'
@@ -89,7 +88,6 @@
       CONTROLS_TIME_BAR_ARIA_VALUE_TEXT: '%value%% vu',
       CONTROLS_FULLSCREEN_ARIA_LABEL: 'Plein écran',
       CONTROLS_FULLSCREEN_EXIT_ARIA_LABEL: 'Quitter le plein écran',
-      CONTROLS_VEO_LABS_ARIA_LABEL: 'Aller sur le site de Veo-Labs',
       TABS_CHAPTERS_ARIA_LABEL: 'Afficher les chapitres',
       TABS_TIMECODES_ARIA_LABEL: 'Afficher les indexes',
       TABS_TAGS_ARIA_LABEL: 'Afficher les tags'

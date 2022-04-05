@@ -60,7 +60,6 @@
  *  - [Boolean] **opl-volume-icon** true to display the volume icon (default to true)
  *  - [Boolean] **opl-template-icon** true to display the template selector icon (default to true)
  *  - [Boolean] **opl-settings-icon** true to display the settings icon (default to true)
- *  - [Boolean] **opl-veo-labs-icon** true to display the Veo-Labs icon (default to true)
  *  - [Boolean] **opl-time** true to display the actual time and duration (default to true)
  *  - [Boolean] **opl-chapters** true to display chapters (default to true)
  *  - [Boolean] **opl-indexes** true to display indexes (default to true)
@@ -271,7 +270,6 @@
  *                  opl-template="split_50_50"
  *                  opl-template-icon="true"
  *                  opl-settings-icon="true"
- *                  opl-veo-labs-icon="true"
  *                  opl-time="true"
  *                  opl-full-viewport="false"
  *                  opl-language="en"
@@ -299,7 +297,6 @@
       oplTemplate: '@?',
       oplTemplateIcon: '@?',
       oplSettingsIcon: '@?',
-      oplVeoLabsIcon: '@?',
       oplTime: '@?',
       oplFullViewport: '@?',
       oplLanguage: '@?',
