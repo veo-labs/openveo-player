@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>API - Openveo Player</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "API";
+    var mkdocs_page_input_path = "api.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Openveo Player</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">INTRODUCTION</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">USERS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../prerequisites/">Prerequisites</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started/">Getting started</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../adaptive-streaming/">Adaptive streaming</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">API</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#introduction">Introduction</a></li>
+    
+
+    <li class="toctree-l3"><a href="#methods">Methods</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#selecttemplatetemplate">selectTemplate(template)</a></li>
+        
+            <li><a class="toctree-l4" href="#playpause">playPause()</a></li>
+        
+            <li><a class="toctree-l4" href="#setvolumevolume">setVolume(volume)</a></li>
+        
+            <li><a class="toctree-l4" href="#settimetime">setTime(time)</a></li>
+        
+            <li><a class="toctree-l4" href="#setdefinitiondefinition">setDefinition(definition)</a></li>
+        
+            <li><a class="toctree-l4" href="#setsource">setSource</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#events">Events</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#ready">ready</a></li>
+        
+            <li><a class="toctree-l4" href="#waiting">waiting</a></li>
+        
+            <li><a class="toctree-l4" href="#playing">playing</a></li>
+        
+            <li><a class="toctree-l4" href="#durationchange">durationChange</a></li>
+        
+            <li><a class="toctree-l4" href="#play">play</a></li>
+        
+            <li><a class="toctree-l4" href="#pause">pause</a></li>
+        
+            <li><a class="toctree-l4" href="#loadprogress">loadProgress</a></li>
+        
+            <li><a class="toctree-l4" href="#playprogress">playProgress</a></li>
+        
+            <li><a class="toctree-l4" href="#end">end</a></li>
+        
+            <li><a class="toctree-l4" href="#error">error</a></li>
+        
+            <li><a class="toctree-l4" href="#needpoiconversion">needPoiConversion</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../examples/">Examples</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">DEVELOPERS</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../developers/basics/">The basics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../developers/prerequisites/">Prerequisites</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../developers/installation/">Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../developers/compilation/">Compilation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../developers/i18n/">I18N and I10N</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../developers/coding-standards/">Coding standards</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../developers/unit-tests/">Unit tests</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Openveo Player</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>USERS &raquo;</li>
+        
+      
+    
+    <li>API</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/veo-labs/openveo-player/edit/master/docs/api.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="introduction">Introduction</h1>
+<p>Player can be controlled by methods and emits catchable events on the player HTML element.</p>
+<h1 id="methods">Methods</h1>
+<h2 id="selecttemplatetemplate">selectTemplate(template)</h2>
+<p>Sets the display template.</p>
+<p>Usage:</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
+  playerController.selectTemplate('split_2');
+});
+</code></pre>
+
+<p>Arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>template</td>
+<td>String</td>
+<td>Display template (can be either <strong>split_1</strong>, <strong>split_50_50</strong>, <strong>split_25_75</strong> or <strong>split_2</strong>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="playpause">playPause()</h2>
+<p>Starts / Pauses the player.</p>
+<p>Usage:</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
+  playerController.playPause();
+});
+</code></pre>
+
+<h2 id="setvolumevolume">setVolume(volume)</h2>
+<p>Sets the player volume.</p>
+<p>Usage:</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
+  playerController.setVolume(50);
+});
+</code></pre>
+
+<p>Arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>volume</td>
+<td>Number</td>
+<td>The volume to set from 0 to 100</td>
+</tr>
+</tbody>
+</table>
+<h2 id="settimetime">setTime(time)</h2>
+<p>Sets the player time.</p>
+<p>Usage:</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
+  playerController.setTime(50000);
+});
+</code></pre>
+
+<p>Arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>time</td>
+<td>Number</td>
+<td>The time to set (in milliseconds) relative to the cut media</td>
+</tr>
+</tbody>
+</table>
+<h2 id="setdefinitiondefinition">setDefinition(definition)</h2>
+<p>Sets actual media definition.</p>
+<p>Usage:</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
+  playerController.setDefinition('720');
+});
+</code></pre>
+
+<p>Arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>definition</td>
+<td>String</td>
+<td>The definition height as String</td>
+</tr>
+</tbody>
+</table>
+<h2 id="setsource">setSource</h2>
+<p>Sets actual media source if multi sources.</p>
+<p>Usage:</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+
+  var playerController = angular.element(myPlayer).controller('oplPlayer');
+  playerController.setSource(1);
+});
+</code></pre>
+
+<p>Arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>source</td>
+<td>Number</td>
+<td>The index of the source to load from the list of sources</td>
+</tr>
+</tbody>
+</table>
+<h1 id="events">Events</h1>
+<h2 id="ready">ready</h2>
+<p>The player is ready to receive actions.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('ready', function(event){
+  console.log('ready');
+});
+</code></pre>
+
+<h2 id="waiting">waiting</h2>
+<p>Media playback has stopped because the next frame is not available.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('waiting', function(event){
+  console.log('waiting');
+});
+</code></pre>
+
+<h2 id="playing">playing</h2>
+<p>Media playback is ready to start after being paused or delayed due to lack of media data.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('playing', function(event){
+  console.log('playing');
+});
+</code></pre>
+
+<h2 id="durationchange">durationChange</h2>
+<p>The duration attribute has just been updated.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('durationChange', function(event, duration){
+  console.log('durationChange with new duration = ' + duration + 'ms');
+});
+</code></pre>
+
+<h2 id="play">play</h2>
+<p>Media is no longer paused.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('play', function(event, duration){
+  console.log('play');
+});
+</code></pre>
+
+<h2 id="pause">pause</h2>
+<p>Media has been paused.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('pause', function(event, duration){
+  console.log('pause');
+});
+</code></pre>
+
+<h2 id="loadprogress">loadProgress</h2>
+<p>Got buffering information.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('loadProgress', function(event, percents){
+  console.log('loadProgress');
+  console.log('Buffering start = ' + percents.loadedStart);
+  console.log('Buffering end = ' + percents.loadedPercent);
+});
+</code></pre>
+
+<h2 id="playprogress">playProgress</h2>
+<p>Media playback position has changed.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('playProgress', function(event, data){
+  console.log('playProgress');
+  console.log('Current time = ' + data.time + 'ms');
+  console.log('Played percent = ' + data.percent);
+});
+</code></pre>
+
+<h2 id="end">end</h2>
+<p>Media playback has reached the end.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('end', function(event, duration){
+  console.log('end');
+});
+</code></pre>
+
+<h2 id="error">error</h2>
+<p>Player has encountered an error.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('error', function(event, error){
+  console.log(error.message);
+  console.log(error.code);
+});
+</code></pre>
+
+<h2 id="needpoiconversion">needPoiConversion</h2>
+<p>Player has detected the old format of chapters / tags / indexes. Time of chapters / tags and indexes have to be expressed in milliseconds and not in percentage.</p>
+<pre><code class="javascript">var myPlayer = document.getElementById('myPlayer');
+
+angular.element(myPlayer).on('needPoiConversion', function(event, duration){
+  console.log('needPoiConversion');
+  console.log('Video duration = ' + duration + 'ms');
+});
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../examples/" class="btn btn-neutral float-right" title="Examples">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../adaptive-streaming/" class="btn btn-neutral" title="Adaptive streaming"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/veo-labs/openveo-player/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../adaptive-streaming/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../examples/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>
