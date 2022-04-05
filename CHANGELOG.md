@@ -1,4 +1,4 @@
-# 8.0.0 / YYYY-MM-DD
+# 8.0.0 / 2022-04-05
 
 ## BREAKING CHANGES
 

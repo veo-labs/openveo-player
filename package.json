@@ -1,6 +1,6 @@
 {
   "name": "@openveo/player",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "OpenVeo player to play a video with associated images and chapters",
   "keywords": [
     "openveo",
